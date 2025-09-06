@@ -32,37 +32,37 @@ class BusinessLocationController extends Controller
 
 	}
 	/**
- * @OA\Get(
- *     path="/api/business/location-information",
- *     tags={"Location Information"},
- *     summary="Get location information",
- *     description="Fetch the location information of the authenticated user's account or business.",
- *     security={{"bearerAuth":{}}},
- *     @OA\Response(
- *         response=200,
- *         description="Location information retrieved successfully",
- *         @OA\JsonContent(
- *             @OA\Property(property="success", type="boolean", example=true),
- *             @OA\Property(property="data", type="object",
- *                 @OA\Property(property="address", type="string", example="123 MG Road, Sector 45"),
- *                 @OA\Property(property="city", type="string", example="Noida"),
- *                 @OA\Property(property="state", type="string", example="Uttar Pradesh"),
- *                 @OA\Property(property="country", type="string", example="India"),
- *                 @OA\Property(property="pincode", type="string", example="201301"),
- *                 @OA\Property(property="latitude", type="string", example="28.5355"),
- *                 @OA\Property(property="longitude", type="string", example="77.3910")
- *             )
- *         )
- *     ),
- *     @OA\Response(
- *         response=401,
- *         description="Unauthenticated",
- *         @OA\JsonContent(
- *             @OA\Property(property="message", type="string", example="Unauthenticated.")
- *         )
- *     )
- * )
- */
+	 * @OA\Get(
+	 *     path="/api/business/location-information",
+	 *     tags={"Location Information"},
+	 *     summary="Get location information",
+	 *     description="Fetch the location information of the authenticated user's account or business.",
+	 *     security={{"bearerAuth":{}}},
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Location information retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="object",
+	 *                 @OA\Property(property="address", type="string", example="123 MG Road, Sector 45"),
+	 *                 @OA\Property(property="city", type="string", example="Noida"),
+	 *                 @OA\Property(property="state", type="string", example="Uttar Pradesh"),
+	 *                 @OA\Property(property="country", type="string", example="India"),
+	 *                 @OA\Property(property="pincode", type="string", example="201301"),
+	 *                 @OA\Property(property="latitude", type="string", example="28.5355"),
+	 *                 @OA\Property(property="longitude", type="string", example="77.3910")
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
 
 
 	public function locationInformation(Request $request)
@@ -353,9 +353,43 @@ class BusinessLocationController extends Controller
 	}
 
 
+	/**
+	 * @OA\Get(
+	 *     path="/api/business/get-business-location",
+	 *     tags={"Business Location"},
+	 *     summary="Get business location",
+	 *     description="Fetches the saved business location details of the authenticated user.",
+	 *     security={{"bearerAuth":{}}},
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Business location retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="object",
+	 *                 @OA\Property(property="business_name", type="string", example="Quick Dials Pvt Ltd"),
+	 *                 @OA\Property(property="address", type="string", example="123 MG Road, Sector 45"),
+	 *                 @OA\Property(property="landmark", type="string", example="Near Metro Station"),
+	 *                 @OA\Property(property="business_city", type="string", example="Noida"),
+	 *                 @OA\Property(property="state", type="string", example="Uttar Pradesh"),
+	 *                 @OA\Property(property="country", type="string", example="India"),
+	 *                 @OA\Property(property="pincode", type="string", example="201301"),
+	 *                 @OA\Property(property="latitude", type="string", example="28.5355"),
+	 *                 @OA\Property(property="longitude", type="string", example="77.3910")
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
 
 
-	public function businessLocation(Request $request)
+	public function getBusinessLocation(Request $request)
 	{
 		if (!Auth::guard('sanctum')->check()) {
 		return response()->json([

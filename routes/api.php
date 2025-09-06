@@ -76,7 +76,7 @@ Route::post('/business/assignLocation/selectAssignZoneDelete',[App\Http\Controll
 
 Route::get('/business/getPackage',[App\Http\Controllers\Api\AccountController::class, 'getPackage']);
 Route::get('/business/account-settings',[App\Http\Controllers\Api\AccountController::class, 'accountSettings']);
-Route::get('/business/business-location',[App\Http\Controllers\Api\BusinessLocationController::class, 'businessLocation']);
+Route::get('/business/get-business-location',[App\Http\Controllers\Api\BusinessLocationController::class, 'getBusinessLocation']);
 
 Route::get('/business/buy-package',[App\Http\Controllers\Api\AccountController::class, 'buyPackage']);
 
@@ -100,7 +100,7 @@ Route::get('/business/get-paginated-payment-history',[App\Http\Controllers\Api\I
  Route::get('/business/enquiry/getfollowups/{id}',[App\Http\Controllers\Api\EnquiryController::class,'getFollowUps']);  
 
 
- Route::get('/business/keywords',[App\Http\Controllers\Api\BusinessKeywordController::class,'keywords']); 
+ Route::get('/business/get-keywords',[App\Http\Controllers\Api\BusinessKeywordController::class,'getKeywords']); 
 
 
 Route::post('/business/saveKeywordAssign/{id}',[App\Http\Controllers\Api\BusinessKeywordController::class,'saveKeywordAssign']); 

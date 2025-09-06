@@ -136,6 +136,71 @@
                 }
             }
         },
+        "/api/business/buy-package": {
+            "get": {
+                "tags": [
+                    "Buy Package"
+                ],
+                "summary": "Get all buy-package",
+                "description": "Fetch all available packages for businesses.",
+                "operationId": "8e6ffd8830121246fd825d5878c34a3c",
+                "responses": {
+                    "200": {
+                        "description": "List of packages",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Premium Business Plan"
+                                                    },
+                                                    "price": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 4999
+                                                    },
+                                                    "duration": {
+                                                        "type": "string",
+                                                        "example": "12 months"
+                                                    },
+                                                    "features": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string",
+                                                            "example": "24/7 Support"
+                                                        }
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-09-04T10:00:00Z"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/upload-documents": {
             "post": {
                 "tags": [
@@ -333,6 +398,433 @@
                     },
                     "400": {
                         "description": "Invalid input"
+                    }
+                }
+            }
+        },
+        "/api/business/get-assigned-zones": {
+            "get": {
+                "tags": [
+                    "Zones"
+                ],
+                "summary": "Get paginated assigned zones",
+                "description": "Fetch a paginated list of zones assigned to the authenticated user.",
+                "operationId": "d70101cc337c6d95e5c679008ee1edfa",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number for pagination",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "length",
+                        "in": "query",
+                        "description": "Number of records per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated zones list retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "draw": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "recordsTotal": {
+                                            "type": "integer",
+                                            "example": 50
+                                        },
+                                        "recordsFiltered": {
+                                            "type": "integer",
+                                            "example": 50
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "zone": {
+                                                        "type": "string",
+                                                        "example": "North Zone"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "example": "2025-09-04 10:30:00"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/assignZone/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Zones"
+                ],
+                "summary": "Delete assigned zone",
+                "description": "Delete a specific zone assigned to the authenticated user by ID.",
+                "operationId": "3b8816e89f05fb6a0ebe9f3cd309ca60",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the assigned zone to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 5
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Zone deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Zone deleted successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Zone not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Zone not found or already deleted."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/cities/getajaxcities": {
+            "get": {
+                "tags": [
+                    "Cities"
+                ],
+                "summary": "Get cities by state",
+                "description": "Fetch a list of cities dynamically based on state_id (used for AJAX calls in dropdowns).",
+                "operationId": "92dbdead8ddeeaec6418d8518e73c0f5",
+                "parameters": [
+                    {
+                        "name": "state_id",
+                        "in": "query",
+                        "description": "ID of the state",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 9
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cities retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "city": {
+                                                        "type": "string",
+                                                        "example": "Noida"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No cities found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No cities found for this state."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/zone/getAjaxZone": {
+            "get": {
+                "tags": [
+                    "Zones"
+                ],
+                "summary": "Get zones by city",
+                "description": "Fetch a list of zones dynamically based on city_id (used for AJAX calls in dropdowns).",
+                "operationId": "44e29675ce782d573c9556049934394a",
+                "parameters": [
+                    {
+                        "name": "city_id",
+                        "in": "query",
+                        "description": "ID of the city",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 101
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Zones retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 501
+                                                    },
+                                                    "zone": {
+                                                        "type": "string",
+                                                        "example": "Sector 45"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No zones found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No zones found for this city."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/help": {
+            "get": {
+                "tags": [
+                    "Help"
+                ],
+                "summary": "Get Help Page content",
+                "description": "Fetches the Help / FAQ page content for the application.",
+                "operationId": "5d71bf2c6fc28482f1516019ea5de67a",
+                "responses": {
+                    "200": {
+                        "description": "Help content retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "title": {
+                                                    "type": "string",
+                                                    "example": "Help & Support"
+                                                },
+                                                "content": {
+                                                    "type": "string",
+                                                    "example": "This is the help page content where users can find FAQs and support information."
+                                                },
+                                                "contact_email": {
+                                                    "type": "string",
+                                                    "example": "support@quickdials.com"
+                                                },
+                                                "contact_phone": {
+                                                    "type": "string",
+                                                    "example": "+91-9876543210"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -690,6 +1182,211 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/get-keywords": {
+            "get": {
+                "tags": [
+                    "Keywords"
+                ],
+                "summary": "Get all keywords",
+                "description": "Fetches a list of available keywords.",
+                "operationId": "adfe4de1a6327417d28ee5fc648a012f",
+                "responses": {
+                    "200": {
+                        "description": "Keywords retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "keyword": {
+                                                        "type": "string",
+                                                        "example": "Artificial Intelligence Training"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/saveKeywordAssign/{id}": {
+            "post": {
+                "tags": [
+                    "Keywords"
+                ],
+                "summary": "Assign a keyword to the authenticated user",
+                "description": "Assign a keyword to the authenticated user's account/business.",
+                "operationId": "ad8e7d7bf376bb517c28a12404a9b451",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "kw_id",
+                                    "parent_cat_id",
+                                    "child_cat_id",
+                                    "zone_id"
+                                ],
+                                "properties": {
+                                    "kw_id": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "parent_cat_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "child_cat_id": {
+                                        "type": "integer",
+                                        "example": 8
+                                    },
+                                    "zone_id": {
+                                        "type": "integer",
+                                        "example": 3
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Keyword assigned successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Keyword assigned successfully."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 15
+                                                },
+                                                "kw_id": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "parent_cat_id": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "child_cat_id": {
+                                                    "type": "integer",
+                                                    "example": 8
+                                                },
+                                                "zone_id": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "kw_id": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The kw_id field is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -1100,6 +1797,436 @@
                 ]
             }
         },
+        "/api/business/get-business-location": {
+            "get": {
+                "tags": [
+                    "Business Location"
+                ],
+                "summary": "Get business location",
+                "description": "Fetches the saved business location details of the authenticated user.",
+                "operationId": "22c6a8822046d5f3711620bd67d3e8d3",
+                "responses": {
+                    "200": {
+                        "description": "Business location retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "business_name": {
+                                                    "type": "string",
+                                                    "example": "Quick Dials Pvt Ltd"
+                                                },
+                                                "address": {
+                                                    "type": "string",
+                                                    "example": "123 MG Road, Sector 45"
+                                                },
+                                                "landmark": {
+                                                    "type": "string",
+                                                    "example": "Near Metro Station"
+                                                },
+                                                "business_city": {
+                                                    "type": "string",
+                                                    "example": "Noida"
+                                                },
+                                                "state": {
+                                                    "type": "string",
+                                                    "example": "Uttar Pradesh"
+                                                },
+                                                "country": {
+                                                    "type": "string",
+                                                    "example": "India"
+                                                },
+                                                "pincode": {
+                                                    "type": "string",
+                                                    "example": "201301"
+                                                },
+                                                "latitude": {
+                                                    "type": "string",
+                                                    "example": "28.5355"
+                                                },
+                                                "longitude": {
+                                                    "type": "string",
+                                                    "example": "77.3910"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/profile-logo": {
+            "get": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Get business profile logo",
+                "description": "Fetches the business profile logo of the authenticated user. Requires Bearer token.",
+                "operationId": "729a08b7244239a0ac88ba798d3a69be",
+                "responses": {
+                    "200": {
+                        "description": "Profile logo retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "logo_url": {
+                                            "type": "string",
+                                            "format": "uri",
+                                            "example": "https://yourdomain.com/storage/logos/profile123.png"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Logo not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Profile logo not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/saveProfileLogo": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Upload business logo and profile picture",
+                "description": "Uploads the business logo and profile picture for the authenticated user. Requires Bearer token.",
+                "operationId": "ed458daf24dc0e703c0bd833a1221a38",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "logo",
+                                    "profile_pic"
+                                ],
+                                "properties": {
+                                    "logo": {
+                                        "description": "Business logo file",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "profile_pic": {
+                                        "description": "Profile picture file",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Files uploaded successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "logo_url": {
+                                            "type": "string",
+                                            "format": "uri",
+                                            "example": "https://yourdomain.com/storage/logos/business.png"
+                                        },
+                                        "profile_pic_url": {
+                                            "type": "string",
+                                            "format": "uri",
+                                            "example": "https://yourdomain.com/storage/profiles/profile.png"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The logo field is required."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "logo": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The logo must be an image."
+                                                    }
+                                                },
+                                                "profile_pic": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The profile_pic must be an image."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/profileLogo/logoDel": {
+            "delete": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Delete business logo",
+                "description": "Deletes the current business logo of the authenticated user. Requires Bearer token.",
+                "operationId": "6591418f574580e17e0baed454b8c472",
+                "responses": {
+                    "200": {
+                        "description": "Logo deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Business logo deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Logo not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No logo found for this user"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/profileLogo/profilePicDel": {
+            "delete": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Delete business profile picture",
+                "description": "Deletes the current profile picture of the authenticated user. Requires Bearer token.",
+                "operationId": "eef36307f342e1d8dd93ce5bad0eaebc",
+                "responses": {
+                    "200": {
+                        "description": "Profile picture deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Profile picture deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Profile picture not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No profile picture found for this user"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/business/get-leads": {
             "get": {
                 "tags": [
@@ -1442,346 +2569,6 @@
                     }
                 ]
             }
-        },
-        "/api/business/profile-logo": {
-            "get": {
-                "tags": [
-                    "Profile"
-                ],
-                "summary": "Get business profile logo",
-                "description": "Fetches the business profile logo of the authenticated user. Requires Bearer token.",
-                "operationId": "90bb132cb2c304759dc4d8021d4d4e1a",
-                "responses": {
-                    "200": {
-                        "description": "Profile logo retrieved successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "logo_url": {
-                                            "type": "string",
-                                            "format": "uri",
-                                            "example": "https://yourdomain.com/storage/logos/profile123.png"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Logo not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Profile logo not found"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/business/saveProfileLogo": {
-            "post": {
-                "tags": [
-                    "Profile"
-                ],
-                "summary": "Upload business logo and profile picture",
-                "description": "Uploads the business logo and profile picture for the authenticated user. Requires Bearer token.",
-                "operationId": "13665856cd25347d2ff121a00ab653fe",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "required": [
-                                    "logo",
-                                    "profile_pic"
-                                ],
-                                "properties": {
-                                    "logo": {
-                                        "description": "Business logo file",
-                                        "type": "string",
-                                        "format": "binary"
-                                    },
-                                    "profile_pic": {
-                                        "description": "Profile picture file",
-                                        "type": "string",
-                                        "format": "binary"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Files uploaded successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "logo_url": {
-                                            "type": "string",
-                                            "format": "uri",
-                                            "example": "https://yourdomain.com/storage/logos/business.png"
-                                        },
-                                        "profile_pic_url": {
-                                            "type": "string",
-                                            "format": "uri",
-                                            "example": "https://yourdomain.com/storage/profiles/profile.png"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The logo field is required."
-                                        },
-                                        "errors": {
-                                            "properties": {
-                                                "logo": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The logo must be an image."
-                                                    }
-                                                },
-                                                "profile_pic": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The profile_pic must be an image."
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/business/profileLogo/logoDel": {
-            "delete": {
-                "tags": [
-                    "Profile"
-                ],
-                "summary": "Delete business logo",
-                "description": "Deletes the current business logo of the authenticated user. Requires Bearer token.",
-                "operationId": "6144b94c140820cd6fc17e0a9ec2b972",
-                "responses": {
-                    "200": {
-                        "description": "Logo deleted successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Business logo deleted successfully"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Logo not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "No logo found for this user"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/business/profileLogo/profilePicDel": {
-            "delete": {
-                "tags": [
-                    "Profile"
-                ],
-                "summary": "Delete business profile picture",
-                "description": "Deletes the current profile picture of the authenticated user. Requires Bearer token.",
-                "operationId": "4e26e7acee374e935aa7cc90db0e89ce",
-                "responses": {
-                    "200": {
-                        "description": "Profile picture deleted successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Profile picture deleted successfully"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Profile picture not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "No profile picture found for this user"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
         }
     },
     "components": {
@@ -1807,12 +2594,28 @@
             "description": "account settings"
         },
         {
+            "name": "Buy Package",
+            "description": "Buy Package"
+        },
+        {
             "name": "Products",
             "description": "Products"
         },
         {
             "name": "Authentication",
             "description": "Authentication"
+        },
+        {
+            "name": "Zones",
+            "description": "Zones"
+        },
+        {
+            "name": "Cities",
+            "description": "Cities"
+        },
+        {
+            "name": "Help",
+            "description": "Help"
         },
         {
             "name": "Dashboard",
@@ -1827,8 +2630,16 @@
             "description": "Assign Keyword"
         },
         {
+            "name": "Keywords",
+            "description": "Keywords"
+        },
+        {
             "name": "Location Information",
             "description": "Location Information"
+        },
+        {
+            "name": "Business Location",
+            "description": "Business Location"
         },
         {
             "name": "Leads",

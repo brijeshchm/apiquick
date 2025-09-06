@@ -28,34 +28,152 @@ class BusinessLogoController extends Controller
 	{
 
 	}
-	public function profileLogo(Request $request)
-	{
-		if (!Auth::guard('sanctum')->check()) {
-				return response()->json([
-					'status' => false,
-					'message' => 'Unauthenticated: Token is missing or invalid',
-					'error' => 'token_missing_or_invalid'
-				], 401);
-			}
+	 
 
-			// Check if user is active
-			$user = auth('sanctum')->user();
-			if (!$user) {
-				return response()->json([
-					'status' => false,
-					'message' => 'Unauthenticated: Token is missing or invalid',
-					'error' => 'token_missing_or_invalid'
-				], 401);
-			}
-			if (!$user->active_status) {
-				$user->tokens()->delete();
-				return response()->json(['status' => false, 'message' => 'User account is inactive',], 403);
-			}	 
-		$data['client'] = Client::find($user->id);
-		echo json_encode($data);
-	}
+    /**
+     * @OA\Get(
+     *     path="/api/business/profile-logo",
+     *     tags={"Profile"},
+     *     summary="Get business profile logo",
+     *     description="Fetches the business profile logo of the authenticated user. Requires Bearer token.",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Profile logo retrieved successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="logo_url", type="string", format="uri", example="https://yourdomain.com/storage/logos/profile123.png")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Logo not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Profile logo not found")
+     *         )
+     *     )
+     * )
+     */
+    public function getProfileLogo(Request $request)
+    {
+        try {
 
-	public function saveProfileLogo(Request $request)
+            if (!Auth::guard('sanctum')->check()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthenticated: Token is missing or invalid',
+                    'error' => 'token_missing_or_invalid'
+                ], 401);
+            }
+
+            // Check if user is active
+
+            $user = auth('sanctum')->user();
+            if (!$user) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthenticated: Token is missing or invalid',
+                    'error' => 'token_missing_or_invalid'
+                ], 401);
+            }
+
+            if (!$user->active_status) {
+                $user->tokens()->delete();
+                return response()->json(['status' => false, 'message' => 'User account is inactive',], 403);
+            }
+
+
+            if (!empty($user->profile_pic)) {
+                $profile_pic = unserialize($user->profile_pic);
+            } else {
+                $profile_pic = "";
+            }
+            if (!empty($user->logo)) {
+                $logo = unserialize($user->logo);
+            } else {
+                $logo = "";
+            }
+
+            $data['userDetails'] = array(
+                'client_id' => $user->id,
+                'username' => $user->username,
+                'business_slug' => $user->business_slug,
+                'profile_pic' => $profile_pic,
+                'logo' => $logo,
+                'active_status' => $user->active_status,
+            );
+
+            return response()->json([
+                'success' => true,
+                'data' => $data,
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve users: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/business/saveProfileLogo",
+     *     tags={"Profile"},
+     *     summary="Upload business logo and profile picture",
+     *     description="Uploads the business logo and profile picture for the authenticated user. Requires Bearer token.",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 required={"logo","profile_pic"},
+     *                 @OA\Property(property="logo", type="string", format="binary", description="Business logo file"),
+     *                 @OA\Property(property="profile_pic", type="string", format="binary", description="Profile picture file")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Files uploaded successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="logo_url", type="string", format="uri", example="https://yourdomain.com/storage/logos/business.png"),
+     *             @OA\Property(property="profile_pic_url", type="string", format="uri", example="https://yourdomain.com/storage/profiles/profile.png")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The logo field is required."),
+     *             @OA\Property(
+     *                 property="errors",
+     *                 type="object",
+     *                 @OA\Property(property="logo", type="array", @OA\Items(type="string", example="The logo must be an image.")),
+     *                 @OA\Property(property="profile_pic", type="array", @OA\Items(type="string", example="The profile_pic must be an image."))
+     *             )
+     *         )
+     *     )
+     * )
+     */
+   public function saveProfileLogo(Request $request)
 	{
 		if (!Auth::guard('sanctum')->check()) {
 				return response()->json([
@@ -273,6 +391,237 @@ class BusinessLogoController extends Controller
 		}
 		echo json_encode($data);
 	}
+
+    /**
+     * @OA\Delete(
+     *     path="/api/business/profileLogo/logoDel",
+     *     tags={"Profile"},
+     *     summary="Delete business logo",
+     *     description="Deletes the current business logo of the authenticated user. Requires Bearer token.",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Logo deleted successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Business logo deleted successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Logo not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="No logo found for this user")
+     *         )
+     *     )
+     * )
+     */
+    public function deleteLogo(Request $request)
+    {
+        try {
+
+            if (!Auth::guard('sanctum')->check()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthenticated: Token is missing or invalid',
+                    'error' => 'token_missing_or_invalid'
+                ], 401);
+            }
+
+            // Check if user is active
+
+            $user = auth('sanctum')->user();
+            if (!$user) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthenticated: Token is missing or invalid',
+                    'error' => 'token_missing_or_invalid'
+                ], 401);
+            }
+
+            if (!$user->active_status) {
+                $user->tokens()->delete();
+                return response()->json(['status' => false, 'message' => 'User account is inactive',], 403);
+            }
+
+
+            $delet_data = Client::findOrFail($user->id);
+
+
+            if ($delet_data->logo != '') {
+                $image = unserialize($delet_data->logo);
+
+                $large = '' . $image['large']['src'];
+                if (!empty($image['thumbnail']['src'])) {
+                    $thumbnail = '' . $image['thumbnail']['src'];
+                    if (file_exists($thumbnail)) {
+                        unlink($thumbnail);
+                    }
+                }
+                if (file_exists($large)) {
+                    unlink($large);
+                }
+            }
+
+            $edit_data = array('logo' => "", );
+            $del = Client::where('id', $user->id)->update($edit_data);
+            $user = Client::find($user->id);
+            if (!empty($user->profile_pic)) {
+                $profile_pic = unserialize($user->profile_pic);
+            } else {
+                $profile_pic = "";
+            }
+            if (!empty($user->logo)) {
+                $logo = unserialize($user->logo);
+            } else {
+                $logo = "";
+            }
+
+            $data['userDetails'] = array(
+                'client_id' => $user->id,
+                'username' => $user->username,
+                'business_slug' => $user->business_slug,
+                'profile_pic' => $profile_pic,
+                'logo' => $logo,
+                'active_status' => $user->active_status,
+            );
+
+            return response()->json([
+                'success' => true,
+                'data' => $data,
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve users: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+    /**
+	 * @OA\Delete(
+	 *     path="/api/business/profileLogo/profilePicDel",
+	 *     tags={"Profile"},
+	 *     summary="Delete business profile picture",
+	 *     description="Deletes the current profile picture of the authenticated user. Requires Bearer token.",
+	 *     security={{"bearerAuth":{}}},
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Profile picture deleted successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Profile picture deleted successfully")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="Profile picture not found",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No profile picture found for this user")
+	 *         )
+	 *     )
+	 * )
+	 */
+    public function deleteProfilePic(Request $request)
+    {
+        try {
+
+            if (!Auth::guard('sanctum')->check()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthenticated: Token is missing or invalid',
+                    'error' => 'token_missing_or_invalid'
+                ], 401);
+            }
+
+            // Check if user is active
+
+            $user = auth('sanctum')->user();
+            if (!$user) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthenticated: Token is missing or invalid',
+                    'error' => 'token_missing_or_invalid'
+                ], 401);
+            }
+
+            if (!$user->active_status) {
+                $user->tokens()->delete();
+                return response()->json(['status' => false, 'message' => 'User account is inactive',], 403);
+            }
+
+
+            $delet_data = Client::findOrFail($user->id);
+
+
+            if ($delet_data->profile_pic != '') {
+                $image = unserialize($delet_data->profile_pic);
+
+                $large = '' . $image['large']['src'];
+                if (!empty($image['thumbnail']['src'])) {
+                    $thumbnail = '' . $image['thumbnail']['src'];
+                    if (file_exists($thumbnail)) {
+                        unlink($thumbnail);
+                    }
+                }
+                if (file_exists($large)) {
+                    unlink($large);
+                }
+            }
+
+            $edit_data = array('profile_pic' => "", );
+            $del = Client::where('id', $user->id)->update($edit_data);
+            $user = Client::find($user->id);
+            if (!empty($user->profile_pic)) {
+                $profile_pic = unserialize($user->profile_pic);
+            } else {
+                $profile_pic = "";
+            }
+            if (!empty($user->logo)) {
+                $logo = unserialize($user->logo);
+            } else {
+                $logo = "";
+            }
+
+            $data['userDetails'] = array(
+                'client_id' => $user->id,
+                'username' => $user->username,
+                'business_slug' => $user->business_slug,
+                'profile_pic' => $profile_pic,
+                'logo' => $logo,
+                'active_status' => $user->active_status,
+            );
+
+            return response()->json([
+                'success' => true,
+                'data' => $data,
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve users: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+	 
 
 	public function logoDel($id)
 	{

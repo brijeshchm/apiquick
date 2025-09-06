@@ -427,8 +427,56 @@ class EnquiryController extends Controller
 		}
 		echo json_encode($data);
 	}
+	/**
+	 * @OA\Post(
+	 *     path="/api/leads/save-favorite",
+	 *     tags={"Leads"},
+	 *     summary="Save favorite lead",
+	 *     description="Mark a lead as favorite for the authenticated user.",
+	 *     security={{"bearerAuth":{}}},
+	 *     @OA\RequestBody(
+	 *         required=true,
+	 *         @OA\JsonContent(
+	 *             required={"lead_id"},
+	 *             @OA\Property(property="lead_id", type="integer", example=101)
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Lead added to favorites successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Lead marked as favorite."),
+	 *             @OA\Property(property="data", type="object",
+	 *                 @OA\Property(property="id", type="integer", example=5),
+	 *                 @OA\Property(property="user_id", type="integer", example=1),
+	 *                 @OA\Property(property="lead_id", type="integer", example=101)
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=422,
+	 *         description="Validation error",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+	 *             @OA\Property(property="errors", type="object",
+	 *                 @OA\Property(property="lead_id", type="array",
+	 *                     @OA\Items(type="string", example="The lead_id field is required.")
+	 *                 )
+	 *             )
+	 *         )
+	 *     )
+	 * )
+	 */
 
-	public function favoritleads(Request $request)
+	public function saveFavoritleads(Request $request)
 	{
 		if(!Auth::guard('sanctum')->check()) {
 				return response()->json([
@@ -679,6 +727,69 @@ class EnquiryController extends Controller
 	}
 
 
+/**
+ * @OA\Get(
+ *     path="/api/business/get-new-enquiry",
+ *     tags={"Leads"},
+ *     summary="Get new enquiry",
+ *     description="Fetch a list of all leads with optional filters",
+ *     @OA\Parameter(
+ *         name="page",
+ *         in="query",
+ *         description="Page number for pagination",
+ *         required=false,
+ *         @OA\Schema(type="integer", default=1)
+ *     ),
+ *     @OA\Parameter(
+ *         name="limit",
+ *         in="query",
+ *         description="Number of leads per page",
+ *         required=false,
+ *         @OA\Schema(type="integer", default=20)
+ *     ),
+ *     @OA\Parameter(
+ *         name="status",
+ *         in="query",
+ *         description="Filter leads by status",
+ *         required=false,
+ *         @OA\Schema(type="string", enum={"new","contacted","converted","lost"})
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="List of leads",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="success", type="boolean", example=true),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="array",
+ *                 @OA\Items(
+ *                     @OA\Property(property="id", type="integer", example=101),
+ *                     @OA\Property(property="name", type="string", example="John Doe"),
+ *                     @OA\Property(property="email", type="string", example="john@example.com"),
+ *                     @OA\Property(property="phone", type="string", example="+911234567890"),
+ *                     @OA\Property(property="status", type="string", example="new"),
+ *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-06T12:00:00Z")
+ *                 )
+ *             ),
+ *             @OA\Property(
+ *                 property="pagination",
+ *                 type="object",
+ *                 @OA\Property(property="page", type="integer", example=1),
+ *                 @OA\Property(property="limit", type="integer", example=20),
+ *                 @OA\Property(property="total", type="integer", example=100)
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Invalid request",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="success", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Invalid parameters")
+ *         )
+ *     )
+ * )
+ */
 
 	public function getNewEnquiry(Request $request)
 	{
@@ -743,7 +854,71 @@ class EnquiryController extends Controller
 		 echo json_encode($data);
 	}
 
-	public function myLead(Request $request)
+	/**
+	 * @OA\Get(
+	 *     path="/api/business/get-myLead",
+	 *     tags={"Leads"},
+	 *     summary="Get myLead",
+	 *     description="Fetch a list of all leads with optional filters",
+	 *     @OA\Parameter(
+	 *         name="page",
+	 *         in="query",
+	 *         description="Page number for pagination",
+	 *         required=false,
+	 *         @OA\Schema(type="integer", default=1)
+	 *     ),
+	 *     @OA\Parameter(
+	 *         name="limit",
+	 *         in="query",
+	 *         description="Number of leads per page",
+	 *         required=false,
+	 *         @OA\Schema(type="integer", default=20)
+	 *     ),
+	 *     @OA\Parameter(
+	 *         name="status",
+	 *         in="query",
+	 *         description="Filter leads by status",
+	 *         required=false,
+	 *         @OA\Schema(type="string", enum={"new","contacted","converted","lost"})
+	 *     ),
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="List of leads",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=101),
+	 *                     @OA\Property(property="name", type="string", example="John Doe"),
+	 *                     @OA\Property(property="email", type="string", example="john@example.com"),
+	 *                     @OA\Property(property="phone", type="string", example="+911234567890"),
+	 *                     @OA\Property(property="status", type="string", example="new"),
+	 *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-06T12:00:00Z")
+	 *                 )
+	 *             ),
+	 *             @OA\Property(
+	 *                 property="pagination",
+	 *                 type="object",
+	 *                 @OA\Property(property="page", type="integer", example=1),
+	 *                 @OA\Property(property="limit", type="integer", example=20),
+	 *                 @OA\Property(property="total", type="integer", example=100)
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=400,
+	 *         description="Invalid request",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="Invalid parameters")
+	 *         )
+	 *     )
+	 * )
+	 */
+
+	public function getMyLead(Request $request)
 	{
 
 		if (!Auth::guard('sanctum')->check()) {
@@ -777,7 +952,70 @@ class EnquiryController extends Controller
 		 
 	}
 
-	public function favoriteEnquiry(Request $request)
+	/**
+	 * @OA\Get(
+	 *     path="/api/business/get-favorite-enquiry",
+	 *     tags={"Leads"},
+	 *     summary="Get myLead",
+	 *     description="Fetch a list of all leads with optional filters",
+	 *     @OA\Parameter(
+	 *         name="page",
+	 *         in="query",
+	 *         description="Page number for pagination",
+	 *         required=false,
+	 *         @OA\Schema(type="integer", default=1)
+	 *     ),
+	 *     @OA\Parameter(
+	 *         name="limit",
+	 *         in="query",
+	 *         description="Number of leads per page",
+	 *         required=false,
+	 *         @OA\Schema(type="integer", default=20)
+	 *     ),
+	 *     @OA\Parameter(
+	 *         name="status",
+	 *         in="query",
+	 *         description="Filter leads by status",
+	 *         required=false,
+	 *         @OA\Schema(type="string", enum={"new","contacted","converted","lost"})
+	 *     ),
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="List of leads",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=101),
+	 *                     @OA\Property(property="name", type="string", example="John Doe"),
+	 *                     @OA\Property(property="email", type="string", example="john@example.com"),
+	 *                     @OA\Property(property="phone", type="string", example="+911234567890"),
+	 *                     @OA\Property(property="status", type="string", example="new"),
+	 *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-06T12:00:00Z")
+	 *                 )
+	 *             ),
+	 *             @OA\Property(
+	 *                 property="pagination",
+	 *                 type="object",
+	 *                 @OA\Property(property="page", type="integer", example=1),
+	 *                 @OA\Property(property="limit", type="integer", example=20),
+	 *                 @OA\Property(property="total", type="integer", example=100)
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=400,
+	 *         description="Invalid request",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="Invalid parameters")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function getFavoriteEnquiry(Request $request)
 	{
 		if (!Auth::guard('sanctum')->check()) {
 			return response()->json([
@@ -806,6 +1044,70 @@ class EnquiryController extends Controller
 			->where('assigned_leads.client_id', $currentUser->id)->get();
 			echo json_encode($data);
 	}
+/**
+ * @OA\Get(
+ *     path="/api/business/manage-enquiry",
+ *     tags={"Enquiries"},
+ *     summary="Get all enquiries",
+ *     description="Fetch a list of all enquiries with optional filters",
+ *     @OA\Parameter(
+ *         name="page",
+ *         in="query",
+ *         description="Page number for pagination",
+ *         required=false,
+ *         @OA\Schema(type="integer", default=1)
+ *     ),
+ *     @OA\Parameter(
+ *         name="limit",
+ *         in="query",
+ *         description="Number of enquiries per page",
+ *         required=false,
+ *         @OA\Schema(type="integer", default=20)
+ *     ),
+ *     @OA\Parameter(
+ *         name="status",
+ *         in="query",
+ *         description="Filter enquiries by status",
+ *         required=false,
+ *         @OA\Schema(type="string", enum={"new","contacted","converted","closed"})
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="List of enquiries",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="success", type="boolean", example=true),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="array",
+ *                 @OA\Items(
+ *                     @OA\Property(property="id", type="integer", example=201),
+ *                     @OA\Property(property="name", type="string", example="Jane Smith"),
+ *                     @OA\Property(property="email", type="string", example="jane@example.com"),
+ *                     @OA\Property(property="phone", type="string", example="+911234567891"),
+ *                     @OA\Property(property="status", type="string", example="new"),
+ *                     @OA\Property(property="message", type="string", example="Interested in your service"),
+ *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-06T12:00:00Z")
+ *                 )
+ *             ),
+ *             @OA\Property(
+ *                 property="pagination",
+ *                 type="object",
+ *                 @OA\Property(property="page", type="integer", example=1),
+ *                 @OA\Property(property="limit", type="integer", example=20),
+ *                 @OA\Property(property="total", type="integer", example=50)
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Invalid request",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="success", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Invalid parameters")
+ *         )
+ *     )
+ * )
+ */
 
 	public function manageEnquiry(Request $request)
 	{

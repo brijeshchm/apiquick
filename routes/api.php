@@ -35,9 +35,9 @@ Route::get('/business/profileInfo', [ProfileController::class, 'profileInfo']);
 Route::get('/business/dashboard',[App\Http\Controllers\Api\BusinessDashboardController::class, 'dashboard'])->name('business.dashboard');
 Route::get('/business/get-leads',[EnquiryController::class, 'getLeads']);
 Route::get('/business/enquiry',[EnquiryController::class,'enquiry']);
-Route::get('/business/new-enquiry',[EnquiryController::class,'newEnquiry']);
-Route::get('/business/myLead',[EnquiryController::class,'myLead']);
-Route::get('/business/favorite-enquiry',[EnquiryController::class,'favoriteEnquiry']);
+Route::get('/business/get-new-enquiry',[EnquiryController::class,'getNewEnquiry']);
+Route::get('/business/get-myLead',[EnquiryController::class,'getMyLead']);
+Route::get('/business/get-favorite-enquiry',[EnquiryController::class,'getFavoriteEnquiry']);
 Route::get('/business/manage-enquiry',[EnquiryController::class,'manageEnquiry']);
 Route::get('/business/get-discussion',[App\Http\Controllers\Api\BusinessDiscussionController::class, 'getDiscussion']);
 Route::get('/business-owners/get-paginated-assigned-keywords',[App\Http\Controllers\Api\BusinessKeywordController::class, 'getPaginatedAssignedKeywords']);
@@ -53,9 +53,9 @@ Route::post('/business/saveProfileLogo',[App\Http\Controllers\Api\BusinessLogoCo
 Route::delete('/business/profileLogo/logoDel',[App\Http\Controllers\Api\BusinessLogoController::class, 'deleteLogo']);
 Route::Delete('/business/profileLogo/profilePicDel',[App\Http\Controllers\Api\BusinessLogoController::class, 'deleteProfilePic']);
 
-Route::get('/business/gallery-pictures',[App\Http\Controllers\Api\BusinessLogoController::class, 'uploadPictures']);
+Route::get('/business/get-gallery-pictures',[App\Http\Controllers\Api\BusinessLogoController::class, 'getGalleryPictures']);
 
-Route::post('/business/saveGallary',[App\Http\Controllers\Api\BusinessLogoController::class,'saveGallary']); 
+Route::post('/business/save-gallery',[App\Http\Controllers\Api\BusinessLogoController::class,'saveGallary']); 
 
 Route::get('/business/location-information',[App\Http\Controllers\Api\BusinessLocationController::class, 'locationInformation']);
 Route::post('/business/saveLocationInformation',[App\Http\Controllers\Api\BusinessLocationController::class, 'saveLocationInformation']);
@@ -64,7 +64,7 @@ Route::post('/business/saveLocationInformation',[App\Http\Controllers\Api\Busine
 Route::post('/business/pauseLead',[App\Http\Controllers\Api\EnquiryController::class, 'pauseLead']);
 Route::post('/business/scrapLead',[App\Http\Controllers\Api\EnquiryController::class, 'scrapLead']);
 Route::post('/business/readLead',[App\Http\Controllers\Api\EnquiryController::class, 'readLead']);
-Route::post('/business/favoritleads',[App\Http\Controllers\Api\EnquiryController::class, 'favoritleads']);
+Route::post('/business/saveFavoritleads',[App\Http\Controllers\Api\EnquiryController::class, 'saveFavoritleads']);
 
 Route::post('/business/cities/getajaxcities',[App\Http\Controllers\Api\BusinessController::class, 'getAjaxCities']);
 Route::post('/business/state/getAjaxSate',[App\Http\Controllers\Api\BusinessController::class, 'getAjaxSate']);

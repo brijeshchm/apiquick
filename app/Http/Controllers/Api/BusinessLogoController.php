@@ -623,96 +623,41 @@ class BusinessLogoController extends Controller
 
 	 
 
-	public function logoDel($id)
-	{
-		if(!Auth::guard('sanctum')->check()) {
-				return response()->json([
-					'status' => false,
-					'message' => 'Unauthenticated: Token is missing or invalid',
-					'error' => 'token_missing_or_invalid'
-				], 401);
-		}
-
-			// Check if user is active
-			$user = auth('sanctum')->user();
-			if (!$user) {
-				return response()->json([
-					'status' => false,
-					'message' => 'Unauthenticated: Token is missing or invalid',
-					'error' => 'token_missing_or_invalid'
-				], 401);
-			}
-		$delet_data = Client::findOrFail($user->id);	 
-
-		if ($delet_data->logo != '') {
-			$image = unserialize($delet_data->logo);
-
-			$large = '' . $image['large']['src'];
 		
-			if (file_exists($large)) {
-				unlink($large);
-			}
-		}
+	/**
+	 * @OA\Get(
+	 *     path="/api/business/get-gallery-pictures",
+	 *     tags={"Gallery"},
+	 *     summary="Get business gallery pictures",
+	 *     description="Fetch all gallery pictures uploaded by the authenticated user's business.",
+	 *     security={{"bearerAuth":{}}},
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Gallery pictures retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=1),
+	 *                     @OA\Property(property="image_url", type="string", example="https://api.quickdials.com/storage/gallery/image1.jpg"),
+	 *                     @OA\Property(property="title", type="string", example="Office Front View"),
+	 *                     @OA\Property(property="created_at", type="string", example="2025-09-04 12:30:00")
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
 
-		$edit_data = array('logo' => "", );
-		$del = Client::where('id', $user->id)->update($edit_data);
-		if($del){
-			$data['status'] = true;
-			$data['message'] = "Successfully Deleted!";
-
-		}else{
-			$data['status'] = true;
-			$data['message'] = "Not deleted logo!";
-			
-		}
-		echo json_encode($data);
-	}
-
-
-	public function profilePicDel($id)
-	{
-		if(!Auth::guard('sanctum')->check()) {
-				return response()->json([
-					'status' => false,
-					'message' => 'Unauthenticated: Token is missing or invalid',
-					'error' => 'token_missing_or_invalid'
-				], 401);
-		}
-
-			// Check if user is active
-			$user = auth('sanctum')->user();
-			if (!$user) {
-				return response()->json([
-					'status' => false,
-					'message' => 'Unauthenticated: Token is missing or invalid',
-					'error' => 'token_missing_or_invalid'
-				], 401);
-			}
-		$delet_data = Client::findOrFail($user->id);
-		 
-		$client = Client::find($user->isDirty);
-		if ($delet_data->profile_pic != '') {
-			$image = unserialize($delet_data->profile_pic);
-			$large = '' . $image['large']['src'];		 
-			if (file_exists($large)) {
-				unlink($large);
-			}
-		}
-		$edit_data = array('profile_pic' => "", );
-		$del = Client::where('id', $id)->update($edit_data);
-		if($del){
-			$data['status'] = true;
-			$data['message'] = "Successfully Deleted!";
-
-		}else{
-			$data['status'] = true;
-			$data['message'] = "Not deleted logo!";
-			
-		}
-		echo json_encode($data);
-
-	}
-	public function uploadPictures(Request $request)
+ 
+	public function getGalleryPictures(Request $request)
 	{
 		if(!Auth::guard('sanctum')->check()) {
 				return response()->json([
@@ -753,6 +698,67 @@ class BusinessLogoController extends Controller
 		 echo json_encode($data);
 
 	}
+	/**
+	 * @OA\Post(
+	 *     path="/api/business/save-gallery",
+	 *     tags={"Gallery"},
+	 *     summary="Upload a new gallery picture",
+	 *     description="Upload a gallery picture for the authenticated user's business.",
+	 *     security={{"bearerAuth":{}}},
+	 *     @OA\RequestBody(
+	 *         required=true,
+	 *         @OA\MediaType(
+	 *             mediaType="multipart/form-data",
+	 *             @OA\Schema(
+	 *                 required={"image"},
+	 *                 @OA\Property(
+	 *                     property="image",
+	 *                     type="string",
+	 *                     format="binary",
+	 *                     description="Gallery image file"
+	 *                 ),
+	 *                 @OA\Property(
+	 *                     property="title",
+	 *                     type="string",
+	 *                     example="Office Front View"
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Gallery picture uploaded successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Gallery picture uploaded successfully."),
+	 *             @OA\Property(property="data", type="object",
+	 *                 @OA\Property(property="id", type="integer", example=1),
+	 *                 @OA\Property(property="image_url", type="string", example="https://api.quickdials.com/storage/gallery/office1.jpg"),
+	 *                 @OA\Property(property="title", type="string", example="Office Front View")
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=422,
+	 *         description="Validation error",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+	 *             @OA\Property(property="errors", type="object",
+	 *                 @OA\Property(property="image", type="array",
+	 *                     @OA\Items(type="string", example="The image field is required.")
+	 *                 )
+	 *             )
+	 *         )
+	 *     )
+	 * )
+	 */
 
 	public function saveGallary(Request $request)
 	{

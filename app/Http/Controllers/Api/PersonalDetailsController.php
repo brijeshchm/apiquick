@@ -24,6 +24,40 @@ class PersonalDetailsController extends Controller
 	{
 
 	}
+	/**
+	 * @OA\Get(
+	 *     path="/api/business/personal-details",
+	 *     tags={"User"},
+	 *     summary="Get personal details",
+	 *     description="Fetch the personal details of the authenticated user",
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Personal details retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="object",
+	 *                 @OA\Property(property="id", type="integer", example=101),
+	 *                 @OA\Property(property="name", type="string", example="John Doe"),
+	 *                 @OA\Property(property="email", type="string", example="john@example.com"),
+	 *                 @OA\Property(property="phone", type="string", example="+911234567890"),
+	 *                 @OA\Property(property="address", type="string", example="123, Example Street, City"),
+	 *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-06T12:00:00Z"),
+	 *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2025-09-06T12:30:00Z")
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="Unauthorized access")
+	 *         )
+	 *     )
+	 * )
+	 */
 
 	public function personalDetails(Request $request)
 	{
@@ -112,10 +146,58 @@ class PersonalDetailsController extends Controller
 		echo json_encode($data);
 		
 	}
-	/*
-	form field:sirName,first_name,middle_name,last_name,dob,email,marital,mobile,sec_mobile,city,area,pincode,occupation,gender
+	/**
+ * @OA\Post(
+ *     path="/api/business/savePersonalDetails",
+ *     tags={"User"},
+ *     summary="Save or update personal details",
+ *     description="Save or update the personal details of the authenticated user",
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             @OA\Property(property="sirName", type="string", example="Mr"),
+ *             @OA\Property(property="first_name", type="string", example="John"),
+ *             @OA\Property(property="middle_name", type="string", example="A"),
+ *             @OA\Property(property="last_name", type="string", example="Doe"),
+ *             @OA\Property(property="dob", type="string", format="date", example="1990-01-01"),
+ *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
+ *             @OA\Property(property="marital", type="string", example="single"),
+ *             @OA\Property(property="mobile", type="string", example="+911234567890"),
+ *             @OA\Property(property="sec_mobile", type="string", example="+911234567891"),
+ *             @OA\Property(property="city", type="string", example="New Delhi"),
+ *             @OA\Property(property="area", type="string", example="Connaught Place"),
+ *             @OA\Property(property="pincode", type="string", example="110001"),
+ *             @OA\Property(property="occupation", type="string", example="Software Engineer"),
+ *             @OA\Property(property="gender", type="string", example="male")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Personal details saved successfully",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="success", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Personal details updated successfully")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Invalid request",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="success", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Invalid parameters")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Unauthorized",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="success", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Unauthorized access")
+ *         )
+ *     )
+ * )
+ */
 
-	*/
 	public function savePersonalDetails(Request $request)
 	{
 		try {

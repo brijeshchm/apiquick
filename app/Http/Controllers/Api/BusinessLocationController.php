@@ -31,6 +31,39 @@ class BusinessLocationController extends Controller
 	{
 
 	}
+	/**
+ * @OA\Get(
+ *     path="/api/business/location-information",
+ *     tags={"Location Information"},
+ *     summary="Get location information",
+ *     description="Fetch the location information of the authenticated user's account or business.",
+ *     security={{"bearerAuth":{}}},
+ *     @OA\Response(
+ *         response=200,
+ *         description="Location information retrieved successfully",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="success", type="boolean", example=true),
+ *             @OA\Property(property="data", type="object",
+ *                 @OA\Property(property="address", type="string", example="123 MG Road, Sector 45"),
+ *                 @OA\Property(property="city", type="string", example="Noida"),
+ *                 @OA\Property(property="state", type="string", example="Uttar Pradesh"),
+ *                 @OA\Property(property="country", type="string", example="India"),
+ *                 @OA\Property(property="pincode", type="string", example="201301"),
+ *                 @OA\Property(property="latitude", type="string", example="28.5355"),
+ *                 @OA\Property(property="longitude", type="string", example="77.3910")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Unauthenticated",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+ *         )
+ *     )
+ * )
+ */
+
 
 	public function locationInformation(Request $request)
 	{
@@ -61,6 +94,55 @@ class BusinessLocationController extends Controller
 
 		 
 	}
+	/**
+	 * @OA\Post(
+	 *     path="/api/business/saveBusinessLocation",
+	 *     tags={"Location Information"},
+	 *     summary="Update location information",
+	 *     description="Update the authenticated user's business or account location.",
+	 *     security={{"bearerAuth":{}}},
+	 *     @OA\RequestBody(
+	 *         required=true,
+	 *         @OA\JsonContent(
+	 *             required={"address","city","state","country","pincode"},
+	 *             @OA\Property(property="address", type="string", example="123 MG Road, Sector 45"),
+	 *             @OA\Property(property="city", type="string", example="Noida"),
+	 *             @OA\Property(property="state", type="string", example="Uttar Pradesh"),
+	 *             @OA\Property(property="country", type="string", example="India"),
+	 *             @OA\Property(property="pincode", type="string", example="201301"),
+	 *             @OA\Property(property="latitude", type="string", example="28.5355"),
+	 *             @OA\Property(property="longitude", type="string", example="77.3910")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Location updated successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Location updated successfully.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=422,
+	 *         description="Validation error",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+	 *             @OA\Property(property="errors", type="object",
+	 *                 @OA\Property(property="address", type="array",
+	 *                     @OA\Items(type="string", example="The address field is required.")
+	 *                 )
+	 *             )
+	 *         )
+	 *     )
+	 * )
+	 */
 	public function saveBusinessLocation(Request $request, $id)
 	{
 		if (!Auth::guard('sanctum')->check()) {
@@ -142,6 +224,73 @@ class BusinessLocationController extends Controller
 
 	}
 
+		
+	/**
+	 * @OA\Post(
+	 *     path="/api/business/saveLocationInformation",
+	 *     tags={"Location Information"},
+	 *     summary="Save or update business location information",
+	 *     description="Save or update the authenticated user's business or account location details.",
+	 *     security={{"bearerAuth":{}}},
+	 *     @OA\RequestBody(
+	 *         required=true,
+	 *         @OA\JsonContent(
+	 *             required={"business_name","address","city","state","country"},
+	 *             @OA\Property(property="business_name", type="string", example="ABC Enterprises"),
+	 *             @OA\Property(property="landmark", type="string", example="Near Sector 18 Metro Station"),
+	 *             @OA\Property(property="address", type="string", example="123 MG Road, Sector 45"),
+	 *             @OA\Property(property="city", type="string", example="Noida"),
+	 *             @OA\Property(property="business_city", type="string", example="Delhi NCR"),
+	 *             @OA\Property(property="state", type="string", example="Uttar Pradesh"),
+	 *             @OA\Property(property="country", type="string", example="India"),
+	 *             @OA\Property(property="pincode", type="string", example="201301"),
+	 *             @OA\Property(property="latitude", type="string", example="28.5355"),
+	 *             @OA\Property(property="longitude", type="string", example="77.3910")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Location information saved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Location updated successfully."),
+	 *             @OA\Property(property="data", type="object",
+	 *                 @OA\Property(property="business_name", type="string", example="ABC Enterprises"),
+	 *                 @OA\Property(property="landmark", type="string", example="Near Sector 18 Metro Station"),
+	 *                 @OA\Property(property="address", type="string", example="123 MG Road, Sector 45"),
+	 *                 @OA\Property(property="city", type="string", example="Noida"),
+	 *                 @OA\Property(property="business_city", type="string", example="Delhi NCR"),
+	 *                 @OA\Property(property="state", type="string", example="Uttar Pradesh"),
+	 *                 @OA\Property(property="country", type="string", example="India"),
+	 *                 @OA\Property(property="pincode", type="string", example="201301"),
+	 *                 @OA\Property(property="latitude", type="string", example="28.5355"),
+	 *                 @OA\Property(property="longitude", type="string", example="77.3910")
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=422,
+	 *         description="Validation error",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+	 *             @OA\Property(property="errors", type="object",
+	 *                 @OA\Property(
+	 *                     property="business_name",
+	 *                     type="array",
+	 *                     @OA\Items(type="string", example="The business name field is required.")
+	 *                 )
+	 *             )
+	 *         )
+	 *     )
+	 * )
+	 */
 	public function saveLocationInformation(Request $request)
 	{
 		 if (!Auth::guard('sanctum')->check()) {

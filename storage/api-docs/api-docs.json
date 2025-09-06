@@ -136,38 +136,6 @@
                 }
             }
         },
-        "/api/users": {
-            "get": {
-                "tags": [
-                    "Users list"
-                ],
-                "summary": "Get a list of users",
-                "operationId": "3d2048a3e0378656a1235d087735b8a9",
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "id": {
-                                                "type": "integer"
-                                            },
-                                            "name": {
-                                                "type": "string"
-                                            }
-                                        },
-                                        "type": "object"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/api/upload-documents": {
             "post": {
                 "tags": [
@@ -722,6 +690,401 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/location-information": {
+            "get": {
+                "tags": [
+                    "Location Information"
+                ],
+                "summary": "Get location information",
+                "description": "Fetch the location information of the authenticated user's account or business.",
+                "operationId": "81531d79a8295735ae02cbef8d032ab3",
+                "responses": {
+                    "200": {
+                        "description": "Location information retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "address": {
+                                                    "type": "string",
+                                                    "example": "123 MG Road, Sector 45"
+                                                },
+                                                "city": {
+                                                    "type": "string",
+                                                    "example": "Noida"
+                                                },
+                                                "state": {
+                                                    "type": "string",
+                                                    "example": "Uttar Pradesh"
+                                                },
+                                                "country": {
+                                                    "type": "string",
+                                                    "example": "India"
+                                                },
+                                                "pincode": {
+                                                    "type": "string",
+                                                    "example": "201301"
+                                                },
+                                                "latitude": {
+                                                    "type": "string",
+                                                    "example": "28.5355"
+                                                },
+                                                "longitude": {
+                                                    "type": "string",
+                                                    "example": "77.3910"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/saveBusinessLocation": {
+            "post": {
+                "tags": [
+                    "Location Information"
+                ],
+                "summary": "Update location information",
+                "description": "Update the authenticated user's business or account location.",
+                "operationId": "b74f551372f59add6f7c2a21e88e452d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "address",
+                                    "city",
+                                    "state",
+                                    "country",
+                                    "pincode"
+                                ],
+                                "properties": {
+                                    "address": {
+                                        "type": "string",
+                                        "example": "123 MG Road, Sector 45"
+                                    },
+                                    "city": {
+                                        "type": "string",
+                                        "example": "Noida"
+                                    },
+                                    "state": {
+                                        "type": "string",
+                                        "example": "Uttar Pradesh"
+                                    },
+                                    "country": {
+                                        "type": "string",
+                                        "example": "India"
+                                    },
+                                    "pincode": {
+                                        "type": "string",
+                                        "example": "201301"
+                                    },
+                                    "latitude": {
+                                        "type": "string",
+                                        "example": "28.5355"
+                                    },
+                                    "longitude": {
+                                        "type": "string",
+                                        "example": "77.3910"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Location updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Location updated successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "address": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The address field is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/saveLocationInformation": {
+            "post": {
+                "tags": [
+                    "Location Information"
+                ],
+                "summary": "Save or update business location information",
+                "description": "Save or update the authenticated user's business or account location details.",
+                "operationId": "7b8a5229ab40359845a97c2facf0c369",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "business_name",
+                                    "address",
+                                    "city",
+                                    "state",
+                                    "country"
+                                ],
+                                "properties": {
+                                    "business_name": {
+                                        "type": "string",
+                                        "example": "ABC Enterprises"
+                                    },
+                                    "landmark": {
+                                        "type": "string",
+                                        "example": "Near Sector 18 Metro Station"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "123 MG Road, Sector 45"
+                                    },
+                                    "city": {
+                                        "type": "string",
+                                        "example": "Noida"
+                                    },
+                                    "business_city": {
+                                        "type": "string",
+                                        "example": "Delhi NCR"
+                                    },
+                                    "state": {
+                                        "type": "string",
+                                        "example": "Uttar Pradesh"
+                                    },
+                                    "country": {
+                                        "type": "string",
+                                        "example": "India"
+                                    },
+                                    "pincode": {
+                                        "type": "string",
+                                        "example": "201301"
+                                    },
+                                    "latitude": {
+                                        "type": "string",
+                                        "example": "28.5355"
+                                    },
+                                    "longitude": {
+                                        "type": "string",
+                                        "example": "77.3910"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Location information saved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Location updated successfully."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "business_name": {
+                                                    "type": "string",
+                                                    "example": "ABC Enterprises"
+                                                },
+                                                "landmark": {
+                                                    "type": "string",
+                                                    "example": "Near Sector 18 Metro Station"
+                                                },
+                                                "address": {
+                                                    "type": "string",
+                                                    "example": "123 MG Road, Sector 45"
+                                                },
+                                                "city": {
+                                                    "type": "string",
+                                                    "example": "Noida"
+                                                },
+                                                "business_city": {
+                                                    "type": "string",
+                                                    "example": "Delhi NCR"
+                                                },
+                                                "state": {
+                                                    "type": "string",
+                                                    "example": "Uttar Pradesh"
+                                                },
+                                                "country": {
+                                                    "type": "string",
+                                                    "example": "India"
+                                                },
+                                                "pincode": {
+                                                    "type": "string",
+                                                    "example": "201301"
+                                                },
+                                                "latitude": {
+                                                    "type": "string",
+                                                    "example": "28.5355"
+                                                },
+                                                "longitude": {
+                                                    "type": "string",
+                                                    "example": "77.3910"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "business_name": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The business name field is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -1444,10 +1807,6 @@
             "description": "account settings"
         },
         {
-            "name": "Users list",
-            "description": "Users list"
-        },
-        {
             "name": "Products",
             "description": "Products"
         },
@@ -1466,6 +1825,10 @@
         {
             "name": "Assign Keyword",
             "description": "Assign Keyword"
+        },
+        {
+            "name": "Location Information",
+            "description": "Location Information"
         },
         {
             "name": "Leads",

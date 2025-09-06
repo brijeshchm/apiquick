@@ -26,33 +26,7 @@ use Illuminate\Support\Facades\Storage;
  */
 class ApiController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/api/users",
-     *     summary="Get a list of users",
-     *     tags={"Users list"},
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful operation",
-     *         @OA\JsonContent(
-     *             type="array",
-     *             @OA\Items(
-     *                 @OA\Property(property="id", type="integer"),
-     *                 @OA\Property(property="name", type="string")
-     *             )
-     *         )
-     *     )
-     * )
-     */
-    public function index(): JsonResponse
-    {
-        $users = [
-            ['id' => 1, 'name' => 'John Doe'],
-            ['id' => 2, 'name' => 'Jane Doe'],
-        ];
-        return response()->json($users);
-    }
-
+     
     /**
      * Upload product documents from a zip file.
      *

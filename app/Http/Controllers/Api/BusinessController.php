@@ -26,20 +26,16 @@ use App\Models\Keyword;
 use App\Models\LeadFollowUp;
 use App\Models\Status;
 use App\Models\AssignedLead;
+use App\Models\State;
 
 use App\Models\Occupation;
 use App\Models\Citieslists;
 use App\Models\AssignedZone;
 use App\Models\KeywordSellCount;
 use App\Models\Client\AssignedKWDS;
+
 class BusinessController extends Controller
 {
-	protected $danger_message = '';
-	protected $success_message = '';
-	protected $warning_message = '';
-	protected $info_message = '';
-	protected $redirectTo = '/business-owners';
-
 	/**
 	 * Create a new controller instance.
 	 *
@@ -49,59 +45,6 @@ class BusinessController extends Controller
 	{
 
 	}
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index()
-	{
-		return view('client.business-owners');
-	}
-
-
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function dashboard()
-	{
-
-		if (!Auth::guard('sanctum')->check()) {
-			return response()->json([
-				'status' => false,
-				'message' => 'Unauthenticated: Token is missing or invalid',
-				'error' => 'token_missing_or_invalid'
-			], 401);
-		}
-
-		$user = auth('sanctum')->user();
-		if (!$user) {
-			return response()->json([
-				'status' => false,
-				'message' => 'Unauthenticated: Token is missing or invalid',
-				'error' => 'token_missing_or_invalid'
-			], 401);
-		}
-
-
-		$data['clientDetails'] = DB::table('clients')->where('id', $user->id)->first();
-		$data['leads'] = DB::table('leads')
-			->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
-			->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
-			->leftjoin('areas', 'leads.area_id', '=', 'areas.id')
-			->leftjoin('zones', 'leads.zone_id', '=', 'zones.id')
-			->select('leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone')
-			->orderBy('assigned_leads.created_at', 'desc')
-			->where('assigned_leads.client_id', $user->id)->get();
-
-		echo json_encode($data);
-	}
-
-
-
-
 
 	/**
 	 * @OA\Get(
@@ -174,13 +117,12 @@ class BusinessController extends Controller
 		$leads = DB::table('assigned_zones')
 			->join('zones', 'assigned_zones.zone_id', '=', 'zones.id')
 			->join('citylists', 'assigned_zones.city_id', '=', 'citylists.id')
-			->select('assigned_zones.*', 'citylists.city', 'zones.zone', 'assigned_zones.id as assign_id')
+			->join('state', 'assigned_zones.state_id', '=', 'state.id')
+			->select('assigned_zones.*', 'citylists.city', 'zones.zone', 'assigned_zones.id as assign_id', 'state.*', 'state.name as state_name')
 			->orderBy('assigned_zones.id', 'desc')
 			->where('assigned_zones.client_id', $user->id)
 			//->paginate($request->input('length'));
 			->paginate($perPage);
-
-
 
 		if (!empty($leads)) {
 			foreach ($leads->items() as $key => $val) {
@@ -191,9 +133,14 @@ class BusinessController extends Controller
 				}
 
 				$leads_list[$key] = array(
+					'assignZone_id' => $val->assign_id,
+					'city_id' => $val->city_id,
 					'city' => $val->city,
-					'zonename' => $zonename,
-					'assignZone_id' => $val->id,
+					'zone_id' => $val->zone_id,
+					'zone_name' => $zonename,
+					'state_id' => $val->state_id,
+					'state_name' => $val->state_name,
+
 				);
 			}
 			$data['leadslist'] = $leads_list;
@@ -208,7 +155,7 @@ class BusinessController extends Controller
 				'last_page' => $leads->lastPage(),
 			],
 		], 200);
-		echo json_encode($data);
+
 	}
 	/**
 	 * @OA\Delete(
@@ -251,7 +198,7 @@ class BusinessController extends Controller
 	 */
 
 	public function assignZoneDelete(Request $request, $id)
-	{
+	{  
 		if (!Auth::guard('sanctum')->check()) {
 			return response()->json([
 				'status' => false,
@@ -283,7 +230,7 @@ class BusinessController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/business/cities/getajaxcities",
+	 *     path="/api/business/cities/get-cities",
 	 *     tags={"Cities"},
 	 *     summary="Get cities by state",
 	 *     description="Fetch a list of cities dynamically based on state_id (used for AJAX calls in dropdowns).",
@@ -326,47 +273,51 @@ class BusinessController extends Controller
 	 * )
 	 */
 
-	public function getAjaxCities(Request $request)
+	public function getCities(Request $request)
 	{
-		$sid = $request->input('sid');
-		$cid = $request->input('cid');
-		$citys = DB::table('citylists')->where('state', $sid)->get();
 
-		if ($citys) {
-			echo '<option value="">Select City</option>';
-			foreach ($citys as $city) {
-				$selected = ($cid == $city->city) ? "selected" : '';
+		$citieslists = Citieslists::get();
+		if ($citieslists) {
+			foreach ($citieslists as $city) {
+				$data[] = [
+					'city_id' => $city->id,
+					'city_name' => $city->city,
 
-				echo '<option value="' . $city->city . '" ' . $selected . ' >' . $city->city . '</option>';
-
+				];
 			}
-		} else {
-			echo '<option value="">No record found</option>';
 		}
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
 	}
+
+
 	/**
-	 * @OA\Get(
-	 *     path="/api/business/zone/getAjaxZone",
-	 *     tags={"Zones"},
-	 *     summary="Get zones by city",
-	 *     description="Fetch a list of zones dynamically based on city_id (used for AJAX calls in dropdowns).",
+	 * @OA\Post(
+	 *     path="/api/business/city/get-city-by-state",
+	 *     tags={"Cities"},
+	 *     summary="Get cities by state",
+	 *     description="Fetch a list of cities dynamically based on state_id (used for AJAX calls in dropdowns).",
 	 *     security={{"bearerAuth":{}}},
 	 *     @OA\Parameter(
-	 *         name="city_id",
+	 *         name="state_id",
 	 *         in="query",
 	 *         required=true,
-	 *         description="ID of the city",
-	 *         @OA\Schema(type="integer", example=101)
+	 *         description="ID of the state",
+	 *         @OA\Schema(type="integer", example=9)
 	 *     ),
 	 *     @OA\Response(
 	 *         response=200,
-	 *         description="Zones retrieved successfully",
+	 *         description="Cities retrieved successfully",
 	 *         @OA\JsonContent(
 	 *             @OA\Property(property="success", type="boolean", example=true),
 	 *             @OA\Property(property="data", type="array",
 	 *                 @OA\Items(
-	 *                     @OA\Property(property="id", type="integer", example=501),
-	 *                     @OA\Property(property="zone", type="string", example="Sector 45")
+	 *                     @OA\Property(property="id", type="integer", example=101),
+	 *                     @OA\Property(property="city", type="string", example="Noida")
 	 *                 )
 	 *             )
 	 *         )
@@ -380,37 +331,104 @@ class BusinessController extends Controller
 	 *     ),
 	 *     @OA\Response(
 	 *         response=404,
-	 *         description="No zones found",
+	 *         description="No cities found",
 	 *         @OA\JsonContent(
 	 *             @OA\Property(property="success", type="boolean", example=false),
-	 *             @OA\Property(property="message", type="string", example="No zones found for this city.")
+	 *             @OA\Property(property="message", type="string", example="No cities found for this state.")
 	 *         )
 	 *     )
 	 * )
 	 */
-
-	public function getAjaxZone(Request $request)
+	public function getCityByState(Request $request)
 	{
+		$sid = $request->input('state_id');
+		$cid = $request->input('cid');
+		$data = [];
+		$cityslist = Citieslists::where('state_id', $sid)->get();
 
-		$cid = $request->input('city');
-		$zid = $request->input('zone');
-		$zones = DB::table('zones')->where('city_id', $cid)->get();
+		if (!$cityslist) {
+			return response()->json([
+				'status' => true,
+				'message' => "City not Found",
+				'data' => '',
 
-		if ($zones) {
-			echo '<option value="">Select zone</option>';
-			foreach ($zones as $zone) {
-				$selected = ($zid == $zone->zone) ? "selected" : '';
-
-				echo '<option value="' . $zone->id . '" ' . $selected . ' >' . $zone->zone . '</option>';
-
-			}
-			echo '<option value="Other">Other</option>';
-		} else {
-			echo '<option value="">No record found</option>';
+			], 200);
 		}
+		if ($cityslist) {
+			foreach ($cityslist as $city) {
+				$data[] = [
+					'city_id' => $city->id,
+					'city_name' => $city->city,
+					'state_id' => $city->state_id,
 
+				];
+			}
+		}
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
 
+		], 200);
 	}
+
+	/**
+	 * @OA\Get(
+	 *     path="/api/business/state/get-state",
+	 *     tags={"State"},
+	 *     summary="Get states",
+	 *     description="Fetch a list of all available states (used for dropdowns and selections).",
+	 *     security={{"bearerAuth":{}}}, 
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="States retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=9),
+	 *                     @OA\Property(property="state", type="string", example="Uttar Pradesh")
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No states found",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No states found.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function getState(Request $request)
+	{
+		$statelists = State::where('country_id', '101')->get();
+		if ($statelists) {
+			foreach ($statelists as $state) {
+				$data[] = [
+					'state_id' => $state->id,
+					'state_name' => $state->name,
+
+				];
+			}
+		}
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
+	}
+	 
 	/**
 	 * @OA\Get(
 	 *     path="/api/business/help",

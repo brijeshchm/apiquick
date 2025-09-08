@@ -586,14 +586,14 @@
                 ]
             }
         },
-        "/api/business/cities/getajaxcities": {
+        "/api/business/cities/get-cities": {
             "get": {
                 "tags": [
                     "Cities"
                 ],
                 "summary": "Get cities by state",
                 "description": "Fetch a list of cities dynamically based on state_id (used for AJAX calls in dropdowns).",
-                "operationId": "92dbdead8ddeeaec6418d8518e73c0f5",
+                "operationId": "11e46168b1ff2aeb9034a147edd08c40",
                 "parameters": [
                     {
                         "name": "state_id",
@@ -683,29 +683,29 @@
                 ]
             }
         },
-        "/api/business/zone/getAjaxZone": {
-            "get": {
+        "/api/business/city/get-city-by-state": {
+            "post": {
                 "tags": [
-                    "Zones"
+                    "Cities"
                 ],
-                "summary": "Get zones by city",
-                "description": "Fetch a list of zones dynamically based on city_id (used for AJAX calls in dropdowns).",
-                "operationId": "44e29675ce782d573c9556049934394a",
+                "summary": "Get cities by state",
+                "description": "Fetch a list of cities dynamically based on state_id (used for AJAX calls in dropdowns).",
+                "operationId": "449cb77c9e40eb701d21172e5cad4002",
                 "parameters": [
                     {
-                        "name": "city_id",
+                        "name": "state_id",
                         "in": "query",
-                        "description": "ID of the city",
+                        "description": "ID of the state",
                         "required": true,
                         "schema": {
                             "type": "integer",
-                            "example": 101
+                            "example": 9
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Zones retrieved successfully",
+                        "description": "Cities retrieved successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -720,11 +720,11 @@
                                                 "properties": {
                                                     "id": {
                                                         "type": "integer",
-                                                        "example": 501
+                                                        "example": 101
                                                     },
-                                                    "zone": {
+                                                    "city": {
                                                         "type": "string",
-                                                        "example": "Sector 45"
+                                                        "example": "Noida"
                                                     }
                                                 },
                                                 "type": "object"
@@ -753,7 +753,7 @@
                         }
                     },
                     "404": {
-                        "description": "No zones found",
+                        "description": "No cities found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -764,7 +764,92 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "No zones found for this city."
+                                            "example": "No cities found for this state."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/state/get-state": {
+            "get": {
+                "tags": [
+                    "State"
+                ],
+                "summary": "Get states",
+                "description": "Fetch a list of all available states (used for dropdowns and selections).",
+                "operationId": "2f8d72bc0450e37dd9f738d2a3e110a5",
+                "responses": {
+                    "200": {
+                        "description": "States retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 9
+                                                    },
+                                                    "state": {
+                                                        "type": "string",
+                                                        "example": "Uttar Pradesh"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No states found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No states found."
                                         }
                                     },
                                     "type": "object"
@@ -4237,6 +4322,121 @@
                     }
                 ]
             }
+        },
+        "/site/city/keyword": {
+            "get": {
+                "tags": [
+                    "Frontend API"
+                ],
+                "summary": "Search records",
+                "description": "Search records dynamically based on a keyword or filters",
+                "operationId": "9f25bf3b2fd529cada2bf4047260cec1",
+                "parameters": [
+                    {
+                        "name": "city",
+                        "in": "query",
+                        "description": "Filter by city",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "noida"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Search keyword",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "php training"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "ABC Coaching Center"
+                                                    },
+                                                    "city": {
+                                                        "type": "string",
+                                                        "example": "Noida"
+                                                    },
+                                                    "category": {
+                                                        "type": "string",
+                                                        "example": "Education"
+                                                    },
+                                                    "rating": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 4.5
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -4280,6 +4480,10 @@
         {
             "name": "Cities",
             "description": "Cities"
+        },
+        {
+            "name": "State",
+            "description": "State"
         },
         {
             "name": "Help",
@@ -4340,6 +4544,10 @@
         {
             "name": "User",
             "description": "User"
+        },
+        {
+            "name": "Frontend API",
+            "description": "Frontend API"
         }
     ],
     "security": {

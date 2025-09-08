@@ -66,11 +66,13 @@ Route::post('/business/scrapLead',[App\Http\Controllers\Api\EnquiryController::c
 Route::post('/business/readLead',[App\Http\Controllers\Api\EnquiryController::class, 'readLead']);
 Route::post('/business/saveFavoritleads',[App\Http\Controllers\Api\EnquiryController::class, 'saveFavoritleads']);
 
+Route::get('/business/cities/get-cities',[App\Http\Controllers\Api\BusinessController::class, 'getCities']);
 Route::post('/business/cities/getajaxcities',[App\Http\Controllers\Api\BusinessController::class, 'getAjaxCities']);
-Route::post('/business/state/getAjaxSate',[App\Http\Controllers\Api\BusinessController::class, 'getAjaxSate']);
-Route::post('/business/zone/getAjaxZone',[App\Http\Controllers\Api\BusinessController::class, 'getAjaxZone']);
+Route::get('/business/state/get-state',[App\Http\Controllers\Api\BusinessController::class, 'getState']);
+Route::post('/business/city/get-city-by-state',[App\Http\Controllers\Api\BusinessController::class, 'getCityByState']);
+ 
 Route::get('/business/get-assigned-zones',[App\Http\Controllers\Api\BusinessController::class, 'getAssignedZonesPagination']);
-Route::get('/business/assignZone/delete/{id}',[App\Http\Controllers\Api\BusinessController::class, 'assignZoneDelete']);
+Route::delete('/business/assignZone/delete/{id}',[App\Http\Controllers\Api\BusinessController::class, 'assignZoneDelete']);
 Route::post('/business/assignLocation/selectAssignZoneDelete',[App\Http\Controllers\Api\BusinessController::class, 'selectAssignZoneDelete']);
 
 
@@ -105,8 +107,7 @@ Route::get('/business/get-paginated-payment-history',[App\Http\Controllers\Api\I
 
 Route::post('/business/saveKeywordAssign/{id}',[App\Http\Controllers\Api\BusinessKeywordController::class,'saveKeywordAssign']); 
 Route::get('/business/assignKeyword/delete/{id}',[App\Http\Controllers\Api\BusinessKeywordController::class, 'assignKeywordDelete']);
-Route::get('/business/get-paginated-assigned-keywords',[App\Http\Controllers\Api\BusinessKeywordController::class, 'getPaginatedAssignedKeywords']);
-
+ 
 
  Route::get('/business/coins-history',[App\Http\Controllers\Api\InvoiceController::class,'coinsHistory']);
  

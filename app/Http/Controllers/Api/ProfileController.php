@@ -67,9 +67,6 @@ class ProfileController extends Controller
                     'error' => 'token_missing_or_invalid'
                 ], 401);
             }
-
-            // Check if user is active
-
             $user = auth('sanctum')->user();
     
             if (!$user) {

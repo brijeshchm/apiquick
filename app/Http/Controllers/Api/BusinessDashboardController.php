@@ -24,8 +24,6 @@ class BusinessDashboardController extends Controller
 
     }
 
-
-
     /**
      * @OA\Get(
      *     path="/api/business/dashboard",
@@ -125,7 +123,7 @@ class BusinessDashboardController extends Controller
                 'last_page' => $leads->lastPage(),
             ],
         ], 200);
-        echo json_encode($data);
+      //  echo json_encode($data);
 
     }
 }

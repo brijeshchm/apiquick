@@ -182,7 +182,7 @@ class BusinessKeywordController extends Controller
 			], 401);
 		}
 
-		// ✅ Default to 10 if `length` not provided
+		 
 		$perPage = (int) $request->input('length', 10);
 
 		$leads = DB::table('assigned_kwds')

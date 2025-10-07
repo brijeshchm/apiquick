@@ -19,7 +19,9 @@ use Illuminate\Http\Request;
 //     return response()->json(['message' => 'API is working!']);
 // });
 
-Route::get('/site/city/keyword', [App\Http\Controllers\Site\SiteController::class, 'getSearch']);
+Route::get('/api/site/city/keyword', [App\Http\Controllers\Site\SiteController::class, 'getSearch']);
+Route::get('/api/site/homePage', [App\Http\Controllers\Site\SiteController::class, 'homePage']);
+Route::get('/api/site/getKeyword', [App\Http\Controllers\Site\SiteController::class, 'getKeyword']);
  
 
  

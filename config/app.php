@@ -52,8 +52,9 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
-
+    'url' => env('APP_URL', 'https://www.quickdials.com/'),
+    'website'=>'https://www.quickdials.com/',
+    'backend_url'=>'https://api.quickdials.com/',
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

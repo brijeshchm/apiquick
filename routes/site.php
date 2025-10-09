@@ -27,6 +27,7 @@ Route::get('/api/site/weddingPlanning', [App\Http\Controllers\Site\SiteControlle
 Route::get('/api/site/entranceExams', [App\Http\Controllers\Site\SiteController::class, 'entranceExams']);
 Route::get('/api/site/studyAbroad', [App\Http\Controllers\Site\SiteController::class, 'studyAbroad']);
 Route::get('/api/site/getKeyword', [App\Http\Controllers\Site\SiteController::class, 'getKeyword']);
+Route::get('/api/site/getBlog-homepage', [App\Http\Controllers\Site\SiteController::class, 'getBlogHomepage']);
  
 
  

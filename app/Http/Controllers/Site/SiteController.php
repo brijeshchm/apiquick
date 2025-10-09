@@ -16,6 +16,7 @@ use App\Keyword;
 use App\Models\Client\AssignedKWDS;
 use App\Models\Client;
 use App\Models\Citieslists;
+use App\Models\Blogdetails;
 use Session;
 use App\Models\ParentCategory;
 use App\Models\Client\Comment;
@@ -691,8 +692,8 @@ class SiteController extends Controller
 		$url = config('app.url');
 		$data['entranceExams'] = [
 			[
-				'url' => $url . 'categories/entrance-exams-coaching',
-				'img' => $url . 'popular/air-force-navy.jpg',
+				'url' => config('app.url').'categories/entrance-exams-coaching',
+				'img' => config('app.url') . 'popular/air-force-navy.jpg',
 				'alt' => 'coaching',
 				'title' => 'Air Force & Navy / SSR / MR',
 
@@ -745,7 +746,7 @@ class SiteController extends Controller
 			$data['code'] = 200;
 			$data['message'] = "failed";
 		}
-		echo json_encode($data);
+		print_r($data);
 	}
 
 	/**
@@ -812,7 +813,7 @@ class SiteController extends Controller
 
 
 					$studyPageList[$key] = array(
-						'url' => $url . '/child/' . $study->child_slug,
+						'url' => $url . 'child/' . $study->child_slug,
 						'img' => $img,
 						'alt' => $study->child_category,
 						'title' => $study->child_category,
@@ -822,6 +823,90 @@ class SiteController extends Controller
 
 
 				}
+			}
+		}
+		if ($data) {
+			$data['status'] = true;
+			$data['code'] = 200;
+			$data['message'] = "Successfully";
+		} else {
+			$data['status'] = false;
+			$data['code'] = 200;
+			$data['message'] = "failed";
+		}
+
+		echo json_encode($data);
+	}
+
+	/**
+	 * @OA\Get(
+	 *     path="/api/site/getBlog-homepage",
+	 *     tags={"Frontend Home Page Blog"},
+	 *     summary="Blog records",
+	 *     description="Display data home page",
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Data retrieved successfully"),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="array",
+	 *                 @OA\Items(type="object")
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function getBlogHomepage(Request $request)
+	{
+		$url = config('app.url');
+		$blogPageList = [];
+		$data = [];
+		 $blogdetails = Blogdetails::where('status', '1')->limit(3)->orderBy('id', 'DESC')->get();
+		 if(!empty($blogdetails)){
+                  foreach($blogdetails as $key=>$blog){
+				 	$image="";
+				 	$alt="";
+					if($blog->image!=''){
+                     $image = unserialize($blog->image);
+                     $image = $image['large']['src'];
+                     $alt = $blog->name;
+                     } 
+
+
+
+					$blogPageList[$key] = array(
+						'url' => $url . 'blog/'.$blog->slug,
+						'img' => $image,
+						'alt' => $alt,
+						'title' => $blog->name,
+						'description' => ucfirst(substr($blog->description,0,220)),
+					);
+
+					$data['blogList'] = $blogPageList;
+
+
+				
 			}
 		}
 		if ($data) {

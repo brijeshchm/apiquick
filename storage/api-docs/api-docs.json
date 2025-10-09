@@ -4882,6 +4882,80 @@
                 }
             }
         },
+        "/api/site/getBlog-homepage": {
+            "get": {
+                "tags": [
+                    "Frontend Home Page Blog"
+                ],
+                "summary": "Blog records",
+                "description": "Display data home page",
+                "operationId": "abbb0171bbfeb4a47710f7144f8c1dac",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/site/getKeyword": {
             "get": {
                 "tags": [
@@ -5117,6 +5191,10 @@
         {
             "name": "Frontend Home Page Study Abroad",
             "description": "Frontend Home Page Study Abroad"
+        },
+        {
+            "name": "Frontend Home Page Blog",
+            "description": "Frontend Home Page Blog"
         }
     ],
     "security": {

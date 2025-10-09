@@ -17,6 +17,7 @@ use App\Models\Client\AssignedKWDS;
 use App\Models\Client;
 use App\Models\Citieslists;
 use App\Models\Blogdetails;
+use App\Models\ChildCategory;
 use Session;
 use App\Models\ParentCategory;
 use App\Models\Client\Comment;
@@ -199,133 +200,133 @@ class SiteController extends Controller
 		$url = config('app.url');
 		$data['homePage'] = [
 			[
-				'url' => $url . 'categories/professional-courses',
-				'img' => $url . 'img/IT-Training.png',
+				'url'=>'/categories/professional-courses',
+				'img' => config('app.website') . 'img/IT-Training.png',
 				'alt' => 'computer courses',
 				'title' => 'computer courses',
 
 			],
 			[
-				'url' => $url . 'child/wedding-planning',
-				'img' => $url . 'img/wedding.png',
+				'url'=>'/child/wedding-planning',
+				'img' => config('app.website') . 'img/wedding.png',
 				'alt' => 'Wedding Planning',
 				'title' => 'Wedding Planning',
 
 			],
 			[
-				'url' => $url . 'categories/electric-services',
-				'img' => $url . 'img/electric-services.png',
+				'url'=>'/categories/electric-services',
+				'img' => config('app.website') . 'img/electric-services.png',
 				'alt' => 'Electric Services',
 				'title' => 'Electric Services',
 
 			],
 			[
-				'url' => $url . 'categories/entrance-exams-coaching',
-				'img' => $url . 'img/government-exam.png',
+				'url'=>'/categories/entrance-exams-coaching',
+				'img' => config('app.website') . 'img/government-exam.png',
 				'alt' => 'Government exam',
 				'title' => 'Government exam',
 
 			],
 			[
-				'url' => $url . 'categories/study-abroad',
-				'img' => $url . 'img/study-abroad.png',
+				'url'=>'/categories/study-abroad',
+				'img' => config('app.website') . 'img/study-abroad.png',
 				'alt' => 'Study Abroad',
 				'title' => 'Study Abroad',
 
 			],
 			[
-				'url' => $url . 'categories/spa-beauty',
-				'img' => $url . 'img/Spa & Beauty.png',
+				'url'=>'/categories/spa-beauty',
+				'img' => config('app.website') . 'img/Spa & Beauty.png',
 				'alt' => 'Spa & Beauty',
 				'title' => 'Spa & Beauty',
 
 			],
 			[
-				'url' => $url . 'categories/repairs-services',
-				'img' => $url . 'img/Repairs-Services.png',
+				'url'=>'/categories/repairs-services',
+				'img' => config('app.website') . 'img/Repairs-Services.png',
 				'alt' => 'Repair Services',
 				'title' => 'Repair Services',
 
 			],
 			[
-				'url' => $url . 'categories/packers-movers',
-				'img' => $url . 'img/Packers-movers.png',
+				'url' =>  '/categories/packers-movers',
+				'img' => config('app.website') . 'img/Packers-movers.png',
 				'alt' => 'Packers & Movers',
 				'title' => 'Packers & Movers',
 
 			],
 			[
-				'url' => $url . 'categories/professional',
-				'img' => $url . 'img/Professional.png',
+				'url' => '/categories/professional',
+				'img' => config('app.website') . 'img/Professional.png',
 				'alt' => 'Professional',
 				'title' => 'Professional',
 
 			],
 			[
-				'url' => $url . 'categories/contractors',
-				'img' => $url . 'img/contractors.png',
+				'url' => '/categories/contractors',
+				'img' => config('app.website'). 'img/contractors.png',
 				'alt' => 'Contractors',
 				'title' => 'Contractors',
 
 			],
 			[
-				'url' => $url . 'categories/distance-education',
-				'img' => $url . 'img/Education.png',
+				'url' => '/categories/distance-education',
+				'img' => config('app.website'). 'img/Education.png',
 				'alt' => 'Education',
 				'title' => 'Education',
 
 			],
 			[
-				'url' => $url . 'categories/rent-buy',
-				'img' => $url . 'img/Rent-buy.png',
+				'url' => '/categories/rent-buy',
+				'img' => config('app.website'). 'img/Rent-buy.png',
 				'alt' => 'Rent & Buy',
 				'title' => 'Rent & Buy',
 			],
 			[
-				'url' => $url . 'child/sports-academy',
-				'img' => $url . 'img/sports.png',
+				'url' => '/child/sports-academy',
+				'img' => config('app.website') . 'img/sports.png',
 				'alt' => 'Sport Academy',
 				'title' => 'Sport Academy',
 			],
 			[
-				'url' => $url . 'categories/medical',
-				'img' => $url . 'img/Medical.png',
+				'url' => '/categories/medical',
+				'img' => config('app.website') . 'img/Medical.png',
 				'alt' => 'Medical',
 				'title' => 'Medical',
 			],
 			[
-				'url' => $url . 'categories/loan',
-				'img' => $url . 'img/Loan.png',
+				'url' =>  '/categories/loan',
+				'img' => config('app.website') . 'img/Loan.png',
 				'alt' => 'Loan',
 				'title' => 'Loan',
 			],
 			[
-				'url' => $url . 'categories/dancing',
-				'img' => $url . 'img/Dancing.png',
+				'url' => '/categories/dancing',
+				'img' => config('app.website'). 'img/Dancing.png',
 				'alt' => 'Dancing',
 				'title' => 'Dancing',
 			],
 			[
-				'url' => $url . 'categories/yoga',
-				'img' => $url . 'img/Yoga.png',
+				'url' =>  '/categories/yoga',
+				'img' => config('app.website'). 'img/Yoga.png',
 				'alt' => 'Yoga',
 				'title' => 'Yoga',
 			],
 			[
-				'url' => $url . 'categories/security-system',
-				'img' => $url . 'img/CCTV-security.png',
+				'url' =>  '/categories/security-system',
+				'img' => config('app.website'). 'img/CCTV-security.png',
 				'alt' => 'CCTV Security',
 				'title' => 'CCTV Security',
 			],
 			[
-				'url' => $url . 'categories/web-technologies',
-				'img' => $url . 'images/Web-Designers.png',
+				'url' =>  '/categories/web-technologies',
+				'img' => config('app.website'). 'images/Web-Designers.png',
 				'alt' => 'Web Designers',
 				'title' => 'Web Designers',
 			],
 			[
-				'url' => $url . 'tours-and-travels',
-				'img' => $url . 'images/tour-travels.png',
+				'url' => '/tours-and-travels',
+				'img' => config('app.website'). 'images/tour-travels.png',
 				'alt' => 'Tours & Travels',
 				'title' => 'Tours & Travels',
 			],
@@ -389,43 +390,43 @@ class SiteController extends Controller
 		$url = config('app.url');
 		$data['popularSearches'] = [
 			[
-				'url' => $url . 'categories/computer-courses',
-				'img' => $url . 'popular/IT-Training.jpg',
+				'url' => '/categories/computer-courses',
+				'img' => config('app.website') . 'popular/IT-Training.jpg',
 				'alt' => 'computer courses',
 				'title' => 'computer courses',
 
 			],
 			[
-				'url' => $url . 'categories/entrance-exams-coaching',
-				'img' => $url . 'popular/Entrance-Exam.jpg',
+				'url' =>  '/categories/entrance-exams-coaching',
+				'img' => config('app.website') . 'popular/Entrance-Exam.jpg',
 				'alt' => 'Entrance exam',
 				'title' => 'Entrance exam',
 
 			],
 			[
-				'url' => $url . 'categories/packers-movers',
-				'img' => $url . 'popular/Packers-Movers.jpg',
+				'url' =>  '/categories/packers-movers',
+				'img' => config('app.website'). 'popular/Packers-Movers.jpg',
 				'alt' => 'Packers & Movers',
 				'title' => 'Packers & Movers',
 
 			],
 			[
-				'url' => $url . 'categories/interior-designer',
-				'img' => $url . 'popular/Interior-design.jpg',
+				'url' =>  '/categories/interior-designer',
+				'img' => config('app.website'). 'popular/Interior-design.jpg',
 				'alt' => 'Interior Design',
 				'title' => 'GInterior Design',
 
 			],
 			[
-				'url' => $url . 'real-estate-agent',
-				'img' => $url . 'popular/real-estate-agent.jpg',
+				'url' =>  '/real-estate-agent',
+				'img' => config('app.website') . 'popular/real-estate-agent.jpg',
 				'alt' => 'Real Estate Agents',
 				'title' => 'Real Estate Agents',
 
 			],
 			[
-				'url' => $url . 'carpenters',
-				'img' => $url . 'popular/carpenter.jpg',
+				'url' =>  '/carpenters',
+				'img' => config('app.website'). 'popular/carpenter.jpg',
 				'alt' => 'Carpenters',
 				'title' => 'Carpenters',
 
@@ -491,43 +492,43 @@ class SiteController extends Controller
 		$url = config('app.url');
 		$data['repairsServices'] = [
 			[
-				'url' => $url . 'ac-service',
-				'img' => $url . 'popular/AC-Service.jpg',
+				'url' => '/ac-service',
+				'img' => config('app.website'). 'popular/AC-Service.jpg',
 				'alt' => 'AC Service',
 				'title' => 'AC Service',
 
 			],
 			[
-				'url' => $url . 'car-service',
-				'img' => $url . 'popular/car-services.jpg',
+				'url' => '/car-service',
+				'img' => config('app.website') . 'popular/car-services.jpg',
 				'alt' => 'Car Services',
 				'title' => 'Car Services',
 
 			],
 			[
-				'url' => $url . 'laundry-service',
-				'img' => $url . 'popular/washing-machines.jpg',
+				'url' => '/laundry-service',
+				'img' => config('app.website') . 'popular/washing-machines.jpg',
 				'alt' => 'Laundry Services',
 				'title' => 'Laundry Services',
 
 			],
 			[
-				'url' => $url . 'electricity-service',
-				'img' => $url . 'popular/Electricity-Services.jpg',
+				'url' =>  '/electricity-service',
+				'img' => config('app.website'). 'popular/Electricity-Services.jpg',
 				'alt' => 'Electrician Services',
 				'title' => 'Electrician Services',
 
 			],
 			[
-				'url' => $url . 'hotels',
-				'img' => $url . 'popular/Hotel-Services.jpg',
+				'url' =>  '/hotels',
+				'img' => config('app.website') . 'popular/Hotel-Services.jpg',
 				'alt' => 'Hotels',
 				'title' => 'Hotels',
 
 			],
 			[
-				'url' => $url . 'categories/clinical-research-training',
-				'img' => $url . 'popular/Fitness-Services.jpg',
+				'url' => '/categories/clinical-research-training',
+				'img' => config('app.website'). 'popular/Fitness-Services.jpg',
 				'alt' => 'Health & Fitness',
 				'title' => 'Health & Fitness',
 
@@ -591,43 +592,43 @@ class SiteController extends Controller
 		$url = config('app.url');
 		$data['weddingPlanning'] = [
 			[
-				'url' => $url . 'catering-services',
-				'img' => $url . 'popular/Catering-Services.jpg',
+				'url' => '/catering-services',
+				'img' => config('app.website'). 'popular/Catering-Services.jpg',
 				'alt' => 'Catering Services',
 				'title' => 'Catering Services',
 
 			],
 			[
-				'url' => $url . 'banquet-halls',
-				'img' => $url . 'popular/Banquet-Halls.jpg',
+				'url' => '/banquet-halls',
+				'img' => config('app.website') . 'popular/Banquet-Halls.jpg',
 				'alt' => 'Banquet Halls',
 				'title' => 'Banquet Halls',
 
 			],
 			[
-				'url' => $url . 'stage-decorators',
-				'img' => $url . 'popular/Stage-Decorators.jpg',
+				'url' => '/stage-decorators',
+				'img' => config('app.website') . 'popular/Stage-Decorators.jpg',
 				'alt' => 'Stage Decorators',
 				'title' => 'Stage Decorators',
 
 			],
 			[
-				'url' => $url . 'makeup-artists',
-				'img' => $url . 'popular/makeup-artists.jpg',
+				'url' => '/makeup-artists',
+				'img' => config('app.website') . 'popular/makeup-artists.jpg',
 				'alt' => 'Makeup Artists',
 				'title' => 'Makeup Artists',
 
 			],
 			[
-				'url' => $url . 'mehendi-artists',
-				'img' => $url . 'popular/Mehendi-Artists.jpg',
+				'url' => '/mehendi-artists',
+				'img' => config('app.website'). 'popular/Mehendi-Artists.jpg',
 				'alt' => 'Mehendi Artists',
 				'title' => 'Mehendi Artists',
 
 			],
 			[
-				'url' => $url . 'bridal-wear',
-				'img' => $url . 'popular/Bridal-Wear.jpg',
+				'url' => '/bridal-wear',
+				'img' => config('app.website'). 'popular/Bridal-Wear.jpg',
 				'alt' => 'Bridal Wear',
 				'title' => 'Bridal Wear',
 
@@ -692,43 +693,43 @@ class SiteController extends Controller
 		$url = config('app.url');
 		$data['entranceExams'] = [
 			[
-				'url' => config('app.url').'categories/entrance-exams-coaching',
-				'img' => config('app.url') . 'popular/air-force-navy.jpg',
+				'url' => '/categories/entrance-exams-coaching',
+				'img' => config('app.website') . 'popular/air-force-navy.jpg',
 				'alt' => 'coaching',
 				'title' => 'Air Force & Navy / SSR / MR',
 
 			],
 			[
-				'url' => $url . 'ssc-cgl',
-				'img' => $url . 'popular/SSC-CGL-JEE.jpg',
+				'url' => '/ssc-cgl',
+				'img' => config('app.website').'popular/SSC-CGL-JEE.jpg',
 				'alt' => 'SSC CGL JEE',
 				'title' => 'SSC CGL JEE',
 
 			],
 			[
-				'url' => $url . 'rrb-ntpc-coaching',
-				'img' => $url . 'popular/NTPC-RRB-Railway.jpg',
+				'url' => '/rrb-ntpc-coaching',
+				'img' => config('app.website') . 'popular/NTPC-RRB-Railway.jpg',
 				'alt' => 'NTPC & RRB Railway ',
 				'title' => 'NTPC & RRB Railway ',
 
 			],
 			[
-				'url' => $url . 'cat-coaching',
-				'img' => $url . 'popular/CAT-exam.jpg',
+				'url' => '/cat-coaching',
+				'img' => config('app.website') . 'popular/CAT-exam.jpg',
 				'alt' => 'CAT/NEET',
 				'title' => 'CAT/NEET',
 
 			],
 			[
-				'url' => $url . 'ctet-coaching',
-				'img' => $url . 'popular/CTET-Super-TET.jpg',
+				'url' => '/ctet-coaching',
+				'img' => config('app.website') . 'popular/CTET-Super-TET.jpg',
 				'alt' => 'CTET Super TET',
 				'title' => 'CTET Super TET',
 
 			],
 			[
-				'url' => $url . 'categories/entrance-exams-coaching',
-				'img' => $url . 'popular/UPSC-IAS.jpg',
+				'url' =>  '/categories/entrance-exams-coaching',
+				'img' => config('app.website'). 'popular/UPSC-IAS.jpg',
 				'alt' => 'UPSC & IAS',
 				'title' => 'UPSC & IAS',
 
@@ -813,7 +814,7 @@ class SiteController extends Controller
 
 
 					$studyPageList[$key] = array(
-						'url' => $url . 'child/' . $study->child_slug,
+						'url' => '/child/' . $study->child_slug,
 						'img' => $img,
 						'alt' => $study->child_category,
 						'title' => $study->child_category,
@@ -882,31 +883,31 @@ class SiteController extends Controller
 		$url = config('app.url');
 		$blogPageList = [];
 		$data = [];
-		 $blogdetails = Blogdetails::where('status', '1')->limit(3)->orderBy('id', 'DESC')->get();
-		 if(!empty($blogdetails)){
-                  foreach($blogdetails as $key=>$blog){
-				 	$image="";
-				 	$alt="";
-					if($blog->image!=''){
-                     $image = unserialize($blog->image);
-                     $image = $image['large']['src'];
-                     $alt = $blog->name;
-                     } 
+		$blogdetails = Blogdetails::where('status', '1')->limit(3)->orderBy('id', 'DESC')->get();
+		if (!empty($blogdetails)) {
+			foreach ($blogdetails as $key => $blog) {
+				$image = "";
+				$alt = "";
+				if ($blog->image != '') {
+					$image = unserialize($blog->image);
+					$image = $image['large']['src'];
+					$alt = $blog->name;
+				}
 
 
 
-					$blogPageList[$key] = array(
-						'url' => $url . 'blog/'.$blog->slug,
-						'img' => $image,
-						'alt' => $alt,
-						'title' => $blog->name,
-						'description' => ucfirst(substr($blog->description,0,220)),
-					);
+				$blogPageList[$key] = array(
+					'url' => '/blog/' . $blog->slug,
+					'img' => $image,
+					'alt' => $alt,
+					'title' => $blog->name,
+					'description' => ucfirst(substr($blog->description, 0, 220)),
+				);
 
-					$data['blogList'] = $blogPageList;
+				$data['blogList'] = $blogPageList;
 
 
-				
+
 			}
 		}
 		if ($data) {
@@ -975,11 +976,8 @@ class SiteController extends Controller
 
 	public function getKeyword(Request $request)
 	{
-
-
 		$search_kw = $request->input('keyword');
 		$city = $request->input('city');
-
 
 		$keyword = DB::table('keyword')
 			->join('parent_category', 'keyword.parent_category_id', '=', 'parent_category.id')
@@ -1008,6 +1006,140 @@ class SiteController extends Controller
 			->get();
 
 		$data['clientsList'] = $clientsList;
+		echo json_encode($data);
+
+
+	}
+
+	/**
+	 * @OA\Get(
+	 *     path="/api/site/categories",
+	 *     tags={"Frontend get categories"},
+	 *     summary="Search records",
+	 *     description="Search records dynamically based on a keyword or filters",
+	 *            
+	 *     @OA\Parameter(
+	 *         name="categories",
+	 *         in="query",
+	 *         required=true,
+	 *         description="Search categories",
+	 *         @OA\Schema(type="string", example="computer-courses")
+	 *     ),
+	 *        
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=101),
+	 *                     @OA\Property(property="name", type="string", example="ABC Coaching Center"),
+	 *                     
+	 *                     @OA\Property(property="category", type="string", example="Education"),
+	 *                     @OA\Property(property="rating", type="number", format="float", example=4.5)
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+
+
+	public function getCategories(Request $request)
+	{
+
+		$slug = $request->input('categories');
+
+		$data['categoryList'] = DB::table('parent_category')
+			->join('child_category', 'child_category.parent_category_id', '=', 'parent_category.id')
+			->select(
+				'parent_category.id as parent_id',
+				'parent_category.parent_slug',
+				'parent_category.parent_category as parent_name',
+				'child_category.id as child_id',
+				'child_category.child_slug',
+				'child_category.child_category as child_name',
+				'child_category.pc_icon as 	pc_icon'
+			)
+			->where('parent_category.parent_slug', $slug)
+			->groupBy(
+				'parent_category.id',
+				'parent_category.parent_slug',
+				'parent_category.parent_category',
+				'child_category.id',
+				'child_category.child_slug',
+				'child_category.child_category'
+			)
+			->get()
+			->map(function ($child) {
+				$image = "";
+				$alt = "";
+
+				if (!empty($child->pc_icon)) {
+					$cicons = unserialize($child->pc_icon);
+
+					if (!empty($cicons)) {
+						$image = $cicons['pc_icon']['src'];
+						$alt = $cicons['pc_icon']['name'];
+					}
+				}
+				return [
+					'url' => "/child/{$child->child_slug}",
+					'img' => asset($image),
+					'alt' => $alt,
+					'title' => $child->child_name,
+				];
+			});
+
+
+		$categoryDetails = DB::table('parent_category')->where('parent_slug', $slug)->first();
+		// dd($categoryDetails);
+
+		$image = "";
+		$alt = "";
+
+		if (!empty($categoryDetails->category_banner)) {
+			$cicons = unserialize($categoryDetails->category_banner);
+
+			if (!empty($cicons)) {
+				$image = $cicons['category_banner']['src'];
+				$alt = $cicons['category_banner']['name'];
+			}
+		}
+		$data['categoryDetails'] = array(
+			'parent_category' => $categoryDetails->parent_category,
+			'parent_slug' => $categoryDetails->parent_slug,
+			'category_banner' => $image,
+			'alt' => $alt
+
+		);
+
+		if (!empty($categoryDetails)) {
+			$keyword = DB::table('keyword')
+
+				->select('keyword.*', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5', 'keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount')
+
+				->where('keyword.parent_category_id', $categoryDetails->id)->get();
+
+		}
+
+		// $data['clientsList'] = $clientsList;
 		echo json_encode($data);
 
 

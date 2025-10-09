@@ -5056,6 +5056,107 @@
                     }
                 }
             }
+        },
+        "/api/site/categories": {
+            "get": {
+                "tags": [
+                    "Frontend get categories"
+                ],
+                "summary": "Search records",
+                "description": "Search records dynamically based on a keyword or filters",
+                "operationId": "94372374186f6df72fca2f2dcac971be",
+                "parameters": [
+                    {
+                        "name": "categories",
+                        "in": "query",
+                        "description": "Search categories",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "computer-courses"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "ABC Coaching Center"
+                                                    },
+                                                    "category": {
+                                                        "type": "string",
+                                                        "example": "Education"
+                                                    },
+                                                    "rating": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 4.5
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -5195,6 +5296,10 @@
         {
             "name": "Frontend Home Page Blog",
             "description": "Frontend Home Page Blog"
+        },
+        {
+            "name": "Frontend get categories",
+            "description": "Frontend get categories"
         }
     ],
     "security": {

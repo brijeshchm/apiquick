@@ -30,4 +30,6 @@ Route::get('/api/site/getKeyword', [App\Http\Controllers\Site\SiteController::cl
 Route::get('/api/site/getBlog-homepage', [App\Http\Controllers\Site\SiteController::class, 'getBlogHomepage']);
  
 
+ Route::get('/api/site/categories', [App\Http\Controllers\Site\SiteController::class, 'getCategories']);
+ Route::get('/api/site/child', [App\Http\Controllers\Site\SiteController::class, 'getChild']);
  

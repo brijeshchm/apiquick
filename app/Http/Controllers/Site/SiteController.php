@@ -151,7 +151,7 @@ class SiteController extends Controller
 
 
 		$data['clientsList'] = $clientsList;
-		echo json_encode($data);
+		print_r($data);
 
 
 	}
@@ -200,56 +200,56 @@ class SiteController extends Controller
 		$url = config('app.url');
 		$data['homePage'] = [
 			[
-				'url'=>'/categories/professional-courses',
+				'url' => '/categories/professional-courses',
 				'img' => config('app.website') . 'img/IT-Training.png',
 				'alt' => 'computer courses',
 				'title' => 'computer courses',
 
 			],
 			[
-				'url'=>'/child/wedding-planning',
+				'url' => '/child/wedding-planning',
 				'img' => config('app.website') . 'img/wedding.png',
 				'alt' => 'Wedding Planning',
 				'title' => 'Wedding Planning',
 
 			],
 			[
-				'url'=>'/categories/electric-services',
+				'url' => '/categories/electric-services',
 				'img' => config('app.website') . 'img/electric-services.png',
 				'alt' => 'Electric Services',
 				'title' => 'Electric Services',
 
 			],
 			[
-				'url'=>'/categories/entrance-exams-coaching',
+				'url' => '/categories/entrance-exams-coaching',
 				'img' => config('app.website') . 'img/government-exam.png',
 				'alt' => 'Government exam',
 				'title' => 'Government exam',
 
 			],
 			[
-				'url'=>'/categories/study-abroad',
+				'url' => '/categories/study-abroad',
 				'img' => config('app.website') . 'img/study-abroad.png',
 				'alt' => 'Study Abroad',
 				'title' => 'Study Abroad',
 
 			],
 			[
-				'url'=>'/categories/spa-beauty',
+				'url' => '/categories/spa-beauty',
 				'img' => config('app.website') . 'img/Spa & Beauty.png',
 				'alt' => 'Spa & Beauty',
 				'title' => 'Spa & Beauty',
 
 			],
 			[
-				'url'=>'/categories/repairs-services',
+				'url' => '/categories/repairs-services',
 				'img' => config('app.website') . 'img/Repairs-Services.png',
 				'alt' => 'Repair Services',
 				'title' => 'Repair Services',
 
 			],
 			[
-				'url' =>  '/categories/packers-movers',
+				'url' => '/categories/packers-movers',
 				'img' => config('app.website') . 'img/Packers-movers.png',
 				'alt' => 'Packers & Movers',
 				'title' => 'Packers & Movers',
@@ -264,21 +264,21 @@ class SiteController extends Controller
 			],
 			[
 				'url' => '/categories/contractors',
-				'img' => config('app.website'). 'img/contractors.png',
+				'img' => config('app.website') . 'img/contractors.png',
 				'alt' => 'Contractors',
 				'title' => 'Contractors',
 
 			],
 			[
 				'url' => '/categories/distance-education',
-				'img' => config('app.website'). 'img/Education.png',
+				'img' => config('app.website') . 'img/Education.png',
 				'alt' => 'Education',
 				'title' => 'Education',
 
 			],
 			[
 				'url' => '/categories/rent-buy',
-				'img' => config('app.website'). 'img/Rent-buy.png',
+				'img' => config('app.website') . 'img/Rent-buy.png',
 				'alt' => 'Rent & Buy',
 				'title' => 'Rent & Buy',
 			],
@@ -295,38 +295,38 @@ class SiteController extends Controller
 				'title' => 'Medical',
 			],
 			[
-				'url' =>  '/categories/loan',
+				'url' => '/categories/loan',
 				'img' => config('app.website') . 'img/Loan.png',
 				'alt' => 'Loan',
 				'title' => 'Loan',
 			],
 			[
 				'url' => '/categories/dancing',
-				'img' => config('app.website'). 'img/Dancing.png',
+				'img' => config('app.website') . 'img/Dancing.png',
 				'alt' => 'Dancing',
 				'title' => 'Dancing',
 			],
 			[
-				'url' =>  '/categories/yoga',
-				'img' => config('app.website'). 'img/Yoga.png',
+				'url' => '/categories/yoga',
+				'img' => config('app.website') . 'img/Yoga.png',
 				'alt' => 'Yoga',
 				'title' => 'Yoga',
 			],
 			[
-				'url' =>  '/categories/security-system',
-				'img' => config('app.website'). 'img/CCTV-security.png',
+				'url' => '/categories/security-system',
+				'img' => config('app.website') . 'img/CCTV-security.png',
 				'alt' => 'CCTV Security',
 				'title' => 'CCTV Security',
 			],
 			[
-				'url' =>  '/categories/web-technologies',
-				'img' => config('app.website'). 'images/Web-Designers.png',
+				'url' => '/categories/web-technologies',
+				'img' => config('app.website') . 'images/Web-Designers.png',
 				'alt' => 'Web Designers',
 				'title' => 'Web Designers',
 			],
 			[
 				'url' => '/tours-and-travels',
-				'img' => config('app.website'). 'images/tour-travels.png',
+				'img' => config('app.website') . 'images/tour-travels.png',
 				'alt' => 'Tours & Travels',
 				'title' => 'Tours & Travels',
 			],
@@ -341,7 +341,7 @@ class SiteController extends Controller
 			$data['code'] = 200;
 			$data['message'] = "failed";
 		}
-		echo json_encode($data);
+		print_r($data);
 
 
 
@@ -397,36 +397,36 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' =>  '/categories/entrance-exams-coaching',
+				'url' => '/categories/entrance-exams-coaching',
 				'img' => config('app.website') . 'popular/Entrance-Exam.jpg',
 				'alt' => 'Entrance exam',
 				'title' => 'Entrance exam',
 
 			],
 			[
-				'url' =>  '/categories/packers-movers',
-				'img' => config('app.website'). 'popular/Packers-Movers.jpg',
+				'url' => '/categories/packers-movers',
+				'img' => config('app.website') . 'popular/Packers-Movers.jpg',
 				'alt' => 'Packers & Movers',
 				'title' => 'Packers & Movers',
 
 			],
 			[
-				'url' =>  '/categories/interior-designer',
-				'img' => config('app.website'). 'popular/Interior-design.jpg',
+				'url' => '/categories/interior-designer',
+				'img' => config('app.website') . 'popular/Interior-design.jpg',
 				'alt' => 'Interior Design',
 				'title' => 'GInterior Design',
 
 			],
 			[
-				'url' =>  '/real-estate-agent',
+				'url' => '/real-estate-agent',
 				'img' => config('app.website') . 'popular/real-estate-agent.jpg',
 				'alt' => 'Real Estate Agents',
 				'title' => 'Real Estate Agents',
 
 			],
 			[
-				'url' =>  '/carpenters',
-				'img' => config('app.website'). 'popular/carpenter.jpg',
+				'url' => '/carpenters',
+				'img' => config('app.website') . 'popular/carpenter.jpg',
 				'alt' => 'Carpenters',
 				'title' => 'Carpenters',
 
@@ -443,7 +443,7 @@ class SiteController extends Controller
 			$data['code'] = 200;
 			$data['message'] = "failed";
 		}
-		echo json_encode($data);
+		print_r($data);
 
 
 	}
@@ -493,7 +493,7 @@ class SiteController extends Controller
 		$data['repairsServices'] = [
 			[
 				'url' => '/ac-service',
-				'img' => config('app.website'). 'popular/AC-Service.jpg',
+				'img' => config('app.website') . 'popular/AC-Service.jpg',
 				'alt' => 'AC Service',
 				'title' => 'AC Service',
 
@@ -513,14 +513,14 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' =>  '/electricity-service',
-				'img' => config('app.website'). 'popular/Electricity-Services.jpg',
+				'url' => '/electricity-service',
+				'img' => config('app.website') . 'popular/Electricity-Services.jpg',
 				'alt' => 'Electrician Services',
 				'title' => 'Electrician Services',
 
 			],
 			[
-				'url' =>  '/hotels',
+				'url' => '/hotels',
 				'img' => config('app.website') . 'popular/Hotel-Services.jpg',
 				'alt' => 'Hotels',
 				'title' => 'Hotels',
@@ -528,7 +528,7 @@ class SiteController extends Controller
 			],
 			[
 				'url' => '/categories/clinical-research-training',
-				'img' => config('app.website'). 'popular/Fitness-Services.jpg',
+				'img' => config('app.website') . 'popular/Fitness-Services.jpg',
 				'alt' => 'Health & Fitness',
 				'title' => 'Health & Fitness',
 
@@ -545,7 +545,7 @@ class SiteController extends Controller
 			$data['code'] = 200;
 			$data['message'] = "failed";
 		}
-		echo json_encode($data);
+		print_r($data);
 	}
 
 	/**
@@ -593,7 +593,7 @@ class SiteController extends Controller
 		$data['weddingPlanning'] = [
 			[
 				'url' => '/catering-services',
-				'img' => config('app.website'). 'popular/Catering-Services.jpg',
+				'img' => config('app.website') . 'popular/Catering-Services.jpg',
 				'alt' => 'Catering Services',
 				'title' => 'Catering Services',
 
@@ -621,14 +621,14 @@ class SiteController extends Controller
 			],
 			[
 				'url' => '/mehendi-artists',
-				'img' => config('app.website'). 'popular/Mehendi-Artists.jpg',
+				'img' => config('app.website') . 'popular/Mehendi-Artists.jpg',
 				'alt' => 'Mehendi Artists',
 				'title' => 'Mehendi Artists',
 
 			],
 			[
 				'url' => '/bridal-wear',
-				'img' => config('app.website'). 'popular/Bridal-Wear.jpg',
+				'img' => config('app.website') . 'popular/Bridal-Wear.jpg',
 				'alt' => 'Bridal Wear',
 				'title' => 'Bridal Wear',
 
@@ -646,7 +646,7 @@ class SiteController extends Controller
 			$data['code'] = 200;
 			$data['message'] = "failed";
 		}
-		echo json_encode($data);
+		print_r($data);
 	}
 
 	/**
@@ -701,7 +701,7 @@ class SiteController extends Controller
 			],
 			[
 				'url' => '/ssc-cgl',
-				'img' => config('app.website').'popular/SSC-CGL-JEE.jpg',
+				'img' => config('app.website') . 'popular/SSC-CGL-JEE.jpg',
 				'alt' => 'SSC CGL JEE',
 				'title' => 'SSC CGL JEE',
 
@@ -728,8 +728,8 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' =>  '/categories/entrance-exams-coaching',
-				'img' => config('app.website'). 'popular/UPSC-IAS.jpg',
+				'url' => '/categories/entrance-exams-coaching',
+				'img' => config('app.website') . 'popular/UPSC-IAS.jpg',
 				'alt' => 'UPSC & IAS',
 				'title' => 'UPSC & IAS',
 
@@ -806,9 +806,9 @@ class SiteController extends Controller
 
 					if ($study->pc_icon) {
 						$abicons = unserialize($study->pc_icon);
-						$img = $abicons['pc_icon']['src'];
+						$img = config('app.website') . $abicons['pc_icon']['src'];
 					} else {
-						$img = $url . 'images/it-training.png';
+						$img = config('app.website') . 'images/it-training.png';
 					}
 
 
@@ -836,7 +836,7 @@ class SiteController extends Controller
 			$data['message'] = "failed";
 		}
 
-		echo json_encode($data);
+		print_r($data);
 	}
 
 	/**
@@ -890,7 +890,7 @@ class SiteController extends Controller
 				$alt = "";
 				if ($blog->image != '') {
 					$image = unserialize($blog->image);
-					$image = $image['large']['src'];
+					$image = config('app.website') . $image['large']['src'];
 					$alt = $blog->name;
 				}
 
@@ -920,7 +920,7 @@ class SiteController extends Controller
 			$data['message'] = "failed";
 		}
 
-		echo json_encode($data);
+		print_r($data);
 	}
 
 
@@ -1006,7 +1006,7 @@ class SiteController extends Controller
 			->get();
 
 		$data['clientsList'] = $clientsList;
-		echo json_encode($data);
+		print_r($data);
 
 
 	}
@@ -1095,13 +1095,13 @@ class SiteController extends Controller
 					$cicons = unserialize($child->pc_icon);
 
 					if (!empty($cicons)) {
-						$image = $cicons['pc_icon']['src'];
+						$image = config('app.website') . $cicons['pc_icon']['src'];
 						$alt = $cicons['pc_icon']['name'];
 					}
 				}
 				return [
 					'url' => "/child/{$child->child_slug}",
-					'img' => asset($image),
+					'img' => $image,
 					'alt' => $alt,
 					'title' => $child->child_name,
 				];
@@ -1118,7 +1118,7 @@ class SiteController extends Controller
 			$cicons = unserialize($categoryDetails->category_banner);
 
 			if (!empty($cicons)) {
-				$image = $cicons['category_banner']['src'];
+				$image = config('app.website') . $cicons['category_banner']['src'];
 				$alt = $cicons['category_banner']['name'];
 			}
 		}
@@ -1140,7 +1140,7 @@ class SiteController extends Controller
 		}
 
 		// $data['clientsList'] = $clientsList;
-		echo json_encode($data);
+		print_r($data);
 
 
 	}

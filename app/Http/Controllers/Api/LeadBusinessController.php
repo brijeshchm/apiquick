@@ -13,7 +13,7 @@ use DB;
 class LeadBusinessController extends Controller
 {
     public function dashboard(Request $request)
-    {  
+    {
         try {
 
             if (!Auth::guard('sanctum')->check()) {
@@ -73,11 +73,11 @@ class LeadBusinessController extends Controller
                 'success' => true,
                 'data' => $data,
                 'pagination' => [
-                        'current_page' => $leads->currentPage(),
-                        'per_page' => $leads->perPage(),
-                        'total' => $leads->total(),
-                        'last_page' => $leads->lastPage(),
-                    ],
+                    'current_page' => $leads->currentPage(),
+                    'per_page' => $leads->perPage(),
+                    'total' => $leads->total(),
+                    'last_page' => $leads->lastPage(),
+                ],
             ], 200);
 
         } catch (\Exception $e) {
@@ -150,22 +150,27 @@ class LeadBusinessController extends Controller
                 'status' => true,
                 'data' => $data,
                 'pagination' => [
-                        'current_page' => $leads->currentPage(),
-                        'per_page' => $leads->perPage(),
-                        'total' => $leads->total(),
-                        'last_page' => $leads->lastPage(),
-                    ],
+                    'current_page' => $leads->currentPage(),
+                    'per_page' => $leads->perPage(),
+                    'total' => $leads->total(),
+                    'last_page' => $leads->lastPage(),
+                ],
             ], 200);
 
         } catch (\Exception $e) {
-            
+
             $data['status'] = false;
             $data['message'] = 'Failed to : ' . $e->getMessage();
-            $data['code'] =  500;
+            $data['code'] = 500;
         }
 
+        return response()->json([
+            'status' => true,
+            'message' => "Successfully",
+            'data' => $data,
 
-        echo json_encode($data);
+        ], 200);
+
     }
 
 

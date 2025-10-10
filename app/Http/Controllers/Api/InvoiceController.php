@@ -24,7 +24,7 @@ class InvoiceController extends Controller
 
 	}
 
-		
+
 	/**
 	 * @OA\Get(
 	 *     path="/api/business/billing-history",
@@ -305,8 +305,8 @@ class InvoiceController extends Controller
 	public function coinsHistory(Request $request)
 	{
 		if (!Auth::guard('sanctum')->check()) {
-		return response()->json([
-			'status' => false,
+			return response()->json([
+				'status' => false,
 				'message' => 'Unauthenticated: Token is missing or invalid',
 				'error' => 'token_missing_or_invalid'
 			], 401);
@@ -320,7 +320,7 @@ class InvoiceController extends Controller
 				'error' => 'token_missing_or_invalid'
 			], 401);
 		}
-		 
+
 		$data['clientDetails'] = Client::find($user->id);
 		$data['coinsLeads'] = DB::table('assigned_leads')
 			->join('leads', 'leads.id', '=', 'assigned_leads.lead_id')
@@ -337,82 +337,87 @@ class InvoiceController extends Controller
 			$search = $request->input('search');
 		}
 
-		echo json_encode($data);
 
-	 
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
+
 	}
 
 
 
 	/**
- * @OA\Get(
- *     path="/api/business/get-paginated-payment-history",
- *     tags={"Payment"},
- *     summary="Get paginated payment history",
- *     description="Fetch a paginated list of payment transactions with optional filters",
- *     @OA\Parameter(
- *         name="page",
- *         in="query",
- *         description="Page number for pagination",
- *         required=false,
- *         @OA\Schema(type="integer", default=1)
- *     ),
- *     @OA\Parameter(
- *         name="limit",
- *         in="query",
- *         description="Number of records per page",
- *         required=false,
- *         @OA\Schema(type="integer", default=20)
- *     ),
- *     @OA\Parameter(
- *         name="status",
- *         in="query",
- *         description="Filter by payment status",
- *         required=false,
- *         @OA\Schema(type="string", enum={"success","pending","failed"})
- *     ),
- *     @OA\Response(
- *         response=200,
- *         description="Payment history retrieved successfully",
- *         @OA\JsonContent(
- *             @OA\Property(property="success", type="boolean", example=true),
- *             @OA\Property(
- *                 property="data",
- *                 type="array",
- *                 @OA\Items(
- *                     @OA\Property(property="id", type="integer", example=501),
- *                     @OA\Property(property="transaction_id", type="string", example="TXN-20250906-001"),
- *                     @OA\Property(property="amount", type="number", format="float", example=1500.75),
- *                     @OA\Property(property="status", type="string", example="success"),
- *                     @OA\Property(property="payment_date", type="string", format="date-time", example="2025-09-06T12:00:00Z"),
- *                     @OA\Property(property="method", type="string", example="credit_card")
- *                 )
- *             ),
- *             @OA\Property(
- *                 property="pagination",
- *                 type="object",
- *                 @OA\Property(property="page", type="integer", example=1),
- *                 @OA\Property(property="limit", type="integer", example=20),
- *                 @OA\Property(property="total", type="integer", example=120)
- *             )
- *         )
- *     ),
- *     @OA\Response(
- *         response=400,
- *         description="Invalid request",
- *         @OA\JsonContent(
- *             @OA\Property(property="success", type="boolean", example=false),
- *             @OA\Property(property="message", type="string", example="Invalid parameters")
- *         )
- *     )
- * )
- */
+	 * @OA\Get(
+	 *     path="/api/business/get-paginated-payment-history",
+	 *     tags={"Payment"},
+	 *     summary="Get paginated payment history",
+	 *     description="Fetch a paginated list of payment transactions with optional filters",
+	 *     @OA\Parameter(
+	 *         name="page",
+	 *         in="query",
+	 *         description="Page number for pagination",
+	 *         required=false,
+	 *         @OA\Schema(type="integer", default=1)
+	 *     ),
+	 *     @OA\Parameter(
+	 *         name="limit",
+	 *         in="query",
+	 *         description="Number of records per page",
+	 *         required=false,
+	 *         @OA\Schema(type="integer", default=20)
+	 *     ),
+	 *     @OA\Parameter(
+	 *         name="status",
+	 *         in="query",
+	 *         description="Filter by payment status",
+	 *         required=false,
+	 *         @OA\Schema(type="string", enum={"success","pending","failed"})
+	 *     ),
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Payment history retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=501),
+	 *                     @OA\Property(property="transaction_id", type="string", example="TXN-20250906-001"),
+	 *                     @OA\Property(property="amount", type="number", format="float", example=1500.75),
+	 *                     @OA\Property(property="status", type="string", example="success"),
+	 *                     @OA\Property(property="payment_date", type="string", format="date-time", example="2025-09-06T12:00:00Z"),
+	 *                     @OA\Property(property="method", type="string", example="credit_card")
+	 *                 )
+	 *             ),
+	 *             @OA\Property(
+	 *                 property="pagination",
+	 *                 type="object",
+	 *                 @OA\Property(property="page", type="integer", example=1),
+	 *                 @OA\Property(property="limit", type="integer", example=20),
+	 *                 @OA\Property(property="total", type="integer", example=120)
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=400,
+	 *         description="Invalid request",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="Invalid parameters")
+	 *         )
+	 *     )
+	 * )
+	 */
 
 	public function getPaginatedPaymentHistory(Request $request)
 	{
 		if (!Auth::guard('sanctum')->check()) {
-		return response()->json([
-			'status' => false,
+			return response()->json([
+				'status' => false,
 				'message' => 'Unauthenticated: Token is missing or invalid',
 				'error' => 'token_missing_or_invalid'
 			], 401);
@@ -427,7 +432,7 @@ class InvoiceController extends Controller
 			], 401);
 		}
 
-		 
+
 		$payments = DB::table('payment_histories')
 			->where('client_id', $user->id)
 			->orderBy('created_at', 'desc')

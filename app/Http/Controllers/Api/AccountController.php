@@ -68,7 +68,12 @@ class AccountController extends Controller
 		}
 
 		$data['client'] = Client::find($user->id);
-		echo json_encode($data);
+		 return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
 	}
 
 	/**
@@ -118,7 +123,12 @@ class AccountController extends Controller
 			], 401);
 		}
 		$data['client'] = Client::find($user->id);
-		echo json_encode($data);
+		 return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
 	}
 	/**
 	 * @OA\Get(
@@ -167,6 +177,11 @@ class AccountController extends Controller
 			], 401);
 		}
 		$data['client'] = Client::find($user->id);
-		echo json_encode($data);
+		 return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
 	}
 }

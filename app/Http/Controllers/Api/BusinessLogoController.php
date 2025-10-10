@@ -389,7 +389,12 @@ class BusinessLogoController extends Controller
 					'profile_pic'=>$profile_pic,
 			);
 		}
-		echo json_encode($data);
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
 	}
 
     /**
@@ -695,7 +700,12 @@ class BusinessLogoController extends Controller
 
 						}
 					}
-		 echo json_encode($data);
+		  return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
 
 	}
 	/**
@@ -911,7 +921,12 @@ class BusinessLogoController extends Controller
 
 					}
 				}
-		 echo json_encode($data);
-		
+		 
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
 	}
 }

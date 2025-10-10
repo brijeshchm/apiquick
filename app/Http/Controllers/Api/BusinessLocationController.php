@@ -90,7 +90,10 @@ class BusinessLocationController extends Controller
 		if ($request->has('search')) {
 			$data['search'] = $request->input('search');
 		}
-	echo json_encode($data);	
+		return response()->json([
+			'success' => true,
+			'data' => $data,
+		], 200);
 
 		 
 	}
@@ -220,7 +223,12 @@ class BusinessLocationController extends Controller
 				$data['message'] = "Already exists <strong>" . $request->input('other') . "</strong> Please add right zone !";
 			}
 
-		echo json_encode($data);	
+		 
+
+		return response()->json([
+			 
+			'data' => $data,
+		], 200);
 
 	}
 
@@ -347,8 +355,9 @@ class BusinessLocationController extends Controller
 				$data['message'] = "Location Information not assigned";
 				 
 			}
-			echo json_encode($data);	
-
+			return response()->json([
+                'data' => $data,
+            ], 200);
 
 	}
 
@@ -414,7 +423,12 @@ class BusinessLocationController extends Controller
 			$data['search'] = $request->input('search');
 		}
 		$data['statesis'] = State::get();
-		echo json_encode($data);	
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
 
 	}
 }

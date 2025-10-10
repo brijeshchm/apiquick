@@ -63,7 +63,7 @@ class EnquiryController extends Controller
 
 			$statuses = DB::table('status')->where('lead_follow_up', 1)->get();
 
- 			$statusHtml = '';
+			$statusHtml = '';
 			$disabled = '';
 			$dateValue = '';
 			if (count($statuses) > 0) {
@@ -265,7 +265,7 @@ class EnquiryController extends Controller
 				$leads = $leads->take(100);
 			}
 			$leads = $leads->paginate($request->input('length'));
-		 
+
 
 			$returnLeads = [];
 			$data = [];
@@ -294,23 +294,23 @@ class EnquiryController extends Controller
 	 */
 	public function pauseLead(Request $request)
 	{
-		if(!Auth::guard('sanctum')->check()) {
-				return response()->json([
-					'status' => false,
-					'message' => 'Unauthenticated: Token is missing or invalid',
-					'error' => 'token_missing_or_invalid'
-				], 401);
+		if (!Auth::guard('sanctum')->check()) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
 		}
 
-			// Check if user is active
+		// Check if user is active
 		$user = auth('sanctum')->user();
-			if (!$user) {
-				return response()->json([
-					'status' => false,
-					'message' => 'Unauthenticated: Token is missing or invalid',
-					'error' => 'token_missing_or_invalid'
-				], 401);
-			}
+		if (!$user) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
+		}
 
 		$client = Client::find($user->id);
 		if (!$client) {
@@ -326,91 +326,100 @@ class EnquiryController extends Controller
 		if ($client->save()) {
 			$data['status'] = true;
 			$data['message'] = 'Pause lead updated';
-			 
+
 		} else {
 			$data['status'] = false;
 			$data['message'] = 'Not Pause lead';
 		}
 
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
 
-		 echo json_encode($data);
-
-
+		], 200);
 	}
 
 	/*
-	* scrapLead by client
-	* input field leadId
-	*/
+	 * scrapLead by client
+	 * input field leadId
+	 */
 	public function scrapLead(Request $request)
 	{
-		if(!Auth::guard('sanctum')->check()) {
-				return response()->json([
-					'status' => false,
-					'message' => 'Unauthenticated: Token is missing or invalid',
-					'error' => 'token_missing_or_invalid'
-				], 401);
+		if (!Auth::guard('sanctum')->check()) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
 		}
 		// Check if user is active
 		$user = auth('sanctum')->user();
-			if (!$user) {
-				return response()->json([
-					'status' => false,
-					'message' => 'Unauthenticated: Token is missing or invalid',
-					'error' => 'token_missing_or_invalid'
-				], 401);
-			}
-	 
-		
-		$assignedLead = AssignedLead::find($request->leadId);
-		$coinsLeads = DB::table('assigned_leads')->where('lead_id',$assignedLead->lead_id)->where('scrapPay','0')->get();
-		$scrapStatusLeads = DB::table('assigned_leads')->where('lead_id',$assignedLead->lead_id)->where('scrapLead','1')->get()->count();
+		if (!$user) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
+		}
 
-		if(!empty($assignedLead)){
-			if($coinsLeads->count() == $scrapStatusLeads + 1){
-				foreach($coinsLeads as $coinsLead){
-				$client = Client::find($coinsLead->client_id);
-				$client->coins_amt =  $client->coins_amt + $coinsLead->coins;
-				$client->save();
-				$assignedclnLead = AssignedLead::find($coinsLead->id);
-				$assignedclnLead->scrapPay = '1';
-				$assignedclnLead->save();
+
+		$assignedLead = AssignedLead::find($request->leadId);
+		$coinsLeads = DB::table('assigned_leads')->where('lead_id', $assignedLead->lead_id)->where('scrapPay', '0')->get();
+		$scrapStatusLeads = DB::table('assigned_leads')->where('lead_id', $assignedLead->lead_id)->where('scrapLead', '1')->get()->count();
+
+		if (!empty($assignedLead)) {
+			if ($coinsLeads->count() == $scrapStatusLeads + 1) {
+				foreach ($coinsLeads as $coinsLead) {
+					$client = Client::find($coinsLead->client_id);
+					$client->coins_amt = $client->coins_amt + $coinsLead->coins;
+					$client->save();
+					$assignedclnLead = AssignedLead::find($coinsLead->id);
+					$assignedclnLead->scrapPay = '1';
+					$assignedclnLead->save();
 				}
 			}
-				
+
 			$assignedLead->scrapLead = '1';
 			$assignedLead->scrapValue = $request->scrapValue;
-			if($assignedLead->save()){
+			if ($assignedLead->save()) {
 				$data['status'] = true;
 				$data['message'] = "Scrap update successfully";
-				
+
 			} else {
 				$data['status'] = false;
 				$data['message'] = "Scrap update successfully";
 			}
 
 		}
-  		echo json_encode($data);
+
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
+		 
 	}
 
 	public function readLead(Request $request)
 	{
-		if(!Auth::guard('sanctum')->check()) {
-				return response()->json([
-					'status' => false,
-					'message' => 'Unauthenticated: Token is missing or invalid',
-					'error' => 'token_missing_or_invalid'
-				], 401);
+		if (!Auth::guard('sanctum')->check()) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
 		}
 		// Check if user is active
 		$user = auth('sanctum')->user();
-			if (!$user) {
-				return response()->json([
-					'status' => false,
-					'message' => 'Unauthenticated: Token is missing or invalid',
-					'error' => 'token_missing_or_invalid'
-				], 401);
-			}
+		if (!$user) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
+		}
 		$assignedLead = AssignedLead::find($request->assingId);
 		if (!$assignedLead) {
 			$data['status'] = true;
@@ -425,7 +434,12 @@ class EnquiryController extends Controller
 			$data['status'] = false;
 			$data['message'] = 'Read Lead not update';
 		}
-		echo json_encode($data);
+		 return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
 	}
 	/**
 	 * @OA\Post(
@@ -478,85 +492,90 @@ class EnquiryController extends Controller
 
 	public function saveFavoritleads(Request $request)
 	{
-		if(!Auth::guard('sanctum')->check()) {
-				return response()->json([
-					'status' => false,
-					'message' => 'Unauthenticated: Token is missing or invalid',
-					'error' => 'token_missing_or_invalid'
-				], 401);
+		if (!Auth::guard('sanctum')->check()) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
 		}
 		// Check if user is active
 		$user = auth('sanctum')->user();
-			if (!$user) {
-				return response()->json([
-					'status' => false,
-					'message' => 'Unauthenticated: Token is missing or invalid',
-					'error' => 'token_missing_or_invalid'
-				], 401);
-			}
+		if (!$user) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
+		}
 
 		$assignedLead = AssignedLead::find($request->assingId);
 
 		if (!$assignedLead) {
-			$data['status']= false;
-			$data['message']= 'assignedLead not found';
-			 
+			$data['status'] = false;
+			$data['message'] = 'assignedLead not found';
+
 		}
 
 		$assignedLead->favoriteLead = '1';
 		if ($assignedLead->save()) {
-			$data['status']= true;
-			$data['message']= 'favorit leads updated';
+			$data['status'] = true;
+			$data['message'] = 'favorit leads updated';
 		} else {
-			$data['status']= true;
-			$data['message']= 'favorit leads not updated';
+			$data['status'] = true;
+			$data['message'] = 'favorit leads not updated';
 		}
-		echo json_encode($data);
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
 	}
 	/**
-     * @OA\Get(
-     *     path="/api/business/get-leads",
-     *     tags={"Leads"},
-     *     summary="Get all leads",
-     *     description="Fetch list of leads for the authenticated user/business. Requires Bearer token.",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(
-     *         response=200,
-     *         description="List of leads",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="data", type="array",
-     *                 @OA\Items(
-     *                     type="object",
-     *                     @OA\Property(property="id", type="integer", example=1),
-     *                     @OA\Property(property="name", type="string", example="Rahul Sharma"),
-     *                     @OA\Property(property="email", type="string", example="rahul@example.com"),
-     *                     @OA\Property(property="phone", type="string", example="+91-9876543210"),
-     *                     @OA\Property(property="message", type="string", example="I am interested in your services."),
-     *                     @OA\Property(property="status", type="string", example="new"),
-     *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-04T12:45:00Z")
-     *                 )
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthenticated",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
-     *         )
-     *     )
-     * )
-     */
+	 * @OA\Get(
+	 *     path="/api/business/get-leads",
+	 *     tags={"Leads"},
+	 *     summary="Get all leads",
+	 *     description="Fetch list of leads for the authenticated user/business. Requires Bearer token.",
+	 *     security={{"bearerAuth":{}}},
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="List of leads",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     type="object",
+	 *                     @OA\Property(property="id", type="integer", example=1),
+	 *                     @OA\Property(property="name", type="string", example="Rahul Sharma"),
+	 *                     @OA\Property(property="email", type="string", example="rahul@example.com"),
+	 *                     @OA\Property(property="phone", type="string", example="+91-9876543210"),
+	 *                     @OA\Property(property="message", type="string", example="I am interested in your services."),
+	 *                     @OA\Property(property="status", type="string", example="new"),
+	 *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-04T12:45:00Z")
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
 	public function getLeads(Request $request)
 	{
-		 if (!Auth::guard('sanctum')->check()) {
+		if (!Auth::guard('sanctum')->check()) {
 			return response()->json([
 				'status' => false,
-                    'message' => 'Unauthenticated: Token is missing or invalid',
-                    'error' => 'token_missing_or_invalid'
-                ], 401);
-        }
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
+		}
 
 		$user = auth('sanctum')->user();
 		if (!$user) {
@@ -567,249 +586,245 @@ class EnquiryController extends Controller
 			], 401);
 		}
 
-		 
-
-			$perPage = $request->query('per_page', 10);
-			$leads = DB::table('leads')
-				->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
-				->select('leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created')
-				->orderBy('assigned_leads.created_at', 'desc')
-				->where('assigned_leads.client_id', $user->id)
-				->paginate($perPage);
-   			if (!empty($leads)) {
-                foreach ($leads->items() as $key => $val) {
-					if (!empty($val->zone)) {
-						$zonename = $val->zone;
-					} else {
-						$zonename = "";
-					}
-                    $leads_list[$key] = array(
-                        'lead_id' => $val->lead_id,
-                        'name' => $val->name,
-                        'mobile' => $val->mobile,
-                        'email' => $val->email,
-                        'city_id' => $val->city_id,
-                        'cityName' => $val->city_name,
-                        'kw_id' => $val->kw_id,
-                        'kw_text' => $val->kw_text,
-                        'client_id' => $val->client_id,
-                        'createdDate' => $val->created,
-                    );
-                }
-                $data['leadslist'] = $leads_list;
-            }
-            return response()->json([
-                'status' => true,
-                'data' => $data,
-                'pagination' => [
-                        'current_page' => $leads->currentPage(),
-                        'per_page' => $leads->perPage(),
-                        'total' => $leads->total(),
-                        'last_page' => $leads->lastPage(),
-                    ],
-            ], 200);
 
 
-
+		$perPage = $request->query('per_page', 10);
+		$leads = DB::table('leads')
+			->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
+			->select('leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created')
+			->orderBy('assigned_leads.created_at', 'desc')
+			->where('assigned_leads.client_id', $user->id)
+			->paginate($perPage);
+		if (!empty($leads)) {
+			foreach ($leads->items() as $key => $val) {
+				if (!empty($val->zone)) {
+					$zonename = $val->zone;
+				} else {
+					$zonename = "";
+				}
+				$leads_list[$key] = array(
+					'lead_id' => $val->lead_id,
+					'name' => $val->name,
+					'mobile' => $val->mobile,
+					'email' => $val->email,
+					'city_id' => $val->city_id,
+					'cityName' => $val->city_name,
+					'kw_id' => $val->kw_id,
+					'kw_text' => $val->kw_text,
+					'client_id' => $val->client_id,
+					'createdDate' => $val->created,
+				);
+			}
+			$data['leadslist'] = $leads_list;
+		}
+		return response()->json([
+			'status' => true,
+			'data' => $data,
+			'pagination' => [
+				'current_page' => $leads->currentPage(),
+				'per_page' => $leads->perPage(),
+				'total' => $leads->total(),
+				'last_page' => $leads->lastPage(),
+			],
+		], 200);
 	}
 
 	/**
- * @OA\Get(
- *     path="/api/business/get-enquiry",
- *     tags={"Enquiry"},
- *     summary="Get all enquiries",
- *     description="Fetch all enquiries received by the authenticated business. Requires Bearer token.",
- *     security={{"bearerAuth":{}}},
- *     @OA\Response(
- *         response=200,
- *         description="List of enquiries",
- *         @OA\JsonContent(
- *             @OA\Property(property="success", type="boolean", example=true),
- *             @OA\Property(property="data", type="array",
- *                 @OA\Items(
- *                     type="object",
- *                     @OA\Property(property="id", type="integer", example=1),
- *                     @OA\Property(property="name", type="string", example="Ravi Kumar"),
- *                     @OA\Property(property="email", type="string", example="ravi@example.com"),
- *                     @OA\Property(property="phone", type="string", example="+91-9876543210"),
- *                     @OA\Property(property="message", type="string", example="I want to know more about your services."),
- *                     @OA\Property(property="status", type="string", example="new"),
- *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-04T14:20:00Z")
- *                 )
- *             )
- *         )
- *     ),
- *     @OA\Response(
- *         response=401,
- *         description="Unauthenticated",
- *         @OA\JsonContent(
- *             @OA\Property(property="message", type="string", example="Unauthenticated.")
- *         )
- *     )
- * )
- */
+	 * @OA\Get(
+	 *     path="/api/business/get-enquiry",
+	 *     tags={"Enquiry"},
+	 *     summary="Get all enquiries",
+	 *     description="Fetch all enquiries received by the authenticated business. Requires Bearer token.",
+	 *     security={{"bearerAuth":{}}},
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="List of enquiries",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     type="object",
+	 *                     @OA\Property(property="id", type="integer", example=1),
+	 *                     @OA\Property(property="name", type="string", example="Ravi Kumar"),
+	 *                     @OA\Property(property="email", type="string", example="ravi@example.com"),
+	 *                     @OA\Property(property="phone", type="string", example="+91-9876543210"),
+	 *                     @OA\Property(property="message", type="string", example="I want to know more about your services."),
+	 *                     @OA\Property(property="status", type="string", example="new"),
+	 *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-04T14:20:00Z")
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
 	public function getEnquiry(Request $request)
 	{
 		try {
 
-            if (!Auth::guard('sanctum')->check()) {
-                return response()->json([
-                    'message' => 'Unauthenticated: Token is missing or invalid',
-                    'error' => 'token_missing_or_invalid'
-                ], 401);
-            }
+			if (!Auth::guard('sanctum')->check()) {
+				return response()->json([
+					'message' => 'Unauthenticated: Token is missing or invalid',
+					'error' => 'token_missing_or_invalid'
+				], 401);
+			}
 
-            $currentUser = auth('sanctum')->user();
-            if (!$currentUser) {
-                return response()->json([
-                    'message' => 'Unauthenticated: Token is missing or invalid',
-                    'error' => 'token_missing_or_invalid'
-                ], 401);
-            }
+			$currentUser = auth('sanctum')->user();
+			if (!$currentUser) {
+				return response()->json([
+					'message' => 'Unauthenticated: Token is missing or invalid',
+					'error' => 'token_missing_or_invalid'
+				], 401);
+			}
 
-            if (!$currentUser->active_status) {
-                $currentUser->tokens()->delete();
-                return response()->json(['status' => false, 'message' => 'User account is inactive',], 403);
-            }
-            // Fetch users with pagination
-            // Fetch users with pagination
-            $perPage = $request->query('per_page', 10); // Default to 15 users per page
-            $leads = DB::table('leads')
-                ->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
-                ->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
-                ->leftjoin('areas', 'leads.area_id', '=', 'areas.id')
-                ->leftjoin('zones', 'leads.zone_id', '=', 'zones.id')
-                ->select('leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone')
-                ->orderBy('assigned_leads.created_at', 'desc')
-                ->where('assigned_leads.client_id', $currentUser->id)
-                ->paginate($perPage);
+			if (!$currentUser->active_status) {
+				$currentUser->tokens()->delete();
+				return response()->json(['status' => false, 'message' => 'User account is inactive',], 403);
+			}
+			// Fetch users with pagination
+			// Fetch users with pagination
+			$perPage = $request->query('per_page', 10); // Default to 15 users per page
+			$leads = DB::table('leads')
+				->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
+				->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
+				->leftjoin('areas', 'leads.area_id', '=', 'areas.id')
+				->leftjoin('zones', 'leads.zone_id', '=', 'zones.id')
+				->select('leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone')
+				->orderBy('assigned_leads.created_at', 'desc')
+				->where('assigned_leads.client_id', $currentUser->id)
+				->paginate($perPage);
 
-            if (!empty($leads)) {
-                foreach ($leads->items() as $key => $val) {
-                    $leads_list[$key] = array(
-                        'lead_id' => $val->lead_id,
-                        'name' => $val->name,
-                        'mobile' => $val->mobile,
-                        'email' => $val->email,
-                        'city_id' => $val->city_id,
-                        'cityName' => $val->city_name,
-                        'area_id' => $val->area_id,
-                        'area' => $val->area,
-                        'zone_id' => $val->zone_id,
-                        'zone' => $val->zone,
-                        'kw_id' => $val->kw_id,
-                        'kw_text' => $val->kw_text,
-                        'client_id' => $val->client_id,
-                        'createdDate' => $val->created,
-                    );
-                }
-                $data['leadslist'] = $leads_list;
-            }
-            return response()->json([
-                'status' => true,
-                'data' => $data,
-                'pagination' => [
-                        'current_page' => $leads->currentPage(),
-                        'per_page' => $leads->perPage(),
-                        'total' => $leads->total(),
-                        'last_page' => $leads->lastPage(),
-                    ],
-            ], 200);
+			if (!empty($leads)) {
+				foreach ($leads->items() as $key => $val) {
+					$leads_list[$key] = array(
+						'lead_id' => $val->lead_id,
+						'name' => $val->name,
+						'mobile' => $val->mobile,
+						'email' => $val->email,
+						'city_id' => $val->city_id,
+						'cityName' => $val->city_name,
+						'area_id' => $val->area_id,
+						'area' => $val->area,
+						'zone_id' => $val->zone_id,
+						'zone' => $val->zone,
+						'kw_id' => $val->kw_id,
+						'kw_text' => $val->kw_text,
+						'client_id' => $val->client_id,
+						'createdDate' => $val->created,
+					);
+				}
+				$data['leadslist'] = $leads_list;
+			}
+			return response()->json([
+				'status' => true,
+				'data' => $data,
+				'pagination' => [
+					'current_page' => $leads->currentPage(),
+					'per_page' => $leads->perPage(),
+					'total' => $leads->total(),
+					'last_page' => $leads->lastPage(),
+				],
+			], 200);
 
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Failed to retrieve users: ' . $e->getMessage(),
-            ], 500);
-        }
-
+		} catch (\Exception $e) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Failed to retrieve users: ' . $e->getMessage(),
+			], 500);
+		}
 
 	}
 
 
-/**
- * @OA\Get(
- *     path="/api/business/get-new-enquiry",
- *     tags={"Leads"},
- *     summary="Get new enquiry",
- *     description="Fetch a list of all leads with optional filters",
- *     @OA\Parameter(
- *         name="page",
- *         in="query",
- *         description="Page number for pagination",
- *         required=false,
- *         @OA\Schema(type="integer", default=1)
- *     ),
- *     @OA\Parameter(
- *         name="limit",
- *         in="query",
- *         description="Number of leads per page",
- *         required=false,
- *         @OA\Schema(type="integer", default=20)
- *     ),
- *     @OA\Parameter(
- *         name="status",
- *         in="query",
- *         description="Filter leads by status",
- *         required=false,
- *         @OA\Schema(type="string", enum={"new","contacted","converted","lost"})
- *     ),
- *     @OA\Response(
- *         response=200,
- *         description="List of leads",
- *         @OA\JsonContent(
- *             @OA\Property(property="success", type="boolean", example=true),
- *             @OA\Property(
- *                 property="data",
- *                 type="array",
- *                 @OA\Items(
- *                     @OA\Property(property="id", type="integer", example=101),
- *                     @OA\Property(property="name", type="string", example="John Doe"),
- *                     @OA\Property(property="email", type="string", example="john@example.com"),
- *                     @OA\Property(property="phone", type="string", example="+911234567890"),
- *                     @OA\Property(property="status", type="string", example="new"),
- *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-06T12:00:00Z")
- *                 )
- *             ),
- *             @OA\Property(
- *                 property="pagination",
- *                 type="object",
- *                 @OA\Property(property="page", type="integer", example=1),
- *                 @OA\Property(property="limit", type="integer", example=20),
- *                 @OA\Property(property="total", type="integer", example=100)
- *             )
- *         )
- *     ),
- *     @OA\Response(
- *         response=400,
- *         description="Invalid request",
- *         @OA\JsonContent(
- *             @OA\Property(property="success", type="boolean", example=false),
- *             @OA\Property(property="message", type="string", example="Invalid parameters")
- *         )
- *     )
- * )
- */
+	/**
+	 * @OA\Get(
+	 *     path="/api/business/get-new-enquiry",
+	 *     tags={"Leads"},
+	 *     summary="Get new enquiry",
+	 *     description="Fetch a list of all leads with optional filters",
+	 *     @OA\Parameter(
+	 *         name="page",
+	 *         in="query",
+	 *         description="Page number for pagination",
+	 *         required=false,
+	 *         @OA\Schema(type="integer", default=1)
+	 *     ),
+	 *     @OA\Parameter(
+	 *         name="limit",
+	 *         in="query",
+	 *         description="Number of leads per page",
+	 *         required=false,
+	 *         @OA\Schema(type="integer", default=20)
+	 *     ),
+	 *     @OA\Parameter(
+	 *         name="status",
+	 *         in="query",
+	 *         description="Filter leads by status",
+	 *         required=false,
+	 *         @OA\Schema(type="string", enum={"new","contacted","converted","lost"})
+	 *     ),
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="List of leads",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=101),
+	 *                     @OA\Property(property="name", type="string", example="John Doe"),
+	 *                     @OA\Property(property="email", type="string", example="john@example.com"),
+	 *                     @OA\Property(property="phone", type="string", example="+911234567890"),
+	 *                     @OA\Property(property="status", type="string", example="new"),
+	 *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-06T12:00:00Z")
+	 *                 )
+	 *             ),
+	 *             @OA\Property(
+	 *                 property="pagination",
+	 *                 type="object",
+	 *                 @OA\Property(property="page", type="integer", example=1),
+	 *                 @OA\Property(property="limit", type="integer", example=20),
+	 *                 @OA\Property(property="total", type="integer", example=100)
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=400,
+	 *         description="Invalid request",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="Invalid parameters")
+	 *         )
+	 *     )
+	 * )
+	 */
 
 	public function getNewEnquiry(Request $request)
 	{
 
-		 if (!Auth::guard('sanctum')->check()) {
-                return response()->json([
-                    'message' => 'Unauthenticated: Token is missing or invalid',
-                    'error' => 'token_missing_or_invalid'
-                ], 401);
-            }
+		if (!Auth::guard('sanctum')->check()) {
+			return response()->json([
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
+		}
 
-            $currentUser = auth('sanctum')->user();
-            if (!$currentUser) {
-                return response()->json([
-                    'message' => 'Unauthenticated: Token is missing or invalid',
-                    'error' => 'token_missing_or_invalid'
-                ], 401);
-            }
-	
-  		$perPage = $request->query('per_page', 10); 
+		$currentUser = auth('sanctum')->user();
+		if (!$currentUser) {
+			return response()->json([
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
+		}
+
+		$perPage = $request->query('per_page', 10);
 		$leads = DB::table('leads')
 			->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
 			->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
@@ -819,39 +834,39 @@ class EnquiryController extends Controller
 			->orderBy('assigned_leads.created_at', 'desc')
 			->where('assigned_leads.readLead', '0')
 			->where('assigned_leads.client_id', $currentUser->id)->paginate($perPage);
-			if (!empty($leads)) {
-                foreach ($leads->items() as $key => $val) {
-                    $leads_list[$key] = array(
-                        'lead_id' => $val->lead_id,
-                        'name' => $val->name,
-                        'mobile' => $val->mobile,
-                        'email' => $val->email,
-                        'city_id' => $val->city_id,
-                        'cityName' => $val->city_name,
-                        'area_id' => $val->area_id,
-                        'area' => $val->area,
-                        'zone_id' => $val->zone_id,
-                        'zone' => $val->zone,
-                        'kw_id' => $val->kw_id,
-                        'kw_text' => $val->kw_text,
-                        'client_id' => $val->client_id,
-                        'createdDate' => $val->created,
-                    );
-                }
-                $data['leadslist'] = $leads_list;
-            }
-            return response()->json([
-                'status' => true,
-                'data' => $data,
-                'pagination' => [
-                        'current_page' => $leads->currentPage(),
-                        'per_page' => $leads->perPage(),
-                        'total' => $leads->total(),
-                        'last_page' => $leads->lastPage(),
-                    ],
-            ], 200);
+		if (!empty($leads)) {
+			foreach ($leads->items() as $key => $val) {
+				$leads_list[$key] = array(
+					'lead_id' => $val->lead_id,
+					'name' => $val->name,
+					'mobile' => $val->mobile,
+					'email' => $val->email,
+					'city_id' => $val->city_id,
+					'cityName' => $val->city_name,
+					'area_id' => $val->area_id,
+					'area' => $val->area,
+					'zone_id' => $val->zone_id,
+					'zone' => $val->zone,
+					'kw_id' => $val->kw_id,
+					'kw_text' => $val->kw_text,
+					'client_id' => $val->client_id,
+					'createdDate' => $val->created,
+				);
+			}
+			$data['leadslist'] = $leads_list;
+		}
+		return response()->json([
+			'status' => true,
+			'data' => $data,
+			'pagination' => [
+				'current_page' => $leads->currentPage(),
+				'per_page' => $leads->perPage(),
+				'total' => $leads->total(),
+				'last_page' => $leads->lastPage(),
+			],
+		], 200);
 
-		 echo json_encode($data);
+		 
 	}
 
 	/**
@@ -935,7 +950,7 @@ class EnquiryController extends Controller
 				'error' => 'token_missing_or_invalid'
 			], 401);
 		}
-	 
+
 		$data['leads'] = DB::table('leads')
 			->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
 			->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
@@ -948,8 +963,15 @@ class EnquiryController extends Controller
 
 			->where('assigned_leads.client_id', $currentUser->id)->get();
 
-			echo json_encode($data);
 		 
+
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
+
 	}
 
 	/**
@@ -1042,82 +1064,88 @@ class EnquiryController extends Controller
 			->orderBy('assigned_leads.created_at', 'desc')
 			->where('assigned_leads.favoriteLead', '1')
 			->where('assigned_leads.client_id', $currentUser->id)->get();
-			echo json_encode($data);
+		 
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
 	}
-/**
- * @OA\Get(
- *     path="/api/business/manage-enquiry",
- *     tags={"Enquiries"},
- *     summary="Get all enquiries",
- *     description="Fetch a list of all enquiries with optional filters",
- *     @OA\Parameter(
- *         name="page",
- *         in="query",
- *         description="Page number for pagination",
- *         required=false,
- *         @OA\Schema(type="integer", default=1)
- *     ),
- *     @OA\Parameter(
- *         name="limit",
- *         in="query",
- *         description="Number of enquiries per page",
- *         required=false,
- *         @OA\Schema(type="integer", default=20)
- *     ),
- *     @OA\Parameter(
- *         name="status",
- *         in="query",
- *         description="Filter enquiries by status",
- *         required=false,
- *         @OA\Schema(type="string", enum={"new","contacted","converted","closed"})
- *     ),
- *     @OA\Response(
- *         response=200,
- *         description="List of enquiries",
- *         @OA\JsonContent(
- *             @OA\Property(property="success", type="boolean", example=true),
- *             @OA\Property(
- *                 property="data",
- *                 type="array",
- *                 @OA\Items(
- *                     @OA\Property(property="id", type="integer", example=201),
- *                     @OA\Property(property="name", type="string", example="Jane Smith"),
- *                     @OA\Property(property="email", type="string", example="jane@example.com"),
- *                     @OA\Property(property="phone", type="string", example="+911234567891"),
- *                     @OA\Property(property="status", type="string", example="new"),
- *                     @OA\Property(property="message", type="string", example="Interested in your service"),
- *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-06T12:00:00Z")
- *                 )
- *             ),
- *             @OA\Property(
- *                 property="pagination",
- *                 type="object",
- *                 @OA\Property(property="page", type="integer", example=1),
- *                 @OA\Property(property="limit", type="integer", example=20),
- *                 @OA\Property(property="total", type="integer", example=50)
- *             )
- *         )
- *     ),
- *     @OA\Response(
- *         response=400,
- *         description="Invalid request",
- *         @OA\JsonContent(
- *             @OA\Property(property="success", type="boolean", example=false),
- *             @OA\Property(property="message", type="string", example="Invalid parameters")
- *         )
- *     )
- * )
- */
+	/**
+	 * @OA\Get(
+	 *     path="/api/business/manage-enquiry",
+	 *     tags={"Enquiries"},
+	 *     summary="Get all enquiries",
+	 *     description="Fetch a list of all enquiries with optional filters",
+	 *     @OA\Parameter(
+	 *         name="page",
+	 *         in="query",
+	 *         description="Page number for pagination",
+	 *         required=false,
+	 *         @OA\Schema(type="integer", default=1)
+	 *     ),
+	 *     @OA\Parameter(
+	 *         name="limit",
+	 *         in="query",
+	 *         description="Number of enquiries per page",
+	 *         required=false,
+	 *         @OA\Schema(type="integer", default=20)
+	 *     ),
+	 *     @OA\Parameter(
+	 *         name="status",
+	 *         in="query",
+	 *         description="Filter enquiries by status",
+	 *         required=false,
+	 *         @OA\Schema(type="string", enum={"new","contacted","converted","closed"})
+	 *     ),
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="List of enquiries",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=201),
+	 *                     @OA\Property(property="name", type="string", example="Jane Smith"),
+	 *                     @OA\Property(property="email", type="string", example="jane@example.com"),
+	 *                     @OA\Property(property="phone", type="string", example="+911234567891"),
+	 *                     @OA\Property(property="status", type="string", example="new"),
+	 *                     @OA\Property(property="message", type="string", example="Interested in your service"),
+	 *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-06T12:00:00Z")
+	 *                 )
+	 *             ),
+	 *             @OA\Property(
+	 *                 property="pagination",
+	 *                 type="object",
+	 *                 @OA\Property(property="page", type="integer", example=1),
+	 *                 @OA\Property(property="limit", type="integer", example=20),
+	 *                 @OA\Property(property="total", type="integer", example=50)
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=400,
+	 *         description="Invalid request",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="Invalid parameters")
+	 *         )
+	 *     )
+	 * )
+	 */
 
 	public function manageEnquiry(Request $request)
 	{
 
 		if (!Auth::guard('sanctum')->check()) {
-				return response()->json([
-					'message' => 'Unauthenticated: Token is missing or invalid',
-					'error' => 'token_missing_or_invalid'
-				], 401);
-			}
+			return response()->json([
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
+		}
 
 		$currentUser = auth('sanctum')->user();
 		if (!$currentUser) {
@@ -1126,7 +1154,7 @@ class EnquiryController extends Controller
 				'error' => 'token_missing_or_invalid'
 			], 401);
 		}
-		 
+
 		$data['leads'] = DB::table('leads')
 			->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
 			->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
@@ -1136,7 +1164,13 @@ class EnquiryController extends Controller
 
 			->orderBy('assigned_leads.created_at', 'desc')
 			->where('assigned_leads.client_id', $currentUser->id)->limit('200')->get();
-		echo json_encode($data);
+		 
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
 	}
 
 }

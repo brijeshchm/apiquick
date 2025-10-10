@@ -304,7 +304,9 @@ class ProfileController extends Controller
                 $data['message'] = 'Failed to : ' . $e->getMessage();
             
         }
-        echo json_encode($data);
+         return response()->json([
+                'data' => $data,
+            ], 200);
 
     }
 

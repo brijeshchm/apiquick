@@ -123,7 +123,7 @@ class BusinessDashboardController extends Controller
                 'last_page' => $leads->lastPage(),
             ],
         ], 200);
-      //  echo json_encode($data);
+      
 
     }
 }

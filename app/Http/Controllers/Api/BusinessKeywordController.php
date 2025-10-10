@@ -102,8 +102,13 @@ class BusinessKeywordController extends Controller
 			$data['status'] = false;
 			$data['message'] = "Assigned Keyword could not be Deleted!";
 		}
-		echo json_encode($data);
+		 
+		return response()->json([
+		'status' => true,
+		'message' => "Successfully",
+		'data' => $data,
 
+		], 200);
 	}
 
 
@@ -284,7 +289,14 @@ class BusinessKeywordController extends Controller
 		$data['citylist'] = Citieslists::get();
 		$data['keywordlist'] = Keyword::select('id', 'keyword', 'child_category_id', 'parent_category_id', 'city_id')->get();
 		$data['clientID'] = $user->id;
-		echo json_encode($data);
+		 
+
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
 	}
 	/**
 	 * @OA\Post(
@@ -446,6 +458,11 @@ class BusinessKeywordController extends Controller
 			$data['status'] = false;
 			$data['message'] = "Keyword not found, Please try again !";
 		}
-		echo json_encode($data);
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
 	}
 }

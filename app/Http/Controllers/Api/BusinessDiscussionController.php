@@ -84,6 +84,11 @@ class BusinessDiscussionController extends Controller
 			->orderBy('id', 'desc')
 			->where('client_id', $user->id)
 			->get();
-		echo json_encode($data);
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
 	}
 }

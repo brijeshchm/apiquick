@@ -223,7 +223,10 @@ class BusinessController extends Controller
 			$data['status'] = false;
 			$data['message'] = "Assigned Zone could not be Deleted!";
 		}
-		echo json_encode($data);
+		 
+		return response()->json([
+                'data' => $data,
+            ], 200);
 	}
 
 
@@ -470,7 +473,12 @@ class BusinessController extends Controller
 			], 401);
 		}
 		$data['client'] = Client::find($user->id);
-		echo json_encode($data);
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
 	}
 
 

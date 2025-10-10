@@ -143,8 +143,13 @@ class PersonalDetailsController extends Controller
 			$data['code']= 400;
 			$data['message']= $e->getMessage();
 		}
-		echo json_encode($data);
-		
+		 
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
 	}
 	/**
  * @OA\Post(
@@ -279,7 +284,13 @@ class PersonalDetailsController extends Controller
 				$data['code'] = 400;
 				$data['message'] = $e->getMessage();
 		}
-		echo json_encode($data);
+		 
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
 	}
 
 

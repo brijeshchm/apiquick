@@ -920,14 +920,17 @@ class SiteController extends Controller
 			$data['message'] = "failed";
 		}
 
-		print_r($data);
+		return response()->json([
+            'success' => true,
+            'data' => $data,  
+        ], 200);		 
 	}
 
 
 	/**
 	 * @OA\Get(
 	 *     path="/api/site/getKeyword",
-	 *     tags={"Frontend API"},
+	 *     tags={"Frontend get Keyword"},
 	 *     summary="Search records",
 	 *     description="Search records dynamically based on a keyword or filters",
 	 *            
@@ -1006,7 +1009,11 @@ class SiteController extends Controller
 			->get();
 
 		$data['clientsList'] = $clientsList;
-		print_r($data);
+		 
+		return response()->json([
+            'success' => true,
+            'data' => $data,  
+        ], 200);
 
 
 	}
@@ -1019,10 +1026,10 @@ class SiteController extends Controller
 	 *     description="Search records dynamically based on a keyword or filters",
 	 *            
 	 *     @OA\Parameter(
-	 *         name="categories",
+	 *         name="category-slug",
 	 *         in="query",
 	 *         required=true,
-	 *         description="Search categories",
+	 *         description="Search category-slug",
 	 *         @OA\Schema(type="string", example="computer-courses")
 	 *     ),
 	 *        
@@ -1064,7 +1071,7 @@ class SiteController extends Controller
 	public function getCategories(Request $request)
 	{
 
-		$slug = $request->input('categories');
+		$slug = $request->input('category-slug');
 
 		$data['categoryList'] = DB::table('parent_category')
 			->join('child_category', 'child_category.parent_category_id', '=', 'parent_category.id')
@@ -1109,7 +1116,7 @@ class SiteController extends Controller
 
 
 		$categoryDetails = DB::table('parent_category')->where('parent_slug', $slug)->first();
-		// dd($categoryDetails);
+		 
 
 		$image = "";
 		$alt = "";
@@ -1122,28 +1129,290 @@ class SiteController extends Controller
 				$alt = $cicons['category_banner']['name'];
 			}
 		}
-		$data['categoryDetails'] = array(
+		$data['keyword'] = array(
 			'parent_category' => $categoryDetails->parent_category,
 			'parent_slug' => $categoryDetails->parent_slug,
 			'category_banner' => $image,
-			'alt' => $alt
+			'alt' => $alt,
+			'meta_title' => $categoryDetails->meta_title,
+			'meta_keywords' => $categoryDetails->meta_keywords,
+			'meta_description' => $categoryDetails->meta_description,
+			'top_description' => $categoryDetails->top_description,
+			'bottom_description' => $categoryDetails->bottom_description,
+			'faqq1' => $categoryDetails->faqq1,
+			'faqa1' => $categoryDetails->faqa1,
+			'faqq2' => $categoryDetails->faqq2,
+			'faqa2' => $categoryDetails->faqa2,
+			'faqq3' => $categoryDetails->faqq3,
+			'faqa3' => $categoryDetails->faqa3,
+			'faqq4' => $categoryDetails->faqq4,
+			'faqa4' => $categoryDetails->faqa4,
+			'faqq5' => $categoryDetails->faqq5,
+			'faqa5' => $categoryDetails->faqa5,
+			'ratingvalue' => $categoryDetails->ratingvalue,
+			'ratingcount' => $categoryDetails->ratingcount,
 
 		);
-
-		if (!empty($categoryDetails)) {
-			$keyword = DB::table('keyword')
-
-				->select('keyword.*', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5', 'keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount')
-
-				->where('keyword.parent_category_id', $categoryDetails->id)->get();
-
-		}
-
-		// $data['clientsList'] = $clientsList;
-		print_r($data);
+ 
+		return response()->json([
+            'success' => true,
+            'data' => $data,  
+        ], 200);
 
 
 	}
+	/**
+	 * @OA\Get(
+	 *     path="/api/site/child",
+	 *     tags={"Frontend get child"},
+	 *     summary="Search records",
+	 *     description="Search records dynamically based on a child",
+	 *            
+	 *     @OA\Parameter(
+	 *         name="child-slug",
+	 *         in="query",
+	 *         required=true,
+	 *         description="Search child-slug",
+	 *         @OA\Schema(type="string", example="cloud-computing")
+	 *     ),
+	 *        
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=101),
+	 *                     @OA\Property(property="name", type="string", example="ABC Coaching Center"),
+	 *                     
+	 *                     @OA\Property(property="category", type="string", example="Education"),
+	 *                     @OA\Property(property="rating", type="number", format="float", example=4.5)
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+
+
+	public function getChild(Request $request)
+	{
+
+		$slug = $request->input('child-slug');
+
+		 
+		if (empty($slug) || !is_string($slug)) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Invalid or missing child-slug parameter.',
+			], 400);
+		}
+
+		$data['childLists'] = DB::table('child_category')
+			->join('keyword', 'keyword.child_category_id', '=', 'child_category.id')
+			->select(
+				'keyword.keyword',
+				DB::raw('MAX(keyword.icon) as icon') // Aggregate icon to avoid GROUP BY issue
+			)
+			->where('child_category.child_slug', $slug)
+			->groupBy('keyword.keyword')
+			->get()
+			->map(function ($keyword) {
+				$image = "";
+				$alt = "";
+
+				if (!empty($keyword->icon)) {
+					 
+						$cicons = @unserialize($keyword->icon);
+						if ($cicons !== false && !empty($cicons['pc_icon']['src']) && !empty($cicons['pc_icon']['name'])) {
+							$image = config('app.website') . $cicons['pc_icon']['src'];
+							$alt = $cicons['pc_icon']['name'];
+						}
+				 
+				}
+
+				return [
+					'url' => '/' . generate_slug($keyword->keyword),
+					'img' => $image ?: '',
+					'alt' => $alt ?: $keyword->keyword,
+					'title' => $keyword->keyword,
+				];
+			});
+	 
+		$childDetails = ChildCategory::where('child_slug', $slug)->first();
+ 
+		$image = "";
+		$alt = "";
+
+		if (!empty($childDetails->category_banner)) {
+			$cicons = unserialize($childDetails->child_banner);
+
+			if (!empty($cicons)) {
+				$image = config('app.website') . $cicons['child_banner']['src'];
+				$alt = $cicons['child_banner']['name'];
+			}
+		}
+		$data['keyword'] = array(
+			'child_category' => $childDetails->child_category,
+			'child_slug' => $childDetails->child_slug,
+			'category_banner' => $image,
+			'alt' => $alt,
+			'meta_title' => $childDetails->meta_title,
+			'meta_keywords' => $childDetails->meta_keywords,
+			'meta_description' => $childDetails->meta_description,
+			'top_description' => $childDetails->top_description,
+			'bottom_description' => $childDetails->bottom_description,
+			'faqq1' => $childDetails->faqq1,
+			'faqa1' => $childDetails->faqa1,
+			'faqq2' => $childDetails->faqq2,
+			'faqa2' => $childDetails->faqa2,
+			'faqq3' => $childDetails->faqq3,
+			'faqa3' => $childDetails->faqa3,
+			'faqq4' => $childDetails->faqq4,
+			'faqa4' => $childDetails->faqa4,
+			'faqq5' => $childDetails->faqq5,
+			'faqa5' => $childDetails->faqa5,
+			'ratingvalue' => $childDetails->ratingvalue,
+			'ratingcount' => $childDetails->ratingcount,
+
+		);
+	  
+	return response()->json([
+            'success' => true,
+            'data' => $data,  
+        ], 200);
+
+	}
+
+	/**
+	 * @OA\Get(
+	 *     path="/api/site/getCityList",
+	 *     tags={"Frontend get get City List"},
+	 *     summary="Search records",
+	 *     description="Search records dynamically based on a city",
+	 *            
+	 *     @OA\Parameter(
+	 *         name="city",
+	 *         in="query",
+	 *         required=true,
+	 *         description="Search city",
+	 *         @OA\Schema(type="string", example="noida")
+	 *     ),
+	 *        
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=101),
+	 *                     @OA\Property(property="name", type="string", example="ABC Coaching Center"),
+	 *                     
+	 *                     @OA\Property(property="category", type="string", example="Education"),
+	 *                     @OA\Property(property="rating", type="number", format="float", example=4.5)
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function getCityList(Request $request)
+	{
+		 
+			$city = $request->input('city');
+        if (!is_null($city) && !is_string($city)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid city input.',
+            ], 400);
+        }
+
+        // Initialize query
+        $query = DB::table('citylists')
+            ->select(
+                'citylists.city',
+                'zones.zone',
+                'areas.area'
+            )
+            ->leftJoin('zones', 'citylists.id', '=', 'zones.city_id')
+            ->leftJoin('areas', 'zones.id', '=', 'areas.zone_id');
+
+        // Apply filters
+        if (is_null($city)) {
+            $query->whereIn('citylists.id', ['278', '596', '961', '428']);
+        } else {
+            $query->where(function ($q) use ($city) {
+                $q->where('citylists.city', 'LIKE', '%' . $city . '%')
+                  ->orWhere('zones.zone', 'LIKE', '%' . $city . '%')
+                  ->orWhere('areas.area', 'LIKE', '%' . $city . '%');
+            });
+        }
+
+        // Get results
+        $locations = $query->get();
+
+        // Transform results
+        $html = [];
+        foreach ($locations as $index => $data) {
+            $entry = ['city' => strtolower($data->city)];
+            if (!is_null($data->zone)) {
+                $entry['zone'] = strtolower($data->zone);
+            }
+            if (!is_null($data->area)) {
+                $entry['area'] = strtolower($data->area);
+            }
+            $html[$index] = $entry;
+        }
+
+        // Handle empty results
+        if (empty($html)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No locations found.',
+            ], 404);
+        }
+
+        // Return JSON response
+        return response()->json([
+            'success' => true,
+            'data' => array_values($html),  
+        ], 200);
+    }
+		 
+	
+
 
 
 }

@@ -32,4 +32,8 @@ Route::get('/api/site/getBlog-homepage', [App\Http\Controllers\Site\SiteControll
 
  Route::get('/api/site/categories', [App\Http\Controllers\Site\SiteController::class, 'getCategories']);
  Route::get('/api/site/child', [App\Http\Controllers\Site\SiteController::class, 'getChild']);
+ Route::get('/api/site/getCityList', [App\Http\Controllers\Site\SiteController::class, 'getCityList']);
+ Route::get('/api/site/business-services', [App\Http\Controllers\Site\SiteController::class, 'businessServices']);
+
+
  

@@ -4326,7 +4326,7 @@
         "/api/site/city/keyword": {
             "get": {
                 "tags": [
-                    "Frontend API"
+                    "Frontend Search city and keyword"
                 ],
                 "summary": "Search records",
                 "description": "Search records dynamically based on a keyword or filters",
@@ -5359,6 +5359,111 @@
                     }
                 }
             }
+        },
+        "/api/site/business-details": {
+            "get": {
+                "tags": [
+                    "Frontend Search city and keyword"
+                ],
+                "summary": "Search records",
+                "description": "Search records dynamically based on a keyword or filters",
+                "operationId": "56c6194b3dd4828af6d3e43aecd72624",
+                "parameters": [
+                    {
+                        "name": "business_slug",
+                        "in": "query",
+                        "description": "Filter by business_slug",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "test-demo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "ABC Coaching Center"
+                                                    },
+                                                    "city": {
+                                                        "type": "string",
+                                                        "example": "Noida"
+                                                    },
+                                                    "category": {
+                                                        "type": "string",
+                                                        "example": "Education"
+                                                    },
+                                                    "rating": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 4.5
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -5468,8 +5573,8 @@
             "description": "User"
         },
         {
-            "name": "Frontend API",
-            "description": "Frontend API"
+            "name": "Frontend Search city and keyword",
+            "description": "Frontend Search city and keyword"
         },
         {
             "name": "Frontend Home Page",

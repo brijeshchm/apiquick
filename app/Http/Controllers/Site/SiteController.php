@@ -28,7 +28,7 @@ class SiteController extends Controller
 	/**
 	 * @OA\Get(
 	 *     path="/api/site/city/keyword",
-	 *     tags={"Frontend API"},
+	 *     tags={"Frontend Search city and keyword"},
 	 *     summary="Search records",
 	 *     description="Search records dynamically based on a keyword or filters",
 	 *      
@@ -84,30 +84,82 @@ class SiteController extends Controller
 
 	public function getSearch(Request $request)
 	{
-
-
 		$search_kw = $request->input('keyword');
 		$city = $request->input('city');
 
 
-		$keyword = DB::table('keyword')
+		$keywordDetails = DB::table('keyword')
 			->join('parent_category', 'keyword.parent_category_id', '=', 'parent_category.id')
 			->join('child_category', 'keyword.child_category_id', '=', 'child_category.id')
-			->where('keyword', 'LIKE', ucwords(str_replace("-", " ", $search_kw)))
+			->where('keyword', 'LIKE', '%' . ucwords(str_replace('-', ' ', $search_kw)) . '%')
 			->select('keyword.*', 'parent_category.*', 'child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5', 'keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount')
 			->first();
-		// dd($keyword);
-		$data['keyword'] = $keyword;
+
+
+		$category_banner = "";
+		$alt = "";
+
+		if (!empty($keywordDetails->category_banner)) {
+			$cicons = unserialize($keywordDetails->category_banner);
+
+			if (!empty($cicons)) {
+				$category_banner = config('app.website') . $cicons['category_banner']['src'];
+				$alt = $cicons['category_banner']['name'];
+			}
+		}
+
+		$data['keyword'] = array(
+			'keyword' => $keywordDetails->keyword,
+			'keyword_slug' => generate_slug($keywordDetails->keyword),
+			'category_banner' => $category_banner,
+			'alt' => $alt,
+			'meta_title' => $keywordDetails->meta_title,
+			'meta_keywords' => $keywordDetails->meta_keywords,
+			'meta_description' => $keywordDetails->meta_description,
+			'top_description' => $keywordDetails->top_description,
+			'bottom_description' => $keywordDetails->bottom_description,
+			'faqq1' => $keywordDetails->faqq1,
+			'faqa1' => $keywordDetails->faqa1,
+			'faqq2' => $keywordDetails->faqq2,
+			'faqa2' => $keywordDetails->faqa2,
+			'faqq3' => $keywordDetails->faqq3,
+			'faqa3' => $keywordDetails->faqa3,
+			'faqq4' => $keywordDetails->faqq4,
+			'faqa4' => $keywordDetails->faqa4,
+			'faqq5' => $keywordDetails->faqq5,
+			'faqa5' => $keywordDetails->faqa5,
+			'ratingvalue' => $keywordDetails->ratingvalue,
+			'ratingcount' => $keywordDetails->ratingcount,
+			'parent_category' => $keywordDetails->parent_category,
+			'parent_slug' => $keywordDetails->parent_slug,
+			'child_category' => $keywordDetails->child_category,
+			'child_slug' => $keywordDetails->child_slug,
+
+		);
+
+
+		$cityName = ucwords(str_replace('-', ' ', $city));
+		$keywordName = ucwords(str_replace('-', ' ', $search_kw));
 
 		$clientscheck = DB::table('clients')
 			->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
 			->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
 			->join('citylists', 'assigned_kwds.city_id', '=', 'citylists.id')
-			->leftJoin(DB::raw('(SELECT SUM(rating) AS rating, comment_client_ID, COUNT(comment_ID) AS comment_count FROM comments GROUP BY comment_client_ID) c'), 'c.comment_client_ID', '=', 'clients.id')
-			->select('clients.*', 'citylists.city', 'assigned_kwds.sold_on_position', 'c.rating', 'c.comment_count')
-			->where('citylists.city', 'LIKE', ucwords($city))
-			->where('clients.active_status', '1')
-			->where('keyword.keyword', 'LIKE', ucwords(str_replace('-', ' ', $search_kw)))
+			->leftJoin(DB::raw('(
+        SELECT SUM(rating) AS rating, comment_client_ID, COUNT(comment_ID) AS comment_count
+        FROM comments GROUP BY comment_client_ID
+    ) c'), 'c.comment_client_ID', '=', 'clients.id')
+			->select(
+				'clients.*',
+				'assigned_kwds.*',
+				'citylists.city',
+				'assigned_kwds.sold_on_position',
+				'c.rating',
+				'c.comment_count'
+			)
+			->where('citylists.city', 'LIKE', "%{$cityName}%")
+			// ->where('clients.active_status', '1')
+			->where('keyword.keyword', 'LIKE', "%{$keywordName}%")
 			->orderByRaw("
         CASE assigned_kwds.sold_on_position
             WHEN 'platinum' THEN 1
@@ -116,42 +168,108 @@ class SiteController extends Controller
             ELSE 4
         END
     ")
-			// ->groupBy(
-			//     'clients.id'
-
-			// )
 			->get();
 
-
-
-
-		if (!empty($clientscheck->count())) {
-
+		if ($clientscheck->count() > 0) {
 			$clientsList = $clientscheck;
-
 		} else {
-
 			$clientsList = DB::table('clients')
 				->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
 				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
 				->join('citylists', 'assigned_kwds.city_id', '=', 'citylists.id')
-				->leftJoin(DB::raw('(SELECT SUM(rating) AS rating,comment_client_ID,COUNT(comment_ID) AS comment_count FROM comments GROUP BY comment_client_ID) c'), 'c.comment_client_ID', '=', 'clients.id')
-				->select('clients.*', 'citylists.city', 'assigned_kwds.sold_on_position', 'c.rating', 'c.comment_count')
+				->leftJoin(DB::raw('(
+            SELECT SUM(rating) AS rating, comment_client_ID, COUNT(comment_ID) AS comment_count
+            FROM comments GROUP BY comment_client_ID
+        ) c'), 'c.comment_client_ID', '=', 'clients.id')
+				->select(
+					'clients.*',
 
-				//->where('clients.active_status','1')
-				->where('keyword.keyword', 'LIKE', ucwords(str_replace("-", " ", $search_kw)))
-
-				->orderby(DB::raw('(CASE `assigned_kwds`.`sold_on_position` WHEN \'platinum\' THEN 1 WHEN \'diamond\' THEN 2 WHEN \'FreeListing\' THEN 3 END)'), 'asc')
-				//	->orderby(DB::raw('(CASE `assigned_kwds`.`sold_on_position` WHEN \'platinum\' THEN 1 WHEN \'diamond\' THEN 2 END)'),'asc')
-				//->orderby(DB::raw('(CASE `assigned_kwds`.`sold_on_position` WHEN \'premium\' THEN 1 WHEN \'platinum\' THEN 2 WHEN \'royal\' THEN 3 WHEN \'preferred\' THEN 4 END)'),'asc')
-				// ->groupBy('client_id')
-				//->orderby(DB::raw('(CASE `clients`.`certified_status` WHEN \'1\' THEN 1 END)'),'DESC')		
+					'assigned_kwds.*',
+					'citylists.city',
+					'assigned_kwds.sold_on_position',
+					'c.rating',
+					'c.comment_count'
+				)
+				->where('keyword.keyword', 'LIKE', '%' . $keywordName . '%')
+				->orderByRaw("
+            CASE assigned_kwds.sold_on_position
+                WHEN 'platinum' THEN 1
+                WHEN 'diamond' THEN 2
+                WHEN 'FreeListing' THEN 3
+                ELSE 4
+            END
+        ")
 				->get();
 		}
+		//  dd($clientsList);
+		$data['clientsList'] = $clientsList->map(function ($client) {
 
+			$logoImage = 'client/images/default_pp_small.jpg';
+			$altLogo = "Business Logo";
+			if (!empty($client->logo)) {
+				$cicons = unserialize($client->logo);
 
-		$data['clientsList'] = $clientsList;
-		print_r($data);
+				if (!empty($cicons)) {
+					$logoImage = config('app.website') . $cicons['large']['src'];
+					$altLogo = $cicons['large']['name'];
+				}
+			}
+			 	 
+			 
+			$galleryArray = array();
+			if (!empty($client->pictures)) {
+				$galleryList = unserialize($client->pictures);
+				if (!empty($galleryList)) {
+					foreach ($galleryList as $key => $value) {
+
+						$galleryArray[$key] = array(
+							'galley' => $value
+
+						);
+
+					}
+				}
+			}	 
+ 
+			return [
+				'business_id' => $client->id,
+				'business_name' => $client->business_name,
+				'business_slug' => $client->business_slug,
+				'logo' => $logoImage ?? '',
+				'altLogo' => $altLogo ?? '',			 
+				'gallery' => $galleryArray ?? '',
+				'business_intro' => $client->business_intro,
+				'certifications' => $client->certifications,
+				'sirName' => $client->sirName,
+				'first_name' => $client->first_name,
+				'middle_name' => $client->middle_name,
+				'last_name' => $client->last_name,
+				'email' => $client->email,
+				'certified_status' => $client->certified_status,
+				'website' => $client->website,
+				'city' => $client->city,
+				'business_state' => $client->business_state,
+				'area' => $client->area,
+				'business_city' => $client->business_city,
+				'address' => $client->address,
+				'pincode' => $client->pincode,
+				'country' => $client->country,
+				'year_of_estb' => $client->year_of_estb,
+				'time' => $client->time,
+				'landmark' => $client->landmark,
+				'profile_pic' => $client->profile_pic,
+				'pictures' => $client->pictures,
+				'rating' => $client->rating,
+				'comment_count' => $client->comment_count,
+			];
+		});
+		// Return JSON response
+		return response()->json([
+			'success' => true,
+			'data' => $data,
+		], 200);
+	 
+	 
 
 
 	}
@@ -341,9 +459,13 @@ class SiteController extends Controller
 			$data['code'] = 200;
 			$data['message'] = "failed";
 		}
-		print_r($data);
+	 
 
-
+	return response()->json([
+			'success' => true,
+			'data' => $data,
+		], 200);
+	 
 
 	}
 	/**
@@ -443,8 +565,11 @@ class SiteController extends Controller
 			$data['code'] = 200;
 			$data['message'] = "failed";
 		}
-		print_r($data);
-
+		return response()->json([
+			'success' => true,
+			'data' => $data,
+		], 200);
+	 
 
 	}
 
@@ -545,7 +670,11 @@ class SiteController extends Controller
 			$data['code'] = 200;
 			$data['message'] = "failed";
 		}
-		print_r($data);
+		return response()->json([
+			'success' => true,
+			'data' => $data,
+		], 200);
+	 
 	}
 
 	/**
@@ -646,7 +775,11 @@ class SiteController extends Controller
 			$data['code'] = 200;
 			$data['message'] = "failed";
 		}
-		print_r($data);
+		return response()->json([
+			'success' => true,
+			'data' => $data,
+		], 200);
+	 
 	}
 
 	/**
@@ -747,7 +880,11 @@ class SiteController extends Controller
 			$data['code'] = 200;
 			$data['message'] = "failed";
 		}
-		print_r($data);
+		return response()->json([
+			'success' => true,
+			'data' => $data,
+		], 200);
+	 
 	}
 
 	/**
@@ -836,7 +973,11 @@ class SiteController extends Controller
 			$data['message'] = "failed";
 		}
 
-		print_r($data);
+		return response()->json([
+			'success' => true,
+			'data' => $data,
+		], 200);
+	 
 	}
 
 	/**
@@ -921,9 +1062,9 @@ class SiteController extends Controller
 		}
 
 		return response()->json([
-            'success' => true,
-            'data' => $data,  
-        ], 200);		 
+			'success' => true,
+			'data' => $data,
+		], 200);
 	}
 
 
@@ -985,7 +1126,7 @@ class SiteController extends Controller
 		$keyword = DB::table('keyword')
 			->join('parent_category', 'keyword.parent_category_id', '=', 'parent_category.id')
 			->join('child_category', 'keyword.child_category_id', '=', 'child_category.id')
-			->where('keyword', 'LIKE', ucwords(str_replace("-", " ", $search_kw)))
+			->where('keyword', 'LIKE', '%' . ucwords(str_replace('-', ' ', $search_kw)) . '%')
 			->select('keyword.*', 'parent_category.*', 'child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5', 'keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount')
 			->first();
 
@@ -998,8 +1139,8 @@ class SiteController extends Controller
 			->leftJoin(DB::raw('(SELECT SUM(rating) AS rating,comment_client_ID,COUNT(comment_ID) AS comment_count FROM comments GROUP BY comment_client_ID) c'), 'c.comment_client_ID', '=', 'clients.id')
 			->select('clients.*', 'citylists.city', 'assigned_kwds.sold_on_position', 'c.rating', 'c.comment_count')
 
-			//->where('clients.active_status','1')
-			->where('keyword.keyword', 'LIKE', ucwords(str_replace("-", " ", $search_kw)))
+			//->where('clients.active_status','1')	 
+			->where('keyword.keyword', 'LIKE', '%' . ucwords(str_replace('-', ' ', $search_kw)) . '%')
 
 			->orderby(DB::raw('(CASE `assigned_kwds`.`sold_on_position` WHEN \'platinum\' THEN 1 WHEN \'diamond\' THEN 2 WHEN \'FreeListing\' THEN 3 END)'), 'asc')
 			//	->orderby(DB::raw('(CASE `assigned_kwds`.`sold_on_position` WHEN \'platinum\' THEN 1 WHEN \'diamond\' THEN 2 END)'),'asc')
@@ -1009,11 +1150,11 @@ class SiteController extends Controller
 			->get();
 
 		$data['clientsList'] = $clientsList;
-		 
+
 		return response()->json([
-            'success' => true,
-            'data' => $data,  
-        ], 200);
+			'success' => true,
+			'data' => $data,
+		], 200);
 
 
 	}
@@ -1116,7 +1257,7 @@ class SiteController extends Controller
 
 
 		$categoryDetails = DB::table('parent_category')->where('parent_slug', $slug)->first();
-		 
+
 
 		$image = "";
 		$alt = "";
@@ -1153,11 +1294,11 @@ class SiteController extends Controller
 			'ratingcount' => $categoryDetails->ratingcount,
 
 		);
- 
+
 		return response()->json([
-            'success' => true,
-            'data' => $data,  
-        ], 200);
+			'success' => true,
+			'data' => $data,
+		], 200);
 
 
 	}
@@ -1216,7 +1357,7 @@ class SiteController extends Controller
 
 		$slug = $request->input('child-slug');
 
-		 
+
 		if (empty($slug) || !is_string($slug)) {
 			return response()->json([
 				'success' => false,
@@ -1238,13 +1379,13 @@ class SiteController extends Controller
 				$alt = "";
 
 				if (!empty($keyword->icon)) {
-					 
-						$cicons = @unserialize($keyword->icon);
-						if ($cicons !== false && !empty($cicons['pc_icon']['src']) && !empty($cicons['pc_icon']['name'])) {
-							$image = config('app.website') . $cicons['pc_icon']['src'];
-							$alt = $cicons['pc_icon']['name'];
-						}
-				 
+
+					$cicons = @unserialize($keyword->icon);
+					if ($cicons !== false && !empty($cicons['pc_icon']['src']) && !empty($cicons['pc_icon']['name'])) {
+						$image = config('app.website') . $cicons['pc_icon']['src'];
+						$alt = $cicons['pc_icon']['name'];
+					}
+
 				}
 
 				return [
@@ -1254,9 +1395,9 @@ class SiteController extends Controller
 					'title' => $keyword->keyword,
 				];
 			});
-	 
+
 		$childDetails = ChildCategory::where('child_slug', $slug)->first();
- 
+
 		$image = "";
 		$alt = "";
 
@@ -1292,11 +1433,11 @@ class SiteController extends Controller
 			'ratingcount' => $childDetails->ratingcount,
 
 		);
-	  
-	return response()->json([
-            'success' => true,
-            'data' => $data,  
-        ], 200);
+
+		return response()->json([
+			'success' => true,
+			'data' => $data,
+		], 200);
 
 	}
 
@@ -1350,68 +1491,335 @@ class SiteController extends Controller
 	 */
 	public function getCityList(Request $request)
 	{
-		 
-			$city = $request->input('city');
-        if (!is_null($city) && !is_string($city)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid city input.',
-            ], 400);
-        }
 
-        // Initialize query
-        $query = DB::table('citylists')
-            ->select(
-                'citylists.city',
-                'zones.zone',
-                'areas.area'
-            )
-            ->leftJoin('zones', 'citylists.id', '=', 'zones.city_id')
-            ->leftJoin('areas', 'zones.id', '=', 'areas.zone_id');
+		$city = $request->input('city');
+		if (!is_null($city) && !is_string($city)) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Invalid city input.',
+			], 400);
+		}
 
-        // Apply filters
-        if (is_null($city)) {
-            $query->whereIn('citylists.id', ['278', '596', '961', '428']);
-        } else {
-            $query->where(function ($q) use ($city) {
-                $q->where('citylists.city', 'LIKE', '%' . $city . '%')
-                  ->orWhere('zones.zone', 'LIKE', '%' . $city . '%')
-                  ->orWhere('areas.area', 'LIKE', '%' . $city . '%');
-            });
-        }
+		// Initialize query
+		$query = DB::table('citylists')
+			->select(
+				'citylists.city',
+				'zones.zone',
+				'areas.area'
+			)
+			->leftJoin('zones', 'citylists.id', '=', 'zones.city_id')
+			->leftJoin('areas', 'zones.id', '=', 'areas.zone_id');
 
-        // Get results
-        $locations = $query->get();
+		// Apply filters
+		if (is_null($city)) {
+			$query->whereIn('citylists.id', ['278', '596', '961', '428']);
+		} else {
+			$query->where(function ($q) use ($city) {
+				$q->where('citylists.city', 'LIKE', '%' . $city . '%')
+					->orWhere('zones.zone', 'LIKE', '%' . $city . '%')
+					->orWhere('areas.area', 'LIKE', '%' . $city . '%');
+			});
+		}
 
-        // Transform results
-        $html = [];
-        foreach ($locations as $index => $data) {
-            $entry = ['city' => strtolower($data->city)];
-            if (!is_null($data->zone)) {
-                $entry['zone'] = strtolower($data->zone);
-            }
-            if (!is_null($data->area)) {
-                $entry['area'] = strtolower($data->area);
-            }
-            $html[$index] = $entry;
-        }
+		// Get results
+		$locations = $query->get();
 
-        // Handle empty results
-        if (empty($html)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No locations found.',
-            ], 404);
-        }
+		// Transform results
+		$html = [];
+		foreach ($locations as $index => $data) {
+			$entry = ['city' => strtolower($data->city)];
+			if (!is_null($data->zone)) {
+				$entry['zone'] = strtolower($data->zone);
+			}
+			if (!is_null($data->area)) {
+				$entry['area'] = strtolower($data->area);
+			}
+			$html[$index] = $entry;
+		}
 
-        // Return JSON response
-        return response()->json([
-            'success' => true,
-            'data' => array_values($html),  
-        ], 200);
-    }
-		 
-	
+		// Handle empty results
+		if (empty($html)) {
+			return response()->json([
+				'success' => false,
+				'message' => 'No locations found.',
+			], 404);
+		}
+
+		// Return JSON response
+		return response()->json([
+			'success' => true,
+			'data' => array_values($html),
+		], 200);
+	}
+
+
+	/**
+	 * @OA\Get(
+	 *     path="/api/site/business-details",
+	 *     tags={"Frontend Search city and keyword"},
+	 *     summary="Search records",
+	 *     description="Search records dynamically based on a keyword or filters",
+	 *      
+	 *      @OA\Parameter(
+	 *         name="business_slug",
+	 *         in="query",
+	 *         required=false,
+	 *         description="Filter by business_slug",
+	 *         @OA\Schema(type="string", example="test-demo")
+	 *     ),  
+	 *        
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=101),
+	 *                     @OA\Property(property="name", type="string", example="ABC Coaching Center"),
+	 *                     @OA\Property(property="city", type="string", example="Noida"),
+	 *                     @OA\Property(property="category", type="string", example="Education"),
+	 *                     @OA\Property(property="rating", type="number", format="float", example=4.5)
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+
+
+	public function businessDetails(Request $request)
+	{
+		$business_slug = $request->input('business_slug');
+	 
+
+
+		$keywordDetails = DB::table('keyword')
+			->join('parent_category', 'keyword.parent_category_id', '=', 'parent_category.id')
+			->join('child_category', 'keyword.child_category_id', '=', 'child_category.id')
+			->where('keyword', 'LIKE', '%' . ucwords(str_replace('-', ' ', $business_slug)) . '%')
+			->select('keyword.*', 'parent_category.*', 'child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5', 'keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount')
+			->first();
+
+
+		$category_banner = "";
+		$alt = "";
+
+		if (!empty($keywordDetails->category_banner)) {
+			$cicons = unserialize($keywordDetails->category_banner);
+
+			if (!empty($cicons)) {
+				$category_banner = config('app.website') . $cicons['category_banner']['src'];
+				$alt = $cicons['category_banner']['name'];
+			}
+		}
+
+		$data['keyword'] = array(
+			'keyword' => $keywordDetails->keyword,
+			'keyword_slug' => generate_slug($keywordDetails->keyword),
+			'category_banner' => $category_banner,
+			'alt' => $alt,
+			'meta_title' => $keywordDetails->meta_title,
+			'meta_keywords' => $keywordDetails->meta_keywords,
+			'meta_description' => $keywordDetails->meta_description,
+			'top_description' => $keywordDetails->top_description,
+			'bottom_description' => $keywordDetails->bottom_description,
+			'faqq1' => $keywordDetails->faqq1,
+			'faqa1' => $keywordDetails->faqa1,
+			'faqq2' => $keywordDetails->faqq2,
+			'faqa2' => $keywordDetails->faqa2,
+			'faqq3' => $keywordDetails->faqq3,
+			'faqa3' => $keywordDetails->faqa3,
+			'faqq4' => $keywordDetails->faqq4,
+			'faqa4' => $keywordDetails->faqa4,
+			'faqq5' => $keywordDetails->faqq5,
+			'faqa5' => $keywordDetails->faqa5,
+			'ratingvalue' => $keywordDetails->ratingvalue,
+			'ratingcount' => $keywordDetails->ratingcount,
+			'parent_category' => $keywordDetails->parent_category,
+			'parent_slug' => $keywordDetails->parent_slug,
+			'child_category' => $keywordDetails->child_category,
+			'child_slug' => $keywordDetails->child_slug,
+
+		);
+
+
+		$cityName = ucwords(str_replace('-', ' ', $city));
+		$keywordName = ucwords(str_replace('-', ' ', $search_kw));
+
+		$clientscheck = DB::table('clients')
+			->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
+			->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+			->join('citylists', 'assigned_kwds.city_id', '=', 'citylists.id')
+			->leftJoin(DB::raw('(
+        SELECT SUM(rating) AS rating, comment_client_ID, COUNT(comment_ID) AS comment_count
+        FROM comments GROUP BY comment_client_ID
+    ) c'), 'c.comment_client_ID', '=', 'clients.id')
+			->select(
+				'clients.*',
+				'assigned_kwds.*',
+				'citylists.city',
+				'assigned_kwds.sold_on_position',
+				'c.rating',
+				'c.comment_count'
+			)
+			->where('citylists.city', 'LIKE', "%{$cityName}%")
+			// ->where('clients.active_status', '1')
+			->where('keyword.keyword', 'LIKE', "%{$keywordName}%")
+			->orderByRaw("
+        CASE assigned_kwds.sold_on_position
+            WHEN 'platinum' THEN 1
+            WHEN 'diamond' THEN 2
+            WHEN 'FreeListing' THEN 3
+            ELSE 4
+        END
+    ")
+			->get();
+
+		if ($clientscheck->count() > 0) {
+			$clientsList = $clientscheck;
+		} else {
+			$clientsList = DB::table('clients')
+				->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
+				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+				->join('citylists', 'assigned_kwds.city_id', '=', 'citylists.id')
+				->leftJoin(DB::raw('(
+            SELECT SUM(rating) AS rating, comment_client_ID, COUNT(comment_ID) AS comment_count
+            FROM comments GROUP BY comment_client_ID
+        ) c'), 'c.comment_client_ID', '=', 'clients.id')
+				->select(
+					'clients.*',
+
+					'assigned_kwds.*',
+					'citylists.city',
+					'assigned_kwds.sold_on_position',
+					'c.rating',
+					'c.comment_count'
+				)
+				->where('keyword.keyword', 'LIKE', '%' . $keywordName . '%')
+				->orderByRaw("
+            CASE assigned_kwds.sold_on_position
+                WHEN 'platinum' THEN 1
+                WHEN 'diamond' THEN 2
+                WHEN 'FreeListing' THEN 3
+                ELSE 4
+            END
+        ")
+				->get();
+		}
+		//  dd($clientsList);
+		$data['clientsList'] = $clientsList->map(function ($client) {
+
+			$logoImage = 'client/images/default_pp_small.jpg';
+			$altLogo = "Business Logo";
+			if (!empty($client->logo)) {
+				$cicons = unserialize($client->logo);
+
+				if (!empty($cicons)) {
+					$logoImage = config('app.website') . $cicons['large']['src'];
+					$altLogo = $cicons['large']['name'];
+				}
+			}
+			$profile_pic = 'client/images/default_profile_pic.jpg';
+			$altbanner = "";
+			if (!empty($client->profile_pic)) {
+				$banner = unserialize($client->profile_pic);
+
+				if (!empty($banner)) {
+					$profile_pic = config('app.website') . $banner['large']['src'];
+					$altLogo = $banner['large']['name'];
+				}
+			}
+
+			$gallery = 'client/images/default_profile_pic.jpg';
+			$altbanner = "";
+			$galleryArray = array();
+			if (!empty($client->pictures)) {
+				$galleryList = unserialize($client->pictures);
+				if (!empty($galleryList)) {
+					foreach ($galleryList as $key => $value) {
+
+						$galleryArray[$key] = array(
+							'galley' => $value
+
+						);
+
+					}
+				}
+			}
+
+
+			$assignedKeywords = DB::table('assigned_kwds')
+				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+				->where('assigned_kwds.client_id', '1748')
+				->pluck('keyword.keyword')
+				->toArray();
+			$assignedCity = DB::table('assigned_kwds')
+			->join('citylists', 'assigned_kwds.city_id', '=', 'citylists.id')
+			->where('assigned_kwds.client_id', 1748)
+			->pluck('citylists.city')
+			->toArray();
+ 
+			return [
+				'business_id' => $client->id,
+				'business_name' => $client->business_name,
+				'business_slug' => $client->business_slug,
+				'logo' => $logoImage ?? '',
+				'altLogo' => $altLogo ?? '',
+				'profile_banner' => $profile_pic ?? '',
+				'altbanner' => $altbanner ?? '',
+				'gallery' => $galleryArray ?? '',
+				'business_intro' => $client->business_intro,
+				'assign_keyword' => $assignedKeywords,
+				'service_city' => $assignedCity,
+
+				'certifications' => $client->certifications,
+				'sirName' => $client->sirName,
+				'first_name' => $client->first_name,
+				'middle_name' => $client->middle_name,
+				'last_name' => $client->last_name,
+				'email' => $client->email,
+				'certified_status' => $client->certified_status,
+				'website' => $client->website,
+				'city' => $client->city,
+				'business_state' => $client->business_state,
+				'area' => $client->area,
+				'business_city' => $client->business_city,
+				'address' => $client->address,
+				'pincode' => $client->pincode,
+				'country' => $client->country,
+				'year_of_estb' => $client->year_of_estb,
+				'time' => $client->time,
+				'landmark' => $client->landmark,
+				'profile_pic' => $client->profile_pic,
+				'pictures' => $client->pictures,
+				'rating' => $client->rating,
+				'comment_count' => $client->comment_count,
+			];
+		});
+
+		dd($data['clientsList']);
+		return response()->json([
+			'success' => true,
+			'data' => $data,
+		], 200);
+	 
+	}
 
 
 

@@ -4512,80 +4512,6 @@
                 }
             }
         },
-        "/api/site/popularSearches": {
-            "get": {
-                "tags": [
-                    "Frontend Home Page popularSearches"
-                ],
-                "summary": "Popular Searches records",
-                "description": "Display data home page",
-                "operationId": "1147a4c289d20d2cb8be5693d386db88",
-                "responses": {
-                    "200": {
-                        "description": "Search results retrieved successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Data retrieved successfully"
-                                        },
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "No results found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "No records found."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/api/site/repairsServices": {
             "get": {
                 "tags": [
@@ -4882,14 +4808,14 @@
                 }
             }
         },
-        "/api/site/getBlog-homepage": {
+        "/api/site/getBlog": {
             "get": {
                 "tags": [
                     "Frontend Home Page Blog"
                 ],
                 "summary": "Blog records",
                 "description": "Display data home page",
-                "operationId": "abbb0171bbfeb4a47710f7144f8c1dac",
+                "operationId": "0b58af3b8d66bccac556605d3332011a",
                 "responses": {
                     "200": {
                         "description": "Search results retrieved successfully",
@@ -5360,14 +5286,14 @@
                 }
             }
         },
-        "/api/site/business-details": {
+        "/api/site/business-details/{slug}": {
             "get": {
                 "tags": [
-                    "Frontend Search city and keyword"
+                    "Frontend Search business details"
                 ],
                 "summary": "Search records",
-                "description": "Search records dynamically based on a keyword or filters",
-                "operationId": "56c6194b3dd4828af6d3e43aecd72624",
+                "description": "Search records dynamically based on a business slug",
+                "operationId": "5f038f0d5a2419179827aad8d5abb2be",
                 "parameters": [
                     {
                         "name": "business_slug",
@@ -5417,6 +5343,228 @@
                                                         "example": 4.5
                                                     }
                                                 },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/site/footer-links": {
+            "get": {
+                "tags": [
+                    "Frontend Footer links"
+                ],
+                "summary": "Footer Links records",
+                "description": "Display data home page",
+                "operationId": "334ed325a48231e9b339c363dcd8da00",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/site/common-linked": {
+            "get": {
+                "tags": [
+                    "Frontend Common Linked"
+                ],
+                "summary": "Common Linked records",
+                "description": "Display data home page",
+                "operationId": "7971b5bc9656191ba0da59f7d3691977",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/site/business-services": {
+            "get": {
+                "tags": [
+                    "Frontend business services"
+                ],
+                "summary": "Business Services records",
+                "description": "Display data home page",
+                "operationId": "f1c18429fb4e70414bcd5f79b43be094",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
                                                 "type": "object"
                                             }
                                         }
@@ -5581,10 +5729,6 @@
             "description": "Frontend Home Page"
         },
         {
-            "name": "Frontend Home Page popularSearches",
-            "description": "Frontend Home Page popularSearches"
-        },
-        {
             "name": "Frontend Home Page Repairs Services",
             "description": "Frontend Home Page Repairs Services"
         },
@@ -5619,6 +5763,22 @@
         {
             "name": "Frontend get get City List",
             "description": "Frontend get get City List"
+        },
+        {
+            "name": "Frontend Search business details",
+            "description": "Frontend Search business details"
+        },
+        {
+            "name": "Frontend Footer links",
+            "description": "Frontend Footer links"
+        },
+        {
+            "name": "Frontend Common Linked",
+            "description": "Frontend Common Linked"
+        },
+        {
+            "name": "Frontend business services",
+            "description": "Frontend business services"
         }
     ],
     "security": {

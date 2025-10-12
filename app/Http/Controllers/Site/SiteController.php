@@ -1175,9 +1175,9 @@ class SiteController extends Controller
 		$request->validate([
 			'blog_slug' => 'required|exists:blogdetails,slug',
 		]);
-	 dd($slug);
+	 
 	 $slug = $request->input('blog_slug');
-
+ 
 		$blogLists = Blogdetails::where('status', '1')->limit(8)->orderBy('id', 'DESC')->get();
 
 		if (!empty($blogLists)) {

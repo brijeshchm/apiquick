@@ -243,7 +243,7 @@ class SiteController extends Controller
         ")
 				->get();
 		}
-		 
+
 		$data['clientsList'] = $clientsList->map(function ($client) {
 
 			$logoImage = 'client/images/default_pp_small.jpg';
@@ -586,182 +586,10 @@ class SiteController extends Controller
 
 		];
 
-		$data['repairsServices'] = [
-			[
-				'url' => '/ac-service',
-				'img' => config('app.website') . 'popular/AC-Service.jpg',
-				'alt' => 'AC Service',
-				'title' => 'AC Service',
-
-			],
-			[
-				'url' => '/car-service',
-				'img' => config('app.website') . 'popular/car-services.jpg',
-				'alt' => 'Car Services',
-				'title' => 'Car Services',
-
-			],
-			[
-				'url' => '/laundry-service',
-				'img' => config('app.website') . 'popular/washing-machines.jpg',
-				'alt' => 'Laundry Services',
-				'title' => 'Laundry Services',
-
-			],
-			[
-				'url' => '/electricity-service',
-				'img' => config('app.website') . 'popular/Electricity-Services.jpg',
-				'alt' => 'Electrician Services',
-				'title' => 'Electrician Services',
-
-			],
-			[
-				'url' => '/hotels',
-				'img' => config('app.website') . 'popular/Hotel-Services.jpg',
-				'alt' => 'Hotels',
-				'title' => 'Hotels',
-
-			],
-			[
-				'url' => '/categories/clinical-research-training',
-				'img' => config('app.website') . 'popular/Fitness-Services.jpg',
-				'alt' => 'Health & Fitness',
-				'title' => 'Health & Fitness',
-
-			]
-
-
-		];
-
-		$data['weddingPlanning'] = [
-			[
-				'url' => '/catering-services',
-				'img' => config('app.website') . 'popular/Catering-Services.jpg',
-				'alt' => 'Catering Services',
-				'title' => 'Catering Services',
-
-			],
-			[
-				'url' => '/banquet-halls',
-				'img' => config('app.website') . 'popular/Banquet-Halls.jpg',
-				'alt' => 'Banquet Halls',
-				'title' => 'Banquet Halls',
-
-			],
-			[
-				'url' => '/stage-decorators',
-				'img' => config('app.website') . 'popular/Stage-Decorators.jpg',
-				'alt' => 'Stage Decorators',
-				'title' => 'Stage Decorators',
-
-			],
-			[
-				'url' => '/makeup-artists',
-				'img' => config('app.website') . 'popular/makeup-artists.jpg',
-				'alt' => 'Makeup Artists',
-				'title' => 'Makeup Artists',
-
-			],
-			[
-				'url' => '/mehendi-artists',
-				'img' => config('app.website') . 'popular/Mehendi-Artists.jpg',
-				'alt' => 'Mehendi Artists',
-				'title' => 'Mehendi Artists',
-
-			],
-			[
-				'url' => '/bridal-wear',
-				'img' => config('app.website') . 'popular/Bridal-Wear.jpg',
-				'alt' => 'Bridal Wear',
-				'title' => 'Bridal Wear',
-
-			]
-
-
-		];
-		$data['entranceExams'] = [
-			[
-				'url' => '/categories/entrance-exams-coaching',
-				'img' => config('app.website') . 'popular/air-force-navy.jpg',
-				'alt' => 'coaching',
-				'title' => 'Air Force & Navy / SSR / MR',
-
-			],
-			[
-				'url' => '/ssc-cgl',
-				'img' => config('app.website') . 'popular/SSC-CGL-JEE.jpg',
-				'alt' => 'SSC CGL JEE',
-				'title' => 'SSC CGL JEE',
-
-			],
-			[
-				'url' => '/rrb-ntpc-coaching',
-				'img' => config('app.website') . 'popular/NTPC-RRB-Railway.jpg',
-				'alt' => 'NTPC & RRB Railway ',
-				'title' => 'NTPC & RRB Railway ',
-
-			],
-			[
-				'url' => '/cat-coaching',
-				'img' => config('app.website') . 'popular/CAT-exam.jpg',
-				'alt' => 'CAT/NEET',
-				'title' => 'CAT/NEET',
-
-			],
-			[
-				'url' => '/ctet-coaching',
-				'img' => config('app.website') . 'popular/CTET-Super-TET.jpg',
-				'alt' => 'CTET Super TET',
-				'title' => 'CTET Super TET',
-
-			],
-			[
-				'url' => '/categories/entrance-exams-coaching',
-				'img' => config('app.website') . 'popular/UPSC-IAS.jpg',
-				'alt' => 'UPSC & IAS',
-				'title' => 'UPSC & IAS',
-
-			]
-
-
-		];
-		
-		$studyPageList = [];
-		 
-		$studyAbroad_id = ParentCategory::where('parent_slug', 'study-abroad')->first();
-		$studyAbroad = DB::table('child_category')
-			->join('parent_category', 'child_category.parent_category_id', '=', 'parent_category.id')
-			->where('parent_category_id', $studyAbroad_id->id)
-			->select('parent_category.*', 'child_category.*')->limit(24)
-			->get();
-		if (!empty($studyAbroad)) {
-			foreach ($studyAbroad as $key => $study) {
-				if ($study->child_slug != 'overseas-journalism-education-consultants' && $study->child_slug != 'overseas-engineering-education-consultant') {
-
-					if ($study->pc_icon) {
-						$abicons = unserialize($study->pc_icon);
-						$img = config('app.website') . $abicons['pc_icon']['src'];
-					} else {
-						$img = config('app.website') . 'images/it-training.png';
-					}
 
 
 
-					$studyPageList[$key] = array(
-						'url' => '/child/' . $study->child_slug,
-						'img' => $img,
-						'alt' => $study->child_category,
-						'title' => $study->child_category,
-					);
-
-					
-
-
-				}
-			}
-		}
-		$data['studyAbroad'] = $studyPageList;
-		$blogPageList = [];		 
+		$blogPageList = [];
 		$blogdetails = Blogdetails::where('status', '1')->limit(3)->orderBy('id', 'DESC')->get();
 		if (!empty($blogdetails)) {
 			foreach ($blogdetails as $key => $blog) {
@@ -782,11 +610,6 @@ class SiteController extends Controller
 					'title' => $blog->name,
 					'description' => ucfirst(substr($blog->description, 0, 220)),
 				);
-
-				
-
-
-
 			}
 		}
 
@@ -809,7 +632,7 @@ class SiteController extends Controller
 
 
 	}
-	 
+
 	/**
 	 * @OA\Get(
 	 *     path="/api/site/repairsServices",
@@ -1259,50 +1082,182 @@ class SiteController extends Controller
 	public function getBlog(Request $request)
 	{
 		$url = config('app.url');
-		$blogPageList = [];
-		$data = [];
-		$blogdetails = Blogdetails::where('status', '1')->orderBy('id', 'DESC')->get();
-		if (!empty($blogdetails)) {
-			foreach ($blogdetails as $key => $blog) {
-				$image = "";
-				$alt = "";
-				if ($blog->image != '') {
-					$image = unserialize($blog->image);
-					$image = config('app.website') . $image['large']['src'];
+
+		$blogdetails = Blogdetails::where('status', '1')
+			->orderBy('id', 'DESC')
+			->paginate(10);
+
+		foreach ($blogdetails as $key => $blog) {
+			$image = "";
+			$alt = "";
+
+			if (!empty($blog->image)) {
+				$imgData = unserialize($blog->image);
+				if (!empty($imgData['large']['src'])) {
+					$image = config('app.website') . $imgData['large']['src'];
 					$alt = $blog->name;
 				}
+			}
 
+			$blogPageList[$key] = [
+				'name' => $blog->name,
+				'url' => '/blog/' . $blog->slug,
+				'img' => $image,
+				'alt' => $alt,
+				'title' => $blog->name,
+				'description' => ucfirst(substr(strip_tags($blog->description), 0, 220)) . '...',
 
+			];
+		}
 
-				$blogPageList[$key] = array(
+		return response()->json([
+			'success' => true,
+			'current_page' => $blogdetails->currentPage(),
+			'last_page' => $blogdetails->lastPage(),
+			'per_page' => $blogdetails->perPage(),
+			'total' => $blogdetails->total(),
+			'data' => $blogPageList,
+		], 200);
+	}
+
+ 
+	/**
+	 * @OA\Get(
+	 *     path="/api/site/blog/{slug}",
+	 *     tags={"Frontend blog details"},
+	 *     summary="Search records",
+	 *     description="Search records dynamically based on a business slug",
+	 *      
+	 *      @OA\Parameter(
+	 *         name="blog_slug",
+	 *         in="query",
+	 *         required=false,
+	 *         description="Filter by blog_slug",
+	 *         @OA\Schema(type="string", example="microsoft-power-bi-data-visualization-course--master-interactive-dashboards")
+	 *     ),  
+	 *        
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=101),
+	 *                     @OA\Property(property="name", type="string", example="ABC Coaching Center"),
+	 *                     @OA\Property(property="city", type="string", example="Noida"),
+	 *                     @OA\Property(property="category", type="string", example="Education"),
+	 *                     @OA\Property(property="rating", type="number", format="float", example=4.5)
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function getBlogDetails(Request $request, $slug)
+	{
+		$url = config('app.url');
+		$request->validate([
+			'blog_slug' => 'required|exists:blogdetails,slug',
+		]);
+	 dd($slug);
+	 $slug = $request->input('blog_slug');
+
+		$blogLists = Blogdetails::where('status', '1')->limit(8)->orderBy('id', 'DESC')->get();
+
+		if (!empty($blogLists)) {
+			foreach ($blogLists as $key => $blog) {
+				$image = "";
+				$alt = "";
+
+				if (!empty($blog->image)) {
+					$imgData = unserialize($blog->image);
+					if (!empty($imgData['large']['src'])) {
+						$image = config('app.website') . $imgData['large']['src'];
+						$alt = $blog->name;
+					}
+				}
+
+				$blogPageList[$key] = [
+					'name' => $blog->name,
 					'url' => '/blog/' . $blog->slug,
 					'img' => $image,
 					'alt' => $alt,
 					'title' => $blog->name,
-					'description' => ucfirst(substr($blog->description, 0, 220)),
-				);
+					'description' => ucfirst(substr(strip_tags($blog->description), 0, 220)) . '...',
 
-				$data['blogList'] = $blogPageList;
-
-
-
+				];
 			}
 		}
-		if ($data) {
-			$data['status'] = true;
-			$data['code'] = 200;
-			$data['message'] = "Successfully";
-		} else {
-			$data['status'] = false;
-			$data['code'] = 200;
-			$data['message'] = "failed";
+
+		$data['blogList'] = $blogPageList;
+		$blogdetails = Blogdetails::where('slug', $slug)->first();
+		$blogPageDetails = array();
+	 
+		if (!empty($blogdetails)) {
+
+			$blogimage = "";
+			$blogalt = "";
+
+			if (!empty($blogdetails->image)) {
+			$imgData = unserialize($blogdetails->image);
+			if (!empty($imgData['large']['src'])) {
+			$blogimage = config('app.website') . $imgData['large']['src'];
+			$blogalt = $blogdetails->name;
+			}
+			}
+			$imageBanner = "";
+			$blogaltB = "";
+
+			if (!empty($blogdetails->image_banner)) {
+			$imgBanner = unserialize($blogdetails->image_banner);
+			if (!empty($imgBanner['large']['src'])) {
+			$imageBanner = config('app.website') . $imgBanner['large']['src'];
+			$blogaltB = $blogdetails->name;
+			}
+			}
+
+
+			$blogPageDetails = [
+				'name' => $blogdetails->name,
+				'url' => '/blog/' . $blogdetails->slug,
+				'blogImage' => $blogimage,
+				'blogalt' => $blogalt,
+				'imageBanner' => $imageBanner,
+				'blogBannerAalt' => $blogaltB,
+				'title' => $blogdetails->name,
+				'description' => ucfirst($blogdetails->description) ,
+				'meta_title' => ucfirst($blogdetails->meta_title) ,
+				'meta_keywords' => ucfirst($blogdetails->meta_keywords) ,
+				'meta_description' => ucfirst($blogdetails->meta_description) ,
+				'top_content' => ucfirst($blogdetails->top_content) ,
+				'bottom_content' => ucfirst($blogdetails->bottom_content) ,
+
+			];
 		}
+	 $data['blogDetails'] = $blogPageDetails;
 
 		return response()->json([
 			'success' => true,
 			'data' => $data,
 		], 200);
 	}
+
 
 
 	/**
@@ -1851,16 +1806,16 @@ class SiteController extends Controller
 	 */
 
 
-	public function businessDetails(Request $request,$slug)
+	public function businessDetails(Request $request, $slug)
 	{
-		 
+
 		$request->validate([
 			'business_slug' => 'required|exists:clients,business_slug',
 		]);
 
-			 
+
 		$business_slug = $request->input('business_slug');
- 
+
 		$clientscheck = DB::table('clients')
 			->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
 			->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
@@ -1878,7 +1833,7 @@ class SiteController extends Controller
 				'c.comment_count'
 			)
 			->where('clients.business_slug', 'LIKE', "%{$business_slug}%")
-			 
+
 			->orderByRaw("
         CASE assigned_kwds.sold_on_position
             WHEN 'platinum' THEN 1
@@ -1888,127 +1843,127 @@ class SiteController extends Controller
         END
     ")
 			->first();
-  
-	 
 
-			$logoImage = 'client/images/default_pp_small.jpg';
-			$altLogo = "Business Logo";
-			if (!empty($clientscheck->logo)) {
-				$cicons = unserialize($clientscheck->logo);
 
-				if (!empty($cicons)) {
-					$logoImage = config('app.website') . $cicons['large']['src'];
-					$altLogo = $cicons['large']['name'];
+
+		$logoImage = 'client/images/default_pp_small.jpg';
+		$altLogo = "Business Logo";
+		if (!empty($clientscheck->logo)) {
+			$cicons = unserialize($clientscheck->logo);
+
+			if (!empty($cicons)) {
+				$logoImage = config('app.website') . $cicons['large']['src'];
+				$altLogo = $cicons['large']['name'];
+			}
+		}
+		$profile_pic = 'client/images/default_profile_pic.jpg';
+		$altbanner = "";
+		if (!empty($clientscheck->profile_pic)) {
+			$banner = unserialize($clientscheck->profile_pic);
+
+			if (!empty($banner)) {
+				$profile_pic = config('app.website') . $banner['large']['src'];
+				$altLogo = $clientscheck->business_name;
+			}
+		}
+
+		$gallery = 'client/images/default_profile_pic.jpg';
+		$altbanner = "";
+		$galleryArray = array();
+		if (!empty($clientscheck->pictures)) {
+			$galleryList = unserialize($clientscheck->pictures);
+			if (!empty($galleryList)) {
+				foreach ($galleryList as $pkey => $gvalue) {
+
+					$galleryArray[$pkey] = array(
+						'gallery' => $gvalue
+					);
+
 				}
 			}
-			$profile_pic = 'client/images/default_profile_pic.jpg';
-			$altbanner = "";
-			if (!empty($clientscheck->profile_pic)) {
-				$banner = unserialize($clientscheck->profile_pic);
-
-				if (!empty($banner)) {
-					$profile_pic = config('app.website') . $banner['large']['src'];
-					$altLogo = $clientscheck->business_name;
-				}
-			}
- 
-			$gallery = 'client/images/default_profile_pic.jpg';
-			$altbanner = "";
-			$galleryArray = array();
-			if (!empty($clientscheck->pictures)) {
-				$galleryList = unserialize($clientscheck->pictures);
-				if (!empty($galleryList)) {
-					foreach ($galleryList as $pkey => $gvalue) {
-
-						$galleryArray[$pkey] = array(
-							'gallery' => $gvalue
-						);
-
-					}
-				}
-			}
+		}
 
 
-			$assignedKeywords = DB::table('assigned_kwds')
-				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
-				->where('assigned_kwds.client_id', '1748')
-				->pluck('keyword.keyword')
-				->toArray();
-			$assignedCity = DB::table('assigned_kwds')
-				->join('citylists', 'assigned_kwds.city_id', '=', 'citylists.id')
-				->where('assigned_kwds.client_id', 1748)
-				->pluck('citylists.city')
-				->toArray();
+		$assignedKeywords = DB::table('assigned_kwds')
+			->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+			->where('assigned_kwds.client_id', '1748')
+			->pluck('keyword.keyword')
+			->toArray();
+		$assignedCity = DB::table('assigned_kwds')
+			->join('citylists', 'assigned_kwds.city_id', '=', 'citylists.id')
+			->where('assigned_kwds.client_id', 1748)
+			->pluck('citylists.city')
+			->toArray();
 
-				$time= "";
-				if($clientscheck->time){
-					$time = unserialize($clientscheck->time);
- 
-				}
-			$data['clientsList'] =  [
-				'business_id' => $clientscheck->id,
-				'business_name' => $clientscheck->business_name,
-				'business_slug' => $clientscheck->business_slug,
-				'logo' => $logoImage  ?? '',
-				'altLogo' => $altLogo .' Logo' ?? '',
-				'profile_banner' => $profile_pic ?? '',
-				'altbanner' => $altbanner ?? '',
-				'gallery' => $galleryArray ?? '',
-				'business_intro' => $clientscheck->business_intro,
-				'assign_keyword' => $assignedKeywords,
-				'service_city' => $assignedCity,
+		$time = "";
+		if ($clientscheck->time) {
+			$time = unserialize($clientscheck->time);
 
-				'certifications' => $clientscheck->certifications,
-				'sirName' => $clientscheck->sirName,
-				'first_name' => $clientscheck->first_name,
-				'middle_name' => $clientscheck->middle_name,
-				'last_name' => $clientscheck->last_name,
-				'email' => $clientscheck->email,
-				'certified_status' => $clientscheck->certified_status,
-				'website' => $clientscheck->website,
-				'city' => $clientscheck->city,
-				'business_state' => $clientscheck->business_state,
-				'area' => $clientscheck->area,
-				'business_city' => $clientscheck->business_city,
-				'address' => $clientscheck->address,
-				'pincode' => $clientscheck->pincode,
-				'country' => $clientscheck->country,
-				'year_of_estb' => $clientscheck->year_of_estb,
-				'time' => $time,
-				'landmark' => $clientscheck->landmark,
-				 
-				'rating' => $clientscheck->rating,
-				'comment_count' => $clientscheck->comment_count,
-			];
-		 
+		}
+		$data['clientsList'] = [
+			'business_id' => $clientscheck->id,
+			'business_name' => $clientscheck->business_name,
+			'business_slug' => $clientscheck->business_slug,
+			'logo' => $logoImage ?? '',
+			'altLogo' => $altLogo . ' Logo' ?? '',
+			'profile_banner' => $profile_pic ?? '',
+			'altbanner' => $altbanner ?? '',
+			'gallery' => $galleryArray ?? '',
+			'business_intro' => $clientscheck->business_intro,
+			'assign_keyword' => $assignedKeywords,
+			'service_city' => $assignedCity,
 
-			$data['comment'] =  Comment::where('comment_client_ID', $clientscheck->id)
-            ->where('comment_approved', 1)
-            ->orderBy('created_at', 'desc')
-            ->get()
-            ->toArray();
+			'certifications' => $clientscheck->certifications,
+			'sirName' => $clientscheck->sirName,
+			'first_name' => $clientscheck->first_name,
+			'middle_name' => $clientscheck->middle_name,
+			'last_name' => $clientscheck->last_name,
+			'email' => $clientscheck->email,
+			'certified_status' => $clientscheck->certified_status,
+			'website' => $clientscheck->website,
+			'city' => $clientscheck->city,
+			'business_state' => $clientscheck->business_state,
+			'area' => $clientscheck->area,
+			'business_city' => $clientscheck->business_city,
+			'address' => $clientscheck->address,
+			'pincode' => $clientscheck->pincode,
+			'country' => $clientscheck->country,
+			'year_of_estb' => $clientscheck->year_of_estb,
+			'time' => $time,
+			'landmark' => $clientscheck->landmark,
 
-			$sum = Comment::where('comment_client_ID', $clientscheck->id)
+			'rating' => $clientscheck->rating,
+			'comment_count' => $clientscheck->comment_count,
+		];
+
+
+		$data['comment'] = Comment::where('comment_client_ID', $clientscheck->id)
+			->where('comment_approved', 1)
+			->orderBy('created_at', 'desc')
+			->get()
+			->toArray();
+
+		$sum = Comment::where('comment_client_ID', $clientscheck->id)
 			->where('comment_approved', 1)
 			->sum('rating');
-			$count = Comment::where('comment_client_ID', $clientscheck->id)
+		$count = Comment::where('comment_client_ID', $clientscheck->id)
 			->where('comment_approved', 1)
 			->count();
 
-			$avgRating = 0;
-			if ($count != 0)
+		$avgRating = 0;
+		if ($count != 0)
 			$avgRating = ($sum / ($count * 5)) * 5;
-			$data['sum'] = $sum;
-			$data['avgRating'] = $avgRating;
-			$data['count'] = $count;
-		 		 
-			$barGraphQuery = Comment::select(DB::raw('*'))
+		$data['sum'] = $sum;
+		$data['avgRating'] = $avgRating;
+		$data['count'] = $count;
+
+		$barGraphQuery = Comment::select(DB::raw('*'))
 			->from(DB::raw('(SELECT COUNT(*) as count, SUM(`rating`) as sum_rating, rating FROM `comments` WHERE `comment_client_ID`=' . $clientscheck->id . ' AND `comment_approved`=1 GROUP BY `rating`) AS temp'))
 			->orderBy('rating', 'desc')
 			->get();
 
-			$data['barGraphQuery'] = $barGraphQuery;
-		
+		$data['barGraphQuery'] = $barGraphQuery;
+
 		return response()->json([
 			'success' => true,
 			'data' => $data,
@@ -2223,7 +2178,7 @@ class SiteController extends Controller
 				'title' => 'Interviews Question',
 			]
 		];
-	 
+
 		if ($data) {
 			$data['status'] = true;
 			$data['code'] = 200;
@@ -2330,7 +2285,7 @@ class SiteController extends Controller
 				'url' => '/home-services',
 				'title' => 'Home Services',
 			],
-			 
+
 			[
 				'url' => '/wedding-organizers',
 				'title' => 'Parties, Special Occasions & Wedding',
@@ -2413,7 +2368,7 @@ class SiteController extends Controller
 				'url' => '/painting-contractors',
 				'title' => 'Painting Contractors',
 			],
-			 
+
 			[
 				'url' => '/modular-kitchen-dealers',
 				'title' => 'Modular Kitchen Dealers',
@@ -2422,7 +2377,7 @@ class SiteController extends Controller
 				'url' => '/waterproofing-contractors',
 				'title' => 'Waterproofing Contractors',
 			]
-			 
+
 		];
 		$data['educationTraining'] = [
 			[
@@ -2464,7 +2419,7 @@ class SiteController extends Controller
 			[
 				'url' => '/placement-consultants',
 				'title' => 'Placement Consultants',
-			]		 
+			]
 		];
 		$data['personalService'] = [
 			[
@@ -2506,11 +2461,11 @@ class SiteController extends Controller
 			[
 				'url' => '/massage-centres',
 				'title' => 'Massage Centres',
-			],		 
+			],
 			[
 				'url' => '/advocates-lawyers',
 				'title' => 'Advocates & Lawyers',
-			],		 
+			],
 		];
 
 		$cities = City::where('popular', '1')->get();
@@ -2543,7 +2498,7 @@ class SiteController extends Controller
 		], 200);
 
 	}
-	
+
 	/**
 	 * @OA\Get(
 	 *     path="/api/site/business-services",
@@ -2586,37 +2541,37 @@ class SiteController extends Controller
 	public function businessServices(Request $request)
 	{
 		$url = config('app.url');
-		 
-	$data['businessServices'] = DB::table('parent_category')
-        ->join('child_category', 'child_category.parent_category_id', '=', 'parent_category.id')
-        ->select('parent_category.parent_category', 'child_category.child_category', 'child_category.child_slug','child_category.pc_icon')
-        ->get()
-		 
-        ->groupBy('parent_category') // Group by parent_category
-        ->map(function ($group) {
-            return $group->map(function ($item) {
-				// dd($item);
-				$image ="";
-				$alt = "";
-				if (!empty($item->pc_icon)) {
 
-					$cicons = @unserialize($item->pc_icon);
-					if ($cicons !== false && !empty($cicons['pc_icon']['src']) && !empty($cicons['pc_icon']['name'])) {
-						$image = config('app.website') . $cicons['pc_icon']['src'];
-						$alt = $item->child_category;
+		$data['businessServices'] = DB::table('parent_category')
+			->join('child_category', 'child_category.parent_category_id', '=', 'parent_category.id')
+			->select('parent_category.parent_category', 'child_category.child_category', 'child_category.child_slug', 'child_category.pc_icon')
+			->get()
+
+			->groupBy('parent_category') // Group by parent_category
+			->map(function ($group) {
+				return $group->map(function ($item) {
+					// dd($item);
+					$image = "";
+					$alt = "";
+					if (!empty($item->pc_icon)) {
+
+						$cicons = @unserialize($item->pc_icon);
+						if ($cicons !== false && !empty($cicons['pc_icon']['src']) && !empty($cicons['pc_icon']['name'])) {
+							$image = config('app.website') . $cicons['pc_icon']['src'];
+							$alt = $item->child_category;
+						}
+
 					}
+					return [
+						'child_category' => $item->child_category,
+						'child_slug' => $item->child_slug,
+						'icon' => $image,
+						'alt' => $alt,
+					];
+				})->toArray();
+			})->toArray();
 
-				}
-                return [
-                    'child_category' => $item->child_category,
-                    'child_slug' => $item->child_slug,
-                    'icon' => $image,
-                    'alt' => $alt,
-                ];
-            })->toArray();
-        })->toArray();
 
- 
 
 		if ($data) {
 			$data['status'] = true;

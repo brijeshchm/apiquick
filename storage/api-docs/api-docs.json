@@ -4882,6 +4882,111 @@
                 }
             }
         },
+        "/api/site/blog/{slug}": {
+            "get": {
+                "tags": [
+                    "Frontend blog details"
+                ],
+                "summary": "Search records",
+                "description": "Search records dynamically based on a business slug",
+                "operationId": "22706b0ce20ae5efa3a0635b4c21de55",
+                "parameters": [
+                    {
+                        "name": "blog_slug",
+                        "in": "query",
+                        "description": "Filter by blog_slug",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "microsoft-power-bi-data-visualization-course--master-interactive-dashboards"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "ABC Coaching Center"
+                                                    },
+                                                    "city": {
+                                                        "type": "string",
+                                                        "example": "Noida"
+                                                    },
+                                                    "category": {
+                                                        "type": "string",
+                                                        "example": "Education"
+                                                    },
+                                                    "rating": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 4.5
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/site/getKeyword": {
             "get": {
                 "tags": [
@@ -5747,6 +5852,10 @@
         {
             "name": "Frontend Home Page Blog",
             "description": "Frontend Home Page Blog"
+        },
+        {
+            "name": "Frontend blog details",
+            "description": "Frontend blog details"
         },
         {
             "name": "Frontend get Keyword",

@@ -364,10 +364,6 @@
                                         "type": "string",
                                         "format": "email",
                                         "example": "test@example.com"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "example": "Enter Password"
                                     }
                                 },
                                 "type": "object"

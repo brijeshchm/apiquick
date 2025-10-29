@@ -40,7 +40,7 @@ Route::get('/business/get-myLead',[EnquiryController::class,'getMyLead']);
 Route::get('/business/get-favorite-enquiry',[EnquiryController::class,'getFavoriteEnquiry']);
 Route::get('/business/manage-enquiry',[EnquiryController::class,'manageEnquiry']);
 Route::get('/business/get-discussion',[App\Http\Controllers\Api\BusinessDiscussionController::class, 'getDiscussion']);
-Route::get('/business-owners/get-paginated-assigned-keywords',[App\Http\Controllers\Api\BusinessKeywordController::class, 'getPaginatedAssignedKeywords']);
+Route::get('/business/get-paginated-assigned-keywords',[App\Http\Controllers\Api\BusinessKeywordController::class, 'getPaginatedAssignedKeywords']);
  
 Route::get('/business/personal-details',[App\Http\Controllers\Api\PersonalDetailsController::class, 'personalDetails']);
  

@@ -286,7 +286,7 @@ class BusinessKeywordController extends Controller
 		if ($request->has('search')) {
 			$search = $request->input('search');
 		}
-		$data['citylist'] = Citieslists::get();
+		// $data['citylist'] = Citieslists::get();
 		$data['keywordlist'] = Keyword::select('id', 'keyword', 'child_category_id', 'parent_category_id', 'city_id')->get();
 		$data['clientID'] = $user->id;
 		 
@@ -309,10 +309,8 @@ class BusinessKeywordController extends Controller
 	 *         required=true,
 	 *         @OA\JsonContent(
 	 *             required={"kw_id","parent_cat_id","child_cat_id","zone_id"},
-	 *             @OA\Property(property="kw_id", type="integer", example=5),
-	 *             @OA\Property(property="parent_cat_id", type="integer", example=2),
-	 *             @OA\Property(property="child_cat_id", type="integer", example=8),
-	 *             @OA\Property(property="zone_id", type="integer", example=3)
+	 *             @OA\Property(property="kw_id", type="integer", example=5)
+	 *             
 	 *         )
 	 *     ),
 	 *     @OA\Response(

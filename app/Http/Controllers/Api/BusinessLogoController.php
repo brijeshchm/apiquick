@@ -124,55 +124,74 @@ class BusinessLogoController extends Controller
         }
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/business/saveProfileLogo",
-     *     tags={"Profile"},
-     *     summary="Upload business logo and profile picture",
-     *     description="Uploads the business logo and profile picture for the authenticated user. Requires Bearer token.",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\MediaType(
-     *             mediaType="multipart/form-data",
-     *             @OA\Schema(
-     *                 required={"logo","profile_pic"},
-     *                 @OA\Property(property="logo", type="string", format="binary", description="Business logo file"),
-     *                 @OA\Property(property="profile_pic", type="string", format="binary", description="Profile picture file")
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Files uploaded successfully",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="logo_url", type="string", format="uri", example="https://yourdomain.com/storage/logos/business.png"),
-     *             @OA\Property(property="profile_pic_url", type="string", format="uri", example="https://yourdomain.com/storage/profiles/profile.png")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthenticated",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validation error",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="The logo field is required."),
-     *             @OA\Property(
-     *                 property="errors",
-     *                 type="object",
-     *                 @OA\Property(property="logo", type="array", @OA\Items(type="string", example="The logo must be an image.")),
-     *                 @OA\Property(property="profile_pic", type="array", @OA\Items(type="string", example="The profile_pic must be an image."))
-     *             )
-     *         )
-     *     )
-     * )
-     */
+   /**
+	 * @OA\Post(
+	 *     path="/api/business/saveProfileLogo",
+	 *     tags={"Profile"},
+	 *     summary="Upload business logo and profile picture",
+	 *     description="Uploads the business logo and profile picture for the authenticated user. Requires Bearer token.",
+	 *     security={{"bearerAuth":{}}},
+	 *     @OA\RequestBody(
+	 *         required=true,
+	 *         @OA\MediaType(
+	 *             mediaType="multipart/form-data",
+	 *             @OA\Schema(
+	 *                 required={"logo", "profile_pic"},
+	 *                 @OA\Property(
+	 *                     property="logo",
+	 *                     type="string",
+	 *                     format="binary",
+	 *                     description="Business logo file"
+	 *                 ),
+	 *                 @OA\Property(
+	 *                     property="profile_pic",
+	 *                     type="string",
+	 *                     format="binary",
+	 *                     description="Profile picture file"
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Files uploaded successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="logo_url", type="string", format="uri", example="https://yourdomain.com/storage/logos/business.png"),
+	 *             @OA\Property(property="profile_pic_url", type="string", format="uri", example="https://yourdomain.com/storage/profiles/profile.png")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=422,
+	 *         description="Validation error",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="The logo field is required."),
+	 *             @OA\Property(
+	 *                 property="errors",
+	 *                 type="object",
+	 *                 @OA\Property(
+	 *                     property="logo",
+	 *                     type="array",
+	 *                     @OA\Items(type="string", example="The logo must be an image.")
+	 *                 ),
+	 *                 @OA\Property(
+	 *                     property="profile_pic",
+	 *                     type="array",
+	 *                     @OA\Items(type="string", example="The profile_pic must be an image.")
+	 *                 )
+	 *             )
+	 *         )
+	 *     )
+	 * )
+	 */
+
    public function saveProfileLogo(Request $request)
 	{
 		if (!Auth::guard('sanctum')->check()) {
@@ -182,7 +201,7 @@ class BusinessLogoController extends Controller
 					'error' => 'token_missing_or_invalid'
 				], 401);
 		}
-
+dd($request);
 			// Check if user is active
 			$user = auth('sanctum')->user();
 			if (!$user) {

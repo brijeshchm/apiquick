@@ -1366,18 +1366,6 @@
                                     "kw_id": {
                                         "type": "integer",
                                         "example": 5
-                                    },
-                                    "parent_cat_id": {
-                                        "type": "integer",
-                                        "example": 2
-                                    },
-                                    "child_cat_id": {
-                                        "type": "integer",
-                                        "example": 8
-                                    },
-                                    "zone_id": {
-                                        "type": "integer",
-                                        "example": 3
                                     }
                                 },
                                 "type": "object"

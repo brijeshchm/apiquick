@@ -1343,27 +1343,24 @@
                 ]
             }
         },
-        "/api/business/saveKeywordAssign/{id}": {
+        "/api/business/saveKeywordAssign": {
             "post": {
                 "tags": [
                     "Keywords"
                 ],
                 "summary": "Assign a keyword to the authenticated user",
                 "description": "Assign a keyword to the authenticated user's account/business.",
-                "operationId": "ad8e7d7bf376bb517c28a12404a9b451",
+                "operationId": "3646c2eb3dd45a11bde54aadaef30e07",
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "kw_id",
-                                    "parent_cat_id",
-                                    "child_cat_id",
-                                    "zone_id"
+                                    "keyword"
                                 ],
                                 "properties": {
-                                    "kw_id": {
+                                    "keyword": {
                                         "type": "integer",
                                         "example": 5
                                     }
@@ -1390,25 +1387,9 @@
                                         },
                                         "data": {
                                             "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 15
-                                                },
-                                                "kw_id": {
+                                                "keyword": {
                                                     "type": "integer",
                                                     "example": 5
-                                                },
-                                                "parent_cat_id": {
-                                                    "type": "integer",
-                                                    "example": 2
-                                                },
-                                                "child_cat_id": {
-                                                    "type": "integer",
-                                                    "example": 8
-                                                },
-                                                "zone_id": {
-                                                    "type": "integer",
-                                                    "example": 3
                                                 }
                                             },
                                             "type": "object"

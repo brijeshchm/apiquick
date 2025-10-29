@@ -105,7 +105,7 @@ Route::get('/business/get-paginated-payment-history',[App\Http\Controllers\Api\I
  Route::get('/business/get-keywords',[App\Http\Controllers\Api\BusinessKeywordController::class,'getKeywords']); 
 
 
-Route::post('/business/saveKeywordAssign/{id}',[App\Http\Controllers\Api\BusinessKeywordController::class,'saveKeywordAssign']); 
+Route::post('/business/saveKeywordAssign',[App\Http\Controllers\Api\BusinessKeywordController::class,'saveKeywordAssign']); 
 Route::get('/business/assignKeyword/delete/{id}',[App\Http\Controllers\Api\BusinessKeywordController::class, 'assignKeywordDelete']);
  
 

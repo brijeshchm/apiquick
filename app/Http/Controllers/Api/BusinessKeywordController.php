@@ -300,7 +300,7 @@ class BusinessKeywordController extends Controller
 	}
 	/**
 	 * @OA\Post(
-	 *     path="/api/business/saveKeywordAssign/{id}",
+	 *     path="/api/business/saveKeywordAssign",
 	 *     tags={"Keywords"},
 	 *     summary="Assign a keyword to the authenticated user",
 	 *     description="Assign a keyword to the authenticated user's account/business.",
@@ -308,8 +308,8 @@ class BusinessKeywordController extends Controller
 	 *     @OA\RequestBody(
 	 *         required=true,
 	 *         @OA\JsonContent(
-	 *             required={"kw_id","parent_cat_id","child_cat_id","zone_id"},
-	 *             @OA\Property(property="kw_id", type="integer", example=5)
+	 *             required={"keyword"},
+	 *             @OA\Property(property="keyword", type="integer", example=5)
 	 *             
 	 *         )
 	 *     ),
@@ -319,12 +319,9 @@ class BusinessKeywordController extends Controller
 	 *         @OA\JsonContent(
 	 *             @OA\Property(property="success", type="boolean", example=true),
 	 *             @OA\Property(property="message", type="string", example="Keyword assigned successfully."),
-	 *             @OA\Property(property="data", type="object",
-	 *                 @OA\Property(property="id", type="integer", example=15),
-	 *                 @OA\Property(property="kw_id", type="integer", example=5),
-	 *                 @OA\Property(property="parent_cat_id", type="integer", example=2),
-	 *                 @OA\Property(property="child_cat_id", type="integer", example=8),
-	 *                 @OA\Property(property="zone_id", type="integer", example=3)
+	 *             @OA\Property(property="data", type="object",	 *                
+	 *                 @OA\Property(property="keyword", type="integer", example=5)
+	 *                 
 	 *             )
 	 *         )
 	 *     ),
@@ -350,7 +347,7 @@ class BusinessKeywordController extends Controller
 	 * )
 	 */
 
-	public function saveKeywordAssign(Request $request, $id)
+	public function saveKeywordAssign(Request $request)
 	{
 
 		if (!Auth::guard('sanctum')->check()) {

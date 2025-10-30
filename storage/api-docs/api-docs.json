@@ -68,7 +68,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/business/account-settings": {
@@ -133,7 +138,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/business/buy-package": {
@@ -198,7 +208,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/upload-documents": {
@@ -396,6 +411,108 @@
                         "description": "Invalid input"
                     }
                 }
+            }
+        },
+        "/api/business/saveBusinessOwners": {
+            "post": {
+                "tags": [
+                    "Registration Business"
+                ],
+                "summary": "List Your Business",
+                "description": "Registration of business business name, email, mobile.",
+                "operationId": "329718c9df8db1e116ad055d4092a994",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "business_name",
+                                    "mobile",
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "example@gmail.com"
+                                    },
+                                    "business_name": {
+                                        "type": "integer",
+                                        "example": "business name"
+                                    },
+                                    "mobile": {
+                                        "type": "interger",
+                                        "example": "9999998888"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Registration Business saved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Registration Business saved successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The email field is required."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "email": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The email must be a valid email address."
+                                                    }
+                                                },
+                                                "year_of_estb": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The year of establishment field is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/business/get-assigned-zones": {
@@ -4208,7 +4325,7 @@
                                     },
                                     "display_hofo": {
                                         "type": "string",
-                                        "example": "Head Office Display Name"
+                                        "example": "0"
                                     },
                                     "business_intro": {
                                         "type": "string",
@@ -5717,6 +5834,10 @@
         {
             "name": "Authentication",
             "description": "Authentication"
+        },
+        {
+            "name": "Registration Business",
+            "description": "Registration Business"
         },
         {
             "name": "Zones",

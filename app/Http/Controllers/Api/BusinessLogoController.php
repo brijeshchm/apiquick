@@ -201,7 +201,7 @@ class BusinessLogoController extends Controller
 					'error' => 'token_missing_or_invalid'
 				], 401);
 		}
-dd($request);
+// dd($request);
 			// Check if user is active
 			$user = auth('sanctum')->user();
 			if (!$user) {

@@ -28,6 +28,7 @@ use App\Http\Controllers\Api\ProfileController;
  use App\Http\Controllers\Api\EnquiryController;
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/business/saveBusinessOwners', [AuthController::class, 'saveBusinessOwners']);
  
 
 Route::middleware('auth:sanctum')->group(function () {

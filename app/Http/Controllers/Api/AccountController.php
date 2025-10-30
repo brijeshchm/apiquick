@@ -26,6 +26,7 @@ class AccountController extends Controller
 	 *     tags={"Package"},
 	 *     summary="Get all packages",
 	 *     description="Fetch all available packages for businesses.",
+	 *     security={{"bearerAuth":{}}},
 	 *     @OA\Response(
 	 *         response=200,
 	 *         description="List of packages",
@@ -82,6 +83,7 @@ class AccountController extends Controller
 	 *     tags={"account settings"},
 	 *     summary="Get all packages",
 	 *     description="Fetch all available packages for businesses.",
+	 *     security={{"bearerAuth":{}}},
 	 *     @OA\Response(
 	 *         response=200,
 	 *         description="List of packages",
@@ -136,6 +138,7 @@ class AccountController extends Controller
 	 *     tags={"Buy Package"},
 	 *     summary="Get all buy-package",
 	 *     description="Fetch all available packages for businesses.",
+	 * 	   security={{"bearerAuth":{}}},
 	 *     @OA\Response(
 	 *         response=200,
 	 *         description="List of packages",

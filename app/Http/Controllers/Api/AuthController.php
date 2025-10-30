@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Client;
+use DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Validator;
@@ -62,7 +63,7 @@ class AuthController extends Controller
         }
 
         $user = Client::where('email', $request->email)->first(); 
-        // dd($user);
+       
         if(!$user){
              return response()->json(['status' => false, 'message' => 'User account not found',], 403);
         }
@@ -97,6 +98,134 @@ class AuthController extends Controller
         return response()->json(['status'=>true,'message' => 'Logout successful']);
     }
 	
- 
+  /**
+     * @OA\Post(
+     *     path="/api/business/saveBusinessOwners",
+     *     tags={"Registration Business"},
+     *     summary="List Your Business",
+     *     description="Registration of business business name, email, mobile.",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"business_name","mobile","email"},
+     *             @OA\Property(property="email", type="string", format="email", example="example@gmail.com"),
+     *             @OA\Property(property="business_name", type="integer", example="business name"),
+     *             @OA\Property(property="mobile", type="interger", example="9999998888"),
+     *              
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Registration Business saved successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Registration Business saved successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The email field is required."),
+     *             @OA\Property(
+     *                 property="errors",
+     *                 type="object",
+     *                 @OA\Property(property="email", type="array", @OA\Items(type="string", example="The email must be a valid email address.")),
+     *                 @OA\Property(property="year_of_estb", type="array", @OA\Items(type="string", example="The year of establishment field is required."))
+     *             )
+     *         )
+     *     )
+     * )
+     */ 
+	public function saveBusinessOwners(Request $request)
+	{		 
+		   
+        	$validator = Validator::make($request->all(), [
+				'business_name' => 'required|unique:clients,business_name',
+				'mobile' => 'required|numeric|digits:10|regex:/^[1-9]+/|unique:clients,mobile,NULL,id',
+				'email' => 'required|email|unique:clients,email,NULL,id'
+
+			]);
+			if ($validator->fails()) {
+				$errorsBag = $validator->getMessageBag()->toArray();
+				return response()->json(['status' => true, 'errors' => $errorsBag], 400);
+			}
+			$client = new Client;
+			 
+
+				$business_slug = NULL;
+				$string = $request->input('business_name');
+				$string = filter_var($string, FILTER_SANITIZE_STRING);
+				$string = preg_replace('/[^A-Za-z0-9]/', ' ', $string);
+				$businessName = preg_replace('/\s+/', ' ', str_replace('&', '', trim($string)));
+				$business_slug = trim(generate_slug(trim($businessName)));
+		 
+				$slugExists = DB::table('clients')
+					->select(DB::raw('business_slug'))
+					->where('business_slug', 'like', '%' . $business_slug . '%')
+					->orderBy('id', 'desc')
+					->get();
+				if (!empty($slugExists) && $slugExists->count() > 0) {
+					$business_slug = $slugExists[0]->business_slug;
+					$business_slug = explode("-", $business_slug);
+					$end = end($business_slug);
+					reset($business_slug);
+					if (!is_numeric($end)) {
+						$business_slug[] = 1;
+					} else {
+						++$end;
+						$business_slug[count($business_slug) - 1] = $end;
+					}
+					$business_slug = implode("-", $business_slug);
+				}
+			
+
+			$client->business_name = $businessName;
+			$client->business_slug = $business_slug;
+			$pass = rand(000001, 999999);
+			$client->password = bcrypt($pass);
+			$client->mobile = $request->input('mobile');
+			$client->email = $request->input('email');
+			$client->max_kw = 30;			 
+			$client->active_status = '1';			 
+			$client->username = '';			 
+		 
+			if ($client->save()) {
+
+                $client = Client::find($client->id);
+				$emailname = $request->input('email');
+				$clientIDToAppend = $clientID = $client->id;
+				if (strlen((string) $clientID) < 4) {
+					$clientIDToAppend = str_pad($clientIDToAppend, 4, '0', STR_PAD_LEFT);
+				}
+				$client->username = strtoupper(substr($emailname, 0, 2)) . $clientIDToAppend;
+				$client->save();
+               
+				$smsMessage = "Thanks for registering with QuickDials.
+				%0D%0ALogin %26 Update your profile to get more leads to grow your business.
+				%0D%0A%0D%0ABusiness Name:" . $client->business_name . "
+				%0D%0AURL:www.quickdials.com
+				%0D%0AUID:" . $client->username . "
+				%0D%0APassword:" . $pass . "
+				%0D%0A--
+				%0D%0ARegards
+				%0D%0AQuickDials Team";
+				sendSMS($client->mobile, $smsMessage);			 
+				$data['clientDetails'] = Client::find($client->id);
+				$data['status'] = true;
+				$data['message'] = "Business registered successfully!";
+				 
+			} else {
+				$data['status'] = false;
+				$data['message'] = "Business not registered successfully!";
+				 
+			}
+			return response()->json([
+                'data' => $data,
+            ], 200);
 	
+    }
+
+
 }

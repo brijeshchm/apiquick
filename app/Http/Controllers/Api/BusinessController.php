@@ -123,7 +123,7 @@ class BusinessController extends Controller
 			->where('assigned_zones.client_id', $user->id)
 			//->paginate($request->input('length'));
 			->paginate($perPage);
-
+		$leads_list= [];
 		if (!empty($leads)) {
 			foreach ($leads->items() as $key => $val) {
 				if (!empty($val->zone)) {

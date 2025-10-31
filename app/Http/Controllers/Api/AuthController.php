@@ -103,8 +103,7 @@ class AuthController extends Controller
      *     path="/api/business/saveBusinessOwners",
      *     tags={"Registration Business"},
      *     summary="List Your Business",
-     *     description="Registration of business business name, email, mobile.",
-     *     security={{"bearerAuth":{}}},
+     *     description="Registration of business business name, email, mobile.",     *      
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(

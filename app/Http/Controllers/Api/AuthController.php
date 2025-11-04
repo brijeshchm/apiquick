@@ -189,7 +189,7 @@ class AuthController extends Controller
 			$client->max_kw = 30;			 
 			$client->active_status = '1';			 
 			$client->username = '';			 
-		 
+			$client->client_type = 'Diamond';		 
 			if ($client->save()) {
 
                 $client = Client::find($client->id);

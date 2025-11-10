@@ -34,6 +34,7 @@ Route::post('/business/saveBusinessOwners', [AuthController::class, 'saveBusines
 
 Route::middleware('auth:sanctum')->group(function () {
 Route::get('/business/profileInfo', [ProfileController::class, 'profileInfo']);
+Route::get('/business/review', [ProfileController::class, 'profileReview']);
 Route::get('/business/dashboard',[App\Http\Controllers\Api\BusinessDashboardController::class, 'dashboard'])->name('business.dashboard');
 Route::get('/business/get-leads',[EnquiryController::class, 'getLeads']);
 Route::get('/business/enquiry',[EnquiryController::class,'enquiry']);

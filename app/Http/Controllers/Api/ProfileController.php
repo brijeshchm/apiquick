@@ -48,12 +48,12 @@ class ProfileController extends Controller
      *         )
      *     ),
      *      @OA\Response(
- *         response=401,
- *         description="Unauthenticated",
- *         @OA\JsonContent(
- *             @OA\Property(property="message", type="string", example="Unauthenticated.")
- *         )
- *     )
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *         )
+     *     )
      * )
      */
     public function profileInfo(Request $request)
@@ -68,7 +68,7 @@ class ProfileController extends Controller
                 ], 401);
             }
             $user = auth('sanctum')->user();
-    
+
             if (!$user) {
                 return response()->json([
                     'status' => false,
@@ -293,20 +293,151 @@ class ProfileController extends Controller
 
                 $data['status'] = true;
                 $data['message'] = "Profile updated successfully!";
-                 
-               
+
+
             } else {
                 $data['status'] = false;
                 $data['message'] = "Profile not updated successfully!";
             }
         } catch (\Exception $e) {
-                $data['status'] = false;
-                $data['message'] = 'Failed to : ' . $e->getMessage();
-            
+            $data['status'] = false;
+            $data['message'] = 'Failed to : ' . $e->getMessage();
+
         }
-         return response()->json([
-                'data' => $data,
+        return response()->json([
+            'data' => $data,
+        ], 200);
+
+    }
+
+
+    /**
+     * @OA\Get(
+     *     path="/api/business/review",
+     *     tags={"Profile"},
+     *     summary="Get authenticated user profile information",
+     *     description="Returns profile details of the logged-in user. Requires Bearer token.",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="User profile info",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="name", type="string", example="John Doe"),
+     *             @OA\Property(property="email", type="string", example="john@example.com"),
+     *             @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-04T12:34:56Z")
+     *         )
+     *     ),
+     *      @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *         )
+     *     )
+     * )
+     */
+    public function profileReview(Request $request)
+    {
+        try {
+
+            if (!Auth::guard('sanctum')->check()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthenticated: Token is missing or invalid',
+                    'error' => 'token_missing_or_invalid'
+                ], 401);
+            }
+            $user = auth('sanctum')->user();
+
+            if (!$user) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthenticated: Token is missing or invalid',
+                    'error' => 'token_missing_or_invalid'
+                ], 401);
+            }
+
+            if (!$user->active_status) {
+                $user->tokens()->delete();
+                return response()->json(['status' => false, 'message' => 'User account is inactive',], 403);
+            }
+
+
+            $clientscheck = DB::table('clients')
+                ->leftJoin(DB::raw('(
+        SELECT 
+            SUM(rating) AS total_rating, 
+            comment_client_ID, 
+            COUNT(comment_ID) AS comment_count
+        FROM comments 
+        GROUP BY comment_client_ID
+    ) as c'), 'c.comment_client_ID', '=', 'clients.id')
+                ->select(
+                    'clients.id',
+                    'clients.business_name',
+                    'clients.business_slug',
+                    DB::raw('COALESCE(c.total_rating, 0) as total_rating'),
+                    DB::raw('COALESCE(c.comment_count, 0) as comment_count')
+                )
+                ->where('clients.id', $user->id)
+                ->get()
+                ->map(function ($client) {
+                    // ✅ Fetch all comments for this specific client
+                    $comments = DB::table('comments')
+                        ->where('comment_client_ID', $client->id)
+                        ->select('comment_ID', 'comment_content', 'rating', 'created_at', 'comment_author', 'comment_author_email', 'comment_author_phone')
+                        ->orderByDesc('created_at')
+                        ->get()
+                        ->map(function ($comment) {
+                        // ✅ Mask email
+                        if (!empty($comment->comment_author_email)) {
+                            [$name, $domain] = explode('@', $comment->comment_author_email);
+                            $comment->comment_author_email =
+                                substr($name, 0, 4) . str_repeat('*', max(0, strlen($name) - 4)) . '@' . $domain;
+                        }
+
+                        // ✅ Mask phone (keep first 3 and last 3 digits visible)
+                        if (!empty($comment->comment_author_phone)) {
+                            $phone = preg_replace('/\D/', '', $comment->comment_author_phone); // remove non-digits
+                            $comment->comment_author_phone =
+                                substr($phone, 0, 3) . str_repeat('*', max(0, strlen($phone) - 6)) . substr($phone, -3);
+                        }
+
+                        return $comment;
+                    });
+
+                    // ✅ Compute average rating
+                    $avg_rating = $client->comment_count > 0
+                        ? round($client->total_rating / $client->comment_count, 1)
+                        : 0;
+
+                    // ✅ Build clean output array
+                    return [
+                        'business_name' => $client->business_name,
+                        'business_slug' => $client->business_slug,
+                        'total_rating' => $client->total_rating,
+                        'avg_rating' => $avg_rating,
+                        'comment_count' => $client->comment_count,
+                        'comments' => $comments,
+                    ];
+                })
+                ->first();
+         
+
+            return response()->json([
+                'status' => true,
+                'data' => $clientscheck,
+                'message' => 'get data record',
             ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to : ' . $e->getMessage(),
+            ], 500);
+        }
+
 
     }
 

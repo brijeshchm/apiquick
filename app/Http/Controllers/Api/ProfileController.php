@@ -164,8 +164,7 @@ class ProfileController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"email","year_of_estb"},
-     *             @OA\Property(property="email", type="string", format="email", example="example@domain.com"),
+     *             required={"email","year_of_estb"},     *            
      *             @OA\Property(property="year_of_estb", type="integer", example=2020),
      *             @OA\Property(property="display_hofo", type="string", example="0"),
      *             @OA\Property(property="business_intro", type="string", example="We are a leading provider of IT services established in 2020."),
@@ -215,8 +214,7 @@ class ProfileController extends Controller
                 ], 401);
             }
 
-            $validator = Validator::make($request->all(), [
-                'email' => 'required|max:255|unique:clients,email,' . $user->id . ',id',
+            $validator = Validator::make($request->all(), [                
                 'year_of_estb' => 'required',
 
 

@@ -6,9 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Client;
+use App\Models\OtpCode;
 use DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Mail;
+use Carbon\Carbon;
 use Validator;
 
 /**
@@ -50,9 +53,7 @@ class AuthController extends Controller
      * )
      */
    public function login(Request $request)
-    {
-
-      
+    {      
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             //'password' => 'required',
@@ -73,7 +74,32 @@ class AuthController extends Controller
         // if (!$user || !Hash::check($request->password, $user->password)) {
         //     return response()->json(['status' => false, 'message' => 'Invalid credentials'], 401);
         // }
+        if($user){
+       
+        $otp = mt_rand(100000, 999999);
+       
+        //$message = "{$otp} is quickdials Portal Verification Code for {$request->session()->get('client.mobile')}.";
+    // $message = "{$otp} is Lead Portal Verification Code for {$request->session()->get('client.mobile')} quickdials";
+        $templateId ='1707161786775524106';
 
+    //sendSMS($request->session()->get('client.mobile'),$message,$templateId);
+                                
+
+        OtpCode::updateOrCreate(
+        ['user_id' => $user->id], // condition: find by user_id
+        [
+        'code'       => $otp,  // update/create this
+        'expires_at' => Carbon::now()->addMinutes(5),
+        ]
+        );
+        $message = "{$otp} is QuickDials Verification Code for {$user->email} .";
+        $subject = "{$otp} is QuickDials Verification Code";
+        Mail::send('emails.sendotp_to_email', ['msg'=>$message], function ($m) use ($message,$request,$subject) {
+            $m->from('leads@quickdials.com', 'Login OTP');
+            $m->to($request->input('email'), "")->subject($subject);
+        });	
+
+        }
         // Generate new Sanctum token
         $token = $user->createToken('api-token')->plainTextToken;
         //$token = $user->createToken('browser-extension')->plainTextToken;
@@ -81,10 +107,99 @@ class AuthController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Login successful',
+             'token' => $token,
+            'token_type' => 'Bearer',
+          //  'expires_in' => auth()->factory()->getTTL()*60,
+            'data' => $user,             
+        ]);
+    }
+    /**
+ * @OA\Post(
+ *     path="/api/verifyOtp",
+ *     tags={"Verify Otp"},
+ *     summary="Verify OTP and Login",
+ *     description="Verify the 6-digit OTP sent to the user's email and issue an API token on success.",
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"email", "otp"},
+ *             @OA\Property(property="email", type="string", format="email", example="user@example.com"),
+ *             @OA\Property(property="otp", type="integer", example=123456, description="6-digit OTP code")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="OTP verified successfully. Login successful.",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="success", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Login successful"),
+ *             @OA\Property(property="token", type="string", example="1|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
+ *             @OA\Property(
+ *                 property="user",
+ *                 type="object",
+ *                 @OA\Property(property="id", type="integer", example=1),
+ *                 @OA\Property(property="name", type="string", example="John Doe"),
+ *                 @OA\Property(property="email", type="string", example="user@example.com")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Invalid or expired OTP",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="success", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Invalid OTP or expired.")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Validation error",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="The email field is required.")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="User not found"
+ *     )
+ * )
+ */
+   public function verifyOtp(Request $request)
+    { //dd($request->email);
+        $request->validate([
+            'email' => 'required|email|exists:clients,email',
+            'otp'  => 'required|size:6',
+        ]);
+
+        $user = client::where('email', $request->email)->first();
+
+        $otp = OtpCode::where('user_id', $user->id)
+                      ->where('code', $request->otp)
+                      ->first();
+
+        if (! $otp) {
+            return response()->json(['error' => 'Invalid OTP.'], 422);
+        }
+ 
+        // if ($otp->isExpired()) {
+        //     $otp->delete();
+        //     return response()->json(['error' => 'OTP has expired.'], 422);
+        // }
+
+        // OTP is valid → delete it (one-time use)
+        $otp->delete();
+
+        // Issue Sanctum token
+        $token = $user->createToken('api-token')->plainTextToken;
+
+       return response()->json([
+            'status' => true,
+            'message' => 'Login successful',
             'token' => $token,
             'token_type' => 'Bearer',
           //  'expires_in' => auth()->factory()->getTTL()*60,
             'data' => $user,
+            
         ]);
     }
 

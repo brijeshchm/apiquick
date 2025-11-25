@@ -218,25 +218,31 @@ class BusinessLogoController extends Controller
 			$client = Client::find($user->id);
 			$id = $request->input('business_id');
 			$validator = Validator::make($request->all(), [
-				'image' => 'mimes:jpeg,jpg,png,svg|max:2048',
+				'logo' => 'mimes:jpeg,jpg,png,svg|max:2048',
 				'profile_pic' => 'mimes:jpeg,jpg,png,svg|max:2048'
 			], [
 				'profile_pic.dimensions' => 'Please upload Banner of given size -> [Minimum Height:319px] &amp; [Minimum Width:1137px].',
-				'image.dimensions' => 'Please upload profile logo of given size -> .[Maximum Height:150px] &amp; [Maximum Width:300px]'
+				'logo.dimensions' => 'Please upload profile logo of given size -> .[Maximum Height:150px] &amp; [Maximum Width:300px]'
 			]);
 
 			if ($validator->fails()) {
 				$errorsBag = $validator->getMessageBag()->toArray();
 				return response()->json(['status' => 1, 'errors' => $errorsBag], 400);
 			}
-
+// dd($request->all());
 			try {
-				if ($request->hasFile('image')) {
+				if ($request->hasFile('logo')) {
 					$image = [];
 					$filePath = getFolderStructure();
-					$file = $request->file('image');
+					$file = $request->file('logo');
 					$filename = str_replace(' ', '_', $file->getClientOriginalName()); // $file->getClientOriginalName();
-					$destinationPath = public_path($filePath);
+					$mainSitePath = 'https://quickdials.com/public';
+				
+					$destinationPath = $mainSitePath.'/'.$filePath;
+					 if (!file_exists($destinationPath)) {
+						mkdir($destinationPath, 0775, true);
+					}
+				//	dd($destinationPath);
 					$nameArr = explode('.', $filename);
 					$ext = array_pop($nameArr);
 					$name = implode('_', $nameArr);
@@ -248,7 +254,7 @@ class BusinessLogoController extends Controller
 					$targetWidth = 250;
 					$targetHeight = 141;
 					$quality = 75;
-
+// dd($imagePath);
 					$ext = strtolower($file->getClientOriginalExtension());
 
 					// Load original image
@@ -279,7 +285,8 @@ class BusinessLogoController extends Controller
 						);
 
 
-						$outputPath = public_path($filePath . "/" . $filename);
+						$outputPath = $destinationPath . "/" . $filename;
+						//  dd($outputPath);
 						imagejpeg($newImage, $outputPath, $quality);
 						imagedestroy($srcImage);
 						imagedestroy($newImage);
@@ -292,7 +299,7 @@ class BusinessLogoController extends Controller
 						'height' => '',
 						'src' => $filePath . "/" . $filename
 					);
-
+dd($image);
 					if (!empty($client->logo)) {
 						$oldImages = unserialize($client->logo);
 					}

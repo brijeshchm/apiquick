@@ -46,6 +46,7 @@ Route::get('/business/get-discussion',[App\Http\Controllers\Api\BusinessDiscussi
 Route::get('/business/get-paginated-assigned-keywords',[App\Http\Controllers\Api\BusinessKeywordController::class, 'getPaginatedAssignedKeywords']);
  
 Route::get('/business/personal-details',[App\Http\Controllers\Api\PersonalDetailsController::class, 'personalDetails']);
+Route::get('/business/get-occupation',[App\Http\Controllers\Api\PersonalDetailsController::class, 'getOccupation']);
  
 Route::post('/business/saveProfileInfo',[App\Http\Controllers\Api\ProfileController::class, 'saveProfileInfo']);
 Route::post('/business/saveBusinessLocation',[App\Http\Controllers\Api\ProfileController::class, 'saveBusinessLocation']);
@@ -60,7 +61,7 @@ Route::get('/business/get-gallery-pictures',[App\Http\Controllers\Api\BusinessLo
 
 Route::post('/business/save-gallery',[App\Http\Controllers\Api\BusinessLogoController::class,'saveGallary']); 
 
-Route::get('/business/location-information',[App\Http\Controllers\Api\BusinessLocationController::class, 'locationInformation']);
+Route::get('/business/business-location',[App\Http\Controllers\Api\BusinessLocationController::class, 'businessLocation']);
 Route::post('/business/saveLocationInformation',[App\Http\Controllers\Api\BusinessLocationController::class, 'saveLocationInformation']);
 
 
@@ -81,7 +82,8 @@ Route::post('/business/assignLocation/selectAssignZoneDelete',[App\Http\Controll
 
 Route::get('/business/getPackage',[App\Http\Controllers\Api\AccountController::class, 'getPackage']);
 Route::get('/business/account-settings',[App\Http\Controllers\Api\AccountController::class, 'accountSettings']);
-Route::get('/business/get-business-location',[App\Http\Controllers\Api\BusinessLocationController::class, 'getBusinessLocation']);
+Route::get('/business/get-business-location-pagination',[App\Http\Controllers\Api\BusinessLocationController::class, 'getBusinessLocationPagination']);
+Route::Delete('/business/business-location/{id}',[App\Http\Controllers\Api\BusinessLocationController::class, 'destroy']);
 
 Route::get('/business/buy-package',[App\Http\Controllers\Api\AccountController::class, 'buyPackage']);
 

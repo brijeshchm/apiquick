@@ -69,12 +69,25 @@ class AccountController extends Controller
 		}
 
 		$data['client'] = Client::find($user->id);
+		
 		 return response()->json([
 			'status' => true,
 			'message' => "Successfully",
 			'data' => $data,
 
 		], 200);
+	}
+
+	function dataEncodeJsonBase64($o){
+				$o = json_encode($o);
+				$o = base64_encode($o);
+				return $o;
+	}
+	function dataDecodeJsonBase64($o){
+				$o = base64_decode($o);
+				$o = json_decode($o); 
+				
+				return $o;
 	}
 
 	/**

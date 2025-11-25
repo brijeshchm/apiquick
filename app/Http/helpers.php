@@ -245,7 +245,8 @@ function getFolderStructure()
 		} else if ($day >= 21) {
 			$week = 'week_3';
 		}
-		$partial_str = 'https://www.quickdials.com/uploads/images/' . date('Y') . '/' . date('m') . '/' . $week;
+		 
+		$partial_str = 'uploads/images/' . date('Y') . '/' . date('m') . '/' . $week;
 		$structure = public_path($partial_str);
 		if (file_exists($structure)) {
 			return $partial_str;

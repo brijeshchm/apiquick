@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\State;
+use App\Models\Citieslists;
 use App\Models\Project;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Client\Client;
@@ -33,7 +35,7 @@ class ProfileController extends Controller
     /**
      * @OA\Get(
      *     path="/api/business/profileInfo",
-     *     tags={"Profile"},
+     *     tags={"Business Information Profile"},
      *     summary="Get authenticated user profile information",
      *     description="Returns profile details of the logged-in user. Requires Bearer token.",
      *     security={{"bearerAuth":{}}},
@@ -94,48 +96,28 @@ class ProfileController extends Controller
             } else {
                 $certifications = "";
             }
-            if (!empty($user->profile_pic)) {
-                $profile_pic = unserialize($user->profile_pic);
-            } else {
-                $profile_pic = "";
-            }
-            if (!empty($user->pictures)) {
-                $pictures = unserialize($user->pictures);
-            } else {
-                $pictures = "";
-            }
+            
 
-            $data['userDetails'] = array(
-                'client_id' => $user->id,
-                'username' => $user->username,
-                'business_slug' => $user->business_slug,
-                'business_name' => $user->business_name,
-                'business_intro' => $user->business_intro,
-                'first_name' => $user->first_name,
-                'last_name' => $user->last_name,
-                'email' => $user->email,
-                'mobile' => $user->mobile,
-                'client_type' => $user->client_type,
-                'balance_amt' => $user->balance_amt,
-                'coins_amt' => $user->coins_amt,
-                'leads_remaining' => $user->leads_remaining,
-                'expired_from' => $user->expired_from,
-                'expired_on' => $user->expired_on,
-                'certified_status' => $user->certified_status,
-                'city_id' => $user->city_id,
-                'city' => $user->city,
+            $data['businessInformation'] = array(
+                'client_id' => $user->id,              
+                'business_name' => $user->business_name,                
                 'address' => $user->address,
                 'landmark' => $user->landmark,
-                'state' => $user->state,
+                'business_city_id' => $user->business_city_id,
+                'business_city' => $user->business_city,
+                'business_state' => $user->business_state,
+                'business_state_id' => $user->business_state_id,
                 'country' => $user->country,
+                'business_intro' => $user->business_intro,                
+                'client_type' => $user->client_type,                 
+                'certified_status' => $user->certified_status,
                 'time' => $time,
                 'days' => $days,
                 'times' => $times,
                 'certifications' => $certifications,
                 'year_of_estb' => $user->year_of_estb,
-                'profile_pic' => $profile_pic,
-                'pictures' => $pictures,
-                'active_status' => $user->active_status,
+                'display_hofo' => $user->display_hofo,
+                 
             );
 
             return response()->json([
@@ -157,18 +139,27 @@ class ProfileController extends Controller
     /**
      * @OA\Post(
      *     path="/api/business/saveProfileInfo",
-     *     tags={"Profile"},
+     *     tags={"Business Information Profile"},
      *     summary="Save profile information",
      *     description="Stores profile information like email, year of establishment, display info, intro, and certifications.",
      *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"email","year_of_estb"},     *            
+     *             required={"certifications","business_name","business_intro"},     *            
+     *             @OA\Property(property="business_name", type="string", example="business name"),
+     *             @OA\Property(property="address", type="string", example=" E-23 sector -3 noida"),
+     *             @OA\Property(property="landmark", type="string", example="landmark"),
+     *             @OA\Property(property="business_state", type="integer", example=10),
+     *             @OA\Property(property="business_city", type="integer", example=961),
+     *             @OA\Property(property="area", type="string", example="sector-3"),
+     *             @OA\Property(property="pincode", type="integer", example="201301"),
+     *             @OA\Property(property="country", type="string", example="india"),
      *             @OA\Property(property="year_of_estb", type="integer", example=2020),
      *             @OA\Property(property="display_hofo", type="string", example="0"),
      *             @OA\Property(property="business_intro", type="string", example="We are a leading provider of IT services established in 2020."),
-     *             @OA\Property(property="certifications", type="string", example="ISO 9001, ISO 27001")
+     *             @OA\Property(property="certifications", type="string", example="ISO 9001, ISO 27001"),
+     *             @OA\Property(property="time", type="string", example=""),
      *         )
      *     ),
      *     @OA\Response(
@@ -214,10 +205,11 @@ class ProfileController extends Controller
                 ], 401);
             }
 
-            $validator = Validator::make($request->all(), [                
+            $validator = Validator::make($request->all(), [
                 'year_of_estb' => 'required',
-
-
+                'business_name' => 'required',
+                'business_intro' => 'required',
+                'certifications' => 'required',
             ]);
 
             if ($validator->fails()) {
@@ -226,76 +218,41 @@ class ProfileController extends Controller
             }
 
             $user = Client::find($user->id);
+            $user->business_name = $request->input('business_name');
+            $user->address = $request->input('address');
+            $user->landmark = $request->input('landmark');
             $user->display_hofo = $request->input('display_hofo');
+            $state = State::where('id',$request->input('business_state'))->first();
+            if($state){
+                $user->business_state_id = $state->id;
+                $user->business_state = $state->name;
+
+            }
+           $cityName = Citieslists::where('id',$request->input('business_city'))->first();
+			if($cityName){
+				$user->business_city_id = $cityName->id;
+				$user->business_city = $cityName->city;
+			}
+           
+
+            $user->area = $request->input('area');
+            $user->pincode = $request->input('pincode');
+            $user->country = $request->input('country');
             $user->business_intro = $request->input('business_intro');
             $user->year_of_estb = $request->input('year_of_estb');
             $user->certifications = $request->input('certifications');
+            $user->time = $request->input('time');
 
 
             if ($user->save()) {
-
-                $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-                $times = ["24:00" => "Open 24 Hrs", "00:00" => "00:00", "00:30" => "00:30", "01:00" => "01:00", "01:30" => "01:30", "02:00" => "02:00", "02:30" => "02:30", "03:00" => "03:00", "03:30" => "03:30", "04:00" => "04:00", "04:30" => "04:30", "05:00" => "05:00", "05:30" => "05:30", "06:00" => "06:00", "06:30" => "06:30", "07:00" => "07:00", "07:30" => "07:30", "08:00" => "08:00", "08:30" => "08:30", "09:00" => "09:00", "09:30" => "09:30", "10:00" => "10:00", "10:30" => "10:30", "11:00" => "11:00", "11:30" => "11:30", "12:00" => "12:00", "12:30" => "12:30", "13:00" => "13:00", "13:30" => "13:30", "14:00" => "14:00", "14:30" => "14:30", "15:00" => "15:00", "15:30" => "15:30", "16:00" => "16:00", "16:30" => "16:30", "17:00" => "17:00", "17:30" => "17:30", "18:00" => "18:00", "18:30" => "18:30", "19:00" => "19:00", "19:30" => "19:30", "20:00" => "20:00", "20:30" => "20:30", "21:00" => "21:00", "21:30" => "21:30", "22:00" => "22:00", "22:30" => "22:30", "23:00" => "23:00", "23:30" => "23:30", "closed" => "Closed"];
-                if (!empty($user->time)) {
-                    $time = unserialize($user->time);
-                } else {
-                    $time = "";
-                }
-                if (!empty($user->certifications)) {
-                    $certifications = $user->certifications;
-                } else {
-                    $certifications = "";
-                }
-                if (!empty($user->profile_pic)) {
-                    $profile_pic = unserialize($user->profile_pic);
-                } else {
-                    $profile_pic = "";
-                }
-                if (!empty($user->pictures)) {
-                    $pictures = unserialize($user->pictures);
-                } else {
-                    $pictures = "";
-                }
-                $data['userDetails'] = array(
-                    'client_id' => $user->id,
-                    'username' => $user->username,
-                    'business_slug' => $user->business_slug,
-                    'business_name' => $user->business_name,
-                    'business_intro' => $user->business_intro,
-                    'first_name' => $user->first_name,
-                    'last_name' => $user->last_name,
-                    'email' => $user->email,
-                    'mobile' => $user->mobile,
-                    'client_type' => $user->client_type,
-                    'balance_amt' => $user->balance_amt,
-                    'coins_amt' => $user->coins_amt,
-                    'leads_remaining' => $user->leads_remaining,
-                    'expired_from' => $user->expired_from,
-                    'expired_on' => $user->expired_on,
-                    'certified_status' => $user->certified_status,
-                    'city_id' => $user->city_id,
-                    'city' => $user->city,
-                    'address' => $user->address,
-                    'landmark' => $user->landmark,
-                    'state' => $user->state,
-                    'country' => $user->country,
-                    'time' => $time,
-                    'days' => $days,
-                    'times' => $times,
-                    'certifications' => $certifications,
-                    'year_of_estb' => $user->year_of_estb,
-                    'profile_pic' => $profile_pic,
-                    'pictures' => $pictures,
-                    'active_status' => $user->active_status,
-                );
-
+               
                 $data['status'] = true;
-                $data['message'] = "Profile updated successfully!";
+                $data['message'] = "Business Information updated successfully!";
 
 
             } else {
                 $data['status'] = false;
-                $data['message'] = "Profile not updated successfully!";
+                $data['message'] = "Business Information not updated successfully!";
             }
         } catch (\Exception $e) {
             $data['status'] = false;
@@ -421,7 +378,7 @@ class ProfileController extends Controller
                     ];
                 })
                 ->first();
-         
+
 
             return response()->json([
                 'status' => true,

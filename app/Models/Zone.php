@@ -8,6 +8,7 @@ class Zone extends Model
 {
     protected $guarded = [];
 
+    protected $fillable = ['id','city_id','zone'];
     public function city()
     {
         return $this->belongsTo(City::class);

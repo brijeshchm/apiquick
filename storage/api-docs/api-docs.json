@@ -1682,14 +1682,14 @@
                 ]
             }
         },
-        "/api/business/location-information": {
+        "/api/business/business-location": {
             "get": {
                 "tags": [
-                    "Location Information"
+                    "Business Location"
                 ],
                 "summary": "Get location information",
                 "description": "Fetch the location information of the authenticated user's account or business.",
-                "operationId": "81531d79a8295735ae02cbef8d032ab3",
+                "operationId": "c1adf380dee27f7c68824750bedd068e",
                 "responses": {
                     "200": {
                         "description": "Location information retrieved successfully",
@@ -1767,10 +1767,10 @@
         "/api/business/saveBusinessLocation": {
             "post": {
                 "tags": [
-                    "Location Information"
+                    "Business Location"
                 ],
-                "summary": "Update location information",
-                "description": "Update the authenticated user's business or account location.",
+                "summary": "Update Business Location",
+                "description": "Update the authenticated user's business location.",
                 "operationId": "b74f551372f59add6f7c2a21e88e452d",
                 "requestBody": {
                     "required": true,
@@ -2077,14 +2077,46 @@
                 ]
             }
         },
-        "/api/business/get-business-location": {
+        "/api/business/get-business-location-pagination": {
             "get": {
                 "tags": [
                     "Business Location"
                 ],
-                "summary": "Get business location",
-                "description": "Fetches the saved business location details of the authenticated user.",
-                "operationId": "22c6a8822046d5f3711620bd67d3e8d3",
+                "summary": "Get business location with pagination",
+                "description": "Fetches paginated business location details of the authenticated user.",
+                "operationId": "49245656df12d5efa0bde24f2cae793d",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search keyword",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "sector 45"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Business location retrieved successfully",
@@ -2092,47 +2124,60 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "success": {
+                                        "status": {
                                             "type": "boolean",
                                             "example": true
                                         },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Successfully"
+                                        },
                                         "data": {
                                             "properties": {
-                                                "business_name": {
-                                                    "type": "string",
-                                                    "example": "Quick Dials Pvt Ltd"
+                                                "records": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "business_name": {
+                                                                "type": "string",
+                                                                "example": "Quick Dials Pvt Ltd"
+                                                            },
+                                                            "address": {
+                                                                "type": "string",
+                                                                "example": "MG Road"
+                                                            },
+                                                            "city": {
+                                                                "type": "string",
+                                                                "example": "Noida"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
                                                 },
-                                                "address": {
-                                                    "type": "string",
-                                                    "example": "123 MG Road, Sector 45"
-                                                },
-                                                "landmark": {
-                                                    "type": "string",
-                                                    "example": "Near Metro Station"
-                                                },
-                                                "business_city": {
-                                                    "type": "string",
-                                                    "example": "Noida"
-                                                },
-                                                "state": {
-                                                    "type": "string",
-                                                    "example": "Uttar Pradesh"
-                                                },
-                                                "country": {
-                                                    "type": "string",
-                                                    "example": "India"
-                                                },
-                                                "pincode": {
-                                                    "type": "string",
-                                                    "example": "201301"
-                                                },
-                                                "latitude": {
-                                                    "type": "string",
-                                                    "example": "28.5355"
-                                                },
-                                                "longitude": {
-                                                    "type": "string",
-                                                    "example": "77.3910"
+                                                "pagination": {
+                                                    "properties": {
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "example": 100
+                                                        },
+                                                        "per_page": {
+                                                            "type": "integer",
+                                                            "example": 10
+                                                        },
+                                                        "current_page": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "last_page": {
+                                                            "type": "integer",
+                                                            "example": 10
+                                                        },
+                                                        "total_pages": {
+                                                            "type": "integer",
+                                                            "example": 10
+                                                        }
+                                                    },
+                                                    "type": "object"
                                                 }
                                             },
                                             "type": "object"
@@ -2158,6 +2203,63 @@
                                 }
                             }
                         }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/business-location/{id}": {
+            "delete": {
+                "tags": [
+                    "Business Location"
+                ],
+                "summary": "Delete assigned business location",
+                "description": "Delete a business location (city + zone) assigned to the authenticated client. Only the owner can delete it.",
+                "operationId": "9e22ed87d9de39e437ab29667599da42",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the assigned zone",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Business location deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Business location deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden - You don't own this location"
+                    },
+                    "404": {
+                        "description": "Assigned zone not found"
                     }
                 },
                 "security": [
@@ -4125,7 +4227,7 @@
         "/api/business/personal-details": {
             "get": {
                 "tags": [
-                    "User"
+                    "Personal details"
                 ],
                 "summary": "Get personal details",
                 "description": "Fetch the personal details of the authenticated user",
@@ -4202,13 +4304,18 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/business/savePersonalDetails": {
             "post": {
                 "tags": [
-                    "User"
+                    "Personal details"
                 ],
                 "summary": "Save or update personal details",
                 "description": "Save or update the personal details of the authenticated user",
@@ -4344,13 +4451,84 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/get-occupation": {
+            "get": {
+                "tags": [
+                    "Occupation"
+                ],
+                "summary": "Get Occupation",
+                "description": "Fetch the Occupation of the authenticated user",
+                "operationId": "d2465757e351c0c7fb68270018a0d0e6",
+                "responses": {
+                    "200": {
+                        "description": "Occupation retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 101
+                                                },
+                                                "Occupation": {
+                                                    "type": "string",
+                                                    "example": "Software engineer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized access"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/business/profileInfo": {
             "get": {
                 "tags": [
-                    "Profile"
+                    "Business Information Profile"
                 ],
                 "summary": "Get authenticated user profile information",
                 "description": "Returns profile details of the logged-in user. Requires Bearer token.",
@@ -4412,7 +4590,7 @@
         "/api/business/saveProfileInfo": {
             "post": {
                 "tags": [
-                    "Profile"
+                    "Business Information Profile"
                 ],
                 "summary": "Save profile information",
                 "description": "Stores profile information like email, year of establishment, display info, intro, and certifications.",
@@ -4423,14 +4601,42 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "email",
-                                    "year_of_estb"
+                                    "certifications",
+                                    "business_name",
+                                    "business_intro"
                                 ],
                                 "properties": {
-                                    "email": {
+                                    "business_name": {
                                         "type": "string",
-                                        "format": "email",
-                                        "example": "example@domain.com"
+                                        "example": "business name"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": " E-23 sector -3 noida"
+                                    },
+                                    "landmark": {
+                                        "type": "string",
+                                        "example": "landmark"
+                                    },
+                                    "business_state": {
+                                        "type": "integer",
+                                        "example": 10
+                                    },
+                                    "business_city": {
+                                        "type": "integer",
+                                        "example": 961
+                                    },
+                                    "area": {
+                                        "type": "string",
+                                        "example": "sector-3"
+                                    },
+                                    "pincode": {
+                                        "type": "integer",
+                                        "example": "201301"
+                                    },
+                                    "country": {
+                                        "type": "string",
+                                        "example": "india"
                                     },
                                     "year_of_estb": {
                                         "type": "integer",
@@ -4447,6 +4653,10 @@
                                     "certifications": {
                                         "type": "string",
                                         "example": "ISO 9001, ISO 27001"
+                                    },
+                                    "time": {
+                                        "type": "string",
+                                        "example": ""
                                     }
                                 },
                                 "type": "object"
@@ -5827,6 +6037,80 @@
                 }
             }
         },
+        "/api/site/about-us": {
+            "get": {
+                "tags": [
+                    "Frontend about-us"
+                ],
+                "summary": "about-us records",
+                "description": "Display data home page",
+                "operationId": "c4d07af4bea13405862a85cec110f0b7",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/site/common-linked": {
             "get": {
                 "tags": [
@@ -6051,12 +6335,12 @@
             "description": "Keywords"
         },
         {
-            "name": "Location Information",
-            "description": "Location Information"
-        },
-        {
             "name": "Business Location",
             "description": "Business Location"
+        },
+        {
+            "name": "Location Information",
+            "description": "Location Information"
         },
         {
             "name": "Gallery",
@@ -6087,8 +6371,16 @@
             "description": "Payment"
         },
         {
-            "name": "User",
-            "description": "User"
+            "name": "Personal details",
+            "description": "Personal details"
+        },
+        {
+            "name": "Occupation",
+            "description": "Occupation"
+        },
+        {
+            "name": "Business Information Profile",
+            "description": "Business Information Profile"
         },
         {
             "name": "Frontend Search city and keyword",
@@ -6145,6 +6437,10 @@
         {
             "name": "Frontend Footer links",
             "description": "Frontend Footer links"
+        },
+        {
+            "name": "Frontend about-us",
+            "description": "Frontend about-us"
         },
         {
             "name": "Frontend Common Linked",

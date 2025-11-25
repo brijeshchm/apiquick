@@ -2196,6 +2196,229 @@ class SiteController extends Controller
 	}
 	/**
 	 * @OA\Get(
+	 *     path="/api/site/about-us",
+	 *     tags={"Frontend about-us"},
+	 *     summary="about-us records",
+	 *     description="Display data home page",
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Data retrieved successfully"),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="array",
+	 *                 @OA\Items(type="object")
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function aboutus(Request $request)
+	{
+		$url = config('app.url');
+		$data['quickLinks'] = [
+			[
+				'url' => '/',
+				'title' => 'Home',
+
+			],
+			[
+				'url' => '/about-us',
+				'title' => 'About Us',
+
+			],
+			[
+				'url' => '/business-owners',
+				'title' => 'Featured Listings',
+
+			],
+			[
+				'url' => '/pricing',
+				'img' => config('app.website') . 'popular/CAT-exam.jpg',
+				'alt' => 'CAT/NEET',
+				'title' => 'CAT/NEET',
+
+			],
+			[
+				'url' => '/ctet-coaching',
+				'title' => 'Premium Plans',
+
+			],
+			[
+				'url' => '/careers',
+				'title' => 'Careers',
+
+			],
+			[
+				'url' => '/blog',
+				'title' => 'Success Stories',
+			],
+			[
+				'url' => '/blog',
+				'title' => 'Blog',
+			],
+			[
+				'url' => '/business-owners',
+				'title' => 'Advertise on quickdials',
+			],
+			[
+				'url' => '/privacy-policy',
+				'title' => 'Privacy Policy',
+			],
+			[
+				'url' => '/terms-conditions',
+				'title' => 'Terms & Conditions',
+			],
+			[
+				'url' => '/copyright-policy',
+				'title' => 'Copyright Policy',
+			]
+
+
+		];
+
+		$data['popularCategories'] = [
+			[
+				'url' => '/categories/professional-courses',
+				'title' => 'Coaching & Tuitions',
+
+			],
+			[
+				'url' => '/child/wedding-planning',
+				'title' => 'Wedding Planning',
+
+			],
+			[
+				'url' => '/category/health-wellness',
+				'title' => 'Healthcare',
+
+			],
+			[
+				'url' => '/category/real-estate-agent',
+				'title' => 'Real Estate',
+
+			],
+			[
+				'url' => '/categories/electric-services',
+				'title' => 'Electric Services',
+
+			],
+			[
+				'url' => '/categories/security-system',
+				'title' => 'Security System',
+
+			],
+			[
+				'url' => '/categories/medical',
+				'title' => 'Medical',
+			],
+			[
+				'url' => '/categories/packers-movers',
+				'title' => 'Packers Movers',
+			],
+			[
+				'url' => '/restaurants',
+				'title' => 'Restaurants',
+			],
+			[
+				'url' => '/hotels',
+				'title' => 'Hotels',
+			],
+			[
+				'url' => '/interior-designer',
+				'title' => 'interior Design',
+			]
+		];
+		$data['businessServicesLink'] = [
+			[
+				'url' => '/patient-care-service',
+				'title' => 'Patient Care Service',
+
+			],
+			[
+				'url' => '/home-appliance-repair-training',
+				'title' => 'Home Appliances Repair',
+
+			],
+			[
+				'url' => '/wedding-organisers',
+				'title' => 'Wedding Organisers',
+
+			],
+			[
+				'url' => '/ac-service',
+				'title' => 'AC Services',
+
+			],
+			[
+				'url' => '/security-guards-services',
+				'title' => 'Security Guards',
+
+			],
+			[
+				'url' => '/cleaning-services',
+				'title' => 'Cleaning Services',
+
+			],
+			[
+				'url' => '/categories/repairs-services',
+				'title' => 'Repairs Services',
+			],
+			[
+				'url' => '/categories/spa-beauty',
+				'title' => 'SPA Beauty',
+			],
+			[
+				'url' => '/child/loan',
+				'title' => 'Loan',
+			],
+			[
+				'url' => '/income-tax-consultants',
+				'title' => 'Tax Consultants',
+			],
+			[
+				'url' => '/interviews',
+				'title' => 'Interviews Question',
+			]
+		];
+
+		if ($data) {
+			$data['status'] = true;
+			$data['code'] = 200;
+			$data['message'] = "Successfully";
+		} else {
+			$data['status'] = false;
+			$data['code'] = 200;
+			$data['message'] = "failed";
+		}
+		return response()->json([
+			'success' => true,
+			'data' => $data,
+		], 200);
+
+	}
+	/**
+	 * @OA\Get(
 	 *     path="/api/site/common-linked",
 	 *     tags={"Frontend Common Linked"},
 	 *     summary="Common Linked records",

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Client\Client; //model
 use Validator;
 use App\Models\Occupation;
+
 use App\Models\Citieslists;
 class PersonalDetailsController extends Controller
 {	 
@@ -27,9 +28,10 @@ class PersonalDetailsController extends Controller
 	/**
 	 * @OA\Get(
 	 *     path="/api/business/personal-details",
-	 *     tags={"User"},
+	 *     tags={"Personal details"},
 	 *     summary="Get personal details",
 	 *     description="Fetch the personal details of the authenticated user",
+	 * 	   security={{"bearerAuth":{}}},
 	 *     @OA\Response(
 	 *         response=200,
 	 *         description="Personal details retrieved successfully",
@@ -84,7 +86,7 @@ class PersonalDetailsController extends Controller
 				return response()->json(['status' => false, 'message' => 'User account is inactive',], 403);
 			}
 
-
+ 
 			$occupations = Occupation::where('status', '1')->get();
 			$occupation_list = [];
 			if (!empty($occupations)) {
@@ -131,6 +133,7 @@ class PersonalDetailsController extends Controller
 			        'area' => $user->area,
 			        'pincode' => $user->pincode,
 			        'gender' => $user->gender,
+			        'occupation' => $user->occupation,
 			        
 			    );
 		 
@@ -154,9 +157,10 @@ class PersonalDetailsController extends Controller
 	/**
  * @OA\Post(
  *     path="/api/business/savePersonalDetails",
- *     tags={"User"},
+ *     tags={"Personal details"},
  *     summary="Save or update personal details",
  *     description="Save or update the personal details of the authenticated user",
+ *     security={{"bearerAuth":{}}},
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
@@ -293,5 +297,61 @@ class PersonalDetailsController extends Controller
 		], 200);
 	}
 
+
+	/**
+	 * @OA\Get(
+	 *     path="/api/business/get-occupation",
+	 *     tags={"Occupation"},
+	 *     summary="Get Occupation",
+	 *     description="Fetch the Occupation of the authenticated user",
+	 * 	   security={{"bearerAuth":{}}},
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Occupation retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="object",
+	 *                 @OA\Property(property="id", type="integer", example=101),
+	 *                 @OA\Property(property="Occupation", type="string", example="Software engineer")
+	 *                 
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="Unauthorized access")
+	 *         )
+	 *     )
+	 * )
+	 */
+
+	public function getOccupation(Request $request)
+	{
+
+			$occupations = Occupation::where('status','1')->get();
+			if (!empty($occupations)) {
+			foreach ($occupations as $key => $val) {
+				 
+				$occupations_list[$key] = array(
+					'id' => $val->id,
+					'name' => $val->name,
+					 
+
+				);
+			}
+			$data['occupations'] = $occupations_list;
+		}
+
+		return response()->json([
+			'status' => true,
+			'data' => $data,
+			 
+		], 200);
+	}
 
 }

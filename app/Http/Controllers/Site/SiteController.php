@@ -2236,172 +2236,41 @@ class SiteController extends Controller
 	public function aboutus(Request $request)
 	{
 		$url = config('app.url');
-		$data['quickLinks'] = [
+		$data['about-us'] = 
 			[
-				'url' => '/',
-				'title' => 'Home',
+				'paragraph1' => 'Quick Dials, one of the most promising start-ups lead generation in India in 2023, offers a B2C model as a match-making admission solution to students, professionals study and services. Their quickdials.com, provide platform connects education seekers with education providers, coupled with excellent career counseling services.',
+				'paragraph2' => 'Quick Dials is an extensive search engine for students, parents, professionals, and education industry players seeking information on the education sector in India. Users can rely on quickdials.com for the most relevant data on institutes, colleges, and universities.',
+				'Vision' => 'Quick Dials has been created to fulfill a vision of providing quality education through certified institutions. In the modern era, we aim to unify educational societies with the help of technology to build a better nation.',
+				'USPs' => 'Quick Dials is the first technology-driven education start-up in India, providing a match-making solution for students educational needs across all sectors. Quick Dials offers extensive in-house personalized counseling to understand each students needs and help them make the most informed decisions.',
+				'Quick Dials For Institutions' => 'Quick Dials provides a non-conventional platform that focuses on delivering quality leads and highly motivated candidates. Our extensive in-house one-on-one personalized counseling gives us an edge in offering a highly specific and active database to our clients.',
+				'Quick Dials For Students' => 'Students can use Quick Dials as a one-stop destination to search for information on coaching institutes, IT training centers, overseas education consultants, available courses, college admission processes, and much more. The website offers interactive tools to simplify the process of finding the right alma mater. Quick Dials has a repository of over 1,000 institutes, coaching centers, schools, colleges, and 10,000 courses categorized into different streams such as IT training, civil services, entrance exam preparation, management, engineering, medical, arts, distance education, and more. Users can classify their education needs based on location, reviews, and certification. Quick Dialss certified business partners ensure quality education, campus placements, top faculty, and fee refund assurance, providing students with a reliable and comprehensive platform for their educational needs.',
+				'Quality Leads'=>'Generate high-quality leads for educational institutions and service providers.',
+				'Targeted Marketing'=>'Reach specific demographics and target audiences based on location, interests, and educational needs.',
+				'Personalized Counselling'=>'Extensive in-house one-on-one counseling helps in understanding the needs and preferences of potential students.
+				Provides educational institutions with detailed insights and qualified leads.',
+				'Interactive Platform'=>'Use interactive tools and features to engage with potential students.
+				Facilitate direct communication between students and educational institutions.',
+				'Database Access'=>'Access to a vast database of students looking for various courses and educational opportunities.
+				Detailed profiles and data to help institutions tailor their offerings.',
+				'Reviews and Ratings'=>'Leverage user reviews and ratings to build credibility and attract more leads.
+				Positive feedback and testimonials can enhance reputation and lead generation.',
+				'Certified Partnerships'=>'Being a Quick Dials Certified Business Partner boosts credibility and trust.
+				Assurance of quality education and services attracts more leads.',
+				'Analytics and Reporting'=>'Detailed analytics and reporting tools to track the effectiveness of lead generation efforts.
+				Insights into student preferences and behavior to refine marketing strategies.',
+				'Location-Based Leads'=>'Generate leads based on specific geographic locations to target local students.
+				Customize offerings to meet the needs of the local student population.',
+				'Engagement Tools'=>'Use forums, discussion boards, and community features to engage with potential leads.
+				Foster a sense of community and belonging to attract more students.',
+				'Career Counselling Integration'=>'Integrate career counseling services to attract students looking for career guidance.
+				Position your institution as a comprehensive solution for education and career planning.',
+				'Real-Time Support'=>'Students can chat with certified counselors in real-time to get their queries answered promptly. Immediate assistance for any doubts regarding courses, admissions, career paths, and more',
+				'Personalized Guidance'=>'One-on-one chat sessions to provide tailored advice based on individual student needs and preferences.
+				Helps in making informed decisions about educational and career choices.',
+				'Convenient and Accessible'=>'Accessible through both desktop and mobile platforms, ensuring students can reach counselors anytime, anywhere.
+				User-friendly interface to facilitate smooth communication.',
 
-			],
-			[
-				'url' => '/about-us',
-				'title' => 'About Us',
-
-			],
-			[
-				'url' => '/business-owners',
-				'title' => 'Featured Listings',
-
-			],
-			[
-				'url' => '/pricing',
-				'img' => config('app.website') . 'popular/CAT-exam.jpg',
-				'alt' => 'CAT/NEET',
-				'title' => 'CAT/NEET',
-
-			],
-			[
-				'url' => '/ctet-coaching',
-				'title' => 'Premium Plans',
-
-			],
-			[
-				'url' => '/careers',
-				'title' => 'Careers',
-
-			],
-			[
-				'url' => '/blog',
-				'title' => 'Success Stories',
-			],
-			[
-				'url' => '/blog',
-				'title' => 'Blog',
-			],
-			[
-				'url' => '/business-owners',
-				'title' => 'Advertise on quickdials',
-			],
-			[
-				'url' => '/privacy-policy',
-				'title' => 'Privacy Policy',
-			],
-			[
-				'url' => '/terms-conditions',
-				'title' => 'Terms & Conditions',
-			],
-			[
-				'url' => '/copyright-policy',
-				'title' => 'Copyright Policy',
-			]
-
-
-		];
-
-		$data['popularCategories'] = [
-			[
-				'url' => '/categories/professional-courses',
-				'title' => 'Coaching & Tuitions',
-
-			],
-			[
-				'url' => '/child/wedding-planning',
-				'title' => 'Wedding Planning',
-
-			],
-			[
-				'url' => '/category/health-wellness',
-				'title' => 'Healthcare',
-
-			],
-			[
-				'url' => '/category/real-estate-agent',
-				'title' => 'Real Estate',
-
-			],
-			[
-				'url' => '/categories/electric-services',
-				'title' => 'Electric Services',
-
-			],
-			[
-				'url' => '/categories/security-system',
-				'title' => 'Security System',
-
-			],
-			[
-				'url' => '/categories/medical',
-				'title' => 'Medical',
-			],
-			[
-				'url' => '/categories/packers-movers',
-				'title' => 'Packers Movers',
-			],
-			[
-				'url' => '/restaurants',
-				'title' => 'Restaurants',
-			],
-			[
-				'url' => '/hotels',
-				'title' => 'Hotels',
-			],
-			[
-				'url' => '/interior-designer',
-				'title' => 'interior Design',
-			]
-		];
-		$data['businessServicesLink'] = [
-			[
-				'url' => '/patient-care-service',
-				'title' => 'Patient Care Service',
-
-			],
-			[
-				'url' => '/home-appliance-repair-training',
-				'title' => 'Home Appliances Repair',
-
-			],
-			[
-				'url' => '/wedding-organisers',
-				'title' => 'Wedding Organisers',
-
-			],
-			[
-				'url' => '/ac-service',
-				'title' => 'AC Services',
-
-			],
-			[
-				'url' => '/security-guards-services',
-				'title' => 'Security Guards',
-
-			],
-			[
-				'url' => '/cleaning-services',
-				'title' => 'Cleaning Services',
-
-			],
-			[
-				'url' => '/categories/repairs-services',
-				'title' => 'Repairs Services',
-			],
-			[
-				'url' => '/categories/spa-beauty',
-				'title' => 'SPA Beauty',
-			],
-			[
-				'url' => '/child/loan',
-				'title' => 'Loan',
-			],
-			[
-				'url' => '/income-tax-consultants',
-				'title' => 'Tax Consultants',
-			],
-			[
-				'url' => '/interviews',
-				'title' => 'Interviews Question',
-			]
-		];
-
+			];  
 		if ($data) {
 			$data['status'] = true;
 			$data['code'] = 200;

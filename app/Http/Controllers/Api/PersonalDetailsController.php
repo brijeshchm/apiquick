@@ -28,7 +28,7 @@ class PersonalDetailsController extends Controller
 	/**
 	 * @OA\Get(
 	 *     path="/api/business/personal-details",
-	 *     tags={"Personal details"},
+	 *     tags={"Profile"},
 	 *     summary="Get personal details",
 	 *     description="Fetch the personal details of the authenticated user",
 	 * 	   security={{"bearerAuth":{}}},
@@ -157,7 +157,7 @@ class PersonalDetailsController extends Controller
 	/**
  * @OA\Post(
  *     path="/api/business/savePersonalDetails",
- *     tags={"Personal details"},
+ *     tags={"Profile"},
  *     summary="Save or update personal details",
  *     description="Save or update the personal details of the authenticated user",
  *     security={{"bearerAuth":{}}},
@@ -173,7 +173,7 @@ class PersonalDetailsController extends Controller
  *             @OA\Property(property="marital", type="string", example="single"),
  *             @OA\Property(property="mobile", type="string", example="+911234567890"),
  *             @OA\Property(property="sec_mobile", type="string", example="+911234567891"),
- *             @OA\Property(property="city", type="string", example="New Delhi"),
+ *             @OA\Property(property="city", type="string", example="1011"),
  *             @OA\Property(property="area", type="string", example="Connaught Place"),
  *             @OA\Property(property="pincode", type="string", example="110001"),
  *             @OA\Property(property="occupation", type="string", example="Software Engineer"),
@@ -236,13 +236,13 @@ class PersonalDetailsController extends Controller
 
 			$validator = Validator::make($request->all(), [
 
-				'first_name' => 'required|max:255',
-				'dob' => 'required',
-				'email' => 'required',
+				'first_name' => 'required|string|min:3|max:255',
+				'dob' => 'required|date|before:today',			 
+				'email' => 'required|email|unique:clients,email',
 				'marital' => 'required',
 				'mobile' => 'required',
-				'city' => 'required',
-				'sirName' => 'required',
+				'city' => 'required|integer|exists:citylists,id',
+				'sirName' => 'required|string|max:15',
 
 			]);
 

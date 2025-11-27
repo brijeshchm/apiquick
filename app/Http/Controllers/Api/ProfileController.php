@@ -35,8 +35,8 @@ class ProfileController extends Controller
     /**
      * @OA\Get(
      *     path="/api/business/profileInfo",
-     *     tags={"Business Information Profile"},
-     *     summary="Get authenticated user profile information",
+     *     tags={"Profile"},
+     *     summary="Get Business Information Profile",
      *     description="Returns profile details of the logged-in user. Requires Bearer token.",
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
@@ -139,8 +139,8 @@ class ProfileController extends Controller
     /**
      * @OA\Post(
      *     path="/api/business/saveProfileInfo",
-     *     tags={"Business Information Profile"},
-     *     summary="Save profile information",
+     *     tags={"Profile"},
+     *     summary="Save Business Information Profile",
      *     description="Stores profile information like email, year of establishment, display info, intro, and certifications.",
      *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
@@ -206,10 +206,15 @@ class ProfileController extends Controller
             }
 
             $validator = Validator::make($request->all(), [
-                'year_of_estb' => 'required',
-                'business_name' => 'required',
-                'business_intro' => 'required',
-                'certifications' => 'required',
+                'year_of_estb' => 'required|digits:4|integer|min:1900|max:' . date('Y'),
+                'business_name' => 'required|string|max:255',
+                'business_intro' => 'required|string',
+                'address' => 'required|string',
+                'certifications' => 'required|string|max:255',
+                'business_city'  => 'required|integer|exists:citylists,id',
+                'business_state' => 'required|integer|exists:state,id',
+                'pincode' => 'required|digits:6',
+                'area' => 'required|string',
             ]);
 
             if ($validator->fails()) {

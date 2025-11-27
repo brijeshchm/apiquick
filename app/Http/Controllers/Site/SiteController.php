@@ -2264,11 +2264,50 @@ class SiteController extends Controller
 				Foster a sense of community and belonging to attract more students.',
 				'Career Counselling Integration'=>'Integrate career counseling services to attract students looking for career guidance.
 				Position your institution as a comprehensive solution for education and career planning.',
+				'Clearing of doubts using chat with counselo'=>[
 				'Real-Time Support'=>'Students can chat with certified counselors in real-time to get their queries answered promptly. Immediate assistance for any doubts regarding courses, admissions, career paths, and more',
 				'Personalized Guidance'=>'One-on-one chat sessions to provide tailored advice based on individual student needs and preferences.
 				Helps in making informed decisions about educational and career choices.',
 				'Convenient and Accessible'=>'Accessible through both desktop and mobile platforms, ensuring students can reach counselors anytime, anywhere.
 				User-friendly interface to facilitate smooth communication.',
+				'Comprehensive Assistance'=>'Counselors can provide information on a wide range of topics, including course details, admission processes, scholarship opportunities, and more.
+				Support for both academic and career-related inquiries.',
+				'Interactive Tools'=>'Use of interactive features such as document sharing, video calls, and screen sharing to enhance the chat experience.
+				Enables a more thorough and interactive counseling session.',
+				'Confidential and Secure'=>'Ensures privacy and confidentiality of student information during chat sessions.
+				Secure platform to protect sensitive data and maintain trust.',
+				'Follow-Up Support'=>'Counselors can schedule follow-up sessions to ensure all doubts are cleared and students are on the right path.
+				Continuous support throughout the decision-making process.',
+				'Feedback Mechanism'=>'Students can provide feedback on their chat experience, helping to improve the quality of counseling services.
+				Counselors can track the effectiveness of their guidance and make necessary adjustments.',
+				'Resource Sharing'=>'Counselors can share links, documents, and other resources directly through the chat to assist students.
+				Access to additional reading material, application forms, and relevant websites.',
+				'Integration with Other Features'=>'Seamless integration with other platform features such as course comparisons, application tracking, and reviews.
+				Comprehensive support system combining various tools for a holistic counseling experience.',
+				],
+				'Real interactive class room and expert faculty Techer'=>[
+					'Live Virtual Classes'=>'Real-time interactive sessions conducted by expert faculty members.
+					Engage students with dynamic content delivery and interactive learning tools.',
+					'Expertise and Experience'=>'Faculty members with extensive knowledge and experience in their respective fields.
+					Provide insights, practical examples, and industry-relevant knowledge.',
+					'Engagement Tools'=>'Use of interactive tools such as polls, quizzes, and live Q&A sessions to keep students engaged.
+					Foster active participation and discussion among students.',
+					'Personalized Learning'=>'Tailored teaching approaches to address individual learning styles and preferences.
+					Adaptive learning techniques to cater to diverse student needs.',
+					'Collaborative Learning Environment'=>'Facilitate group discussions, peer-to-peer interaction, and collaborative projects.
+					Encourage teamwork and communication skills development.',
+					'Hands-on Activities'=>'Incorporate practical demonstrations, case studies, and simulations to enhance learning outcomes.
+					Bridge theoretical knowledge with real-world applications.',
+					'Multimedia Integration'=>'Utilize multimedia resources such as videos, presentations, and virtual labs to enrich the learning experience.
+					Enhance understanding and retention of complex concepts.',
+					'Feedback and Assessment'=>'Provide immediate feedback on assignments, assessments, and student progress.
+					Continuous evaluation to track learning outcomes and address areas of improvement.',
+					'Accessible Learning Platform'=>'Accessible through desktop and mobile devices, ensuring flexibility in learning.
+					Seamless integration with learning management systems for easy navigation and resource access.',
+					'Continuous Improvement'=>'Faculty regularly update content and teaching methods based on student feedback and industry trends.
+					Commitment to delivering high-quality education and enhancing the learning experience.',
+				],
+
 
 			];  
 		if ($data) {
@@ -2286,6 +2325,196 @@ class SiteController extends Controller
 		], 200);
 
 	}
+
+	
+	/**
+	 * @OA\Get(
+	 *     path="/api/site/faq",
+	 *     tags={"Frontend FAQ's"},
+	 *     summary="FAQ's records",
+	 *     description="Display data home page",
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Data retrieved successfully"),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="array",
+	 *                 @OA\Items(type="object")
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function FAQ(Request $request)
+	{
+		$url = config('app.url');
+		$data['FAQ'] =[
+			[
+				'q1' => 'What is Quick Dials?',
+				'a1' => 'Quick Dials is an extensive search engine for the students, parents, and Professionals, Quick Dials Only Deals In Education Sector and helps students to grab their right opportunity, and helps business owners to grow their business.',
+			],
+			[
+				'q2' => 'Why choose Quick Dials for growing your business?',
+				'a2' => 'Our Work Module Is Completely Different, we work on the Conversion module, and we Provide you  Dual Manually Verified Leads to your Business.',
+			],
+			[
+				'q3' => 'What Happen If my leads commitment did not get fulfilled?',
+				'a3' => 'In case we are unable to fulfill our committed no of leads, we will refund your remaining amount.',
+			],
+			[
+				'q4' => 'What happens if I received a lead from out of my city/category?',
+				'a4' => 'If you get a lead which is either out from your Locality or Category Then we will replace it as soon as possible.',
+			],
+			[
+				'q5' => 'How Diffrent your leads quality from others?',
+				'a5' => 'our leads are dual manually verified by our expert counselors, so no need to worry about it.',
+			],
+			[
+				'q6' => 'How do you generate leads?',
+				'a6' => 'we generate leads organically as well as inorganic leads, and we have Our own channels partners.',
+			],
+			[
+				'q7' => 'How will I get Leads?',
+				'a7' => 'You will receive Leads on your Registered contact no through sms, and also on Your registered Email Id.',
+			],
+			[
+				'q8' => 'I Need More info?',
+				'a8' => 'For More Info & any Queries, you can Contact Us on +91 70113 10265 or reach out to us via e-mail @ info@quickdials.com, or list your business as free listing, our marketing team Will Contact you Soon.',
+			],
+			];  
+		if ($data) {
+			$data['status'] = true;
+			$data['code'] = 200;
+			$data['message'] = "Successfully";
+		} else {
+			$data['status'] = false;
+			$data['code'] = 200;
+			$data['message'] = "failed";
+		}
+		return response()->json([
+			'success' => true,
+			'data' => $data,
+		], 200);
+
+	}
+	/**
+	 * @OA\Get(
+	 *     path="/api/site/business-owners",
+	 *     tags={"Frontend business signup"},
+	 *     summary="Business sign up",
+	 *     description="Display data home page",
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Data retrieved successfully"),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="array",
+	 *                 @OA\Items(type="object")
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function businessOwners(Request $request)
+	{
+		$url = config('app.url');
+		$data['businessOwners'] =[
+			[
+				'Grow Client' => '1453 +',
+				'Suppliers' => '8.1 K+',
+				'Products & Services' => '8.1 K+',
+				'Keyword' => '1878 +',
+				'Store' => '21 +',
+				'Platform' => '11.3 K+',
+			],
+			[
+				'q2' => 'Why choose Quick Dials for growing your business?',
+				'a2' => 'Our Work Module Is Completely Different, we work on the Conversion module, and we Provide you  Dual Manually Verified Leads to your Business.',
+			],
+			[
+				'q3' => 'What Happen If my leads commitment did not get fulfilled?',
+				'a3' => 'In case we are unable to fulfill our committed no of leads, we will refund your remaining amount.',
+			],
+			[
+				'q4' => 'What happens if I received a lead from out of my city/category?',
+				'a4' => 'If you get a lead which is either out from your Locality or Category Then we will replace it as soon as possible.',
+			],
+			[
+				'q5' => 'How Diffrent your leads quality from others?',
+				'a5' => 'our leads are dual manually verified by our expert counselors, so no need to worry about it.',
+			],
+			[
+				'q6' => 'How do you generate leads?',
+				'a6' => 'we generate leads organically as well as inorganic leads, and we have Our own channels partners.',
+			],
+			[
+				'q7' => 'How will I get Leads?',
+				'a7' => 'You will receive Leads on your Registered contact no through sms, and also on Your registered Email Id.',
+			],
+			[
+				'q7' => 'I Need More info?',
+				'a7' => 'For More Info & any Queries, you can Contact Us on +91 70113 10265 or reach out to us via e-mail @ info@quickdials.com, or list your business as free listing, our marketing team Will Contact you Soon.',
+			],
+			];  
+		if ($data) {
+			$data['status'] = true;
+			$data['code'] = 200;
+			$data['message'] = "Successfully";
+		} else {
+			$data['status'] = false;
+			$data['code'] = 200;
+			$data['message'] = "failed";
+		}
+		return response()->json([
+			'success' => true,
+			'data' => $data,
+		], 200);
+
+	}
+
+
 	/**
 	 * @OA\Get(
 	 *     path="/api/site/common-linked",

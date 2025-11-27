@@ -49,7 +49,7 @@ Route::get('/business/personal-details',[App\Http\Controllers\Api\PersonalDetail
 Route::get('/business/get-occupation',[App\Http\Controllers\Api\PersonalDetailsController::class, 'getOccupation']);
  
 Route::post('/business/saveProfileInfo',[App\Http\Controllers\Api\ProfileController::class, 'saveProfileInfo']);
-Route::post('/business/saveBusinessLocation',[App\Http\Controllers\Api\ProfileController::class, 'saveBusinessLocation']);
+Route::post('/business/saveBusinessLocation',[App\Http\Controllers\Api\BusinessLocationController::class, 'saveBusinessLocation']);
 Route::post('/business/savePersonalDetails',[App\Http\Controllers\Api\PersonalDetailsController::class, 'savePersonalDetails']);
 
 Route::get('/business/profile-logo',[App\Http\Controllers\Api\BusinessLogoController::class, 'getProfileLogo']);

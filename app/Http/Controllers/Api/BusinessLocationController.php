@@ -12,6 +12,8 @@ use Validator;
 use App\Models\Zone;
 use App\Models\Citieslists;
 use App\Models\AssignedZone;
+use App\Models\AssignedLead;
+use App\Models\AssigneddArea;
 use App\Models\State;
 use DB;
 
@@ -35,7 +37,7 @@ class BusinessLocationController extends Controller
 	/**
 	 * @OA\Get(
 	 *     path="/api/business/business-location",
-	 *     tags={"Business Location"},
+	 *     tags={"Profile"},
 	 *     summary="Get location information",
 	 *     description="Fetch the location information of the authenticated user's account or business.",
 	 *     security={{"bearerAuth":{}}},
@@ -68,7 +70,7 @@ class BusinessLocationController extends Controller
 
 	public function businessLocation(Request $request)
 	{
-		if (!Auth::guard('sanctum')->check()) {
+		 if (!Auth::guard('sanctum')->check()) {
 			return response()->json([
 				'status' => false,
 				'message' => 'Unauthenticated: Token is missing or invalid',
@@ -77,45 +79,102 @@ class BusinessLocationController extends Controller
 		}
 
 		$user = auth('sanctum')->user();
-		if (!$user) {
-			return response()->json([
-				'status' => false,
-				'message' => 'Unauthenticated: Token is missing or invalid',
-				'error' => 'token_missing_or_invalid'
-			], 401);
+		$clientID = $user->id;
+		$search = $request->input('search');
+		$length = (int) $request->input('length', 10); // per page
+
+		$query = DB::table('assigned_zones')
+			->join('zones', 'assigned_zones.zone_id', '=', 'zones.id')
+			->join('citylists', 'assigned_zones.city_id', '=', 'citylists.id')
+			->join('state', 'assigned_zones.state_id', '=', 'state.id')
+			->select(
+				'assigned_zones.id as assign_id',
+				'assigned_zones.*',
+				'citylists.city',
+				'zones.zone',
+				'state.name',
+			)
+			->where('assigned_zones.client_id', $clientID);
+
+		// Apply search if provided
+		if (!empty($search)) {
+			$query->where(function ($q) use ($search) {
+				$q->where('citylists.city', 'LIKE', "%{$search}%")
+					->orWhere('zones.zone', 'LIKE', "%{$search}%");
+					 
+			});
 		}
 
-		$data['clientDetails'] = Client::find($user->id);
+		$searchableColumns = ['id', 'city', 'zone'];
+		$sortableColumns = array_merge($searchableColumns, ['created_at']);
 
-		$search = [];
-		if ($request->has('search')) {
-			$data['search'] = $request->input('search');
+
+		$sortBy = in_array($request->input('sort_by'), $sortableColumns) ? $request->input('sort_by') : 'created_at';
+		$sortDir = strtolower($request->input('sort_direction', 'desc')) === 'asc' ? 'asc' : 'desc';
+		$perPage = min($request->get('per_page', 15), 100); // Limit max per_page to 100
+		$page = max($request->get('page', 1), 1); // Ensure page is at least 1
+
+		// Get total count BEFORE applying pagination
+		$totalRecords = (clone $query)->count();
+		$totalPages = $perPage > 0 ? (int) ceil($totalRecords / $perPage) : 1;
+
+		// Adjust page if it exceeds total pages
+		if ($page > $totalPages && $totalPages > 0) {
+			$page = $totalPages; // Go to last page instead of first page
 		}
+
+		// Apply sorting and pagination
+		$leads = $query->orderBy($sortBy, $sortDir)
+			->offset(($page - 1) * $perPage)
+			->limit($perPage)
+			->get();
+		// Transform collection for DataTables
+		$data = $leads->map(function ($lead) {
+			 
+			$checkbox = $lead->assign_id;
+			$cityName = $lead->city ?? 'N/A';
+			$zoneName = $lead->zone ?? '';
+			$stateName = $lead->name ?? '';
+
+
+
+			return [
+				$checkbox,
+				e($stateName),
+				e($cityName),
+				e($zoneName),
+
+			];
+		})->all();
+
+
 		return response()->json([
-			'success' => true,
+
+			'status' => true,
+			'message' => 'Success',
+
+			'total_pages' => $totalPages,
+			'total_records' => $totalRecords,
 			'data' => $data,
 		], 200);
-
 
 	}
 	/**
 	 * @OA\Post(
 	 *     path="/api/business/saveBusinessLocation",
-	 *     tags={"Business Location"},
+	 *     tags={"Profile"},
 	 *     summary="Update Business Location",
 	 *     description="Update the authenticated user's business location.",
 	 *     security={{"bearerAuth":{}}},
 	 *     @OA\RequestBody(
 	 *         required=true,
 	 *         @OA\JsonContent(
-	 *             required={"address","city","state","country","pincode"},
-	 *             @OA\Property(property="address", type="string", example="123 MG Road, Sector 45"),
-	 *             @OA\Property(property="city", type="string", example="Noida"),
-	 *             @OA\Property(property="state", type="string", example="Uttar Pradesh"),
-	 *             @OA\Property(property="country", type="string", example="India"),
-	 *             @OA\Property(property="pincode", type="string", example="201301"),
-	 *             @OA\Property(property="latitude", type="string", example="28.5355"),
-	 *             @OA\Property(property="longitude", type="string", example="77.3910")
+	 *             required={"state_id","cityiesid"},
+	 *             @OA\Property(property="state_id", type="integer", example="38"),
+	 *             @OA\Property(property="cityiesid", type="string", example="961"),
+	 *             @OA\Property(property="zone_id", type="string", example="1090 or Other"),
+	 *             @OA\Property(property="other", type="string", example="zone name"),
+	 *            
 	 *         )
 	 *     ),
 	 *     @OA\Response(
@@ -147,7 +206,8 @@ class BusinessLocationController extends Controller
 	 *     )
 	 * )
 	 */
-	public function saveBusinessLocation(Request $request, $id)
+
+	public function saveBusinessLocation(Request $request)
 	{
 		if (!Auth::guard('sanctum')->check()) {
 			return response()->json([
@@ -158,6 +218,7 @@ class BusinessLocationController extends Controller
 		}
 
 		$user = auth('sanctum')->user();
+		 
 		if (!$user) {
 			return response()->json([
 				'status' => false,
@@ -165,74 +226,257 @@ class BusinessLocationController extends Controller
 				'error' => 'token_missing_or_invalid'
 			], 401);
 		}
+		 
 
-		if ($request->input('zone_id') == "Other") {
+			if ($request->input('zone_id') == "Other") {
+				$validator = Validator::make($request->all(), [
+					'state_id'   => 'required|integer|exists:state,id',
+					'cityiesid'  => 'required|integer|exists:citylists,id',
+					'other' => 'required|min:3|max:32|regex:/^(?!.*(.)\1{3,}).+$/',
+				]);
 
-
-			$validator = Validator::make($request->all(), [
-				'city_id' => 'required|max:25',
-				//'other' 	=> 'required|regex:/^[\pL\s\-]+$/u|min:3|max:32',	
-				'other' => 'required|min:3|max:32|regex:/^(?!.*(.)\1{3,}).+$/',
-			]);
-
-
-		} else {
-			$validator = Validator::make($request->all(), [
-				'city_id' => 'required|max:255',
-				'zone_id' => 'required|max:255',
-
-			]);
-		}
-
-		if ($validator->fails()) {
-			$errorsBag = $validator->getMessageBag()->toArray();
-			return response()->json(['status' => 1, 'errors' => $errorsBag], 400);
-		}
-		$assignedZone = new AssignedZone;
-		$assignedZone->city_id = $request->input('city_id');
-		if ($request->input('zone_id') == "Other") {
-			$checkZone = Zone::where('zone', $request->input('other'))->where('city_id', $request->input('city_id'))->first();
-			if (empty($checkZone)) {
-				$zone = new Zone;
-				$zone->city_id = $request->input('city_id');
-				$zone->zone = ucfirst($request->input('other'));
-				$zone->save();
-				$zone_id = $zone->id;
 			} else {
-				$zone_id = $checkZone->id;
+				$validator = Validator::make($request->all(), [
+					//'city_id' 	=> 'required|max:35',
+					//'zone_id' => 'required|max:35',
+					'state_id' => 'required|max:32',
+				]);
 			}
 
-		} else {
-			$zone_id = $request->input('zone_id');
-		}
-		$assignedZone->zone_id = $zone_id;
-		$assignedZone->client_id = $request->input('client_id');
-
-		$checkAssignedZone = AssignedZone::where('client_id', $request->input('client_id'))->where('zone_id', $zone_id)->where('city_id', $request->input('city_id'))->first();
-
-		if (empty($checkAssignedZone)) {
-			if ($assignedZone->save()) {
-
-				$data['status'] = true;
-				$data['message'] = "Business Location updated successfully !";
-			} else {
-				$data['status'] = 0;
-				$data['message'] = "Business Location could not be successfully, Please try again !";
+			if ($validator->fails()) {
+				$errorsBag = $validator->getMessageBag()->toArray();
+				return response()->json(['status' => 1, 'errors' => $errorsBag], 400);
 			}
-		} else {
-			$data['status'] = 0;
-			$data['message'] = "Already exists <strong>" . $request->input('other') . "</strong> Please add right zone !";
-		}
+			$client = Client::find($user->id);
+			if (empty($request->input('zone_id')) && !empty($request->input('cityiesid')) && !empty($request->input('state_id'))) {
+
+				$zones = Zone::where('city_id', $request->input('cityiesid'))->get();
+				if (!empty($zones)) {
+					foreach ($zones as $zone) {
+						$assignedZone = new AssignedZone;
+						$assignedZone->city_id = $request->input('cityiesid');
+						$assignedZone->zone_id = $zone->id;
+						$assignedZone->client_id = $client->id;
+						$assignedZone->state_id = $request->input('state_id');
+						$checkAssignedZone = AssignedZone::where('client_id', $client->id)->where('zone_id', $zone->id)->where('city_id', $request->input('cityiesid'))->where('state_id', $request->input('state_id'))->first();
+
+						if (empty($checkAssignedZone)) {
+							if ($assignedZone->save()) {
+
+								$areas = DB::table('areas');
+								$areas = $areas->where('areas.zone_id', '=', $zone->id);
+								$areas = $areas->select('areas.id', 'areas.area');
+								$areas = $areas->get();
+								if (!empty($areas)) {
+									foreach ($areas as $area) {
+										$assigneddArea = new AssigneddArea;
+										$assigneddArea->client_id = $client->id;
+										$assigneddArea->state_id = $request->input('state_id');
+										$assigneddArea->city_id = $request->input('cityiesid');
+										$assigneddArea->assigned_zone_id = $zone->id;
+										$assigneddArea->area_id = $area->id;
+										$checkAssignedArea = AssigneddArea::where('client_id', $client->id)->where('assigned_zone_id', $zone->id)->where('city_id', $request->input('cityiesid'))->where('area_id', $area->id)->where('state_id', $request->input('state_id'))->first();
+										if (empty($checkAssignedArea)) {
+											$assigneddArea->save();
+										} else {
+											$already = 1;
+										}
+
+									}
+								}
+								$add = 1;
+							}
+						} else {
+							$already = 1;
+
+						}
+					}
+				}
+				if (!empty($add)) {
+					$status = true;
+					$msg = 'Business Location add successfully';
+					$code = 200;
+				} else {
+					if (!empty($already)) {
+						$status = false;
+						$msg = "Already exists all City, Please add right city !";
+						$code = 400;
+					} else {
+						$status = false;
+						$msg = 'City not assigned';
+						$code = 400;
+					}
+
+				}
 
 
 
-		return response()->json([
 
+			} else if (empty($request->input('zone_id')) && empty($request->input('cityiesid')) && !empty($request->input('state_id'))) {
+
+				//state
+				$states = State::where('id', $request->input('state_id'))->first();
+				$cities = Citieslists::where('state_id', $states->id)->get();
+				if (!empty($cities)) {
+					foreach ($cities as $citis) {
+
+						$zones = Zone::where('city_id', $citis->id)->get();
+						if (!empty($zones)) {
+							foreach ($zones as $zone) {
+								$assignedZone = new AssignedZone;
+								$assignedZone->city_id = $citis->id;
+								$assignedZone->zone_id = $zone->id;
+								$assignedZone->client_id = $client->id;
+								$assignedZone->state_id = $states->id;
+								$checkAssignedZone = AssignedZone::where('client_id', $client->id)->where('zone_id', $zone->id)->where('city_id', $citis->id)->where('state_id', $states->id)->first();
+
+								if (empty($checkAssignedZone)) {
+									if ($assignedZone->save()) {
+										$areas = DB::table('areas');
+										$areas = $areas->where('areas.zone_id', '=', $zone->id);
+										$areas = $areas->select('areas.id', 'areas.area');
+										$areas = $areas->get();
+										if (!empty($areas)) {
+											foreach ($areas as $area) {
+												$assigneddArea = new AssigneddArea;
+												$assigneddArea->client_id = $client->id;
+												$assigneddArea->state_id = $states->id;
+												$assigneddArea->city_id = $citis->id;
+												$assigneddArea->assigned_zone_id = $zone->id;
+												$assigneddArea->area_id = $area->id;
+												$checkAssignedArea = AssigneddArea::where('client_id', $client->id)->where('assigned_zone_id', $zone->id)->where('city_id', $citis->id)->where('area_id', $area->id)->where('state_id', $states->id)->first();
+												if (empty($checkAssignedArea)) {
+													$assigneddArea->save();
+												}
+											}
+										}
+									}
+									$add = 1;
+								} else {
+									$already = 1;
+								}
+							}
+						}
+					}
+				}
+				if (!empty($add)) {
+					$status = true;
+					$msg = 'Business Location add successfully';
+					$code = 200;
+				} else {
+					if (!empty($already)) {
+						$status = false;
+						$msg = "Already exists, Please add right city !";
+						$code = 400;
+					} else {
+						$status = false;
+						$msg = 'City not assigned';
+						$code = 400;
+					}
+				}
+
+			} elseif (!empty($request->input('zone_id')) && ($request->input('zone_id') != 'Other') && !empty($request->input('cityiesid')) && !empty($request->input('state_id'))) {
+				//zone
+				$assignedZone = new AssignedZone;
+				$assignedZone->city_id = $request->input('cityiesid');
+				$assignedZone->zone_id = $request->input('zone_id');
+				$assignedZone->client_id = $user->id;
+				$assignedZone->state_id = $request->input('state_id');
+				$checkAssignedZone = AssignedZone::where('client_id', $user->id)->where('zone_id', $request->input('zone_id'))->where('city_id', $request->input('cityiesid'))->first();
+
+				if (empty($checkAssignedZone)) {
+					if ($assignedZone->save()) {
+						$areas = DB::table('areas');
+						$areas = $areas->where('areas.zone_id', '=', $request->input('zone_id'));
+						$areas = $areas->select('areas.id', 'areas.area');
+						$areas = $areas->get();
+						if (!empty($areas)) {
+							foreach ($areas as $area) {
+								$assigneddArea = new AssigneddArea;
+								$assigneddArea->client_id = $user->id;
+								$assigneddArea->state_id = $request->input('state_id');
+								$assigneddArea->city_id = $request->input('cityiesid');
+								$assigneddArea->assigned_zone_id = $request->input('zone_id');
+								$assigneddArea->area_id = $area->id;
+								$checkAssignedArea = AssigneddArea::where('client_id', $user->id)->where('assigned_zone_id', $request->input('zone_id'))->where('city_id', $request->input('cityiesid'))->where('area_id', $area->id)->where('state_id', $request->input('state_id'))->first();
+								if (empty($checkAssignedArea)) {
+									$assigneddArea->save();
+
+								}
+							}
+						}
+						$add = 1;
+					}
+				} else {
+					$already = 0;
+				}
+
+
+				if (!empty($add)) {
+					$status = true;
+					$msg = "Business Location updated successfully !";
+				} else {
+
+					if (!empty($already)) {
+						$status = false;
+						$msg = "Already exists, Please add right city !";
+						$code = 400;
+					} else {
+						$status = false;
+						$msg = "Business Location could not be successfully, Please try again !";
+						$code = 400;
+					}
+				}
+			} else if (!empty($request->input('zone_id') == 'Other') && !empty($request->input('cityiesid')) && !empty($request->input('state_id')) && !empty($request->input('other'))) {
+
+				//Other
+				$assignedZone = new AssignedZone;
+				$assignedZone->city_id = $request->input('cityiesid');
+				if ($request->input('zone_id') == "Other") {
+					$checkZone = Zone::where('zone', $request->input('other'))->where('city_id', $request->input('cityiesid'))->first();
+					if (empty($checkZone)) {
+						$zone = new Zone;
+						$zone->city_id = $request->input('cityiesid');
+						$zone->zone = ucfirst($request->input('other'));
+						$zone->save();
+						$zone_id = $zone->id;
+					} else {
+						$zone_id = $checkZone->id;
+					}
+
+				} else {
+					$zone_id = $request->input('zone_id');
+				}
+				$assignedZone->zone_id = $zone_id;
+				$assignedZone->client_id = $user->id;
+				$assignedZone->state_id = $request->input('state_id');
+				$checkAssignedZone = AssignedZone::where('client_id', $user->id)->where('zone_id', $zone_id)->where('city_id', $request->input('cityiesid'))->where('state_id', $request->input('state_id'))->first();
+				if (empty($checkAssignedZone)) {
+					if ($assignedZone->save()) {
+						$status = true;
+						$msg = "Business Location updated successfully !";
+					} else {
+						$status = false;
+						$msg = "Business Location could not be successfully, Please try again !";
+					}
+				} else {
+					$status = false;
+					$msg = "Already exists " . $request->input('other') . " Please add right zone !";
+				}
+
+			}
+
+			$data['status'] = $status;
+			$data['message'] = $msg;
+			return response()->json([
 			'data' => $data,
 		], 200);
+			
+		
 
 	}
 
+	 
 
 	/**
 	 * @OA\Post(
@@ -366,7 +610,7 @@ class BusinessLocationController extends Controller
 	/**
 	 * @OA\Get(
 	 *     path="/api/business/get-business-location-pagination",
-	 *     tags={"Business Location"},
+	 *     tags={"Profile"},
 	 *     summary="Get business location with pagination",
 	 *     description="Fetches paginated business location details of the authenticated user.",
 	 *     security={{"bearerAuth":{}}},
@@ -446,11 +690,13 @@ class BusinessLocationController extends Controller
 		$query = DB::table('assigned_zones')
 			->join('zones', 'assigned_zones.zone_id', '=', 'zones.id')
 			->join('citylists', 'assigned_zones.city_id', '=', 'citylists.id')
+			->join('state', 'assigned_zones.state_id', '=', 'state.id')
 			->select(
 				'assigned_zones.id as assign_id',
 				'assigned_zones.*',
 				'citylists.city',
-				'zones.zone'
+				'zones.zone',
+				'state.name',
 			)
 			->where('assigned_zones.client_id', $clientID);
 
@@ -459,6 +705,7 @@ class BusinessLocationController extends Controller
 			$query->where(function ($q) use ($search) {
 				$q->where('citylists.city', 'LIKE', "%{$search}%")
 					->orWhere('zones.zone', 'LIKE', "%{$search}%");
+					 
 			});
 		}
 
@@ -487,14 +734,17 @@ class BusinessLocationController extends Controller
 			->get();
 		// Transform collection for DataTables
 		$data = $leads->map(function ($lead) {
-			$checkbox = $lead->id;
+			 
+			$checkbox = $lead->assign_id;
 			$cityName = $lead->city ?? 'N/A';
 			$zoneName = $lead->zone ?? '';
+			$stateName = $lead->name ?? '';
 
 
 
 			return [
 				$checkbox,
+				e($stateName),
 				e($cityName),
 				e($zoneName),
 
@@ -517,7 +767,7 @@ class BusinessLocationController extends Controller
 	/**
  * @OA\Delete(
  *     path="/api/business/business-location/{id}",
- *     tags={"Business Location"},
+ *     tags={"Profile"},
  *     summary="Delete assigned business location",
  *     description="Delete a business location (city + zone) assigned to the authenticated client. Only the owner can delete it.",
  *     security={{"bearerAuth":{}}},

@@ -40,6 +40,8 @@ Route::get('/api/site/blog/{slug}', [App\Http\Controllers\Site\SiteController::c
   
  Route::get('/api/site/business-details/{slug}', [App\Http\Controllers\Site\SiteController::class, 'businessDetails']);
  Route::get('/api/site/about-us', [App\Http\Controllers\Site\SiteController::class, 'aboutus']);
+ Route::get('/api/site/faq', [App\Http\Controllers\Site\SiteController::class, 'FAQ']);
+ Route::get('/api/site/business-owners', [App\Http\Controllers\Site\SiteController::class, 'businessOwners']);
 
 
  

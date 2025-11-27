@@ -1685,7 +1685,7 @@
         "/api/business/business-location": {
             "get": {
                 "tags": [
-                    "Business Location"
+                    "Profile"
                 ],
                 "summary": "Get location information",
                 "description": "Fetch the location information of the authenticated user's account or business.",
@@ -1767,7 +1767,7 @@
         "/api/business/saveBusinessLocation": {
             "post": {
                 "tags": [
-                    "Business Location"
+                    "Profile"
                 ],
                 "summary": "Update Business Location",
                 "description": "Update the authenticated user's business location.",
@@ -1778,40 +1778,25 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "address",
-                                    "city",
-                                    "state",
-                                    "country",
-                                    "pincode"
+                                    "state_id",
+                                    "cityiesid"
                                 ],
                                 "properties": {
-                                    "address": {
-                                        "type": "string",
-                                        "example": "123 MG Road, Sector 45"
+                                    "state_id": {
+                                        "type": "integer",
+                                        "example": "38"
                                     },
-                                    "city": {
+                                    "cityiesid": {
                                         "type": "string",
-                                        "example": "Noida"
+                                        "example": "961"
                                     },
-                                    "state": {
+                                    "zone_id": {
                                         "type": "string",
-                                        "example": "Uttar Pradesh"
+                                        "example": "1090 or Other"
                                     },
-                                    "country": {
+                                    "other": {
                                         "type": "string",
-                                        "example": "India"
-                                    },
-                                    "pincode": {
-                                        "type": "string",
-                                        "example": "201301"
-                                    },
-                                    "latitude": {
-                                        "type": "string",
-                                        "example": "28.5355"
-                                    },
-                                    "longitude": {
-                                        "type": "string",
-                                        "example": "77.3910"
+                                        "example": "zone name"
                                     }
                                 },
                                 "type": "object"
@@ -2080,7 +2065,7 @@
         "/api/business/get-business-location-pagination": {
             "get": {
                 "tags": [
-                    "Business Location"
+                    "Profile"
                 ],
                 "summary": "Get business location with pagination",
                 "description": "Fetches paginated business location details of the authenticated user.",
@@ -2215,7 +2200,7 @@
         "/api/business/business-location/{id}": {
             "delete": {
                 "tags": [
-                    "Business Location"
+                    "Profile"
                 ],
                 "summary": "Delete assigned business location",
                 "description": "Delete a business location (city + zone) assigned to the authenticated client. Only the owner can delete it.",
@@ -4227,7 +4212,7 @@
         "/api/business/personal-details": {
             "get": {
                 "tags": [
-                    "Personal details"
+                    "Profile"
                 ],
                 "summary": "Get personal details",
                 "description": "Fetch the personal details of the authenticated user",
@@ -4315,7 +4300,7 @@
         "/api/business/savePersonalDetails": {
             "post": {
                 "tags": [
-                    "Personal details"
+                    "Profile"
                 ],
                 "summary": "Save or update personal details",
                 "description": "Save or update the personal details of the authenticated user",
@@ -4366,7 +4351,7 @@
                                     },
                                     "city": {
                                         "type": "string",
-                                        "example": "New Delhi"
+                                        "example": "1011"
                                     },
                                     "area": {
                                         "type": "string",
@@ -4528,9 +4513,9 @@
         "/api/business/profileInfo": {
             "get": {
                 "tags": [
-                    "Business Information Profile"
+                    "Profile"
                 ],
-                "summary": "Get authenticated user profile information",
+                "summary": "Get Business Information Profile",
                 "description": "Returns profile details of the logged-in user. Requires Bearer token.",
                 "operationId": "2e7fbc8e8c388184873af97859d6027f",
                 "responses": {
@@ -4590,9 +4575,9 @@
         "/api/business/saveProfileInfo": {
             "post": {
                 "tags": [
-                    "Business Information Profile"
+                    "Profile"
                 ],
-                "summary": "Save profile information",
+                "summary": "Save Business Information Profile",
                 "description": "Stores profile information like email, year of establishment, display info, intro, and certifications.",
                 "operationId": "63065efaf03bf7ffd2887846a3b217e0",
                 "requestBody": {
@@ -6111,6 +6096,154 @@
                 }
             }
         },
+        "/api/site/faq": {
+            "get": {
+                "tags": [
+                    "Frontend FAQ's"
+                ],
+                "summary": "FAQ's records",
+                "description": "Display data home page",
+                "operationId": "a9567b9ab7ee7957d26b9726a1dfb722",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/site/business-owners": {
+            "get": {
+                "tags": [
+                    "Frontend business signup"
+                ],
+                "summary": "Business sign up",
+                "description": "Display data home page",
+                "operationId": "a5e037d667ad53b7a56a149f75eacc3f",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/site/common-linked": {
             "get": {
                 "tags": [
@@ -6335,10 +6468,6 @@
             "description": "Keywords"
         },
         {
-            "name": "Business Location",
-            "description": "Business Location"
-        },
-        {
             "name": "Location Information",
             "description": "Location Information"
         },
@@ -6371,16 +6500,8 @@
             "description": "Payment"
         },
         {
-            "name": "Personal details",
-            "description": "Personal details"
-        },
-        {
             "name": "Occupation",
             "description": "Occupation"
-        },
-        {
-            "name": "Business Information Profile",
-            "description": "Business Information Profile"
         },
         {
             "name": "Frontend Search city and keyword",
@@ -6441,6 +6562,14 @@
         {
             "name": "Frontend about-us",
             "description": "Frontend about-us"
+        },
+        {
+            "name": "Frontend FAQ's",
+            "description": "Frontend FAQ's"
+        },
+        {
+            "name": "Frontend business signup",
+            "description": "Frontend business signup"
         },
         {
             "name": "Frontend Common Linked",

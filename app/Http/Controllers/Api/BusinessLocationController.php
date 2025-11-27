@@ -609,7 +609,7 @@ class BusinessLocationController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/business/get-business-location-pagination",
+	 *     path="/api/business/get-business-location",
 	 *     tags={"Profile"},
 	 *     summary="Get business location with pagination",
 	 *     description="Fetches paginated business location details of the authenticated user.",
@@ -674,6 +674,7 @@ class BusinessLocationController extends Controller
 
 	public function getBusinessLocationPagination(Request $request)
 	{
+		
 		if (!Auth::guard('sanctum')->check()) {
 			return response()->json([
 				'status' => false,
@@ -683,83 +684,56 @@ class BusinessLocationController extends Controller
 		}
 
 		$user = auth('sanctum')->user();
-		$clientID = $user->id;
-		$search = $request->input('search');
-		$length = (int) $request->input('length', 10); // per page
 
-		$query = DB::table('assigned_zones')
+		if (!$user) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
+		}
+		$perPage = $request->query('per_page', 10);
+		$leads = DB::table('assigned_zones')
 			->join('zones', 'assigned_zones.zone_id', '=', 'zones.id')
 			->join('citylists', 'assigned_zones.city_id', '=', 'citylists.id')
 			->join('state', 'assigned_zones.state_id', '=', 'state.id')
-			->select(
-				'assigned_zones.id as assign_id',
-				'assigned_zones.*',
-				'citylists.city',
-				'zones.zone',
-				'state.name',
-			)
-			->where('assigned_zones.client_id', $clientID);
+			->select('assigned_zones.*', 'citylists.city', 'zones.zone', 'assigned_zones.id as assign_id', 'state.*', 'state.name as state_name')
+			->orderBy('assigned_zones.id', 'desc')
+			->where('assigned_zones.client_id', $user->id)
+			//->paginate($request->input('length'));
+			->paginate($perPage);
+		$leads_list= [];
+		if (!empty($leads)) {
+			foreach ($leads->items() as $key => $val) {
+				if (!empty($val->zone)) {
+					$zonename = $val->zone;
+				} else {
+					$zonename = "";
+				}
 
-		// Apply search if provided
-		if (!empty($search)) {
-			$query->where(function ($q) use ($search) {
-				$q->where('citylists.city', 'LIKE', "%{$search}%")
-					->orWhere('zones.zone', 'LIKE', "%{$search}%");
-					 
-			});
+				$leads_list[$key] = array(
+					'assignZone_id' => $val->assign_id,
+					'city_id' => $val->city_id,
+					'city' => $val->city,
+					'zone_id' => $val->zone_id,
+					'zone_name' => $zonename,
+					'state_id' => $val->state_id,
+					'state_name' => $val->state_name,
+
+				);
+			}
+			$data = $leads_list;
 		}
-
-		$searchableColumns = ['id', 'city', 'zone'];
-		$sortableColumns = array_merge($searchableColumns, ['created_at']);
-
-
-		$sortBy = in_array($request->input('sort_by'), $sortableColumns) ? $request->input('sort_by') : 'created_at';
-		$sortDir = strtolower($request->input('sort_direction', 'desc')) === 'asc' ? 'asc' : 'desc';
-		$perPage = min($request->get('per_page', 15), 100); // Limit max per_page to 100
-		$page = max($request->get('page', 1), 1); // Ensure page is at least 1
-
-		// Get total count BEFORE applying pagination
-		$totalRecords = (clone $query)->count();
-		$totalPages = $perPage > 0 ? (int) ceil($totalRecords / $perPage) : 1;
-
-		// Adjust page if it exceeds total pages
-		if ($page > $totalPages && $totalPages > 0) {
-			$page = $totalPages; // Go to last page instead of first page
-		}
-
-		// Apply sorting and pagination
-		$leads = $query->orderBy($sortBy, $sortDir)
-			->offset(($page - 1) * $perPage)
-			->limit($perPage)
-			->get();
-		// Transform collection for DataTables
-		$data = $leads->map(function ($lead) {
-			 
-			$checkbox = $lead->assign_id;
-			$cityName = $lead->city ?? 'N/A';
-			$zoneName = $lead->zone ?? '';
-			$stateName = $lead->name ?? '';
-
-
-
-			return [
-				$checkbox,
-				e($stateName),
-				e($cityName),
-				e($zoneName),
-
-			];
-		})->all();
-
-
 		return response()->json([
-
 			'status' => true,
-			'message' => 'Success',
-
-			'total_pages' => $totalPages,
-			'total_records' => $totalRecords,
+			'current_page' => $leads->currentPage(),
+				'per_page' => $leads->perPage(),
+				'total' => $leads->total(),
+				'last_page' => $leads->lastPage(),
 			'data' => $data,
+			 
+				
+			
 		], 200);
 	}
 

@@ -49,7 +49,7 @@ class BusinessController extends Controller
 	/**
 	 * @OA\Get(
 	 *     path="/api/business/get-assigned-zones",
-	 *     tags={"Zones"},
+	 *     tags={"business-location"},
 	 *     summary="Get paginated assigned zones",
 	 *     description="Fetch a paginated list of zones assigned to the authenticated user.",
 	 *     security={{"bearerAuth":{}}},
@@ -143,17 +143,18 @@ class BusinessController extends Controller
 
 				);
 			}
-			$data['leadslist'] = $leads_list;
+			$data = $leads_list;
 		}
 		return response()->json([
 			'status' => true,
-			'data' => $data,
-			'pagination' => [
-				'current_page' => $leads->currentPage(),
+			'current_page' => $leads->currentPage(),
 				'per_page' => $leads->perPage(),
 				'total' => $leads->total(),
 				'last_page' => $leads->lastPage(),
-			],
+			'data' => $data,
+			 
+				
+			
 		], 200);
 
 	}

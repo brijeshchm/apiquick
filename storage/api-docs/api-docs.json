@@ -595,18 +595,6 @@
                 "summary": "Get cities by state",
                 "description": "Fetch a list of cities dynamically based on state_id (used for AJAX calls in dropdowns).",
                 "operationId": "11e46168b1ff2aeb9034a147edd08c40",
-                "parameters": [
-                    {
-                        "name": "state_id",
-                        "in": "query",
-                        "description": "ID of the state",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "example": 9
-                        }
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Cities retrieved successfully",
@@ -700,7 +688,7 @@
                         "required": true,
                         "schema": {
                             "type": "integer",
-                            "example": 9
+                            "example": 10
                         }
                     }
                 ],
@@ -755,6 +743,188 @@
                     },
                     "404": {
                         "description": "No cities found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No cities found for this state."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/country/get-country": {
+            "get": {
+                "tags": [
+                    "Country"
+                ],
+                "summary": "Get cities by state",
+                "description": "Fetch a list of cities dynamically based on state_id (used for AJAX calls in dropdowns).",
+                "operationId": "e8ee47a5533c5f4fe735b49017611599",
+                "responses": {
+                    "200": {
+                        "description": "Cities retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "city": {
+                                                        "type": "string",
+                                                        "example": "Noida"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No cities found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No cities found for this state."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/state/get-state-by-country": {
+            "post": {
+                "tags": [
+                    "State"
+                ],
+                "summary": "Get state by Coutry",
+                "description": "Fetch a list of state  by country.",
+                "operationId": "565f43a35bffc0d6a38ffdf599288648",
+                "parameters": [
+                    {
+                        "name": "country_id",
+                        "in": "query",
+                        "description": "ID of the country",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 101
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cities retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "country": {
+                                                        "type": "string",
+                                                        "example": "india"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No country found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -6497,16 +6667,20 @@
             "description": "Cities"
         },
         {
+            "name": "Country",
+            "description": "Country"
+        },
+        {
+            "name": "State",
+            "description": "State"
+        },
+        {
             "name": "Zones",
             "description": "Zones"
         },
         {
             "name": "Area",
             "description": "Area"
-        },
-        {
-            "name": "State",
-            "description": "State"
         },
         {
             "name": "Help",

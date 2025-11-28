@@ -20,6 +20,7 @@ use App\Models\PaymentHistory;
 use Illuminate\Support\Facades\Auth;
 use Exception;
 use App\Models\Zone;
+use App\Models\Country;
 use App\Models\Area;
 use App\Models\Lead;
 use App\Models\User;
@@ -138,9 +139,9 @@ class BusinessController extends Controller
 					'city_id' => $val->city_id,
 					'city' => $val->city,
 					'zone_id' => $val->zone_id,
-					'zone_name' => $zonename,
+					'zone' => $zonename,
 					'state_id' => $val->state_id,
-					'state_name' => $val->state_name,
+					'state' => $val->state_name,
 
 				);
 			}
@@ -166,14 +167,7 @@ class BusinessController extends Controller
 	 *     tags={"Cities"},
 	 *     summary="Get cities by state",
 	 *     description="Fetch a list of cities dynamically based on state_id (used for AJAX calls in dropdowns).",
-	 *     security={{"bearerAuth":{}}},
-	 *     @OA\Parameter(
-	 *         name="state_id",
-	 *         in="query",
-	 *         required=true,
-	 *         description="ID of the state",
-	 *         @OA\Schema(type="integer", example=9)
-	 *     ),
+	 *     security={{"bearerAuth":{}}},	 *   
 	 *     @OA\Response(
 	 *         response=200,
 	 *         description="Cities retrieved successfully",
@@ -213,7 +207,7 @@ class BusinessController extends Controller
 			foreach ($citieslists as $city) {
 				$data[] = [
 					'city_id' => $city->id,
-					'city_name' => $city->city,
+					'city' => $city->city,
 
 				];
 			}
@@ -239,7 +233,7 @@ class BusinessController extends Controller
 	 *         in="query",
 	 *         required=true,
 	 *         description="ID of the state",
-	 *         @OA\Schema(type="integer", example=9)
+	 *         @OA\Schema(type="integer", example=10)
 	 *     ),
 	 *     @OA\Response(
 	 *         response=200,
@@ -274,7 +268,7 @@ class BusinessController extends Controller
 	public function getCityByState(Request $request)
 	{
 		$sid = $request->input('state_id');
-		$cid = $request->input('cid');
+	
 		$data = [];
 		$cityslist = Citieslists::where('state_id', $sid)->get();
 
@@ -290,7 +284,7 @@ class BusinessController extends Controller
 			foreach ($cityslist as $city) {
 				$data[] = [
 					'city_id' => $city->id,
-					'city_name' => $city->city,
+					'city' => $city->city,
 					'state_id' => $city->state_id,
 
 				];
@@ -304,6 +298,143 @@ class BusinessController extends Controller
 		], 200);
 	}
 
+	
+	/**
+	 * @OA\Get(
+	 *     path="/api/business/country/get-country",
+	 *     tags={"Country"},
+	 *     summary="Get cities by state",
+	 *     description="Fetch a list of cities dynamically based on state_id (used for AJAX calls in dropdowns).",
+	 *     security={{"bearerAuth":{}}},	 *   
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Cities retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=101),
+	 *                     @OA\Property(property="city", type="string", example="Noida")
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No cities found",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No cities found for this state.")
+	 *         )
+	 *     )
+	 * )
+	 */
+
+	public function getCountry(Request $request)
+	{
+
+		$countrylists = Country::get();
+		if ($countrylists) {
+			foreach ($countrylists as $country) {
+				$data[] = [
+					'country_id' => $country->id,
+					'country' => $country->name,
+
+				];
+			}
+		}
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
+	}
+
+
+	/**
+	 * @OA\Post(
+	 *     path="/api/business/state/get-state-by-country",
+	 *     tags={"State"},
+	 *     summary="Get state by Coutry",
+	 *     description="Fetch a list of state  by country.",
+	 *     security={{"bearerAuth":{}}},
+	 *     @OA\Parameter(
+	 *         name="country_id",
+	 *         in="query",
+	 *         required=true,
+	 *         description="ID of the country",
+	 *         @OA\Schema(type="integer", example=101)
+	 *     ),
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Cities retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=101),
+	 *                     @OA\Property(property="country", type="string", example="india")
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No country found",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No cities found for this state.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function getStateByCountry(Request $request)
+	{
+		$cid = $request->input('country_id');
+	
+		$data = [];
+		$statelist = State::where('country_id', $cid)->get();
+
+		if (!$statelist) {
+			return response()->json([
+				'status' => true,
+				'message' => "State not Found",
+				'data' => '',
+
+			], 200);
+		}
+		if ($statelist) {
+			foreach ($statelist as $state) {
+				$data[] = [
+					'state_id' => $state->id,
+					'state' => $state->name,
+					'coutry_id' => $state->country_id,
+
+				];
+			}
+		}
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
+	}
 	/**
 	 * @OA\Get(
 	 *     path="/api/business/zones/get-zones",
@@ -622,7 +753,7 @@ class BusinessController extends Controller
 			foreach ($statelists as $state) {
 				$data[] = [
 					'state_id' => $state->id,
-					'state_name' => $state->name,
+					'state' => $state->name,
 
 				];
 			}

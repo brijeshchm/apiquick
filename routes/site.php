@@ -35,7 +35,7 @@ Route::get('/api/site/blog/{slug}', [App\Http\Controllers\Site\SiteController::c
  Route::get('/api/site/child', [App\Http\Controllers\Site\SiteController::class, 'getChild']);
  Route::get('/api/site/getCityList', [App\Http\Controllers\Site\SiteController::class, 'getCityList']);
  Route::get('/api/site/business-services', [App\Http\Controllers\Site\SiteController::class, 'businessServices']);
- Route::get('/api/site/footer-links', [App\Http\Controllers\Site\SiteController::class, 'quickLinks']);
+ Route::get('/api/site/footer-links', [App\Http\Controllers\Site\SiteController::class, 'footerLinks']);
  Route::get('/api/site/common-linked', [App\Http\Controllers\Site\SiteController::class, 'commonLinked']);
   
  Route::get('/api/site/business-details/{slug}', [App\Http\Controllers\Site\SiteController::class, 'businessDetails']);

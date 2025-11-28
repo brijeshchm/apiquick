@@ -74,7 +74,11 @@ Route::get('/business/cities/get-cities',[App\Http\Controllers\Api\BusinessContr
 Route::post('/business/cities/getajaxcities',[App\Http\Controllers\Api\BusinessController::class, 'getAjaxCities']);
 Route::get('/business/state/get-state',[App\Http\Controllers\Api\BusinessController::class, 'getState']);
 Route::post('/business/city/get-city-by-state',[App\Http\Controllers\Api\BusinessController::class, 'getCityByState']);
- 
+Route::post('/business/zones/get-zone-by-city',[App\Http\Controllers\Api\BusinessController::class, 'getZoneByCity']);
+Route::get('/business/zones/get-zones',[App\Http\Controllers\Api\BusinessController::class, 'getZones']);
+Route::post('/business/area/get-area-by-zone',[App\Http\Controllers\Api\BusinessController::class, 'getAreaByZone']);
+Route::get('/business/area/get-area',[App\Http\Controllers\Api\BusinessController::class, 'getArea']);
+  
 Route::get('/business/get-assigned-zones',[App\Http\Controllers\Api\BusinessController::class, 'getAssignedZonesPagination']);
 Route::delete('/business/assignZone/delete/{id}',[App\Http\Controllers\Api\BusinessController::class, 'assignZoneDelete']);
 Route::post('/business/assignLocation/selectAssignZoneDelete',[App\Http\Controllers\Api\BusinessController::class, 'selectAssignZoneDelete']);

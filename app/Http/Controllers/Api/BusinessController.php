@@ -20,6 +20,7 @@ use App\Models\PaymentHistory;
 use Illuminate\Support\Facades\Auth;
 use Exception;
 use App\Models\Zone;
+use App\Models\Area;
 use App\Models\Lead;
 use App\Models\User;
 use App\Models\Keyword;
@@ -158,80 +159,7 @@ class BusinessController extends Controller
 		], 200);
 
 	}
-	/**
-	 * @OA\Delete(
-	 *     path="/api/business/assignZone/delete/{id}",
-	 *     tags={"Zones"},
-	 *     summary="Delete assigned zone",
-	 *     description="Delete a specific zone assigned to the authenticated user by ID.",
-	 *     security={{"bearerAuth":{}}},
-	 *     @OA\Parameter(
-	 *         name="id",
-	 *         in="path",
-	 *         required=true,
-	 *         description="ID of the assigned zone to delete",
-	 *         @OA\Schema(type="integer", example=5)
-	 *     ),
-	 *     @OA\Response(
-	 *         response=200,
-	 *         description="Zone deleted successfully",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="success", type="boolean", example=true),
-	 *             @OA\Property(property="message", type="string", example="Zone deleted successfully.")
-	 *         )
-	 *     ),
-	 *     @OA\Response(
-	 *         response=401,
-	 *         description="Unauthenticated",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
-	 *         )
-	 *     ),
-	 *     @OA\Response(
-	 *         response=404,
-	 *         description="Zone not found",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="success", type="boolean", example=false),
-	 *             @OA\Property(property="message", type="string", example="Zone not found or already deleted.")
-	 *         )
-	 *     )
-	 * )
-	 */
-
-	public function assignZoneDelete(Request $request, $id)
-	{  
-		if (!Auth::guard('sanctum')->check()) {
-			return response()->json([
-				'status' => false,
-				'message' => 'Unauthenticated: Token is missing or invalid',
-				'error' => 'token_missing_or_invalid'
-			], 401);
-		}
-
-		$user = auth('sanctum')->user();
-		if (!$user) {
-			return response()->json([
-				'status' => false,
-				'message' => 'Unauthenticated: Token is missing or invalid',
-				'error' => 'token_missing_or_invalid'
-			], 401);
-		}
-		$assignedZone = AssignedZone::findOrFail($id);
-		if ($assignedZone->delete()) {
-			$data['status'] = true;
-			$data['message'] = "Assigned Zone Successfully!";
-		} else {
-			$data['status'] = false;
-			$data['message'] = "Assigned Zone could not be Deleted!";
-		}
-		 
-		return response()->json([
-                'data' => $data,
-            ], 200);
-	}
-
-
-
+ 
 	/**
 	 * @OA\Get(
 	 *     path="/api/business/cities/get-cities",
@@ -364,6 +292,280 @@ class BusinessController extends Controller
 					'city_id' => $city->id,
 					'city_name' => $city->city,
 					'state_id' => $city->state_id,
+
+				];
+			}
+		}
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
+	}
+
+	/**
+	 * @OA\Get(
+	 *     path="/api/business/zones/get-zones",
+	 *     tags={"Zones"},
+	 *     summary="Get zones list",
+	 *     description="Fetch a list of zones .",
+	 *     security={{"bearerAuth":{}}},   
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Zones retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=4),
+	 *                     @OA\Property(property="zones", type="string", example="South Delhi")
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No zones found",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No cities found for this state.")
+	 *         )
+	 *     )
+	 * )
+	 */
+
+	public function getZones(Request $request)
+	{
+
+		$zonelists = Zone::get();
+		if ($zonelists) {
+			foreach ($zonelists as $zone) {
+				$data[] = [
+					'zone_id' => $zone->id,
+					'zone' => $zone->zone,
+
+				];
+			}
+		}
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
+	}
+
+
+	/**
+	 * @OA\Post(
+	 *     path="/api/business/zones/get-zone-by-city",
+	 *     tags={"Zones"},
+	 *     summary="Get zone by city",
+	 *     description="Fetch a list of zones dynamically based on city_id (used for AJAX calls in dropdowns).",
+	 *     security={{"bearerAuth":{}}},
+	 *     @OA\Parameter(
+	 *         name="city_id",
+	 *         in="query",
+	 *         required=true,
+	 *         description="ID of the city",
+	 *         @OA\Schema(type="integer", example=278)
+	 *     ),
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Zones retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=101),
+	 *                     @OA\Property(property="city", type="string", example="Noida")
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No cities found",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No cities found for this state.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function getZoneByCity(Request $request)
+	{
+		$cid = $request->input('city_id');
+		$zid = $request->input('zid');
+		$data = [];
+		$zoneslist = Zone::where('city_id', $cid)->get();
+
+		if (!$zoneslist) {
+			return response()->json([
+				'status' => true,
+				'message' => "Zone not Found",
+				'data' => '',
+
+			], 200);
+		}
+		if ($zoneslist) {
+			foreach ($zoneslist as $zone) {
+				$data[] = [
+					'zone_id' => $zone->id,
+					'zone' => $zone->zone,
+					'city_id' => $zone->city_id,
+
+				];
+			}
+		}
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
+	}
+
+	/**
+	 * @OA\Get(
+	 *     path="/api/business/area/get-area",
+	 *     tags={"Area"},
+	 *     summary="Get Area list",
+	 *     description="Fetch a list of areas .",
+	 *     security={{"bearerAuth":{}}},   
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Area retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=9),
+	 *                     @OA\Property(property="area", type="string", example="Sector-2")
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No area found",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No cities found for this state.")
+	 *         )
+	 *     )
+	 * )
+	 */
+
+	public function getArea(Request $request)
+	{
+
+		$arealists = Area::get();
+		if ($arealists) {
+			foreach ($arealists as $area) {
+				$data[] = [
+					'area_id' => $area->id,
+					'area' => $area->area,
+
+				];
+			}
+		}
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
+	}
+
+
+	/**
+	 * @OA\Post(
+	 *     path="/api/business/area/get-area-by-zone",
+	 *     tags={"Area"},
+	 *     summary="Get area by zone",
+	 *     description="Fetch a list of area.",
+	 *     security={{"bearerAuth":{}}},
+	 *     @OA\Parameter(
+	 *         name="zone_id",
+	 *         in="query",
+	 *         required=true,
+	 *         description="ID of the zone",
+	 *         @OA\Schema(type="integer", example=12)
+	 *     ),
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Area retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=9),
+	 *                     @OA\Property(property="area", type="string", example="Sector-2")
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No area found",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No cities found for this state.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function getAreaByZone(Request $request)
+	{
+		$zid = $request->input('zone_id');
+	 
+		$data = [];
+		$areaslist = Area::where('zone_id', $zid)->get();
+
+		if (!$areaslist) {
+			return response()->json([
+				'status' => true,
+				'message' => "Area not Found",
+				'data' => '',
+
+			], 200);
+		}
+		if ($areaslist) {
+			foreach ($areaslist as $area) {
+				$data[] = [
+					'area_id' => $area->id,
+					'area' => $area->area,
+					'zone_id' => $area->zone_id,
 
 				];
 			}

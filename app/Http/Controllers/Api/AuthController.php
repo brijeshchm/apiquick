@@ -106,7 +106,7 @@ class AuthController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Login successful',
+            'message' => 'OTP has been sent to your email successfully',
              'token' => $token,
             'token_type' => 'Bearer',
           //  'expires_in' => auth()->factory()->getTTL()*60,

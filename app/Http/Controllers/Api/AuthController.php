@@ -76,7 +76,7 @@ class AuthController extends Controller
         // }
         if($user){
        
-    //     $otp = mt_rand(100000, 999999);
+        $otp = mt_rand(100000, 999999);
        
     //     //$message = "{$otp} is quickdials Portal Verification Code for {$request->session()->get('client.mobile')}.";
     // // $message = "{$otp} is Lead Portal Verification Code for {$request->session()->get('client.mobile')} quickdials";
@@ -85,19 +85,19 @@ class AuthController extends Controller
     // //sendSMS($request->session()->get('client.mobile'),$message,$templateId);
                                 
 
-    //     OtpCode::updateOrCreate(
-    //     ['user_id' => $user->id], // condition: find by user_id
-    //     [
-    //     'code'       => $otp,  // update/create this
-    //     'expires_at' => Carbon::now()->addMinutes(5),
-    //     ]
-    //     );
-    //     $message = "{$otp} is QuickDials Verification Code for {$user->email} .";
-    //     $subject = "{$otp} is QuickDials Verification Code";
-    //     Mail::send('emails.sendotp_to_email', ['msg'=>$message], function ($m) use ($message,$request,$subject) {
-    //         $m->from('leads@quickdials.com', 'Login OTP');
-    //         $m->to($request->input('email'), "")->subject($subject);
-    //     });	
+        OtpCode::updateOrCreate(
+        ['user_id' => $user->id], // condition: find by user_id
+        [
+        'code'       => $otp,  // update/create this
+        'expires_at' => Carbon::now()->addMinutes(5),
+        ]
+        );
+        $message = "{$otp} is QuickDials Verification Code for {$user->email} .";
+        $subject = "{$otp} is QuickDials Verification Code";
+        Mail::send('emails.sendotp_to_email', ['msg'=>$message], function ($m) use ($message,$request,$subject) {
+            $m->from('leads@quickdials.com', 'Login OTP');
+            $m->to($request->input('email'), "")->subject($subject);
+        });	
 
         }
         // Generate new Sanctum token

@@ -175,35 +175,34 @@ class InvoiceController extends Controller
 	 * )
 	 */
 
-	 public function downloadInvoicePdf($invoice_id)
-{
-	//dd($invoice_id);
-    // 🔐 Sanctum auth
-    if (!Auth::guard('sanctum')->check()) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Unauthenticated'
-        ], 401);
-    }
+	public function downloadInvoicePdf($invoice_id)
+	{
 
-    $paymentprint = PaymentHistory::find($invoice_id);
+		if (!Auth::guard('sanctum')->check()) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Unauthenticated'
+			], 401);
+		}
 
-    if (!$paymentprint) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Invoice not found'
-        ], 404);
-    }
+		$paymentprint = PaymentHistory::find($invoice_id);
 
-    $client = Client::withTrashed()->find($paymentprint->client_id);
+		if (!$paymentprint) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Invoice not found'
+			], 404);
+		}
 
-    $pdf = Pdf::loadView(
-        'business.getInvoicePrintPdfSlip',
-        compact('paymentprint', 'client')
-    );
-	return $pdf->download(
-    'invoice_' . $invoice_id . '_' . date('d-m-Y_H-i-s') . '.pdf'
-); 
+		$client = Client::withTrashed()->find($paymentprint->client_id);
+
+		$pdf = Pdf::loadView(
+			'business.getInvoicePrintPdfSlip',
+			compact('paymentprint', 'client')
+		);
+		return $pdf->download(
+			'invoice_' . $invoice_id . '_' . date('d-m-Y_H-i-s') . '.pdf'
+		);
 	}
 
 	/**
@@ -264,67 +263,67 @@ class InvoiceController extends Controller
 	 * )
 	 */
 
-public function coinsHistory(Request $request)
-{
-    // 🔐 Auth check
-    if (!Auth::guard('sanctum')->check()) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Unauthenticated'
-        ], 401);
-    }
+	public function coinsHistory(Request $request)
+	{
+		// 🔐 Auth check
+		if (!Auth::guard('sanctum')->check()) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Unauthenticated'
+			], 401);
+		}
 
-    $user = auth('sanctum')->user();
+		$user = auth('sanctum')->user();
 
-    $page  = (int) $request->input('page', 1);
-    $limit = (int) $request->input('limit', 20);
+		$page = (int) $request->input('page', 1);
+		$limit = (int) $request->input('limit', 20);
 
-    // 🪙 Coins history with pagination
-    $coinsLeads = DB::table('assigned_leads')
-        ->join('leads', 'leads.id', '=', 'assigned_leads.lead_id')
-        ->leftJoin('citylists', 'leads.city_id', '=', 'citylists.id')
-        ->leftJoin('keyword', 'assigned_leads.kw_id', '=', 'keyword.id')
-        ->where('assigned_leads.client_id', $user->id)
-        ->orderBy('assigned_leads.created_at', 'desc')
-        ->select(
-            'assigned_leads.id',
-            'assigned_leads.lead_id',
-            'assigned_leads.coins',
-            'assigned_leads.scrapLead',
-            'assigned_leads.created_at',
-            'leads.name as lead_name',
-            'leads.email',
-            'leads.mobile',
-            'citylists.city as city_name',
-            'keyword.keyword as keyword_name'
-        )
-        ->paginate($limit, ['*'], 'page', $page);
+		// 🪙 Coins history with pagination
+		$coinsLeads = DB::table('assigned_leads')
+			->join('leads', 'leads.id', '=', 'assigned_leads.lead_id')
+			->leftJoin('citylists', 'leads.city_id', '=', 'citylists.id')
+			->leftJoin('keyword', 'assigned_leads.kw_id', '=', 'keyword.id')
+			->where('assigned_leads.client_id', $user->id)
+			->orderBy('assigned_leads.created_at', 'desc')
+			->select(
+				'assigned_leads.id',
+				'assigned_leads.lead_id',
+				'assigned_leads.coins',
+				'assigned_leads.scrapLead',
+				'assigned_leads.created_at',
+				'leads.name as lead_name',
+				'leads.email',
+				'leads.mobile',
+				'citylists.city as city_name',
+				'keyword.keyword as keyword_name'
+			)
+			->paginate($limit, ['*'], 'page', $page);
 
-    // ✅ map() properly
-    $data = $coinsLeads->getCollection()->map(function ($lead) {
-        return [
-            'lead_id'    => $lead->lead_id,
-            'lead_name'  => $lead->lead_name,
-            'email'      => $lead->email,
-            'phone'      => $lead->mobile,
-            'city'       => $lead->city_name,
-            'keyword'    => $lead->keyword_name,
-            'coins'      => $lead->coins,
-            'scrap_lead' => (bool) $lead->scrapLead,
-            'date'       => date('d M Y', strtotime($lead->created_at)),
-        ];
-    });
+		// ✅ map() properly
+		$data = $coinsLeads->getCollection()->map(function ($lead) {
+			return [
+				'lead_id' => $lead->lead_id,
+				'lead_name' => $lead->lead_name,
+				'email' => $lead->email,
+				'phone' => $lead->mobile,
+				'city' => $lead->city_name,
+				'keyword' => $lead->keyword_name,
+				'coins' => $lead->coins,
+				'scrap_lead' => (bool) $lead->scrapLead,
+				'date' => date('d M Y', strtotime($lead->created_at)),
+			];
+		});
 
-    return response()->json([
-        'success' => true,
-        'data' => $data,
-         
-            'page'  => $coinsLeads->currentPage(),
-            'limit'=> $coinsLeads->perPage(),
-            'total'=> $coinsLeads->total(),
-        
-    ], 200);
-}
+		return response()->json([
+			'success' => true,
+			'data' => $data,
+
+			'page' => $coinsLeads->currentPage(),
+			'limit' => $coinsLeads->perPage(),
+			'total' => $coinsLeads->total(),
+
+		], 200);
+	}
 
 
 

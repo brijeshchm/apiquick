@@ -87,6 +87,7 @@ class BusinessDashboardController extends Controller
             ->orderBy('assigned_leads.created_at', 'desc')
             ->where('assigned_leads.client_id', $user->id)
             ->paginate($perPage);
+            $leads_list=[];
         if (!empty($leads)) {
             foreach ($leads->items() as $key => $val) {
                 if (!empty($val->zone)) {
@@ -104,7 +105,7 @@ class BusinessDashboardController extends Controller
                     'area_id' => $val->area_id,
                     'area' => $val->area,
                     'zone_id' => $val->zone_id,
-                    'zone' => $val->zone,
+                    'zone' => $zonename,
                     'kw_id' => $val->kw_id,
                     'kw_text' => $val->kw_text,
                     'client_id' => $val->client_id,
@@ -115,13 +116,12 @@ class BusinessDashboardController extends Controller
         }
         return response()->json([
             'status' => true,
-            'data' => $data,
-            'pagination' => [
-                'current_page' => $leads->currentPage(),
-                'per_page' => $leads->perPage(),
-                'total' => $leads->total(),
-                'last_page' => $leads->lastPage(),
-            ],
+            'data' => $data,             
+            'current_page' => $leads->currentPage(),
+            'per_page' => $leads->perPage(),
+            'total' => $leads->total(),
+            'last_page' => $leads->lastPage(),
+            
         ], 200);
       
 

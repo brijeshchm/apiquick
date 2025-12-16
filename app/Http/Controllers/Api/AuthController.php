@@ -52,8 +52,8 @@ class AuthController extends Controller
      *     )
      * )
      */
-   public function login(Request $request)
-    {      
+    public function login(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             //'password' => 'required',
@@ -63,10 +63,10 @@ class AuthController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $user = Client::where('email', $request->email)->first(); 
-       
-        if(!$user){
-             return response()->json(['status' => false, 'message' => 'User account not found',], 403);
+        $user = Client::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json(['status' => false, 'message' => 'User account not found',], 403);
         }
         if (!$user->active_status) {
             return response()->json(['status' => false, 'message' => 'User account is inactive',], 403);
@@ -74,30 +74,30 @@ class AuthController extends Controller
         // if (!$user || !Hash::check($request->password, $user->password)) {
         //     return response()->json(['status' => false, 'message' => 'Invalid credentials'], 401);
         // }
-        if($user){
-       
-        $otp = mt_rand(100000, 999999);
-       
-    //     //$message = "{$otp} is quickdials Portal Verification Code for {$request->session()->get('client.mobile')}.";
-    // // $message = "{$otp} is Lead Portal Verification Code for {$request->session()->get('client.mobile')} quickdials";
-    //     $templateId ='1707161786775524106';
+        if ($user) {
 
-    // //sendSMS($request->session()->get('client.mobile'),$message,$templateId);
-                                
+            $otp = mt_rand(100000, 999999);
 
-        OtpCode::updateOrCreate(
-        ['user_id' => $user->id], // condition: find by user_id
-        [
-        'code'       => $otp,  // update/create this
-        'expires_at' => Carbon::now()->addMinutes(5),
-        ]
-        );
-        $message = "{$otp} is QuickDials Verification Code for {$user->email} .";
-        $subject = "{$otp} is QuickDials Verification Code";
-        Mail::send('emails.sendotp_to_email', ['msg'=>$message], function ($m) use ($message,$request,$subject) {
-            $m->from('leads@quickdials.com', 'Login OTP');
-            $m->to($request->input('email'), "")->subject($subject);
-        });	
+            //     //$message = "{$otp} is quickdials Portal Verification Code for {$request->session()->get('client.mobile')}.";
+            // // $message = "{$otp} is Lead Portal Verification Code for {$request->session()->get('client.mobile')} quickdials";
+            //     $templateId ='1707161786775524106';
+
+            // //sendSMS($request->session()->get('client.mobile'),$message,$templateId);
+
+
+            OtpCode::updateOrCreate(
+                ['user_id' => $user->id], // condition: find by user_id
+                [
+                    'code' => $otp,  // update/create this
+                    'expires_at' => Carbon::now()->addMinutes(5),
+                ]
+            );
+            $message = "{$otp} is QuickDials Verification Code for {$user->email} .";
+            $subject = "{$otp} is QuickDials Verification Code";
+            Mail::send('emails.sendotp_to_email', ['msg' => $message], function ($m) use ($message, $request, $subject) {
+                $m->from('leads@quickdials.com', 'Login OTP');
+                $m->to($request->input('email'), "")->subject($subject);
+            });
 
         }
         // Generate new Sanctum token
@@ -107,127 +107,160 @@ class AuthController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'OTP has been sent to your email successfully',
-             'token' => $token,
+            'token' => $token,
             'token_type' => 'Bearer',
-          //  'expires_in' => auth()->factory()->getTTL()*60,
-            'data' => $user,             
+            //  'expires_in' => auth()->factory()->getTTL()*60,
+            'data' => $user,
         ]);
     }
     /**
- * @OA\Post(
- *     path="/api/verifyOtp",
- *     tags={"Verify Otp"},
- *     summary="Verify OTP and Login",
- *     description="Verify the 6-digit OTP sent to the user's email and issue an API token on success.",
- *     @OA\RequestBody(
- *         required=true,
- *         @OA\JsonContent(
- *             required={"email", "otp"},
- *             @OA\Property(property="email", type="string", format="email", example="user@example.com"),
- *             @OA\Property(property="otp", type="integer", example=123456, description="6-digit OTP code")
- *         )
- *     ),
- *     @OA\Response(
- *         response=200,
- *         description="OTP verified successfully. Login successful.",
- *         @OA\JsonContent(
- *             @OA\Property(property="success", type="boolean", example=true),
- *             @OA\Property(property="message", type="string", example="Login successful"),
- *             @OA\Property(property="token", type="string", example="1|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
- *             @OA\Property(
- *                 property="user",
- *                 type="object",
- *                 @OA\Property(property="id", type="integer", example=1),
- *                 @OA\Property(property="name", type="string", example="John Doe"),
- *                 @OA\Property(property="email", type="string", example="user@example.com")
- *             )
- *         )
- *     ),
- *     @OA\Response(
- *         response=422,
- *         description="Invalid or expired OTP",
- *         @OA\JsonContent(
- *             @OA\Property(property="success", type="boolean", example=false),
- *             @OA\Property(property="message", type="string", example="Invalid OTP or expired.")
- *         )
- *     ),
- *     @OA\Response(
- *         response=400,
- *         description="Validation error",
- *         @OA\JsonContent(
- *             @OA\Property(property="message", type="string", example="The email field is required.")
- *         )
- *     ),
- *     @OA\Response(
- *         response=404,
- *         description="User not found"
- *     )
- * )
- */
-   public function verifyOtp(Request $request)
+     * @OA\Post(
+     *     path="/api/verifyOtp",
+     *     tags={"Verify Otp"},
+     *     summary="Verify OTP and Login",
+     *     description="Verify the 6-digit OTP sent to the user's email and issue an API token on success.",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email", "otp"},
+     *             @OA\Property(property="email", type="string", format="email", example="user@example.com"),
+     *             @OA\Property(property="otp", type="integer", example=123456, description="6-digit OTP code")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="OTP verified successfully. Login successful.",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Login successful"),
+     *             @OA\Property(property="token", type="string", example="1|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
+     *             @OA\Property(
+     *                 property="user",
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="John Doe"),
+     *                 @OA\Property(property="email", type="string", example="user@example.com")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Invalid or expired OTP",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Invalid OTP or expired.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The email field is required.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found"
+     *     )
+     * )
+     */
+    public function verifyOtp(Request $request)
     { //dd($request->email);
         $request->validate([
             'email' => 'required|email|exists:clients,email',
-            'otp'  => 'required|size:6',
+            'otp' => 'required|size:6',
         ]);
 
-        $master ='202525';
+        $master = '202525';
         $user = client::where('email', $request->email)->first();
         $otp = OtpCode::where(function ($q) use ($request, $user) {
-        $q->where('user_id', $user->id)
-          ->where('code', $request->otp);
-    })    
-    ->first();
+            $q->where('user_id', $user->id)
+                ->where('code', $request->otp);
+        })
+            ->first();
 
 
-        if ( $otp ||  $master == $request->otp) {                    
- 
-        // if ($otp->isExpired()) {
-        //     $otp->delete();
-        //     return response()->json(['error' => 'OTP has expired.'], 422);
-        // }
+        if ($otp || $master == $request->otp) {
 
-        // OTP is valid → delete it (one-time use)
-        if($otp){
-                
-            OtpCode::updateOrCreate(
-            ['user_id' => $otp->user_id],  
-            [
-            'code' => 0,               
-            ]
-            );
+            // if ($otp->isExpired()) {
+            //     $otp->delete();
+            //     return response()->json(['error' => 'OTP has expired.'], 422);
+            // }
+
+            // OTP is valid → delete it (one-time use)
+            if ($otp) {
+
+                OtpCode::updateOrCreate(
+                    ['user_id' => $otp->user_id],
+                    [
+                        'code' => 0,
+                    ]
+                );
+            }
+
+            // Issue Sanctum token
+            $token = $user->createToken('api-token')->plainTextToken;
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Login successful',
+                'token' => $token,
+                'token_type' => 'Bearer',
+                //  'expires_in' => auth()->factory()->getTTL()*60,
+                'data' => $user,
+
+            ]);
+
+        } else {
+            return response()->json(['error' => 'Invalid OTP.'], 422);
+
         }
-
-        // Issue Sanctum token
-        $token = $user->createToken('api-token')->plainTextToken;
-
-       return response()->json([
-            'status' => true,
-            'message' => 'Login successful',
-            'token' => $token,
-            'token_type' => 'Bearer',
-          //  'expires_in' => auth()->factory()->getTTL()*60,
-            'data' => $user,
-            
-        ]);
-
-    }else{
-return response()->json(['error' => 'Invalid OTP.'], 422);
-
-    }
     }
 
- 
 
-    // Logout API
+    /**
+     * @OA\Post(
+     *     path="/api/logout",
+     *     tags={"Auth Logout"},
+     *     summary="Logout user",
+     *     description="Logout the authenticated user by revoking all access tokens",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Logout successful",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Logout successful")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Unauthenticated")
+     *         )
+     *     )
+     * )
+     */
     public function logout(Request $request)
     {
-        $request->user()->tokens()->delete();
+        $user = $request->user();
 
-        return response()->json(['status'=>true,'message' => 'Logout successful']);
+        if ($user) {
+            $user->currentAccessToken()->delete();
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Logout successful'
+        ], 200);
     }
-	
-  /**
+
+
+
+    /**
      * @OA\Post(
      *     path="/api/business/saveBusinessOwners",
      *     tags={"Registration Business"},
@@ -265,72 +298,72 @@ return response()->json(['error' => 'Invalid OTP.'], 422);
      *         )
      *     )
      * )
-     */ 
-	public function saveBusinessOwners(Request $request)
-	{		 
-		   
-        	$validator = Validator::make($request->all(), [
-				'business_name' => 'required|unique:clients,business_name',
-				'mobile' => 'required|numeric|digits:10|regex:/^[1-9]+/|unique:clients,mobile,NULL,id',
-				'email' => 'required|email|unique:clients,email,NULL,id'
+     */
+    public function saveBusinessOwners(Request $request)
+    {
 
-			]);
-			if ($validator->fails()) {
-				$errorsBag = $validator->getMessageBag()->toArray();
-				return response()->json(['status' => true, 'errors' => $errorsBag], 400);
-			}
-			$client = new Client;
-			 
+        $validator = Validator::make($request->all(), [
+            'business_name' => 'required|unique:clients,business_name',
+            'mobile' => 'required|numeric|digits:10|regex:/^[1-9]+/|unique:clients,mobile,NULL,id',
+            'email' => 'required|email|unique:clients,email,NULL,id'
 
-				$business_slug = NULL;
-				$string = $request->input('business_name');
-				$string = filter_var($string, FILTER_SANITIZE_STRING);
-				$string = preg_replace('/[^A-Za-z0-9]/', ' ', $string);
-				$businessName = preg_replace('/\s+/', ' ', str_replace('&', '', trim($string)));
-				$business_slug = trim(generate_slug(trim($businessName)));
-		 
-				$slugExists = DB::table('clients')
-					->select(DB::raw('business_slug'))
-					->where('business_slug', 'like', '%' . $business_slug . '%')
-					->orderBy('id', 'desc')
-					->get();
-				if (!empty($slugExists) && $slugExists->count() > 0) {
-					$business_slug = $slugExists[0]->business_slug;
-					$business_slug = explode("-", $business_slug);
-					$end = end($business_slug);
-					reset($business_slug);
-					if (!is_numeric($end)) {
-						$business_slug[] = 1;
-					} else {
-						++$end;
-						$business_slug[count($business_slug) - 1] = $end;
-					}
-					$business_slug = implode("-", $business_slug);
-				}
-			
+        ]);
+        if ($validator->fails()) {
+            $errorsBag = $validator->getMessageBag()->toArray();
+            return response()->json(['status' => true, 'errors' => $errorsBag], 400);
+        }
+        $client = new Client;
 
-			$client->business_name = $businessName;
-			$client->business_slug = $business_slug;
-			$pass = rand(000001, 999999);
-			$client->password = bcrypt($pass);
-			$client->mobile = $request->input('mobile');
-			$client->email = $request->input('email');
-			$client->max_kw = 30;			 
-			$client->active_status = '1';			 
-			$client->username = '';			 
-			$client->client_type = 'Diamond';		 
-			if ($client->save()) {
 
-                $client = Client::find($client->id);
-				$emailname = $request->input('email');
-				$clientIDToAppend = $clientID = $client->id;
-				if (strlen((string) $clientID) < 4) {
-					$clientIDToAppend = str_pad($clientIDToAppend, 4, '0', STR_PAD_LEFT);
-				}
-				$client->username = strtoupper(substr($emailname, 0, 2)) . $clientIDToAppend;
-				$client->save();
-               
-				$smsMessage = "Thanks for registering with QuickDials.
+        $business_slug = NULL;
+        $string = $request->input('business_name');
+        $string = filter_var($string, FILTER_SANITIZE_STRING);
+        $string = preg_replace('/[^A-Za-z0-9]/', ' ', $string);
+        $businessName = preg_replace('/\s+/', ' ', str_replace('&', '', trim($string)));
+        $business_slug = trim(generate_slug(trim($businessName)));
+
+        $slugExists = DB::table('clients')
+            ->select(DB::raw('business_slug'))
+            ->where('business_slug', 'like', '%' . $business_slug . '%')
+            ->orderBy('id', 'desc')
+            ->get();
+        if (!empty($slugExists) && $slugExists->count() > 0) {
+            $business_slug = $slugExists[0]->business_slug;
+            $business_slug = explode("-", $business_slug);
+            $end = end($business_slug);
+            reset($business_slug);
+            if (!is_numeric($end)) {
+                $business_slug[] = 1;
+            } else {
+                ++$end;
+                $business_slug[count($business_slug) - 1] = $end;
+            }
+            $business_slug = implode("-", $business_slug);
+        }
+
+
+        $client->business_name = $businessName;
+        $client->business_slug = $business_slug;
+        $pass = rand(000001, 999999);
+        $client->password = bcrypt($pass);
+        $client->mobile = $request->input('mobile');
+        $client->email = $request->input('email');
+        $client->max_kw = 30;
+        $client->active_status = '1';
+        $client->username = '';
+        $client->client_type = 'Diamond';
+        if ($client->save()) {
+
+            $client = Client::find($client->id);
+            $emailname = $request->input('email');
+            $clientIDToAppend = $clientID = $client->id;
+            if (strlen((string) $clientID) < 4) {
+                $clientIDToAppend = str_pad($clientIDToAppend, 4, '0', STR_PAD_LEFT);
+            }
+            $client->username = strtoupper(substr($emailname, 0, 2)) . $clientIDToAppend;
+            $client->save();
+
+            $smsMessage = "Thanks for registering with QuickDials.
 				%0D%0ALogin %26 Update your profile to get more leads to grow your business.
 				%0D%0A%0D%0ABusiness Name:" . $client->business_name . "
 				%0D%0AURL:www.quickdials.com
@@ -339,20 +372,20 @@ return response()->json(['error' => 'Invalid OTP.'], 422);
 				%0D%0A--
 				%0D%0ARegards
 				%0D%0AQuickDials Team";
-				sendSMS($client->mobile, $smsMessage);			 
-				$data['clientDetails'] = Client::find($client->id);
-				$data['status'] = true;
-				$data['message'] = "Business registered successfully!";
-				 
-			} else {
-				$data['status'] = false;
-				$data['message'] = "Business not registered successfully!";
-				 
-			}
-			return response()->json([
-                'data' => $data,
-            ], 200);
-	
+            sendSMS($client->mobile, $smsMessage);
+            $data['clientDetails'] = Client::find($client->id);
+            $data['status'] = true;
+            $data['message'] = "Business registered successfully!";
+
+        } else {
+            $data['status'] = false;
+            $data['message'] = "Business not registered successfully!";
+
+        }
+        return response()->json([
+            'data' => $data,
+        ], 200);
+
     }
 
 

@@ -28,11 +28,15 @@ use App\Http\Controllers\Api\ProfileController;
  use App\Http\Controllers\Api\EnquiryController;
 
 Route::post('/login', [AuthController::class, 'login']);
+
+
 Route::post('/verifyOtp', [AuthController::class, 'verifyOtp']);
 Route::post('/business/saveBusinessOwners', [AuthController::class, 'saveBusinessOwners']);
  
 
 Route::middleware('auth:sanctum')->group(function () {
+    
+Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/business/profileInfo', [ProfileController::class, 'profileInfo']);
 Route::get('/business/review', [ProfileController::class, 'profileReview']);
 Route::get('/business/dashboard',[App\Http\Controllers\Api\BusinessDashboardController::class, 'dashboard'])->name('business.dashboard');

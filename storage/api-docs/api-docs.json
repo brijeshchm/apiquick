@@ -3437,7 +3437,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/business/get-myLead": {
@@ -3572,7 +3577,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/business/get-favorite-enquiry": {
@@ -3707,7 +3717,107 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/get-lead-details/{id}": {
+            "get": {
+                "tags": [
+                    "Leads"
+                ],
+                "summary": "Get myLead",
+                "description": "Fetch lead details",
+                "operationId": "664887cfbfe0ce9065c24d0177897745",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Lead ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lead details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 101
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "John Doe"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "john@example.com"
+                                                },
+                                                "phone": {
+                                                    "type": "string",
+                                                    "example": "+911234567890"
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "new"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-09-06T12:00:00Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid parameters"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/business/manage-enquiry": {
@@ -3846,17 +3956,22 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
-        "/api/business/billing-history": {
+        "/api/business/get-invoice-history": {
             "get": {
                 "tags": [
                     "Billing"
                 ],
                 "summary": "Get billing history",
                 "description": "Fetch a list of billing or invoice records with optional filters",
-                "operationId": "757bde88b1fa6f982e468df95a429590",
+                "operationId": "a293fe06cb9d513072068bdfb4b1e613",
                 "parameters": [
                     {
                         "name": "page",
@@ -3963,142 +4078,12 @@
                             }
                         }
                     }
-                }
-            }
-        },
-        "/api/business/get-billing-history": {
-            "get": {
-                "tags": [
-                    "Billing"
-                ],
-                "summary": "Get billing history",
-                "description": "Fetch a list of billing or invoice records with optional filters",
-                "operationId": "86360a14a54538ad391e6ed7430b7582",
-                "parameters": [
+                },
+                "security": [
                     {
-                        "name": "page",
-                        "in": "query",
-                        "description": "Page number for pagination",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "default": 1
-                        }
-                    },
-                    {
-                        "name": "limit",
-                        "in": "query",
-                        "description": "Number of records per page",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "default": 20
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "Filter by payment status",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "paid",
-                                "pending",
-                                "failed"
-                            ]
-                        }
+                        "bearerAuth": []
                     }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Billing history retrieved successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "id": {
-                                                        "type": "integer",
-                                                        "example": 301
-                                                    },
-                                                    "invoice_number": {
-                                                        "type": "string",
-                                                        "example": "INV-20250906-001"
-                                                    },
-                                                    "amount": {
-                                                        "type": "number",
-                                                        "format": "float",
-                                                        "example": 2500.5
-                                                    },
-                                                    "status": {
-                                                        "type": "string",
-                                                        "example": "paid"
-                                                    },
-                                                    "payment_date": {
-                                                        "type": "string",
-                                                        "format": "date-time",
-                                                        "example": "2025-09-06T12:00:00Z"
-                                                    },
-                                                    "description": {
-                                                        "type": "string",
-                                                        "example": "Monthly subscription"
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
-                                        },
-                                        "pagination": {
-                                            "properties": {
-                                                "page": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "limit": {
-                                                    "type": "integer",
-                                                    "example": 20
-                                                },
-                                                "total": {
-                                                    "type": "integer",
-                                                    "example": 45
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Invalid parameters"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
+                ]
             }
         },
         "/api/business/getinvoiceBillingPrintPdf/{invoice_id}": {
@@ -4168,7 +4153,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/business/coinsHistory": {
@@ -4198,19 +4188,6 @@
                         "schema": {
                             "type": "integer",
                             "default": 20
-                        }
-                    },
-                    {
-                        "name": "type",
-                        "in": "query",
-                        "description": "Filter by transaction type",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "credit",
-                                "debit"
-                            ]
                         }
                     }
                 ],
@@ -4298,142 +4275,12 @@
                             }
                         }
                     }
-                }
-            }
-        },
-        "/api/business/get-paginated-payment-history": {
-            "get": {
-                "tags": [
-                    "Payment"
-                ],
-                "summary": "Get paginated payment history",
-                "description": "Fetch a paginated list of payment transactions with optional filters",
-                "operationId": "223c0f0d9807bf312683074bc4306127",
-                "parameters": [
+                },
+                "security": [
                     {
-                        "name": "page",
-                        "in": "query",
-                        "description": "Page number for pagination",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "default": 1
-                        }
-                    },
-                    {
-                        "name": "limit",
-                        "in": "query",
-                        "description": "Number of records per page",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "default": 20
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "Filter by payment status",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "success",
-                                "pending",
-                                "failed"
-                            ]
-                        }
+                        "bearerAuth": []
                     }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Payment history retrieved successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "id": {
-                                                        "type": "integer",
-                                                        "example": 501
-                                                    },
-                                                    "transaction_id": {
-                                                        "type": "string",
-                                                        "example": "TXN-20250906-001"
-                                                    },
-                                                    "amount": {
-                                                        "type": "number",
-                                                        "format": "float",
-                                                        "example": 1500.75
-                                                    },
-                                                    "status": {
-                                                        "type": "string",
-                                                        "example": "success"
-                                                    },
-                                                    "payment_date": {
-                                                        "type": "string",
-                                                        "format": "date-time",
-                                                        "example": "2025-09-06T12:00:00Z"
-                                                    },
-                                                    "method": {
-                                                        "type": "string",
-                                                        "example": "credit_card"
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
-                                        },
-                                        "pagination": {
-                                            "properties": {
-                                                "page": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "limit": {
-                                                    "type": "integer",
-                                                    "example": 20
-                                                },
-                                                "total": {
-                                                    "type": "integer",
-                                                    "example": 120
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Invalid parameters"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
+                ]
             }
         },
         "/api/business/personal-details": {
@@ -6729,10 +6576,6 @@
         {
             "name": "Coins",
             "description": "Coins"
-        },
-        {
-            "name": "Payment",
-            "description": "Payment"
         },
         {
             "name": "Occupation",

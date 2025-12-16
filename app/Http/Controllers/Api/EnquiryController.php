@@ -748,6 +748,7 @@ class EnquiryController extends Controller
 	 *     tags={"Leads"},
 	 *     summary="Get new enquiry",
 	 *     description="Fetch a list of all leads with optional filters",
+	 * 	   security={{"bearerAuth":{}}},
 	 *     @OA\Parameter(
 	 *         name="page",
 	 *         in="query",
@@ -875,6 +876,7 @@ class EnquiryController extends Controller
 	 *     tags={"Leads"},
 	 *     summary="Get myLead",
 	 *     description="Fetch a list of all leads with optional filters",
+	 *     security={{"bearerAuth":{}}},
 	 *     @OA\Parameter(
 	 *         name="page",
 	 *         in="query",
@@ -980,6 +982,7 @@ class EnquiryController extends Controller
 	 *     tags={"Leads"},
 	 *     summary="Get myLead",
 	 *     description="Fetch a list of all leads with optional filters",
+	 * 	   security={{"bearerAuth":{}}},
 	 *     @OA\Parameter(
 	 *         name="page",
 	 *         in="query",
@@ -1072,12 +1075,110 @@ class EnquiryController extends Controller
 
 		], 200);
 	}
+	
+	/**
+ * @OA\Get(
+ *     path="/api/business/get-lead-details/{id}",
+ *     tags={"Leads"},
+ *     summary="Get myLead",
+ *     description="Fetch lead details",
+ *     security={{"bearerAuth":{}}},
+ *
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="Lead ID",
+ *         required=true,
+ *         @OA\Schema(type="integer", example=1)
+ *     ),
+ *
+ *     @OA\Response(
+ *         response=200,
+ *         description="Lead details",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="success", type="boolean", example=true),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="id", type="integer", example=101),
+ *                 @OA\Property(property="name", type="string", example="John Doe"),
+ *                 @OA\Property(property="email", type="string", example="john@example.com"),
+ *                 @OA\Property(property="phone", type="string", example="+911234567890"),
+ *                 @OA\Property(property="status", type="string", example="new"),
+ *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-06T12:00:00Z")
+ *             )
+ *         )
+ *     ),
+ *
+ *     @OA\Response(
+ *         response=400,
+ *         description="Invalid request",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="success", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Invalid parameters")
+ *         )
+ *     )
+ * )
+ */
+
+	public function getLeadDetails(Request $request,$id)
+	{  
+		if (!Auth::guard('sanctum')->check()) {
+			return response()->json([
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
+		}
+
+		$currentUser = auth('sanctum')->user();
+		if (!$currentUser) {
+			return response()->json([
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
+		}
+
+		$leads = DB::table('leads')
+			->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
+			->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
+			->leftjoin('areas', 'leads.area_id', '=', 'areas.id')
+			->leftjoin('zones', 'leads.zone_id', '=', 'zones.id')
+			->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id as clientId', 'assigned_leads.lead_id', 'assigned_leads.id as assignId', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone')
+
+			->orderBy('assigned_leads.created_at', 'desc')
+			 
+			->where('assigned_leads.client_id', $currentUser->id)
+			->where('assigned_leads.lead_id', $id)
+			->first();
+
+			$data = [
+
+				'name'=>$leads->name,
+				'email'=>$leads->email,
+				'kw_text'=>$leads->kw_text,
+				'created'=>$leads->created,
+				'city_name'=>$leads->city_name,
+				'mobile'=>$leads->mobile,
+				'status_name'=>$leads->status_name,
+				'zone'=>$leads->zone,
+				'area'=>$leads->area,
+			];
+		 
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
+	}
+
 	/**
 	 * @OA\Get(
 	 *     path="/api/business/manage-enquiry",
 	 *     tags={"Enquiries"},
 	 *     summary="Get all enquiries",
 	 *     description="Fetch a list of all enquiries with optional filters",
+	 * 	   security={{"bearerAuth":{}}},
 	 *     @OA\Parameter(
 	 *         name="page",
 	 *         in="query",
@@ -1172,5 +1273,7 @@ class EnquiryController extends Controller
 
 		], 200);
 	}
+
+
 
 }

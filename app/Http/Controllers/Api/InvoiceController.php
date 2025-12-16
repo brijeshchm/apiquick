@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Client\Client;
+use Barryvdh\DomPDF\Facade\Pdf;
 use DB;
 use App\Models\PaymentHistory;
 class InvoiceController extends Controller
@@ -27,10 +28,11 @@ class InvoiceController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/business/billing-history",
+	 *     path="/api/business/get-invoice-history",
 	 *     tags={"Billing"},
 	 *     summary="Get billing history",
 	 *     description="Fetch a list of billing or invoice records with optional filters",
+	 * 	   security={{"bearerAuth":{}}},
 	 *     @OA\Parameter(
 	 *         name="page",
 	 *         in="query",
@@ -81,119 +83,65 @@ class InvoiceController extends Controller
 	 * )
 	 */
 
-	public function billingHistory(Request $request)
+	public function getInvoiceHistory(Request $request)
 	{
-		$search = [];
-		if ($request->has('search')) {
-			$search = $request->input('search');
+		if (!Auth::guard('sanctum')->check()) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid'
+			], 401);
 		}
-		return view('business.billingHistory', ['search' => $search]);
+
+		$user = auth('sanctum')->user();
+
+		$page = (int) $request->input('page', 1);
+		$limit = (int) $request->input('limit', 20);
+
+		$payments = PaymentHistory::where('client_id', $user->id)
+			->orderBy('created_at', 'desc')
+			->paginate($limit, ['*'], 'page', $page);
+
+		// ✅ Use map() properly
+		$data = $payments->getCollection()->map(function ($payment) {
+			return [
+				'id' => $payment->id,
+				'business_name' => $payment->business_name ?? null,
+				'cost_per_lead' => $payment->cost_per_lead ?? null,
+				'customer_name' => $payment->customer_name ?? null,
+				'package_name' => $payment->package_name ?? null,
+				'invoice_no' => $payment->order_number ?? null,
+				'invoice_date' => $payment->order_date ?? null,
+				'transactionid' => $payment->transactionid ?? null,
+				'coins_amt' => $payment->coins_amt ?? null,
+				'paid_amount' => $payment->paid_amount,
+				'gst_tax' => $payment->gst_tax,
+				'total_amount' => $payment->total_amount,
+				'tds_amount' => $payment->tds_amount,
+				'tds_status' => $payment->tds_status,
+				'payment_mode' => $payment->payment_mode,
+				'invoice_status' => $payment->invoice_status,
+				'payment_date' => $payment->created_at->format('d M Y'),
+			];
+		});
+
+		return response()->json([
+			'success' => true,
+			'page' => $payments->currentPage(),
+			'limit' => $payments->perPage(),
+			'total' => $payments->total(),
+			'data' => $data
+		], 200);
 	}
 
 
 
-	/**
-	 * @OA\Get(
-	 *     path="/api/business/get-billing-history",
-	 *     tags={"Billing"},
-	 *     summary="Get billing history",
-	 *     description="Fetch a list of billing or invoice records with optional filters",
-	 *     @OA\Parameter(
-	 *         name="page",
-	 *         in="query",
-	 *         description="Page number for pagination",
-	 *         required=false,
-	 *         @OA\Schema(type="integer", default=1)
-	 *     ),
-	 *     @OA\Parameter(
-	 *         name="limit",
-	 *         in="query",
-	 *         description="Number of records per page",
-	 *         required=false,
-	 *         @OA\Schema(type="integer", default=20)
-	 *     ),
-	 *     @OA\Parameter(
-	 *         name="status",
-	 *         in="query",
-	 *         description="Filter by payment status",
-	 *         required=false,
-	 *         @OA\Schema(type="string", enum={"paid","pending","failed"})
-	 *     ),
-	 *     @OA\Response(
-	 *         response=200,
-	 *         description="Billing history retrieved successfully",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="success", type="boolean", example=true),
-	 *             @OA\Property(
-	 *                 property="data",
-	 *                 type="array",
-	 *                 @OA\Items(
-	 *                     @OA\Property(property="id", type="integer", example=301),
-	 *                     @OA\Property(property="invoice_number", type="string", example="INV-20250906-001"),
-	 *                     @OA\Property(property="amount", type="number", format="float", example=2500.50),
-	 *                     @OA\Property(property="status", type="string", example="paid"),
-	 *                     @OA\Property(property="payment_date", type="string", format="date-time", example="2025-09-06T12:00:00Z"),
-	 *                     @OA\Property(property="description", type="string", example="Monthly subscription")
-	 *                 )
-	 *             ),
-	 *             @OA\Property(
-	 *                 property="pagination",
-	 *                 type="object",
-	 *                 @OA\Property(property="page", type="integer", example=1),
-	 *                 @OA\Property(property="limit", type="integer", example=20),
-	 *                 @OA\Property(property="total", type="integer", example=45)
-	 *             )
-	 *         )
-	 *     ),
-	 *     @OA\Response(
-	 *         response=400,
-	 *         description="Invalid request",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="success", type="boolean", example=false),
-	 *             @OA\Property(property="message", type="string", example="Invalid parameters")
-	 *         )
-	 *     )
-	 * )
-	 */
-	public function getBillingHistory(Request $request)
-	{
-		if ($request->ajax()) {
-			$clientID = auth()->guard('clients')->user()->id;
-			$payments = DB::table('payment_histories')
-				->where('client_id', $clientID)
-				->orderBy('created_at', 'desc')
-				->paginate($request->input('length'));
-
-			$returnLeads = $data = [];
-			$returnLeads['draw'] = $request->input('draw');
-			$returnLeads['recordsTotal'] = $payments->total();
-			$returnLeads['recordsFiltered'] = $payments->total();
-			foreach ($payments as $payment) {
-				$action = '';
-				$separator = '';
-				if ($payment->invoice_status == '1') {
-					$action .= $separator . '<a href="javascript:void(0)" data-toggle="popover" title="Invoice PDF" id="invoiceBillingPdf" data-trigger="hover" data-placement="left" data-sid="' . $payment->id . '"><i aria-hidden="true" class="bi bi-file-earmark-pdf"></i></a>';
-				}
-
-				$data[] = [
-					date_format(date_create($payment->created_at), 'd M Y'),
-					$payment->paid_amount,
-					$payment->gst_tax,
-					$payment->total_amount,
-					$action,
-
-				];
-			}
-			$returnLeads['data'] = $data;
-			return response()->json($returnLeads);
-		}
-	}
 	/**
 	 * @OA\Get(
 	 *     path="/api/business/getinvoiceBillingPrintPdf/{invoice_id}",
 	 *     tags={"Billing"},
 	 *     summary="Get invoice PDF",
 	 *     description="Generate or fetch the PDF for a specific invoice",
+	 *  	security={{"bearerAuth":{}}},
 	 *     @OA\Parameter(
 	 *         name="invoice_id",
 	 *         in="path",
@@ -227,24 +175,52 @@ class InvoiceController extends Controller
 	 * )
 	 */
 
-	public function getinvoiceBillingPrintPdf(Request $request)
-	{
-		if (isset($_GET['pid'])) {
-			if ($request->input('action') == 'getinvoicePrintPdf') {
-				$paymnetid = $_GET['pid'];
-				$paymentprint = PaymentHistory::find($paymnetid);
-				$client = Client::withTrashed()->where('id', $paymentprint->client_id)->first();
-				return response()->view("business.getInvoicePrintPdfSlip", ['paymentprint' => $paymentprint, 'client' => $client]);
-				die;
-			}
-		}
+	 public function getinvoiceBillingPrintPdf($invoice_id)
+{
+	
+    // 🔐 Sanctum auth
+    if (!Auth::guard('sanctum')->check()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Unauthenticated'
+        ], 401);
+    }
+
+    $paymentprint = PaymentHistory::find($invoice_id);
+
+    if (!$paymentprint) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Invoice not found'
+        ], 404);
+    }
+
+    $client = Client::withTrashed()->find($paymentprint->client_id);
+
+    // 📄 Generate PDF
+    $pdf = Pdf::loadView(
+        'business.getInvoicePrintPdfSlip',
+        compact('paymentprint', 'client')
+    );
+
+	 return response()->make($pdf->output(), 200, [
+        'Content-Type'        => 'application/pdf',
+        'Content-Disposition'=> 'inline; filename="invoice_'.$invoice_id.'.pdf"',
+    ]);
+
+    // return response($pdf->output(), 200)
+    //     ->header('Content-Type', 'application/pdf')
+    //     ->header('Content-Disposition', 'inline; filename="invoice_'.$invoice_id.'.pdf"');
+
 	}
+
 	/**
 	 * @OA\Get(
 	 *     path="/api/business/coinsHistory",
 	 *     tags={"Coins"},
 	 *     summary="Get coins transaction history",
 	 *     description="Fetch a list of all coin transactions for the user with optional filters",
+	 *     security={{"bearerAuth":{}}},
 	 *     @OA\Parameter(
 	 *         name="page",
 	 *         in="query",
@@ -259,13 +235,7 @@ class InvoiceController extends Controller
 	 *         required=false,
 	 *         @OA\Schema(type="integer", default=20)
 	 *     ),
-	 *     @OA\Parameter(
-	 *         name="type",
-	 *         in="query",
-	 *         description="Filter by transaction type",
-	 *         required=false,
-	 *         @OA\Schema(type="string", enum={"credit","debit"})
-	 *     ),
+	 *     
 	 *     @OA\Response(
 	 *         response=200,
 	 *         description="Coins history retrieved successfully",
@@ -302,160 +272,71 @@ class InvoiceController extends Controller
 	 * )
 	 */
 
-	public function coinsHistory(Request $request)
-	{
-		if (!Auth::guard('sanctum')->check()) {
-			return response()->json([
-				'status' => false,
-				'message' => 'Unauthenticated: Token is missing or invalid',
-				'error' => 'token_missing_or_invalid'
-			], 401);
-		}
+public function coinsHistory(Request $request)
+{
+    // 🔐 Auth check
+    if (!Auth::guard('sanctum')->check()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Unauthenticated'
+        ], 401);
+    }
 
-		$user = auth('sanctum')->user();
-		if (!$user) {
-			return response()->json([
-				'status' => false,
-				'message' => 'Unauthenticated: Token is missing or invalid',
-				'error' => 'token_missing_or_invalid'
-			], 401);
-		}
+    $user = auth('sanctum')->user();
 
-		$data['clientDetails'] = Client::find($user->id);
-		$data['coinsLeads'] = DB::table('assigned_leads')
-			->join('leads', 'leads.id', '=', 'assigned_leads.lead_id')
-			->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
-			->leftjoin('keyword', 'assigned_leads.kw_id', '=', 'keyword.id')
+    $page  = (int) $request->input('page', 1);
+    $limit = (int) $request->input('limit', 20);
 
-			->select('leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'assigned_leads.coins', 'assigned_leads.scrapLead')
+    // 🪙 Coins history with pagination
+    $coinsLeads = DB::table('assigned_leads')
+        ->join('leads', 'leads.id', '=', 'assigned_leads.lead_id')
+        ->leftJoin('citylists', 'leads.city_id', '=', 'citylists.id')
+        ->leftJoin('keyword', 'assigned_leads.kw_id', '=', 'keyword.id')
+        ->where('assigned_leads.client_id', $user->id)
+        ->orderBy('assigned_leads.created_at', 'desc')
+        ->select(
+            'assigned_leads.id',
+            'assigned_leads.lead_id',
+            'assigned_leads.coins',
+            'assigned_leads.scrapLead',
+            'assigned_leads.created_at',
+            'leads.name as lead_name',
+            'leads.email',
+            'leads.mobile',
+            'citylists.city as city_name',
+            'keyword.keyword as keyword_name'
+        )
+        ->paginate($limit, ['*'], 'page', $page);
 
-			->orderBy('assigned_leads.created_at', 'desc')
-			->where('assigned_leads.client_id', $user->id)->get();
+    // ✅ map() properly
+    $data = $coinsLeads->getCollection()->map(function ($lead) {
+        return [
+            'lead_id'    => $lead->lead_id,
+            'lead_name'  => $lead->lead_name,
+            'email'      => $lead->email,
+            'phone'      => $lead->mobile,
+            'city'       => $lead->city_name,
+            'keyword'    => $lead->keyword_name,
+            'coins'      => $lead->coins,
+            'scrap_lead' => (bool) $lead->scrapLead,
+            'date'       => date('d M Y', strtotime($lead->created_at)),
+        ];
+    });
 
-		$search = [];
-		if ($request->has('search')) {
-			$search = $request->input('search');
-		}
-
-
-		return response()->json([
-			'status' => true,
-			'message' => "Successfully",
-			'data' => $data,
-
-		], 200);
-
-	}
-
-
-
-	/**
-	 * @OA\Get(
-	 *     path="/api/business/get-paginated-payment-history",
-	 *     tags={"Payment"},
-	 *     summary="Get paginated payment history",
-	 *     description="Fetch a paginated list of payment transactions with optional filters",
-	 *     @OA\Parameter(
-	 *         name="page",
-	 *         in="query",
-	 *         description="Page number for pagination",
-	 *         required=false,
-	 *         @OA\Schema(type="integer", default=1)
-	 *     ),
-	 *     @OA\Parameter(
-	 *         name="limit",
-	 *         in="query",
-	 *         description="Number of records per page",
-	 *         required=false,
-	 *         @OA\Schema(type="integer", default=20)
-	 *     ),
-	 *     @OA\Parameter(
-	 *         name="status",
-	 *         in="query",
-	 *         description="Filter by payment status",
-	 *         required=false,
-	 *         @OA\Schema(type="string", enum={"success","pending","failed"})
-	 *     ),
-	 *     @OA\Response(
-	 *         response=200,
-	 *         description="Payment history retrieved successfully",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="success", type="boolean", example=true),
-	 *             @OA\Property(
-	 *                 property="data",
-	 *                 type="array",
-	 *                 @OA\Items(
-	 *                     @OA\Property(property="id", type="integer", example=501),
-	 *                     @OA\Property(property="transaction_id", type="string", example="TXN-20250906-001"),
-	 *                     @OA\Property(property="amount", type="number", format="float", example=1500.75),
-	 *                     @OA\Property(property="status", type="string", example="success"),
-	 *                     @OA\Property(property="payment_date", type="string", format="date-time", example="2025-09-06T12:00:00Z"),
-	 *                     @OA\Property(property="method", type="string", example="credit_card")
-	 *                 )
-	 *             ),
-	 *             @OA\Property(
-	 *                 property="pagination",
-	 *                 type="object",
-	 *                 @OA\Property(property="page", type="integer", example=1),
-	 *                 @OA\Property(property="limit", type="integer", example=20),
-	 *                 @OA\Property(property="total", type="integer", example=120)
-	 *             )
-	 *         )
-	 *     ),
-	 *     @OA\Response(
-	 *         response=400,
-	 *         description="Invalid request",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="success", type="boolean", example=false),
-	 *             @OA\Property(property="message", type="string", example="Invalid parameters")
-	 *         )
-	 *     )
-	 * )
-	 */
-
-	public function getPaginatedPaymentHistory(Request $request)
-	{
-		if (!Auth::guard('sanctum')->check()) {
-			return response()->json([
-				'status' => false,
-				'message' => 'Unauthenticated: Token is missing or invalid',
-				'error' => 'token_missing_or_invalid'
-			], 401);
-		}
-
-		$user = auth('sanctum')->user();
-		if (!$user) {
-			return response()->json([
-				'status' => false,
-				'message' => 'Unauthenticated: Token is missing or invalid',
-				'error' => 'token_missing_or_invalid'
-			], 401);
-		}
+    return response()->json([
+        'success' => true,
+        'data' => $data,
+         
+            'page'  => $coinsLeads->currentPage(),
+            'limit'=> $coinsLeads->perPage(),
+            'total'=> $coinsLeads->total(),
+        
+    ], 200);
+}
 
 
-		$payments = DB::table('payment_histories')
-			->where('client_id', $user->id)
-			->orderBy('created_at', 'desc')
-			->paginate($request->input('length'));
 
-		$returnLeads = $data = [];
-		$returnLeads['draw'] = $request->input('draw');
-		$returnLeads['recordsTotal'] = $payments->total();
-		$returnLeads['recordsFiltered'] = $payments->total();
-		foreach ($payments as $payment) {
-			$action = '';
-			$separator = '';
-			$action .= $separator . '<a href="javascript:void(0)" data-toggle="popover" title="Invoice PDF" id="paymentPrint" data-trigger="hover" data-placement="left" data-sid="' . $payment->id . '"><i aria-hidden="true" class="fa fa-file-pdf-o"></i></a>';
 
-			$data[] = [
-				date_format(date_create($payment->created_at), 'd M Y'),
-				$payment->paid_amount,
-				$payment->gst_tax,
-				$payment->total_amount,
-				$payment->payment_mode,
-			];
-		}
-		$returnLeads['data'] = $data;
-		return response()->json($returnLeads);
-	}
+
+
 }

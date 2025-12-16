@@ -103,7 +103,7 @@ Route::get('/business/get-invoice-history',[App\Http\Controllers\Api\InvoiceCont
 
 Route::get('/business/get-billing-history',[App\Http\Controllers\Api\InvoiceController::class, 'getBillingHistory']);
 
-Route::get('/business/getinvoiceBillingPrintPdf/{id}',[App\Http\Controllers\Api\InvoiceController::class, 'getinvoiceBillingPrintPdf']);
+Route::get('/business/download-invoice/{id}',[App\Http\Controllers\Api\InvoiceController::class, 'downloadInvoicePdf']);
 
 Route::get('/business/coinsHistory',[App\Http\Controllers\Api\InvoiceController::class, 'coinsHistory']);
 

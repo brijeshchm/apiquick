@@ -4143,14 +4143,14 @@
                 ]
             }
         },
-        "/api/business/getinvoiceBillingPrintPdf/{invoice_id}": {
+        "/api/business/download-invoice/{invoice_id}": {
             "get": {
                 "tags": [
                     "Billing"
                 ],
                 "summary": "Get invoice PDF",
                 "description": "Generate or fetch the PDF for a specific invoice",
-                "operationId": "1b48e105d8278f3c69f46762e1d213b6",
+                "operationId": "2ddb1b228055032cc25d4c2094b5d507",
                 "parameters": [
                     {
                         "name": "invoice_id",

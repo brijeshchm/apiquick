@@ -137,7 +137,7 @@ class InvoiceController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/business/getinvoiceBillingPrintPdf/{invoice_id}",
+	 *     path="/api/business/download-invoice/{invoice_id}",
 	 *     tags={"Billing"},
 	 *     summary="Get invoice PDF",
 	 *     description="Generate or fetch the PDF for a specific invoice",
@@ -175,9 +175,9 @@ class InvoiceController extends Controller
 	 * )
 	 */
 
-	 public function getinvoiceBillingPrintPdf($invoice_id)
+	 public function downloadInvoicePdf($invoice_id)
 {
-	
+	//dd($invoice_id);
     // 🔐 Sanctum auth
     if (!Auth::guard('sanctum')->check()) {
         return response()->json([
@@ -197,21 +197,13 @@ class InvoiceController extends Controller
 
     $client = Client::withTrashed()->find($paymentprint->client_id);
 
-    // 📄 Generate PDF
     $pdf = Pdf::loadView(
         'business.getInvoicePrintPdfSlip',
         compact('paymentprint', 'client')
     );
-
-	 return response()->make($pdf->output(), 200, [
-        'Content-Type'        => 'application/pdf',
-        'Content-Disposition'=> 'inline; filename="invoice_'.$invoice_id.'.pdf"',
-    ]);
-
-    // return response($pdf->output(), 200)
-    //     ->header('Content-Type', 'application/pdf')
-    //     ->header('Content-Disposition', 'inline; filename="invoice_'.$invoice_id.'.pdf"');
-
+	return $pdf->download(
+    'invoice_' . $invoice_id . '_' . date('d-m-Y_H-i-s') . '.pdf'
+); 
 	}
 
 	/**

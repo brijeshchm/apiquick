@@ -2737,34 +2737,14 @@
                 ]
             }
         },
-        "https://www.quickdials.com/api/business/profileLogo/logoDel": {
+        "https://www.quickdials.com/api/business/profileLogo/logoDel/{business_id}": {
             "delete": {
                 "tags": [
                     "Profile"
                 ],
                 "summary": "Delete business logo",
                 "description": "Deletes the current business logo of the authenticated user",
-                "operationId": "b372c579f86e6aefb36c7628eefebc23",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "business_id"
-                                ],
-                                "properties": {
-                                    "business_id": {
-                                        "description": "Business ID",
-                                        "type": "integer",
-                                        "example": 12
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
+                "operationId": "65c3e0a74135db518a7552e2e7a44d18",
                 "responses": {
                     "200": {
                         "description": "Logo deleted successfully",
@@ -2825,34 +2805,14 @@
                 }
             }
         },
-        "https://www.quickdials.com/api/business/profileLogo/profilePicDel": {
+        "https://www.quickdials.com/api/business/profileLogo/profilePicDel/{business_id}": {
             "delete": {
                 "tags": [
                     "Profile"
                 ],
                 "summary": "Delete business logo",
                 "description": "Deletes the current business logo of the authenticated user",
-                "operationId": "a4ab74c0638f3765285be8d73aa5b8bc",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "business_id"
-                                ],
-                                "properties": {
-                                    "business_id": {
-                                        "description": "Business ID",
-                                        "type": "integer",
-                                        "example": 12
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
+                "operationId": "8d8132fc20d791b4ae87e6a5f1bab262",
                 "responses": {
                     "200": {
                         "description": "Logo deleted successfully",

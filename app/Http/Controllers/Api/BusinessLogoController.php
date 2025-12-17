@@ -205,23 +205,12 @@ class BusinessLogoController extends Controller
 	}
 	/**
 	 * @OA\Delete(
-	 *     path="https://www.quickdials.com/api/business/profileLogo/logoDel",
+	 *     path="https://www.quickdials.com/api/business/profileLogo/logoDel/{business_id}",
 	 *     tags={"Profile"},
 	 *     summary="Delete business logo",
 	 *     description="Deletes the current business logo of the authenticated user", *     
 	 *
-	 *     @OA\RequestBody(
-	 *         required=true,
-	 *         @OA\JsonContent(
-	 *             required={"business_id"},
-	 *             @OA\Property(
-	 *                 property="business_id",
-	 *                 type="integer",
-	 *                 example=12,
-	 *                 description="Business ID"
-	 *             )
-	 *         )
-	 *     ),
+	 *      
 	 *
 	 *     @OA\Response(
 	 *         response=200,
@@ -251,29 +240,18 @@ class BusinessLogoController extends Controller
 	 * )
 	 */
 
-	public function deleteLogo()
+	public function deleteLogo($business_id)
 	{
 
 	}
 	/**
 	 * @OA\Delete(
-	 *     path="https://www.quickdials.com/api/business/profileLogo/profilePicDel",
+	 *     path="https://www.quickdials.com/api/business/profileLogo/profilePicDel/{business_id}",
 	 *     tags={"Profile"},
 	 *     summary="Delete business logo",
 	 *     description="Deletes the current business logo of the authenticated user", *     
 	 *
-	 *     @OA\RequestBody(
-	 *         required=true,
-	 *         @OA\JsonContent(
-	 *             required={"business_id"},
-	 *             @OA\Property(
-	 *                 property="business_id",
-	 *                 type="integer",
-	 *                 example=12,
-	 *                 description="Business ID"
-	 *             )
-	 *         )
-	 *     ),
+	 *      
 	 *
 	 *     @OA\Response(
 	 *         response=200,
@@ -302,7 +280,7 @@ class BusinessLogoController extends Controller
 	 *     )
 	 * )
 	 */
-	public function deleteProfilePic()
+	public function deleteProfilePic($business_id)
 	{
 
 	}

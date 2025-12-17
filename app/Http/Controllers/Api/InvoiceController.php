@@ -134,28 +134,38 @@ class InvoiceController extends Controller
 	}
 
 
-
 	/**
 	 * @OA\Get(
 	 *     path="/api/business/download-invoice/{invoice_id}",
 	 *     tags={"Billing"},
-	 *     summary="Get invoice PDF",
-	 *     description="Generate or fetch the PDF for a specific invoice",
-	 *  	security={{"bearerAuth":{}}},
+	 *     summary="Download invoice PDF",
+	 *     description="Download invoice PDF by invoice ID",
+	 *     security={{"bearerAuth":{}}},
 	 *     @OA\Parameter(
 	 *         name="invoice_id",
 	 *         in="path",
-	 *         description="ID of the invoice to generate PDF for",
 	 *         required=true,
+	 *         description="Invoice ID",
 	 *         @OA\Schema(type="integer", example=301)
 	 *     ),
+	 *
 	 *     @OA\Response(
 	 *         response=200,
-	 *         description="Invoice PDF generated successfully",
+	 *         description="Invoice PDF downloaded successfully",
 	 *         @OA\MediaType(
 	 *             mediaType="application/pdf"
 	 *         )
 	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated")
+	 *         )
+	 *     ),
+	 *
 	 *     @OA\Response(
 	 *         response=404,
 	 *         description="Invoice not found",
@@ -163,27 +173,20 @@ class InvoiceController extends Controller
 	 *             @OA\Property(property="success", type="boolean", example=false),
 	 *             @OA\Property(property="message", type="string", example="Invoice not found")
 	 *         )
-	 *     ),
-	 *     @OA\Response(
-	 *         response=400,
-	 *         description="Invalid request",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="success", type="boolean", example=false),
-	 *             @OA\Property(property="message", type="string", example="Invalid invoice ID")
-	 *         )
 	 *     )
 	 * )
 	 */
-
-	public function downloadInvoicePdf($invoice_id)
+	public function downloadInvoicePdf(Request $request, $invoice_id)
 	{
-
 		if (!Auth::guard('sanctum')->check()) {
 			return response()->json([
-				'success' => false,
-				'message' => 'Unauthenticated'
+				'status' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
 			], 401);
 		}
+
+		 
 
 		$paymentprint = PaymentHistory::find($invoice_id);
 
@@ -191,7 +194,7 @@ class InvoiceController extends Controller
 			return response()->json([
 				'success' => false,
 				'message' => 'Invoice not found'
-			], 404);
+			], 200);
 		}
 
 		$client = Client::withTrashed()->find($paymentprint->client_id);

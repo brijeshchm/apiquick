@@ -4148,14 +4148,14 @@
                 "tags": [
                     "Billing"
                 ],
-                "summary": "Get invoice PDF",
-                "description": "Generate or fetch the PDF for a specific invoice",
+                "summary": "Download invoice PDF",
+                "description": "Download invoice PDF by invoice ID",
                 "operationId": "2ddb1b228055032cc25d4c2094b5d507",
                 "parameters": [
                     {
                         "name": "invoice_id",
                         "in": "path",
-                        "description": "ID of the invoice to generate PDF for",
+                        "description": "Invoice ID",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -4165,9 +4165,29 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Invoice PDF generated successfully",
+                        "description": "Invoice PDF downloaded successfully",
                         "content": {
                             "application/pdf": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
                         }
                     },
                     "404": {
@@ -4183,26 +4203,6 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Invoice not found"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Invalid invoice ID"
                                         }
                                     },
                                     "type": "object"

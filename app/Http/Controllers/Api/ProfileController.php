@@ -59,7 +59,7 @@ class ProfileController extends Controller
      * )
      */
     public function profileInfo(Request $request)
-    {
+    {   
         try {
 
             if (!Auth::guard('sanctum')->check()) {
@@ -101,6 +101,7 @@ class ProfileController extends Controller
             $data['businessInformation'] = array(
                 'client_id' => $user->id,              
                 'business_name' => $user->business_name,                
+                'email' => $user->email,                
                 'address' => $user->address,
                 'landmark' => $user->landmark,
                 'business_city_id' => $user->business_city_id,
@@ -114,6 +115,8 @@ class ProfileController extends Controller
                 'time' => $time,
                 'days' => $days,
                 'times' => $times,
+                 "area"=>$user->area,
+                "pincode"=> $user->pincode,
                 'certifications' => $certifications,
                 'year_of_estb' => $user->year_of_estb,
                 'display_hofo' => $user->display_hofo,

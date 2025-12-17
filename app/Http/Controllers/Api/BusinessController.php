@@ -564,6 +564,9 @@ class BusinessController extends Controller
 				];
 			}
 		}
+		$data[] = [
+					'zone_id' => 'Other',
+					'zone' => 'Other',				];
 		return response()->json([
 			'status' => true,
 			'message' => "Successfully",

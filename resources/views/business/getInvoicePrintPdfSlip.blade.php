@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 	<title>quickdials-Invoice_<?php echo date('d-m-Y H:i:s'); ?></title>
-		<link href="<?php echo asset('invoiceprintpdf.css'); ?>" rel="stylesheet">
+		 
 	</head>
 	<style>
 	 
@@ -90,14 +90,14 @@ article address { float: left; font-size: 125%; font-weight: bold; }
 
 /* table meta & balance */
 
-table.meta, { float: right; width: 36%; }
+table.meta, { float: right; width: 50%; }
 table.meta, table.balance { float: right; width: 40%; }
 table.meta:after, table.balance:after { clear: both; content: ""; display: table; }
 
 /* table meta */
 
-table.meta th { width: 40%; }
-table.meta td { width: 60%; }
+table.meta th { width: 30%;height: 1%; }
+table.meta td { width: 30%;height: 1%; }
 
 /* table items */
 

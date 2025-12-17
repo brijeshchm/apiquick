@@ -58,13 +58,13 @@ Route::post('/business/saveBusinessLocation',[App\Http\Controllers\Api\BusinessL
 Route::post('/business/savePersonalDetails',[App\Http\Controllers\Api\PersonalDetailsController::class, 'savePersonalDetails']);
 
 Route::get('/business/profile-logo',[App\Http\Controllers\Api\BusinessLogoController::class, 'getProfileLogo']);
-Route::post('/business/saveProfileLogo',[App\Http\Controllers\Api\BusinessLogoController::class, 'saveProfileLogo']);
-Route::delete('/business/profileLogo/logoDel',[App\Http\Controllers\Api\BusinessLogoController::class, 'deleteLogo']);
-Route::Delete('/business/profileLogo/profilePicDel',[App\Http\Controllers\Api\BusinessLogoController::class, 'deleteProfilePic']);
+Route::post('https://www.quickdials.com/api/business/saveProfileLogo',[App\Http\Controllers\Api\BusinessLogoController::class, 'saveProfileLogo']);
+Route::delete('https://www.quickdials.com/api/business/profileLogo/logoDel',[App\Http\Controllers\Api\BusinessLogoController::class, 'deleteLogo']);
+Route::delete('https://www.quickdials.com/api/business/profileLogo/profilePicDel',[App\Http\Controllers\Api\BusinessLogoController::class, 'deleteProfilePic']);
 
 Route::get('/business/get-gallery-pictures',[App\Http\Controllers\Api\BusinessLogoController::class, 'getGalleryPictures']);
 
-Route::post('/business/save-gallery',[App\Http\Controllers\Api\BusinessLogoController::class,'saveGallary']); 
+Route::post('https://www.quickdials.com/api/business/save-gallery',[App\Http\Controllers\Api\BusinessLogoController::class,'saveGallary']); 
 
 Route::get('/business/business-location',[App\Http\Controllers\Api\BusinessLocationController::class, 'businessLocation']);
 Route::post('/business/saveLocationInformation',[App\Http\Controllers\Api\BusinessLocationController::class, 'saveLocationInformation']);

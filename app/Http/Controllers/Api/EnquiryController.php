@@ -1076,7 +1076,7 @@ class EnquiryController extends Controller
 
 	public function getNewEnquiry(Request $request)
 	{
-
+ 
 		if (!Auth::guard('sanctum')->check()) {
 			return response()->json([
 				'message' => 'Unauthenticated: Token is missing or invalid',
@@ -1092,7 +1092,7 @@ class EnquiryController extends Controller
 			], 401);
 		}
 
-		$perPage = $request->query('per_page', 10);
+	 
 		$leads = DB::table('leads')
 			->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
 			->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
@@ -1103,6 +1103,7 @@ class EnquiryController extends Controller
 			->where('assigned_leads.readLead', '0')
 			->where('assigned_leads.client_id', $currentUser->id)->get();
 		if (!empty($leads)) {
+			$leads_list = [];
 			foreach ($leads as $key => $val) {
 				$leads_list[$key] = array(
 					'lead_id' => $val->lead_id,
@@ -1128,10 +1129,7 @@ class EnquiryController extends Controller
 			'status' => true,
 			'data' => $data,
 
-			'current_page' => $leads->currentPage(),
-			'per_page' => $leads->perPage(),
-			'total' => $leads->total(),
-			'last_page' => $leads->lastPage(),
+			  
 
 		], 200);
 
@@ -1213,6 +1211,7 @@ class EnquiryController extends Controller
 
 			->where('assigned_leads.client_id', $currentUser->id)->get();
 	if (!empty($leads)) {
+		$leads_list = [];
 			foreach ($leads as $key => $val) {
 				$leads_list[$key] = array(
 					'lead_id' => $val->lead_id,
@@ -1251,28 +1250,7 @@ class EnquiryController extends Controller
 	 *     tags={"Leads"},
 	 *     summary="Get myLead",
 	 *     description="Fetch a list of all leads with optional filters",
-	 * 	   security={{"bearerAuth":{}}},
-	 *     @OA\Parameter(
-	 *         name="page",
-	 *         in="query",
-	 *         description="Page number for pagination",
-	 *         required=false,
-	 *         @OA\Schema(type="integer", default=1)
-	 *     ),
-	 *     @OA\Parameter(
-	 *         name="limit",
-	 *         in="query",
-	 *         description="Number of leads per page",
-	 *         required=false,
-	 *         @OA\Schema(type="integer", default=20)
-	 *     ),
-	 *     @OA\Parameter(
-	 *         name="status",
-	 *         in="query",
-	 *         description="Filter leads by status",
-	 *         required=false,
-	 *         @OA\Schema(type="string", enum={"new","contacted","converted","lost"})
-	 *     ),
+	 * 	   security={{"bearerAuth":{}}},	 *      
 	 *     @OA\Response(
 	 *         response=200,
 	 *         description="List of leads",
@@ -1338,6 +1316,7 @@ class EnquiryController extends Controller
 			->where('assigned_leads.client_id', $currentUser->id)->get();
 
 			if (!empty($leads)) {
+				$leads_list = [];
 			foreach ($leads as $key => $val) {
 				$leads_list[$key] = array(
 					'lead_id' => $val->lead_id,

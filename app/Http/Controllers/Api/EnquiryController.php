@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Client\Client;
 use Validator;
-use DB; 
+use DB;
 use App\Exports\EnquiryExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Lead;
@@ -285,14 +285,52 @@ class EnquiryController extends Controller
 			return response()->json($returnLeads);
 		}
 	}
-
 	/**
-	 * Pause Lead by client.
+	 * @OA\Post(
+	 *     path="/api/business/pause-lead",
+	 *     tags={"Leads"},
+	 *     summary="Pause lead",
+	 *     description="Pause a lead for the authenticated business user",
+	 *     security={{"bearerAuth":{}}},
+	 *@OA\RequestBody(
+	 *         required=true,
+	 *         @OA\JsonContent(
+	 *             required={"pauseLead"},
+	 *             @OA\Property(property="pauseLead", type="boolean", enum={"true","false"}, example=true)
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Lead paused successfully",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Lead paused successfully")
+	 *         )
+	 *     ),
 	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * pause Lead status true
-	 * @return \Illuminate\Http\Response
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=422,
+	 *         description="Validation error",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="message", type="string", example="The given data was invalid.")
+	 *         )
+	 *     )
+	 * )
 	 */
+
+
+
 	public function pauseLead(Request $request)
 	{
 		if (!Auth::guard('sanctum')->check()) {
@@ -341,11 +379,55 @@ class EnquiryController extends Controller
 		], 200);
 	}
 
-	/*
-	 * scrapLead by client
-	 * input field leadId
+	/**
+	 * @OA\Post(
+	 *     path="/api/business/save-scrap-lead",
+	 *     tags={"Leads"},
+	 *     summary="scrap lead",
+	 *     description="Mark a lead as favorite for the authenticated user.",
+	 *     security={{"bearerAuth":{}}},
+	 *     @OA\RequestBody(
+	 *         required=true,
+	 *         @OA\JsonContent(
+	 *             required={"assingId"},
+	 *             @OA\Property(property="assingId", type="integer", example=101)
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Lead added to favorites successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Lead marked as favorite."),
+	 *             @OA\Property(property="data", type="object",
+	 *                 @OA\Property(property="id", type="integer", example=5),
+	 *                 @OA\Property(property="user_id", type="integer", example=1),
+	 *                 @OA\Property(property="assingId", type="integer", example=101)
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=422,
+	 *         description="Validation error",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+	 *             @OA\Property(property="errors", type="object",
+	 *                 @OA\Property(property="lead_id", type="array",
+	 *                     @OA\Items(type="string", example="The lead_id field is required.")
+	 *                 )
+	 *             )
+	 *         )
+	 *     )
+	 * )
 	 */
-	public function scrapLead(Request $request)
+	public function saveScrapLead(Request $request)
 	{
 		if (!Auth::guard('sanctum')->check()) {
 			return response()->json([
@@ -365,7 +447,7 @@ class EnquiryController extends Controller
 		}
 
 
-		$assignedLead = AssignedLead::find($request->leadId);
+		$assignedLead = AssignedLead::find($request->assingId);
 		$coinsLeads = DB::table('assigned_leads')->where('lead_id', $assignedLead->lead_id)->where('scrapPay', '0')->get();
 		$scrapStatusLeads = DB::table('assigned_leads')->where('lead_id', $assignedLead->lead_id)->where('scrapLead', '1')->get()->count();
 
@@ -402,7 +484,210 @@ class EnquiryController extends Controller
 		], 200);
 
 	}
+	/**
+	 * @OA\Get(
+	 *     path="/api/business/get-scrap",
+	 *     tags={"Leads"},
+	 *     summary="scrap lead",
+	 *     description="Mark a lead as favorite for the authenticated user.",
+	 *     security={{"bearerAuth":{}}},
+	 *     @OA\RequestBody(
+	 *         required=true,
+	 *         @OA\JsonContent(
+	 *             required={"assingId"},
+	 *             @OA\Property(property="assingId", type="integer", example=101)
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Lead added to favorites successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Lead marked as favorite."),
+	 *             @OA\Property(property="data", type="object",
+	 *                 @OA\Property(property="id", type="integer", example=5),
+	 *                 @OA\Property(property="user_id", type="integer", example=1),
+	 *                 @OA\Property(property="assingId", type="integer", example=101)
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=422,
+	 *         description="Validation error",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+	 *             @OA\Property(property="errors", type="object",
+	 *                 @OA\Property(property="lead_id", type="array",
+	 *                     @OA\Items(type="string", example="The lead_id field is required.")
+	 *                 )
+	 *             )
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function getScrapLead(Request $request)
+	{
+		if (!Auth::guard('sanctum')->check()) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
+		}
+		// Check if user is active
+		$user = auth('sanctum')->user();
+		if (!$user) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
+		}
 
+		$assignedLead = AssignedLead::find($request->assingId);
+
+		$data = [
+			[
+				'classId' => 'gridRadios1',
+				'name' => 'scrapLead',
+				'clientid' => $assignedLead->client_id,
+				'assingId' => $assignedLead->id,
+				'lead_id' => $assignedLead->lead_id,
+				'scapName' => 'Student in just exploring & not planing to hire any tutor',
+				'value' => '1',
+			],
+			[
+				'classId' => 'gridRadios2',
+				'name' => 'scrapLead',
+				'clientid' => $assignedLead->client_id,
+				'assingId' => $assignedLead->id,
+				'lead_id' => $assignedLead->lead_id,
+				'scapName' => 'Enquiry is posted by a tutor, an Institute or a tutor agency',
+				'value' => '2',
+			],
+			[
+				'classId' => 'gridRadios3',
+				'name' => 'scrapLead',
+				'clientid' => $assignedLead->client_id,
+				'assingId' => $assignedLead->id,
+				'lead_id' => $assignedLead->lead_id,
+				'scapName' => 'Enquiry is posted by a tutor, an Institute or a tutor agency',
+				'value' => '3',
+			],
+			[
+				'classId' => 'gridRadios4',
+				'name' => 'scrapLead',
+				'clientid' => $assignedLead->client_id,
+				'assingId' => $assignedLead->id,
+				'lead_id' => $assignedLead->lead_id,
+				'scapName' => 'Student has select wrong locality',
+				'value' => '4',
+			],
+			[
+				'classId' => 'gridRadios5',
+				'name' => 'scrapLead',
+				'clientid' => $assignedLead->client_id,
+				'assingId' => $assignedLead->id,
+				'lead_id' => $assignedLead->lead_id,
+				'scapName' => 'Student is asking for only Female/Male tutor',
+				'value' => '5',
+			],
+			[
+				'classId' => 'gridRadios6',
+				'name' => 'scrapLead',
+				'clientid' => $assignedLead->client_id,
+				'assingId' => $assignedLead->id,
+				'lead_id' => $assignedLead->lead_id,
+				'scapName' => 'Student phone number is either invailid or not reachable or no response',
+				'value' => '6',
+			],
+			[
+				'classId' => 'gridRadios7',
+				'name' => 'scrapLead',
+				'clientid' => $assignedLead->client_id,
+				'assingId' => $assignedLead->id,
+				'lead_id' => $assignedLead->lead_id,
+				'scapName' => 'Student has already hire tutor for this requirement',
+				'value' => '7',
+			],
+			[
+				'classId' => 'gridRadios8',
+				'name' => 'scrapLead',
+				'clientid' => $assignedLead->client_id,
+				'assingId' => $assignedLead->id,
+				'lead_id' => $assignedLead->lead_id,
+				'scapName' => 'Student is showing suspicious behaviour, with an intention to do a payment scam or any other misuse.',
+				'value' => '8',
+			],
+
+
+		];
+
+
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
+
+	}
+
+	/**
+	 * @OA\Post(
+	 *     path="/api/business/save-readLead",
+	 *     tags={"Leads"},
+	 *     summary="Save read lead",
+	 *     description="Mark a lead as favorite for the authenticated user.",
+	 *     security={{"bearerAuth":{}}},
+	 *     @OA\RequestBody(
+	 *         required=true,
+	 *         @OA\JsonContent(
+	 *             required={"assingId"},
+	 *             @OA\Property(property="assingId", type="integer", example=101)
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Lead added to favorites successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Lead marked as favorite."),
+	 *             @OA\Property(property="data", type="object",
+	 *                 @OA\Property(property="id", type="integer", example=5),
+	 *                 @OA\Property(property="user_id", type="integer", example=1),
+	 *                 @OA\Property(property="assingId", type="integer", example=101)
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=422,
+	 *         description="Validation error",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+	 *             @OA\Property(property="errors", type="object",
+	 *                 @OA\Property(property="lead_id", type="array",
+	 *                     @OA\Items(type="string", example="The lead_id field is required.")
+	 *                 )
+	 *             )
+	 *         )
+	 *     )
+	 * )
+	 */
 	public function readLead(Request $request)
 	{
 		if (!Auth::guard('sanctum')->check()) {
@@ -444,7 +729,7 @@ class EnquiryController extends Controller
 	}
 	/**
 	 * @OA\Post(
-	 *     path="/api/leads/save-favorite",
+	 *     path="/api/business/save-favorite",
 	 *     tags={"Leads"},
 	 *     summary="Save favorite lead",
 	 *     description="Mark a lead as favorite for the authenticated user.",
@@ -452,8 +737,8 @@ class EnquiryController extends Controller
 	 *     @OA\RequestBody(
 	 *         required=true,
 	 *         @OA\JsonContent(
-	 *             required={"lead_id"},
-	 *             @OA\Property(property="lead_id", type="integer", example=101)
+	 *             required={"assingId"},
+	 *             @OA\Property(property="assingId", type="integer", example=101)
 	 *         )
 	 *     ),
 	 *     @OA\Response(
@@ -465,7 +750,7 @@ class EnquiryController extends Controller
 	 *             @OA\Property(property="data", type="object",
 	 *                 @OA\Property(property="id", type="integer", example=5),
 	 *                 @OA\Property(property="user_id", type="integer", example=1),
-	 *                 @OA\Property(property="lead_id", type="integer", example=101)
+	 *                 @OA\Property(property="assingId", type="integer", example=101)
 	 *             )
 	 *         )
 	 *     ),
@@ -592,7 +877,7 @@ class EnquiryController extends Controller
 		$perPage = $request->query('per_page', 10);
 		$leads = DB::table('leads')
 			->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
-			->select('leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created')
+			->select('leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created','assigned_leads.id as assingId')
 			->orderBy('assigned_leads.created_at', 'desc')
 			->where('assigned_leads.client_id', $user->id)
 			->paginate($perPage);
@@ -605,6 +890,7 @@ class EnquiryController extends Controller
 				}
 				$leads_list[$key] = array(
 					'lead_id' => $val->lead_id,
+					'assingId' => $val->assingId,
 					'name' => $val->name,
 					'mobile' => $val->mobile,
 					'email' => $val->email,
@@ -621,12 +907,11 @@ class EnquiryController extends Controller
 		return response()->json([
 			'status' => true,
 			'data' => $data,
-			'pagination' => [
-				'current_page' => $leads->currentPage(),
-				'per_page' => $leads->perPage(),
-				'total' => $leads->total(),
-				'last_page' => $leads->lastPage(),
-			],
+			'current_page' => $leads->currentPage(),
+			'per_page' => $leads->perPage(),
+			'total' => $leads->total(),
+			'last_page' => $leads->lastPage(),
+
 		], 200);
 	}
 
@@ -696,7 +981,7 @@ class EnquiryController extends Controller
 				->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
 				->leftjoin('areas', 'leads.area_id', '=', 'areas.id')
 				->leftjoin('zones', 'leads.zone_id', '=', 'zones.id')
-				->select('leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone')
+				->select('leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone','assigned_leads.id as assingId')
 				->orderBy('assigned_leads.created_at', 'desc')
 				->where('assigned_leads.client_id', $currentUser->id)
 				->paginate($perPage);
@@ -705,6 +990,7 @@ class EnquiryController extends Controller
 				foreach ($leads->items() as $key => $val) {
 					$leads_list[$key] = array(
 						'lead_id' => $val->lead_id,
+						'assingId' => $val->assingId,
 						'name' => $val->name,
 						'mobile' => $val->mobile,
 						'email' => $val->email,
@@ -725,12 +1011,12 @@ class EnquiryController extends Controller
 			return response()->json([
 				'status' => true,
 				'data' => $data,
-				'pagination' => [
-					'current_page' => $leads->currentPage(),
-					'per_page' => $leads->perPage(),
-					'total' => $leads->total(),
-					'last_page' => $leads->lastPage(),
-				],
+
+				'current_page' => $leads->currentPage(),
+				'per_page' => $leads->perPage(),
+				'total' => $leads->total(),
+				'last_page' => $leads->lastPage(),
+
 			], 200);
 
 		} catch (\Exception $e) {
@@ -750,27 +1036,7 @@ class EnquiryController extends Controller
 	 *     summary="Get new enquiry",
 	 *     description="Fetch a list of all leads with optional filters",
 	 * 	   security={{"bearerAuth":{}}},
-	 *     @OA\Parameter(
-	 *         name="page",
-	 *         in="query",
-	 *         description="Page number for pagination",
-	 *         required=false,
-	 *         @OA\Schema(type="integer", default=1)
-	 *     ),
-	 *     @OA\Parameter(
-	 *         name="limit",
-	 *         in="query",
-	 *         description="Number of leads per page",
-	 *         required=false,
-	 *         @OA\Schema(type="integer", default=20)
-	 *     ),
-	 *     @OA\Parameter(
-	 *         name="status",
-	 *         in="query",
-	 *         description="Filter leads by status",
-	 *         required=false,
-	 *         @OA\Schema(type="string", enum={"new","contacted","converted","lost"})
-	 *     ),
+	 *     
 	 *     @OA\Response(
 	 *         response=200,
 	 *         description="List of leads",
@@ -832,14 +1098,15 @@ class EnquiryController extends Controller
 			->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
 			->leftjoin('areas', 'leads.area_id', '=', 'areas.id')
 			->leftjoin('zones', 'leads.zone_id', '=', 'zones.id')
-			->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id as clientId', 'assigned_leads.lead_id', 'assigned_leads.id as assignId', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone')
+			->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id as clientId', 'assigned_leads.lead_id', 'assigned_leads.id as assignId', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone','assigned_leads.id as assingId')
 			->orderBy('assigned_leads.created_at', 'desc')
 			->where('assigned_leads.readLead', '0')
-			->where('assigned_leads.client_id', $currentUser->id)->paginate($perPage);
+			->where('assigned_leads.client_id', $currentUser->id)->get();
 		if (!empty($leads)) {
-			foreach ($leads->items() as $key => $val) {
+			foreach ($leads as $key => $val) {
 				$leads_list[$key] = array(
 					'lead_id' => $val->lead_id,
+					'assingId' => $val->assingId,
 					'name' => $val->name,
 					'mobile' => $val->mobile,
 					'email' => $val->email,
@@ -860,12 +1127,12 @@ class EnquiryController extends Controller
 		return response()->json([
 			'status' => true,
 			'data' => $data,
-			'pagination' => [
-				'current_page' => $leads->currentPage(),
-				'per_page' => $leads->perPage(),
-				'total' => $leads->total(),
-				'last_page' => $leads->lastPage(),
-			],
+
+			'current_page' => $leads->currentPage(),
+			'per_page' => $leads->perPage(),
+			'total' => $leads->total(),
+			'last_page' => $leads->lastPage(),
+
 		], 200);
 
 
@@ -878,27 +1145,7 @@ class EnquiryController extends Controller
 	 *     summary="Get myLead",
 	 *     description="Fetch a list of all leads with optional filters",
 	 *     security={{"bearerAuth":{}}},
-	 *     @OA\Parameter(
-	 *         name="page",
-	 *         in="query",
-	 *         description="Page number for pagination",
-	 *         required=false,
-	 *         @OA\Schema(type="integer", default=1)
-	 *     ),
-	 *     @OA\Parameter(
-	 *         name="limit",
-	 *         in="query",
-	 *         description="Number of leads per page",
-	 *         required=false,
-	 *         @OA\Schema(type="integer", default=20)
-	 *     ),
-	 *     @OA\Parameter(
-	 *         name="status",
-	 *         in="query",
-	 *         description="Filter leads by status",
-	 *         required=false,
-	 *         @OA\Schema(type="string", enum={"new","contacted","converted","lost"})
-	 *     ),
+	 *      
 	 *     @OA\Response(
 	 *         response=200,
 	 *         description="List of leads",
@@ -954,18 +1201,39 @@ class EnquiryController extends Controller
 			], 401);
 		}
 
-		$data['leads'] = DB::table('leads')
+		$leads = DB::table('leads')
 			->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
 			->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
 			->leftjoin('areas', 'leads.area_id', '=', 'areas.id')
 			->leftjoin('zones', 'leads.zone_id', '=', 'zones.id')
-			->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id as clientId', 'assigned_leads.lead_id', 'assigned_leads.id as assignId', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone')
+			->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id as clientId', 'assigned_leads.lead_id', 'assigned_leads.id as assignId', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone','assigned_leads.id as assingId')
 
 			->orderBy('assigned_leads.created_at', 'desc')
 			->where('assigned_leads.favoriteLead', '!=', '1')
 
 			->where('assigned_leads.client_id', $currentUser->id)->get();
-
+	if (!empty($leads)) {
+			foreach ($leads as $key => $val) {
+				$leads_list[$key] = array(
+					'lead_id' => $val->lead_id,
+					'assingId' => $val->assingId,
+					'name' => $val->name,
+					'mobile' => $val->mobile,
+					'email' => $val->email,
+					'city_id' => $val->city_id,
+					'cityName' => $val->city_name,
+					'area_id' => $val->area_id,
+					'area' => $val->area,
+					'zone_id' => $val->zone_id,
+					'zone' => $val->zone,
+					'kw_id' => $val->kw_id,
+					'kw_text' => $val->kw_text,
+					'client_id' => $val->client_id,
+					'createdDate' => $val->created,
+				);
+			}
+			$data['leadslist'] = $leads_list;
+		}
 
 
 		return response()->json([
@@ -1058,16 +1326,40 @@ class EnquiryController extends Controller
 			], 401);
 		}
 
-		$data['leads'] = DB::table('leads')
+		$leads = DB::table('leads')
 			->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
 			->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
 			->leftjoin('areas', 'leads.area_id', '=', 'areas.id')
 			->leftjoin('zones', 'leads.zone_id', '=', 'zones.id')
-			->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id as clientId', 'assigned_leads.lead_id', 'assigned_leads.id as assignId', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone')
+			->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id as clientId', 'assigned_leads.lead_id', 'assigned_leads.id as assignId', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone','assigned_leads.id as assingId')
 
 			->orderBy('assigned_leads.created_at', 'desc')
 			->where('assigned_leads.favoriteLead', '1')
 			->where('assigned_leads.client_id', $currentUser->id)->get();
+
+			if (!empty($leads)) {
+			foreach ($leads as $key => $val) {
+				$leads_list[$key] = array(
+					'lead_id' => $val->lead_id,
+					'assingId' => $val->assingId,
+					'name' => $val->name,
+					'mobile' => $val->mobile,
+					'email' => $val->email,
+					'city_id' => $val->city_id,
+					'cityName' => $val->city_name,
+					'area_id' => $val->area_id,
+					'area' => $val->area,
+					'zone_id' => $val->zone_id,
+					'zone' => $val->zone,
+					'kw_id' => $val->kw_id,
+					'kw_text' => $val->kw_text,
+					'client_id' => $val->client_id,
+					'createdDate' => $val->created,
+				);
+			}
+			$data['leadslist'] = $leads_list;
+		}
+
 
 		return response()->json([
 			'status' => true,
@@ -1144,7 +1436,7 @@ class EnquiryController extends Controller
 			->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
 			->leftjoin('areas', 'leads.area_id', '=', 'areas.id')
 			->leftjoin('zones', 'leads.zone_id', '=', 'zones.id')
-			->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id as clientId', 'assigned_leads.lead_id', 'assigned_leads.id as assignId', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone')
+			->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id as clientId', 'assigned_leads.lead_id',  'assigned_leads.created_at as created', 'areas.area', 'zones.zone','assigned_leads.id as assingId')
 
 			->orderBy('assigned_leads.created_at', 'desc')
 
@@ -1154,7 +1446,9 @@ class EnquiryController extends Controller
 
 		$data = [
 
+			'lead_id' => $leads->lead_id,
 			'name' => $leads->name,
+			'assingId' => $leads->assingId,
 			'email' => $leads->email,
 			'kw_text' => $leads->kw_text,
 			'created' => $leads->created,
@@ -1275,7 +1569,7 @@ class EnquiryController extends Controller
 				'zones.zone',
 				'leads.kw_text',
 				'leads.city_name',
-				'assigned_leads.created_at'
+				'assigned_leads.created_at','assigned_leads.id as assingId'
 			)
 			->orderBy('assigned_leads.created_at', 'desc');
 
@@ -1353,64 +1647,64 @@ class EnquiryController extends Controller
 	 *     )
 	 * )
 	 */
- public function exportEnquiry(Request $request)
-{
-    // 🔐 Auth check
-    if (!Auth::guard('sanctum')->check()) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Unauthenticated'
-        ], 401);
-    }
+	public function exportEnquiry(Request $request)
+	{
+		// 🔐 Auth check
+		if (!Auth::guard('sanctum')->check()) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Unauthenticated'
+			], 401);
+		}
 
-    $user = auth('sanctum')->user();
+		$user = auth('sanctum')->user();
 
-    $query = DB::table('leads')
-        ->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
-        ->leftJoin('citylists', 'leads.city_id', '=', 'citylists.id')
-        ->leftJoin('areas', 'leads.area_id', '=', 'areas.id')
-        ->leftJoin('zones', 'leads.zone_id', '=', 'zones.id')
-        ->where('assigned_leads.client_id', $user->id)
-        ->select(
-            'leads.name',
-            'leads.email',
-            'leads.mobile',
-            'leads.kw_text',
-            'leads.city_name',
-            'assigned_leads.created_at'
-        )
-        ->orderBy('assigned_leads.created_at', 'desc');
+		$query = DB::table('leads')
+			->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
+			->leftJoin('citylists', 'leads.city_id', '=', 'citylists.id')
+			->leftJoin('areas', 'leads.area_id', '=', 'areas.id')
+			->leftJoin('zones', 'leads.zone_id', '=', 'zones.id')
+			->where('assigned_leads.client_id', $user->id)
+			->select(
+				'leads.name',
+				'leads.email',
+				'leads.mobile',
+				'leads.kw_text',
+				'leads.city_name',
+				'assigned_leads.created_at'
+			)
+			->orderBy('assigned_leads.created_at', 'desc');
 
-    // 📅 Date filters
-    if ($request->filled('date_from')) {
-        $query->whereDate('assigned_leads.created_at', '>=', $request->date_from);
-    }
+		// 📅 Date filters
+		if ($request->filled('date_from')) {
+			$query->whereDate('assigned_leads.created_at', '>=', $request->date_from);
+		}
 
-    if ($request->filled('date_to')) {
-        $query->whereDate('assigned_leads.created_at', '<=', $request->date_to);
-    }
+		if ($request->filled('date_to')) {
+			$query->whereDate('assigned_leads.created_at', '<=', $request->date_to);
+		}
 
-    $enquiries = $query->get();
+		$enquiries = $query->get();
 
-    // 🧾 Prepare Excel rows
-    $rows = [];
-    foreach ($enquiries as $row) {
-        $rows[] = [
-            'Name'   => $row->name,
-            'Mobile' => $row->mobile,
-            'Email'  => $row->email,
-            'Course' => $row->kw_text,
-            'City'   => $row->city_name,
-            'Date'   => date('d M, Y H:i:s', strtotime($row->created_at)),
-        ];
-    }
+		// 🧾 Prepare Excel rows
+		$rows = [];
+		foreach ($enquiries as $row) {
+			$rows[] = [
+				'Name' => $row->name,
+				'Mobile' => $row->mobile,
+				'Email' => $row->email,
+				'Course' => $row->kw_text,
+				'City' => $row->city_name,
+				'Date' => date('d M, Y H:i:s', strtotime($row->created_at)),
+			];
+		}
 
-    // 📥 Download Excel
-    return Excel::download(
-        new EnquiryExport($rows),
-        'enquiries_' . date('d_m_Y_His') . '.xlsx'
-    );
-}
+		// 📥 Download Excel
+		return Excel::download(
+			new EnquiryExport($rows),
+			'enquiries_' . date('d_m_Y_His') . '.xlsx'
+		);
+	}
 
 
 

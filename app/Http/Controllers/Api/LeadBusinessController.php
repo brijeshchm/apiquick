@@ -72,12 +72,12 @@ class LeadBusinessController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $data,
-                'pagination' => [
+                
                     'current_page' => $leads->currentPage(),
                     'per_page' => $leads->perPage(),
                     'total' => $leads->total(),
                     'last_page' => $leads->lastPage(),
-                ],
+            
             ], 200);
 
         } catch (\Exception $e) {
@@ -149,12 +149,12 @@ class LeadBusinessController extends Controller
             return response()->json([
                 'status' => true,
                 'data' => $data,
-                'pagination' => [
+                 
                     'current_page' => $leads->currentPage(),
                     'per_page' => $leads->perPage(),
                     'total' => $leads->total(),
                     'last_page' => $leads->lastPage(),
-                ],
+                
             ], 200);
 
         } catch (\Exception $e) {

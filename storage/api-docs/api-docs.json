@@ -3069,24 +3069,116 @@
                 }
             }
         },
-        "/api/leads/save-favorite": {
+        "/api/business/pause-lead": {
             "post": {
                 "tags": [
                     "Leads"
                 ],
-                "summary": "Save favorite lead",
-                "description": "Mark a lead as favorite for the authenticated user.",
-                "operationId": "7c505406de9358d9cd7c1d4e95a3a882",
+                "summary": "Pause lead",
+                "description": "Pause a lead for the authenticated business user",
+                "operationId": "ee2c2c718af9d932a419e707e96830a1",
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "lead_id"
+                                    "pauseLead"
                                 ],
                                 "properties": {
-                                    "lead_id": {
+                                    "pauseLead": {
+                                        "type": "boolean",
+                                        "enum": [
+                                            "true",
+                                            "false"
+                                        ],
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Lead paused successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lead paused successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/save-scrap-lead": {
+            "post": {
+                "tags": [
+                    "Leads"
+                ],
+                "summary": "scrap lead",
+                "description": "Mark a lead as favorite for the authenticated user.",
+                "operationId": "18e4ad77214ec8c0bbc34e0fdbce7105",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "assingId"
+                                ],
+                                "properties": {
+                                    "assingId": {
                                         "type": "integer",
                                         "example": 101
                                     }
@@ -3121,7 +3213,358 @@
                                                     "type": "integer",
                                                     "example": 1
                                                 },
+                                                "assingId": {
+                                                    "type": "integer",
+                                                    "example": 101
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
                                                 "lead_id": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The lead_id field is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/get-scrap": {
+            "get": {
+                "tags": [
+                    "Leads"
+                ],
+                "summary": "scrap lead",
+                "description": "Mark a lead as favorite for the authenticated user.",
+                "operationId": "a6d4f86cea62b53b20f5f9ad6fd37fba",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "assingId"
+                                ],
+                                "properties": {
+                                    "assingId": {
+                                        "type": "integer",
+                                        "example": 101
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Lead added to favorites successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lead marked as favorite."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "assingId": {
+                                                    "type": "integer",
+                                                    "example": 101
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "lead_id": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The lead_id field is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/save-readLead": {
+            "post": {
+                "tags": [
+                    "Leads"
+                ],
+                "summary": "Save read lead",
+                "description": "Mark a lead as favorite for the authenticated user.",
+                "operationId": "3b8bcb833eb5e1edd31925c5a3c584f8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "assingId"
+                                ],
+                                "properties": {
+                                    "assingId": {
+                                        "type": "integer",
+                                        "example": 101
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Lead added to favorites successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lead marked as favorite."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "assingId": {
+                                                    "type": "integer",
+                                                    "example": 101
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "lead_id": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The lead_id field is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/save-favorite": {
+            "post": {
+                "tags": [
+                    "Leads"
+                ],
+                "summary": "Save favorite lead",
+                "description": "Mark a lead as favorite for the authenticated user.",
+                "operationId": "3dc5fc481dacd350f6ec0400c5a7296c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "assingId"
+                                ],
+                                "properties": {
+                                    "assingId": {
+                                        "type": "integer",
+                                        "example": 101
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Lead added to favorites successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lead marked as favorite."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "assingId": {
                                                     "type": "integer",
                                                     "example": 101
                                                 }
@@ -3366,43 +3809,6 @@
                 "summary": "Get new enquiry",
                 "description": "Fetch a list of all leads with optional filters",
                 "operationId": "b6abb31c85b22a89468a38ecab1b8aca",
-                "parameters": [
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "description": "Page number for pagination",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "default": 1
-                        }
-                    },
-                    {
-                        "name": "limit",
-                        "in": "query",
-                        "description": "Number of leads per page",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "default": 20
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "Filter leads by status",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "new",
-                                "contacted",
-                                "converted",
-                                "lost"
-                            ]
-                        }
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "List of leads",
@@ -3506,43 +3912,6 @@
                 "summary": "Get myLead",
                 "description": "Fetch a list of all leads with optional filters",
                 "operationId": "7a97e2df1c07dc659b02ee39386ea0b7",
-                "parameters": [
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "description": "Page number for pagination",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "default": 1
-                        }
-                    },
-                    {
-                        "name": "limit",
-                        "in": "query",
-                        "description": "Number of leads per page",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "default": 20
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "Filter leads by status",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "new",
-                                "contacted",
-                                "converted",
-                                "lost"
-                            ]
-                        }
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "List of leads",

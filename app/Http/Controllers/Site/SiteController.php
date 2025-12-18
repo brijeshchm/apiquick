@@ -1120,7 +1120,7 @@ class SiteController extends Controller
 		], 200);
 	}
 
- 
+
 	/**
 	 * @OA\Get(
 	 *     path="/api/site/blog/{slug}",
@@ -1175,9 +1175,9 @@ class SiteController extends Controller
 		$request->validate([
 			'blog_slug' => 'required|exists:blogdetails,slug',
 		]);
-	 
-	 $slug = $request->input('blog_slug');
- 
+
+		$slug = $request->input('blog_slug');
+
 		$blogLists = Blogdetails::where('status', '1')->limit(8)->orderBy('id', 'DESC')->get();
 
 		if (!empty($blogLists)) {
@@ -1208,28 +1208,28 @@ class SiteController extends Controller
 		$data['blogList'] = $blogPageList;
 		$blogdetails = Blogdetails::where('slug', $slug)->first();
 		$blogPageDetails = array();
-	 
+
 		if (!empty($blogdetails)) {
 
 			$blogimage = "";
 			$blogalt = "";
 
 			if (!empty($blogdetails->image)) {
-			$imgData = unserialize($blogdetails->image);
-			if (!empty($imgData['large']['src'])) {
-			$blogimage = config('app.website') . $imgData['large']['src'];
-			$blogalt = $blogdetails->name;
-			}
+				$imgData = unserialize($blogdetails->image);
+				if (!empty($imgData['large']['src'])) {
+					$blogimage = config('app.website') . $imgData['large']['src'];
+					$blogalt = $blogdetails->name;
+				}
 			}
 			$imageBanner = "";
 			$blogaltB = "";
 
 			if (!empty($blogdetails->image_banner)) {
-			$imgBanner = unserialize($blogdetails->image_banner);
-			if (!empty($imgBanner['large']['src'])) {
-			$imageBanner = config('app.website') . $imgBanner['large']['src'];
-			$blogaltB = $blogdetails->name;
-			}
+				$imgBanner = unserialize($blogdetails->image_banner);
+				if (!empty($imgBanner['large']['src'])) {
+					$imageBanner = config('app.website') . $imgBanner['large']['src'];
+					$blogaltB = $blogdetails->name;
+				}
 			}
 
 
@@ -1241,16 +1241,16 @@ class SiteController extends Controller
 				'imageBanner' => $imageBanner,
 				'blogBannerAalt' => $blogaltB,
 				'title' => $blogdetails->name,
-				'description' => ucfirst($blogdetails->description) ,
-				'meta_title' => ucfirst($blogdetails->meta_title) ,
-				'meta_keywords' => ucfirst($blogdetails->meta_keywords) ,
-				'meta_description' => ucfirst($blogdetails->meta_description) ,
-				'top_content' => ucfirst($blogdetails->top_content) ,
-				'bottom_content' => ucfirst($blogdetails->bottom_content) ,
+				'description' => ucfirst($blogdetails->description),
+				'meta_title' => ucfirst($blogdetails->meta_title),
+				'meta_keywords' => ucfirst($blogdetails->meta_keywords),
+				'meta_description' => ucfirst($blogdetails->meta_description),
+				'top_content' => ucfirst($blogdetails->top_content),
+				'bottom_content' => ucfirst($blogdetails->bottom_content),
 
 			];
 		}
-	 $data['blogDetails'] = $blogPageDetails;
+		$data['blogDetails'] = $blogPageDetails;
 
 		return response()->json([
 			'success' => true,
@@ -1826,6 +1826,7 @@ class SiteController extends Controller
     ) c'), 'c.comment_client_ID', '=', 'clients.id')
 			->select(
 				'clients.*',
+				'clients.id as business_id',
 				'assigned_kwds.*',
 				'citylists.city',
 				'assigned_kwds.sold_on_position',
@@ -1886,12 +1887,12 @@ class SiteController extends Controller
 
 		$assignedKeywords = DB::table('assigned_kwds')
 			->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
-			->where('assigned_kwds.client_id', '1748')
+			->where('assigned_kwds.client_id', $clientscheck->business_id)
 			->pluck('keyword.keyword')
 			->toArray();
 		$assignedCity = DB::table('assigned_kwds')
 			->join('citylists', 'assigned_kwds.city_id', '=', 'citylists.id')
-			->where('assigned_kwds.client_id', 1748)
+			->where('assigned_kwds.client_id', $clientscheck->business_id)
 			->pluck('citylists.city')
 			->toArray();
 
@@ -1900,8 +1901,10 @@ class SiteController extends Controller
 			$time = unserialize($clientscheck->time);
 
 		}
+
+
 		$data['clientsList'] = [
-			'business_id' => $clientscheck->id,
+			'business_id' => $clientscheck->business_id,
 			'business_name' => $clientscheck->business_name,
 			'business_slug' => $clientscheck->business_slug,
 			'logo' => $logoImage ?? '',
@@ -1934,6 +1937,7 @@ class SiteController extends Controller
 
 			'rating' => $clientscheck->rating,
 			'comment_count' => $clientscheck->comment_count,
+
 		];
 
 
@@ -1963,6 +1967,71 @@ class SiteController extends Controller
 			->get();
 
 		$data['barGraphQuery'] = $barGraphQuery;
+
+
+		$findKeywords = Keyword::select('child_category_id')->where('keyword', $assignedKeywords[0])->first();
+
+		$relKeywords = Keyword::select('keyword')->where('child_category_id', $findKeywords->child_category_id)->pluck('keyword.keyword')
+			->toArray();
+
+
+		$data['related_searches'] = $relKeywords;
+
+		$area_business = [
+			'heading' =>
+				($clientscheck->business_name ?? '') .
+				' in ' .
+				($clientscheck->area ?? '') .
+				', ' .
+				($clientscheck->city ?? ''),
+
+			'paragraph' =>
+				($clientscheck->business_name ?? '') .
+				', located in ' .
+				($clientscheck->area ?? '') .
+				', ' .
+				($clientscheck->city ?? '') .
+				', has been a leader in skill development for many years. The company specializes in providing a comprehensive range of training programs designed to equip individuals with practical knowledge and expertise.'
+		];
+
+		$data['area_business'] = $area_business;
+
+		$workingHoursHtml = '';
+
+		if (!empty($clientscheck->time)) {
+
+		$times = unserialize($clientscheck->time);
+		$today = strtolower(date('l'));
+
+		// Today
+		if (isset($times[$today])) {
+		$workingHoursHtml .= $times[$today]['from'] . ' - ' . $times[$today]['to'];
+		}
+
+		// Other days
+		foreach ($times as $day => $time) {
+		$workingHoursHtml .= ucfirst($day) . ' ' . $time['from'] . ' - ' . $time['to'];
+		}
+
+		} else {
+		$workingHoursHtml .= '';
+		}
+
+		$overviewParagraph = ($clientscheck->business_name ?? '') . ' in ' .
+    ($clientscheck->area ?? '') . ', ' .
+    ($clientscheck->city ?? '') . ' is a prominent institution in the SAP Training Institutes sector, offering various skill-building programs tailored to meet the demands of today’s competitive job market.' . $workingHoursHtml . 'The company provides flexible scheduling options for individuals looking to enhance their skills while managing other responsibilities.The highly experienced team at ' . ($clientscheck->business_name ?? '') . ' is committed to delivering high-quality training to each participant.';
+$overviewParagraph2 = 'Whether you’re looking to improve your technical skills, leadership capabilities, or industry-specific knowledge,' . ($clientscheck->business_name ?? '') . ' in ' .($clientscheck->area ?? '') . ', ' .  ($clientscheck->city ?? '') . ' has the right program for you. With a wide range of offerings, including IT, management, soft skills, and vocational training, ' . ($clientscheck->business_name ?? '') . ' stands as a comprehensive solution for all your skill development needs.';
+
+$overview_business = [
+    'heading'    => 'Overview of Business',
+    'paragraph' => $overviewParagraph,
+    'paragraph1'=> $overviewParagraph2
+];
+
+$data['overview_business'] = $overview_business;
+ 
+
+
 
 		return response()->json([
 			'success' => true,
@@ -2236,7 +2305,7 @@ class SiteController extends Controller
 	public function aboutus(Request $request)
 	{
 		$url = config('app.url');
-		$data['about-us'] = 
+		$data['about-us'] =
 			[
 				'paragraph1' => 'Quick Dials, one of the most promising start-ups lead generation in India in 2023, offers a B2C model as a match-making admission solution to students, professionals study and services. Their quickdials.com, provide platform connects education seekers with education providers, coupled with excellent career counseling services.',
 				'paragraph2' => 'Quick Dials is an extensive search engine for students, parents, professionals, and education industry players seeking information on the education sector in India. Users can rely on quickdials.com for the most relevant data on institutes, colleges, and universities.',
@@ -2244,72 +2313,72 @@ class SiteController extends Controller
 				'USPs' => 'Quick Dials is the first technology-driven education start-up in India, providing a match-making solution for students educational needs across all sectors. Quick Dials offers extensive in-house personalized counseling to understand each students needs and help them make the most informed decisions.',
 				'Quick Dials For Institutions' => 'Quick Dials provides a non-conventional platform that focuses on delivering quality leads and highly motivated candidates. Our extensive in-house one-on-one personalized counseling gives us an edge in offering a highly specific and active database to our clients.',
 				'Quick Dials For Students' => 'Students can use Quick Dials as a one-stop destination to search for information on coaching institutes, IT training centers, overseas education consultants, available courses, college admission processes, and much more. The website offers interactive tools to simplify the process of finding the right alma mater. Quick Dials has a repository of over 1,000 institutes, coaching centers, schools, colleges, and 10,000 courses categorized into different streams such as IT training, civil services, entrance exam preparation, management, engineering, medical, arts, distance education, and more. Users can classify their education needs based on location, reviews, and certification. Quick Dialss certified business partners ensure quality education, campus placements, top faculty, and fee refund assurance, providing students with a reliable and comprehensive platform for their educational needs.',
-				'Quality Leads'=>'Generate high-quality leads for educational institutions and service providers.',
-				'Targeted Marketing'=>'Reach specific demographics and target audiences based on location, interests, and educational needs.',
-				'Personalized Counselling'=>'Extensive in-house one-on-one counseling helps in understanding the needs and preferences of potential students.
+				'Quality Leads' => 'Generate high-quality leads for educational institutions and service providers.',
+				'Targeted Marketing' => 'Reach specific demographics and target audiences based on location, interests, and educational needs.',
+				'Personalized Counselling' => 'Extensive in-house one-on-one counseling helps in understanding the needs and preferences of potential students.
 				Provides educational institutions with detailed insights and qualified leads.',
-				'Interactive Platform'=>'Use interactive tools and features to engage with potential students.
+				'Interactive Platform' => 'Use interactive tools and features to engage with potential students.
 				Facilitate direct communication between students and educational institutions.',
-				'Database Access'=>'Access to a vast database of students looking for various courses and educational opportunities.
+				'Database Access' => 'Access to a vast database of students looking for various courses and educational opportunities.
 				Detailed profiles and data to help institutions tailor their offerings.',
-				'Reviews and Ratings'=>'Leverage user reviews and ratings to build credibility and attract more leads.
+				'Reviews and Ratings' => 'Leverage user reviews and ratings to build credibility and attract more leads.
 				Positive feedback and testimonials can enhance reputation and lead generation.',
-				'Certified Partnerships'=>'Being a Quick Dials Certified Business Partner boosts credibility and trust.
+				'Certified Partnerships' => 'Being a Quick Dials Certified Business Partner boosts credibility and trust.
 				Assurance of quality education and services attracts more leads.',
-				'Analytics and Reporting'=>'Detailed analytics and reporting tools to track the effectiveness of lead generation efforts.
+				'Analytics and Reporting' => 'Detailed analytics and reporting tools to track the effectiveness of lead generation efforts.
 				Insights into student preferences and behavior to refine marketing strategies.',
-				'Location-Based Leads'=>'Generate leads based on specific geographic locations to target local students.
+				'Location-Based Leads' => 'Generate leads based on specific geographic locations to target local students.
 				Customize offerings to meet the needs of the local student population.',
-				'Engagement Tools'=>'Use forums, discussion boards, and community features to engage with potential leads.
+				'Engagement Tools' => 'Use forums, discussion boards, and community features to engage with potential leads.
 				Foster a sense of community and belonging to attract more students.',
-				'Career Counselling Integration'=>'Integrate career counseling services to attract students looking for career guidance.
+				'Career Counselling Integration' => 'Integrate career counseling services to attract students looking for career guidance.
 				Position your institution as a comprehensive solution for education and career planning.',
-				'Clearing of doubts using chat with counselo'=>[
-				'Real-Time Support'=>'Students can chat with certified counselors in real-time to get their queries answered promptly. Immediate assistance for any doubts regarding courses, admissions, career paths, and more',
-				'Personalized Guidance'=>'One-on-one chat sessions to provide tailored advice based on individual student needs and preferences.
+				'Clearing of doubts using chat with counselo' => [
+					'Real-Time Support' => 'Students can chat with certified counselors in real-time to get their queries answered promptly. Immediate assistance for any doubts regarding courses, admissions, career paths, and more',
+					'Personalized Guidance' => 'One-on-one chat sessions to provide tailored advice based on individual student needs and preferences.
 				Helps in making informed decisions about educational and career choices.',
-				'Convenient and Accessible'=>'Accessible through both desktop and mobile platforms, ensuring students can reach counselors anytime, anywhere.
+					'Convenient and Accessible' => 'Accessible through both desktop and mobile platforms, ensuring students can reach counselors anytime, anywhere.
 				User-friendly interface to facilitate smooth communication.',
-				'Comprehensive Assistance'=>'Counselors can provide information on a wide range of topics, including course details, admission processes, scholarship opportunities, and more.
+					'Comprehensive Assistance' => 'Counselors can provide information on a wide range of topics, including course details, admission processes, scholarship opportunities, and more.
 				Support for both academic and career-related inquiries.',
-				'Interactive Tools'=>'Use of interactive features such as document sharing, video calls, and screen sharing to enhance the chat experience.
+					'Interactive Tools' => 'Use of interactive features such as document sharing, video calls, and screen sharing to enhance the chat experience.
 				Enables a more thorough and interactive counseling session.',
-				'Confidential and Secure'=>'Ensures privacy and confidentiality of student information during chat sessions.
+					'Confidential and Secure' => 'Ensures privacy and confidentiality of student information during chat sessions.
 				Secure platform to protect sensitive data and maintain trust.',
-				'Follow-Up Support'=>'Counselors can schedule follow-up sessions to ensure all doubts are cleared and students are on the right path.
+					'Follow-Up Support' => 'Counselors can schedule follow-up sessions to ensure all doubts are cleared and students are on the right path.
 				Continuous support throughout the decision-making process.',
-				'Feedback Mechanism'=>'Students can provide feedback on their chat experience, helping to improve the quality of counseling services.
+					'Feedback Mechanism' => 'Students can provide feedback on their chat experience, helping to improve the quality of counseling services.
 				Counselors can track the effectiveness of their guidance and make necessary adjustments.',
-				'Resource Sharing'=>'Counselors can share links, documents, and other resources directly through the chat to assist students.
+					'Resource Sharing' => 'Counselors can share links, documents, and other resources directly through the chat to assist students.
 				Access to additional reading material, application forms, and relevant websites.',
-				'Integration with Other Features'=>'Seamless integration with other platform features such as course comparisons, application tracking, and reviews.
+					'Integration with Other Features' => 'Seamless integration with other platform features such as course comparisons, application tracking, and reviews.
 				Comprehensive support system combining various tools for a holistic counseling experience.',
 				],
-				'Real interactive class room and expert faculty Techer'=>[
-					'Live Virtual Classes'=>'Real-time interactive sessions conducted by expert faculty members.
+				'Real interactive class room and expert faculty Techer' => [
+					'Live Virtual Classes' => 'Real-time interactive sessions conducted by expert faculty members.
 					Engage students with dynamic content delivery and interactive learning tools.',
-					'Expertise and Experience'=>'Faculty members with extensive knowledge and experience in their respective fields.
+					'Expertise and Experience' => 'Faculty members with extensive knowledge and experience in their respective fields.
 					Provide insights, practical examples, and industry-relevant knowledge.',
-					'Engagement Tools'=>'Use of interactive tools such as polls, quizzes, and live Q&A sessions to keep students engaged.
+					'Engagement Tools' => 'Use of interactive tools such as polls, quizzes, and live Q&A sessions to keep students engaged.
 					Foster active participation and discussion among students.',
-					'Personalized Learning'=>'Tailored teaching approaches to address individual learning styles and preferences.
+					'Personalized Learning' => 'Tailored teaching approaches to address individual learning styles and preferences.
 					Adaptive learning techniques to cater to diverse student needs.',
-					'Collaborative Learning Environment'=>'Facilitate group discussions, peer-to-peer interaction, and collaborative projects.
+					'Collaborative Learning Environment' => 'Facilitate group discussions, peer-to-peer interaction, and collaborative projects.
 					Encourage teamwork and communication skills development.',
-					'Hands-on Activities'=>'Incorporate practical demonstrations, case studies, and simulations to enhance learning outcomes.
+					'Hands-on Activities' => 'Incorporate practical demonstrations, case studies, and simulations to enhance learning outcomes.
 					Bridge theoretical knowledge with real-world applications.',
-					'Multimedia Integration'=>'Utilize multimedia resources such as videos, presentations, and virtual labs to enrich the learning experience.
+					'Multimedia Integration' => 'Utilize multimedia resources such as videos, presentations, and virtual labs to enrich the learning experience.
 					Enhance understanding and retention of complex concepts.',
-					'Feedback and Assessment'=>'Provide immediate feedback on assignments, assessments, and student progress.
+					'Feedback and Assessment' => 'Provide immediate feedback on assignments, assessments, and student progress.
 					Continuous evaluation to track learning outcomes and address areas of improvement.',
-					'Accessible Learning Platform'=>'Accessible through desktop and mobile devices, ensuring flexibility in learning.
+					'Accessible Learning Platform' => 'Accessible through desktop and mobile devices, ensuring flexibility in learning.
 					Seamless integration with learning management systems for easy navigation and resource access.',
-					'Continuous Improvement'=>'Faculty regularly update content and teaching methods based on student feedback and industry trends.
+					'Continuous Improvement' => 'Faculty regularly update content and teaching methods based on student feedback and industry trends.
 					Commitment to delivering high-quality education and enhancing the learning experience.',
 				],
 
 
-			];  
+			];
 		if ($data) {
 			$data['status'] = true;
 			$data['code'] = 200;
@@ -2326,7 +2395,7 @@ class SiteController extends Controller
 
 	}
 
-	
+
 	/**
 	 * @OA\Get(
 	 *     path="/api/site/faq",
@@ -2369,7 +2438,7 @@ class SiteController extends Controller
 	public function FAQ(Request $request)
 	{
 		$url = config('app.url');
-		$data['FAQ'] =[
+		$data['FAQ'] = [
 			[
 				'q1' => 'What is Quick Dials?',
 				'a1' => 'Quick Dials is an extensive search engine for the students, parents, and Professionals, Quick Dials Only Deals In Education Sector and helps students to grab their right opportunity, and helps business owners to grow their business.',
@@ -2402,7 +2471,7 @@ class SiteController extends Controller
 				'q8' => 'I Need More info?',
 				'a8' => 'For More Info & any Queries, you can Contact Us on +91 70113 10265 or reach out to us via e-mail @ info@quickdials.com, or list your business as free listing, our marketing team Will Contact you Soon.',
 			],
-			];  
+		];
 		if ($data) {
 			$data['status'] = true;
 			$data['code'] = 200;
@@ -2460,7 +2529,7 @@ class SiteController extends Controller
 	public function businessOwners(Request $request)
 	{
 		$url = config('app.url');
-		$data['businessOwners'] =[
+		$data['businessOwners'] = [
 			[
 				'Grow Client' => '1453 +',
 				'Suppliers' => '8.1 K+',
@@ -2497,7 +2566,7 @@ class SiteController extends Controller
 				'q7' => 'I Need More info?',
 				'a7' => 'For More Info & any Queries, you can Contact Us on +91 70113 10265 or reach out to us via e-mail @ info@quickdials.com, or list your business as free listing, our marketing team Will Contact you Soon.',
 			],
-			];  
+		];
 		if ($data) {
 			$data['status'] = true;
 			$data['code'] = 200;

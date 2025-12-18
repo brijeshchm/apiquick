@@ -1817,9 +1817,9 @@ class SiteController extends Controller
 		$business_slug = $request->input('business_slug');
 
 		$clientscheck = DB::table('clients')
-			->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
-			->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
-			->join('citylists', 'assigned_kwds.city_id', '=', 'citylists.id')
+			->leftJoin('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
+			->leftJoin('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+			->leftJoin('citylists', 'assigned_kwds.city_id', '=', 'citylists.id')
 			->leftJoin(DB::raw('(
         SELECT SUM(rating) AS rating, comment_client_ID, COUNT(comment_ID) AS comment_count
         FROM comments GROUP BY comment_client_ID
@@ -1844,199 +1844,207 @@ class SiteController extends Controller
         END
     ")
 			->first();
+		if (!empty($clientscheck)) {
 
+			$logoImage = 'client/images/default_pp_small.jpg';
+			$altLogo = "Business Logo";
+			if (!empty($clientscheck->logo)) {
+				$cicons = unserialize($clientscheck->logo);
 
-
-		$logoImage = 'client/images/default_pp_small.jpg';
-		$altLogo = "Business Logo";
-		if (!empty($clientscheck->logo)) {
-			$cicons = unserialize($clientscheck->logo);
-
-			if (!empty($cicons)) {
-				$logoImage = config('app.website') . $cicons['large']['src'];
-				$altLogo = $cicons['large']['name'];
-			}
-		}
-		$profile_pic = 'client/images/default_profile_pic.jpg';
-		$altbanner = "";
-		if (!empty($clientscheck->profile_pic)) {
-			$banner = unserialize($clientscheck->profile_pic);
-
-			if (!empty($banner)) {
-				$profile_pic = config('app.website') . $banner['large']['src'];
-				$altLogo = $clientscheck->business_name;
-			}
-		}
-
-		$gallery = 'client/images/default_profile_pic.jpg';
-		$altbanner = "";
-		$galleryArray = array();
-		if (!empty($clientscheck->pictures)) {
-			$galleryList = unserialize($clientscheck->pictures);
-			if (!empty($galleryList)) {
-				foreach ($galleryList as $pkey => $gvalue) {
-
-					$galleryArray[$pkey] = array(
-						'gallery' => $gvalue
-					);
-
+				if (!empty($cicons)) {
+					$logoImage = config('app.website') . $cicons['large']['src'];
+					$altLogo = $cicons['large']['name'];
 				}
 			}
-		}
+			$profile_pic = 'client/images/default_profile_pic.jpg';
+			$altbanner = "";
+			if (!empty($clientscheck->profile_pic)) {
+				$banner = unserialize($clientscheck->profile_pic);
+
+				if (!empty($banner)) {
+					$profile_pic = config('app.website') . $banner['large']['src'];
+					$altLogo = $clientscheck->business_name;
+				}
+			}
+
+			$gallery = 'client/images/default_profile_pic.jpg';
+			$altbanner = "";
+			$galleryArray = array();
+			if (!empty($clientscheck->pictures)) {
+				$galleryList = unserialize($clientscheck->pictures);
+				if (!empty($galleryList)) {
+					foreach ($galleryList as $pkey => $gvalue) {
+
+						$galleryArray[$pkey] = array(
+							'gallery' => $gvalue
+						);
+
+					}
+				}
+			}
 
 
-		$assignedKeywords = DB::table('assigned_kwds')
-			->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
-			->where('assigned_kwds.client_id', $clientscheck->business_id)
-			->pluck('keyword.keyword')
-			->toArray();
-		$assignedCity = DB::table('assigned_kwds')
-			->join('citylists', 'assigned_kwds.city_id', '=', 'citylists.id')
-			->where('assigned_kwds.client_id', $clientscheck->business_id)
-			->pluck('citylists.city')
-			->toArray();
+			$assignedKeywords = DB::table('assigned_kwds')
+				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+				->where('assigned_kwds.client_id', $clientscheck->business_id)
+				->pluck('keyword.keyword')
+				->toArray();
+			$assignedCity = DB::table('assigned_kwds')
+				->join('citylists', 'assigned_kwds.city_id', '=', 'citylists.id')
+				->where('assigned_kwds.client_id', $clientscheck->business_id)
+				->pluck('citylists.city')
+				->toArray();
 
-		$time = "";
-		if ($clientscheck->time) {
-			$time = unserialize($clientscheck->time);
+			$time = "";
+			if ($clientscheck->time) {
+				$time = unserialize($clientscheck->time);
 
-		}
-
-
-		$data['clientsList'] = [
-			'business_id' => $clientscheck->business_id,
-			'business_name' => $clientscheck->business_name,
-			'business_slug' => $clientscheck->business_slug,
-			'logo' => $logoImage ?? '',
-			'altLogo' => $altLogo . ' Logo' ?? '',
-			'profile_banner' => $profile_pic ?? '',
-			'altbanner' => $altbanner ?? '',
-			'gallery' => $galleryArray ?? '',
-			'business_intro' => $clientscheck->business_intro,
-			'assign_keyword' => $assignedKeywords,
-			'service_city' => $assignedCity,
-
-			'certifications' => $clientscheck->certifications,
-			'sirName' => $clientscheck->sirName,
-			'first_name' => $clientscheck->first_name,
-			'middle_name' => $clientscheck->middle_name,
-			'last_name' => $clientscheck->last_name,
-			'email' => $clientscheck->email,
-			'certified_status' => $clientscheck->certified_status,
-			'website' => $clientscheck->website,
-			'city' => $clientscheck->city,
-			'business_state' => $clientscheck->business_state,
-			'area' => $clientscheck->area,
-			'business_city' => $clientscheck->business_city,
-			'address' => $clientscheck->address,
-			'pincode' => $clientscheck->pincode,
-			'country' => $clientscheck->country,
-			'year_of_estb' => $clientscheck->year_of_estb,
-			'time' => $time,
-			'landmark' => $clientscheck->landmark,
-
-			'rating' => $clientscheck->rating,
-			'comment_count' => $clientscheck->comment_count,
-
-		];
+			}
 
 
-		$data['comment'] = Comment::where('comment_client_ID', $clientscheck->id)
-			->where('comment_approved', 1)
-			->orderBy('created_at', 'desc')
-			->get()
-			->toArray();
+			$data['clientsList'] = [
+				'business_id' => $clientscheck->business_id,
+				'business_name' => $clientscheck->business_name,
+				'business_slug' => $clientscheck->business_slug,
+				'logo' => $logoImage ?? '',
+				'altLogo' => $altLogo . ' Logo' ?? '',
+				'profile_banner' => $profile_pic ?? '',
+				'altbanner' => $altbanner ?? '',
+				'gallery' => $galleryArray ?? '',
+				'business_intro' => $clientscheck->business_intro,
+				'assign_keyword' => $assignedKeywords,
+				'service_city' => $assignedCity,
 
-		$sum = Comment::where('comment_client_ID', $clientscheck->id)
-			->where('comment_approved', 1)
-			->sum('rating');
-		$count = Comment::where('comment_client_ID', $clientscheck->id)
-			->where('comment_approved', 1)
-			->count();
+				'certifications' => $clientscheck->certifications,
+				'sirName' => $clientscheck->sirName,
+				'first_name' => $clientscheck->first_name,
+				'middle_name' => $clientscheck->middle_name,
+				'last_name' => $clientscheck->last_name,
+				'email' => $clientscheck->email,
+				'certified_status' => $clientscheck->certified_status,
+				'website' => $clientscheck->website,
+				'city' => $clientscheck->city,
+				'business_state' => $clientscheck->business_state,
+				'area' => $clientscheck->area,
+				'business_city' => $clientscheck->business_city,
+				'address' => $clientscheck->address,
+				'pincode' => $clientscheck->pincode,
+				'country' => $clientscheck->country,
+				'year_of_estb' => $clientscheck->year_of_estb,
+				'time' => $time,
+				'landmark' => $clientscheck->landmark,
 
-		$avgRating = 0;
-		if ($count != 0)
-			$avgRating = ($sum / ($count * 5)) * 5;
-		$data['sum'] = $sum;
-		$data['avgRating'] = $avgRating;
-		$data['count'] = $count;
+				'rating' => $clientscheck->rating,
+				// 'comment_count' => $clientscheck->comment_count,
 
-		$barGraphQuery = Comment::select(DB::raw('*'))
-			->from(DB::raw('(SELECT COUNT(*) as count, SUM(`rating`) as sum_rating, rating FROM `comments` WHERE `comment_client_ID`=' . $clientscheck->id . ' AND `comment_approved`=1 GROUP BY `rating`) AS temp'))
-			->orderBy('rating', 'desc')
-			->get();
-
-		$data['barGraphQuery'] = $barGraphQuery;
-
-
-		$findKeywords = Keyword::select('child_category_id')->where('keyword', $assignedKeywords[0])->first();
-
-		$relKeywords = Keyword::select('keyword')->where('child_category_id', $findKeywords->child_category_id)->pluck('keyword.keyword')
-			->toArray();
+			];
 
 
-		$data['related_searches'] = $relKeywords;
+			$data['comment'] = Comment::where('comment_client_ID', $clientscheck->id)
+				->where('comment_approved', 1)
+				->orderBy('created_at', 'desc')
+				->get()
+				->toArray();
 
-		$area_business = [
-			'heading' =>
-				($clientscheck->business_name ?? '') .
-				' in ' .
-				($clientscheck->area ?? '') .
-				', ' .
-				($clientscheck->city ?? ''),
+			$sum = Comment::where('comment_client_ID', $clientscheck->id)
+				->where('comment_approved', 1)
+				->sum('rating');
+			$count = Comment::where('comment_client_ID', $clientscheck->id)
+				->where('comment_approved', 1)
+				->count();
 
-			'paragraph' =>
-				($clientscheck->business_name ?? '') .
-				', located in ' .
-				($clientscheck->area ?? '') .
-				', ' .
-				($clientscheck->city ?? '') .
-				', has been a leader in skill development for many years. The company specializes in providing a comprehensive range of training programs designed to equip individuals with practical knowledge and expertise.'
-		];
+			$avgRating = 0;
+			if ($count != 0)
+				$avgRating = ($sum / ($count * 5)) * 5;
+			$data['sum'] = $sum;
+			$data['avgRating'] = $avgRating;
+			$data['count'] = $count;
 
-		$data['area_business'] = $area_business;
+			// $barGraphQuery = Comment::select(DB::raw('*'))
+			// 	->from(DB::raw('(SELECT COUNT(*) as count, SUM(`rating`) as sum_rating, rating FROM `comments` WHERE `comment_client_ID`=' . $clientscheck->id . ' AND `comment_approved`=1 GROUP BY `rating`) AS temp'))
+			// 	->orderBy('rating', 'desc')
+			// 	->get();
 
-		$workingHoursHtml = '';
+			// $data['barGraphQuery'] = $barGraphQuery;
 
-		if (!empty($clientscheck->time)) {
 
-		$times = unserialize($clientscheck->time);
-		$today = strtolower(date('l'));
+			if (!empty($assignedKeywords)) {
+				$findKeywords = Keyword::select('child_category_id')->where('keyword', $assignedKeywords[0])->first();
 
-		// Today
-		if (isset($times[$today])) {
-		$workingHoursHtml .= $times[$today]['from'] . ' - ' . $times[$today]['to'];
-		}
+				$relKeywords = Keyword::select('keyword')->where('child_category_id', $findKeywords->child_category_id)->pluck('keyword.keyword')
+					->toArray();
 
-		// Other days
-		foreach ($times as $day => $time) {
-		$workingHoursHtml .= ucfirst($day) . ' ' . $time['from'] . ' - ' . $time['to'];
-		}
+
+				$data['related_searches'] = $relKeywords;
+			}
+			$area_business = [
+				'heading' =>
+					($clientscheck->business_name ?? '') .
+					' in ' .
+					($clientscheck->area ?? '') .
+					', ' .
+					($clientscheck->city ?? ''),
+
+				'paragraph' =>
+					($clientscheck->business_name ?? '') .
+					', located in ' .
+					($clientscheck->area ?? '') .
+					', ' .
+					($clientscheck->city ?? '') .
+					', has been a leader in skill development for many years. The company specializes in providing a comprehensive range of training programs designed to equip individuals with practical knowledge and expertise.'
+			];
+
+			$data['area_business'] = $area_business;
+
+			$workingHoursHtml = '';
+
+			if (!empty($clientscheck->time)) {
+
+				$times = unserialize($clientscheck->time);
+				$today = strtolower(date('l'));
+
+				// Today
+				if (isset($times[$today])) {
+					$workingHoursHtml .= $times[$today]['from'] . ' - ' . $times[$today]['to'];
+				}
+
+				// Other days
+				foreach ($times as $day => $time) {
+					$workingHoursHtml .= ucfirst($day) . ' ' . $time['from'] . ' - ' . $time['to'];
+				}
+
+			} else {
+				$workingHoursHtml .= '';
+			}
+
+			$overviewParagraph = ($clientscheck->business_name ?? '') . ' in ' .
+				($clientscheck->area ?? '') . ', ' .
+				($clientscheck->city ?? '') . ' is a prominent institution in the SAP Training Institutes sector, offering various skill-building programs tailored to meet the demands of today’s competitive job market.' . $workingHoursHtml . 'The company provides flexible scheduling options for individuals looking to enhance their skills while managing other responsibilities.The highly experienced team at ' . ($clientscheck->business_name ?? '') . ' is committed to delivering high-quality training to each participant.';
+			$overviewParagraph2 = 'Whether you’re looking to improve your technical skills, leadership capabilities, or industry-specific knowledge,' . ($clientscheck->business_name ?? '') . ' in ' . ($clientscheck->area ?? '') . ', ' . ($clientscheck->city ?? '') . ' has the right program for you. With a wide range of offerings, including IT, management, soft skills, and vocational training, ' . ($clientscheck->business_name ?? '') . ' stands as a comprehensive solution for all your skill development needs.';
+
+			$overview_business = [
+				'heading' => 'Overview of Business',
+				'paragraph' => $overviewParagraph,
+				'paragraph1' => $overviewParagraph2
+			];
+
+			$data['overview_business'] = $overview_business;
+
+
+
+
+			return response()->json([
+				'success' => true,
+				'data' => $data,
+			], 200);
 
 		} else {
-		$workingHoursHtml .= '';
+			return response()->json([
+				'success' => false,
+				'data' => [],
+			], 200);
+
 		}
-
-		$overviewParagraph = ($clientscheck->business_name ?? '') . ' in ' .
-    ($clientscheck->area ?? '') . ', ' .
-    ($clientscheck->city ?? '') . ' is a prominent institution in the SAP Training Institutes sector, offering various skill-building programs tailored to meet the demands of today’s competitive job market.' . $workingHoursHtml . 'The company provides flexible scheduling options for individuals looking to enhance their skills while managing other responsibilities.The highly experienced team at ' . ($clientscheck->business_name ?? '') . ' is committed to delivering high-quality training to each participant.';
-$overviewParagraph2 = 'Whether you’re looking to improve your technical skills, leadership capabilities, or industry-specific knowledge,' . ($clientscheck->business_name ?? '') . ' in ' .($clientscheck->area ?? '') . ', ' .  ($clientscheck->city ?? '') . ' has the right program for you. With a wide range of offerings, including IT, management, soft skills, and vocational training, ' . ($clientscheck->business_name ?? '') . ' stands as a comprehensive solution for all your skill development needs.';
-
-$overview_business = [
-    'heading'    => 'Overview of Business',
-    'paragraph' => $overviewParagraph,
-    'paragraph1'=> $overviewParagraph2
-];
-
-$data['overview_business'] = $overview_business;
- 
-
-
-
-		return response()->json([
-			'success' => true,
-			'data' => $data,
-		], 200);
 
 	}
 

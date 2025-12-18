@@ -7,8 +7,9 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Client\Client;
 use Validator;
-use DB;
-use Excel;
+use DB; 
+use App\Exports\EnquiryExport;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Lead;
 use Illuminate\Support\Facades\Auth;
 use App\Models\LeadFollowUp;
@@ -399,7 +400,7 @@ class EnquiryController extends Controller
 			'data' => $data,
 
 		], 200);
-		 
+
 	}
 
 	public function readLead(Request $request)
@@ -434,7 +435,7 @@ class EnquiryController extends Controller
 			$data['status'] = false;
 			$data['message'] = 'Read Lead not update';
 		}
-		 return response()->json([
+		return response()->json([
 			'status' => true,
 			'message' => "Successfully",
 			'data' => $data,
@@ -867,7 +868,7 @@ class EnquiryController extends Controller
 			],
 		], 200);
 
-		 
+
 	}
 
 	/**
@@ -965,7 +966,7 @@ class EnquiryController extends Controller
 
 			->where('assigned_leads.client_id', $currentUser->id)->get();
 
-		 
+
 
 		return response()->json([
 			'status' => true,
@@ -1067,7 +1068,7 @@ class EnquiryController extends Controller
 			->orderBy('assigned_leads.created_at', 'desc')
 			->where('assigned_leads.favoriteLead', '1')
 			->where('assigned_leads.client_id', $currentUser->id)->get();
-		 
+
 		return response()->json([
 			'status' => true,
 			'message' => "Successfully",
@@ -1075,54 +1076,54 @@ class EnquiryController extends Controller
 
 		], 200);
 	}
-	
-	/**
- * @OA\Get(
- *     path="/api/business/get-lead-details/{id}",
- *     tags={"Leads"},
- *     summary="Get myLead",
- *     description="Fetch lead details",
- *     security={{"bearerAuth":{}}},
- *
- *     @OA\Parameter(
- *         name="id",
- *         in="path",
- *         description="Lead ID",
- *         required=true,
- *         @OA\Schema(type="integer", example=1)
- *     ),
- *
- *     @OA\Response(
- *         response=200,
- *         description="Lead details",
- *         @OA\JsonContent(
- *             @OA\Property(property="success", type="boolean", example=true),
- *             @OA\Property(
- *                 property="data",
- *                 type="object",
- *                 @OA\Property(property="id", type="integer", example=101),
- *                 @OA\Property(property="name", type="string", example="John Doe"),
- *                 @OA\Property(property="email", type="string", example="john@example.com"),
- *                 @OA\Property(property="phone", type="string", example="+911234567890"),
- *                 @OA\Property(property="status", type="string", example="new"),
- *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-06T12:00:00Z")
- *             )
- *         )
- *     ),
- *
- *     @OA\Response(
- *         response=400,
- *         description="Invalid request",
- *         @OA\JsonContent(
- *             @OA\Property(property="success", type="boolean", example=false),
- *             @OA\Property(property="message", type="string", example="Invalid parameters")
- *         )
- *     )
- * )
- */
 
-	public function getLeadDetails(Request $request,$id)
-	{  
+	/**
+	 * @OA\Get(
+	 *     path="/api/business/get-lead-details/{id}",
+	 *     tags={"Leads"},
+	 *     summary="Get myLead",
+	 *     description="Fetch lead details",
+	 *     security={{"bearerAuth":{}}},
+	 *
+	 *     @OA\Parameter(
+	 *         name="id",
+	 *         in="path",
+	 *         description="Lead ID",
+	 *         required=true,
+	 *         @OA\Schema(type="integer", example=1)
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Lead details",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="object",
+	 *                 @OA\Property(property="id", type="integer", example=101),
+	 *                 @OA\Property(property="name", type="string", example="John Doe"),
+	 *                 @OA\Property(property="email", type="string", example="john@example.com"),
+	 *                 @OA\Property(property="phone", type="string", example="+911234567890"),
+	 *                 @OA\Property(property="status", type="string", example="new"),
+	 *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-06T12:00:00Z")
+	 *             )
+	 *         )
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=400,
+	 *         description="Invalid request",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="Invalid parameters")
+	 *         )
+	 *     )
+	 * )
+	 */
+
+	public function getLeadDetails(Request $request, $id)
+	{
 		if (!Auth::guard('sanctum')->check()) {
 			return response()->json([
 				'message' => 'Unauthenticated: Token is missing or invalid',
@@ -1146,24 +1147,24 @@ class EnquiryController extends Controller
 			->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id as clientId', 'assigned_leads.lead_id', 'assigned_leads.id as assignId', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone')
 
 			->orderBy('assigned_leads.created_at', 'desc')
-			 
+
 			->where('assigned_leads.client_id', $currentUser->id)
 			->where('assigned_leads.lead_id', $id)
 			->first();
 
-			$data = [
+		$data = [
 
-				'name'=>$leads->name,
-				'email'=>$leads->email,
-				'kw_text'=>$leads->kw_text,
-				'created'=>$leads->created,
-				'city_name'=>$leads->city_name,
-				'mobile'=>$leads->mobile,
-				'status_name'=>$leads->status_name,
-				'zone'=>$leads->zone,
-				'area'=>$leads->area,
-			];
-		 
+			'name' => $leads->name,
+			'email' => $leads->email,
+			'kw_text' => $leads->kw_text,
+			'created' => $leads->created,
+			'city_name' => $leads->city_name,
+			'mobile' => $leads->mobile,
+			'status_name' => $leads->status_name,
+			'zone' => $leads->zone,
+			'area' => $leads->area,
+		];
+
 		return response()->json([
 			'status' => true,
 			'message' => "Successfully",
@@ -1177,102 +1178,240 @@ class EnquiryController extends Controller
 	 *     path="/api/business/manage-enquiry",
 	 *     tags={"Enquiries"},
 	 *     summary="Get all enquiries",
-	 *     description="Fetch a list of all enquiries with optional filters",
-	 * 	   security={{"bearerAuth":{}}},
+	 *     description="Fetch a paginated list of enquiries with optional date filters",
+	 *     security={{"bearerAuth":{}}},
+	 *
 	 *     @OA\Parameter(
 	 *         name="page",
 	 *         in="query",
-	 *         description="Page number for pagination",
+	 *         description="Page number",
 	 *         required=false,
-	 *         @OA\Schema(type="integer", default=1)
+	 *         @OA\Schema(type="integer", example=1)
 	 *     ),
+	 *
 	 *     @OA\Parameter(
 	 *         name="limit",
 	 *         in="query",
-	 *         description="Number of enquiries per page",
+	 *         description="Records per page",
 	 *         required=false,
-	 *         @OA\Schema(type="integer", default=20)
+	 *         @OA\Schema(type="integer", example=20)
 	 *     ),
+	 *
 	 *     @OA\Parameter(
-	 *         name="status",
+	 *         name="date_from",
 	 *         in="query",
-	 *         description="Filter enquiries by status",
+	 *         description="Start date (YYYY-MM-DD)",
 	 *         required=false,
-	 *         @OA\Schema(type="string", enum={"new","contacted","converted","closed"})
+	 *         @OA\Schema(type="string", format="date", example="2025-01-01")
 	 *     ),
+	 *
+	 *     @OA\Parameter(
+	 *         name="date_to",
+	 *         in="query",
+	 *         description="End date (YYYY-MM-DD)",
+	 *         required=false,
+	 *         @OA\Schema(type="string", format="date", example="2025-01-31")
+	 *     ),
+	 *
 	 *     @OA\Response(
 	 *         response=200,
-	 *         description="List of enquiries",
+	 *         description="Enquiries fetched successfully",
 	 *         @OA\JsonContent(
 	 *             @OA\Property(property="success", type="boolean", example=true),
-	 *             @OA\Property(
-	 *                 property="data",
-	 *                 type="array",
+	 *             @OA\Property(property="data", type="array",
 	 *                 @OA\Items(
 	 *                     @OA\Property(property="id", type="integer", example=201),
 	 *                     @OA\Property(property="name", type="string", example="Jane Smith"),
 	 *                     @OA\Property(property="email", type="string", example="jane@example.com"),
-	 *                     @OA\Property(property="phone", type="string", example="+911234567891"),
-	 *                     @OA\Property(property="status", type="string", example="new"),
-	 *                     @OA\Property(property="message", type="string", example="Interested in your service"),
-	 *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-06T12:00:00Z")
+	 *                     @OA\Property(property="mobile", type="string", example="+911234567891"),
+	 *                     @OA\Property(property="area", type="string", example="Andheri"),
+	 *                     @OA\Property(property="zone", type="string", example="West"),
+	 *                     @OA\Property(property="created_at", type="string", example="2025-09-06")
 	 *                 )
 	 *             ),
-	 *             @OA\Property(
-	 *                 property="pagination",
-	 *                 type="object",
+	 *             @OA\Property(property="pagination", type="object",
 	 *                 @OA\Property(property="page", type="integer", example=1),
 	 *                 @OA\Property(property="limit", type="integer", example=20),
 	 *                 @OA\Property(property="total", type="integer", example=50)
 	 *             )
 	 *         )
 	 *     ),
+	 *
 	 *     @OA\Response(
-	 *         response=400,
-	 *         description="Invalid request",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="success", type="boolean", example=false),
-	 *             @OA\Property(property="message", type="string", example="Invalid parameters")
-	 *         )
+	 *         response=401,
+	 *         description="Unauthenticated"
 	 *     )
 	 * )
 	 */
 
+
 	public function manageEnquiry(Request $request)
 	{
-
+		// 🔐 Auth check
 		if (!Auth::guard('sanctum')->check()) {
 			return response()->json([
-				'message' => 'Unauthenticated: Token is missing or invalid',
-				'error' => 'token_missing_or_invalid'
+				'success' => false,
+				'message' => 'Unauthenticated'
 			], 401);
 		}
 
-		$currentUser = auth('sanctum')->user();
-		if (!$currentUser) {
-			return response()->json([
-				'message' => 'Unauthenticated: Token is missing or invalid',
-				'error' => 'token_missing_or_invalid'
-			], 401);
-		}
+		$user = auth('sanctum')->user();
 
-		$data['leads'] = DB::table('leads')
+		$page = (int) $request->input('page', 1);
+		$limit = (int) $request->input('limit', 20);
+
+		$query = DB::table('leads')
 			->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
-			->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
-			->leftjoin('areas', 'leads.area_id', '=', 'areas.id')
-			->leftjoin('zones', 'leads.zone_id', '=', 'zones.id')
-			->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id as clientId', 'assigned_leads.lead_id', 'assigned_leads.id as assignId', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone')
+			->leftJoin('citylists', 'leads.city_id', '=', 'citylists.id')
+			->leftJoin('areas', 'leads.area_id', '=', 'areas.id')
+			->leftJoin('zones', 'leads.zone_id', '=', 'zones.id')
+			->where('assigned_leads.client_id', $user->id)
+			->select(
+				'leads.id',
+				'leads.name',
+				'leads.email',
+				'leads.mobile',
+				'areas.area',
+				'zones.zone',
+				'leads.kw_text',
+				'leads.city_name',
+				'assigned_leads.created_at'
+			)
+			->orderBy('assigned_leads.created_at', 'desc');
 
-			->orderBy('assigned_leads.created_at', 'desc')
-			->where('assigned_leads.client_id', $currentUser->id)->limit('200')->get();
-		 
+		// 📅 Date filters
+		if ($request->filled('date_from')) {
+			$query->whereDate('assigned_leads.created_at', '>=', $request->date_from);
+		}
+
+		if ($request->filled('date_to')) {
+			$query->whereDate('assigned_leads.created_at', '<=', $request->date_to);
+		}
+
+		$enquiries = $query->paginate($limit, ['*'], 'page', $page);
+
 		return response()->json([
-			'status' => true,
-			'message' => "Successfully",
-			'data' => $data,
+			'success' => true,
+			'data' => $enquiries->items(),
+			'page' => $enquiries->currentPage(),
+			'limit' => $enquiries->perPage(),
+			'total' => $enquiries->total()
 
 		], 200);
 	}
+
+	/**
+	 * @OA\Get(
+	 *     path="/api/business/export-enquiry",
+	 *     tags={"Enquiries"},
+	 *     summary="Get all export enquiries",
+	 *     description="Fetch a paginated list of enquiries with optional date filters",
+	 *     security={{"bearerAuth":{}}},
+	 *     @OA\Parameter(
+	 *         name="date_from",
+	 *         in="query",
+	 *         description="Start date (YYYY-MM-DD)",
+	 *         required=false,
+	 *         @OA\Schema(type="string", format="date", example="2025-01-01")
+	 *     ),
+	 *
+	 *     @OA\Parameter(
+	 *         name="date_to",
+	 *         in="query",
+	 *         description="End date (YYYY-MM-DD)",
+	 *         required=false,
+	 *         @OA\Schema(type="string", format="date", example="2025-01-31")
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Enquiries fetched successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=201),
+	 *                     @OA\Property(property="name", type="string", example="Jane Smith"),
+	 *                     @OA\Property(property="email", type="string", example="jane@example.com"),
+	 *                     @OA\Property(property="mobile", type="string", example="+911234567891"),
+	 *                     @OA\Property(property="area", type="string", example="Andheri"),
+	 *                     @OA\Property(property="zone", type="string", example="West"),
+	 *                     @OA\Property(property="created_at", type="string", example="2025-09-06")
+	 *                 )
+	 *             ),
+	 *             @OA\Property(property="pagination", type="object",
+	 *                 @OA\Property(property="page", type="integer", example=1),
+	 *                 @OA\Property(property="limit", type="integer", example=20),
+	 *                 @OA\Property(property="total", type="integer", example=50)
+	 *             )
+	 *         )
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated"
+	 *     )
+	 * )
+	 */
+ public function exportEnquiry(Request $request)
+{
+    // 🔐 Auth check
+    if (!Auth::guard('sanctum')->check()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Unauthenticated'
+        ], 401);
+    }
+
+    $user = auth('sanctum')->user();
+
+    $query = DB::table('leads')
+        ->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
+        ->leftJoin('citylists', 'leads.city_id', '=', 'citylists.id')
+        ->leftJoin('areas', 'leads.area_id', '=', 'areas.id')
+        ->leftJoin('zones', 'leads.zone_id', '=', 'zones.id')
+        ->where('assigned_leads.client_id', $user->id)
+        ->select(
+            'leads.name',
+            'leads.email',
+            'leads.mobile',
+            'leads.kw_text',
+            'leads.city_name',
+            'assigned_leads.created_at'
+        )
+        ->orderBy('assigned_leads.created_at', 'desc');
+
+    // 📅 Date filters
+    if ($request->filled('date_from')) {
+        $query->whereDate('assigned_leads.created_at', '>=', $request->date_from);
+    }
+
+    if ($request->filled('date_to')) {
+        $query->whereDate('assigned_leads.created_at', '<=', $request->date_to);
+    }
+
+    $enquiries = $query->get();
+
+    // 🧾 Prepare Excel rows
+    $rows = [];
+    foreach ($enquiries as $row) {
+        $rows[] = [
+            'Name'   => $row->name,
+            'Mobile' => $row->mobile,
+            'Email'  => $row->email,
+            'Course' => $row->kw_text,
+            'City'   => $row->city_name,
+            'Date'   => date('d M, Y H:i:s', strtotime($row->created_at)),
+        ];
+    }
+
+    // 📥 Download Excel
+    return Excel::download(
+        new EnquiryExport($rows),
+        'enquiries_' . date('d_m_Y_His') . '.xlsx'
+    );
+}
+
 
 
 

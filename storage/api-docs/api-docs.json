@@ -3879,48 +3879,55 @@
                     "Enquiries"
                 ],
                 "summary": "Get all enquiries",
-                "description": "Fetch a list of all enquiries with optional filters",
+                "description": "Fetch a paginated list of enquiries with optional date filters",
                 "operationId": "8c52817e5697ec3cf944019fab28f57b",
                 "parameters": [
                     {
                         "name": "page",
                         "in": "query",
-                        "description": "Page number for pagination",
+                        "description": "Page number",
                         "required": false,
                         "schema": {
                             "type": "integer",
-                            "default": 1
+                            "example": 1
                         }
                     },
                     {
                         "name": "limit",
                         "in": "query",
-                        "description": "Number of enquiries per page",
+                        "description": "Records per page",
                         "required": false,
                         "schema": {
                             "type": "integer",
-                            "default": 20
+                            "example": 20
                         }
                     },
                     {
-                        "name": "status",
+                        "name": "date_from",
                         "in": "query",
-                        "description": "Filter enquiries by status",
+                        "description": "Start date (YYYY-MM-DD)",
                         "required": false,
                         "schema": {
                             "type": "string",
-                            "enum": [
-                                "new",
-                                "contacted",
-                                "converted",
-                                "closed"
-                            ]
+                            "format": "date",
+                            "example": "2025-01-01"
+                        }
+                    },
+                    {
+                        "name": "date_to",
+                        "in": "query",
+                        "description": "End date (YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2025-01-31"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "List of enquiries",
+                        "description": "Enquiries fetched successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -3945,22 +3952,21 @@
                                                         "type": "string",
                                                         "example": "jane@example.com"
                                                     },
-                                                    "phone": {
+                                                    "mobile": {
                                                         "type": "string",
                                                         "example": "+911234567891"
                                                     },
-                                                    "status": {
+                                                    "area": {
                                                         "type": "string",
-                                                        "example": "new"
+                                                        "example": "Andheri"
                                                     },
-                                                    "message": {
+                                                    "zone": {
                                                         "type": "string",
-                                                        "example": "Interested in your service"
+                                                        "example": "West"
                                                     },
                                                     "created_at": {
                                                         "type": "string",
-                                                        "format": "date-time",
-                                                        "example": "2025-09-06T12:00:00Z"
+                                                        "example": "2025-09-06"
                                                     }
                                                 },
                                                 "type": "object"
@@ -3989,25 +3995,121 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Invalid request",
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/export-enquiry": {
+            "get": {
+                "tags": [
+                    "Enquiries"
+                ],
+                "summary": "Get all export enquiries",
+                "description": "Fetch a paginated list of enquiries with optional date filters",
+                "operationId": "77c7c99f5a7d7454b11332e8e0474f94",
+                "parameters": [
+                    {
+                        "name": "date_from",
+                        "in": "query",
+                        "description": "Start date (YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2025-01-01"
+                        }
+                    },
+                    {
+                        "name": "date_to",
+                        "in": "query",
+                        "description": "End date (YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2025-01-31"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Enquiries fetched successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "success": {
                                             "type": "boolean",
-                                            "example": false
+                                            "example": true
                                         },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Invalid parameters"
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 201
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Jane Smith"
+                                                    },
+                                                    "email": {
+                                                        "type": "string",
+                                                        "example": "jane@example.com"
+                                                    },
+                                                    "mobile": {
+                                                        "type": "string",
+                                                        "example": "+911234567891"
+                                                    },
+                                                    "area": {
+                                                        "type": "string",
+                                                        "example": "Andheri"
+                                                    },
+                                                    "zone": {
+                                                        "type": "string",
+                                                        "example": "West"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "example": "2025-09-06"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "pagination": {
+                                            "properties": {
+                                                "page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "limit": {
+                                                    "type": "integer",
+                                                    "example": 20
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 50
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
                                 }
                             }
                         }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [

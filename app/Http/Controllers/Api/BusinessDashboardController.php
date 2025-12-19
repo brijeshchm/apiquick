@@ -120,8 +120,7 @@ class BusinessDashboardController extends Controller
                     'kw_text' => $val->kw_text,
                     'client_id' => $val->client_id,
                     'createdDate' => $created,
-                    'coins' => $coins,
-                    'created' => $val->created,
+                    'coins' => $coins,                    
                 );
             }
             $data['leadslist'] = $leads_list;

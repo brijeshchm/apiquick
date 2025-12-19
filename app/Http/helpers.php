@@ -92,6 +92,8 @@ function getCity()
 function get_time($time)
 {
 
+	date_default_timezone_set('Asia/Kolkata');
+
 	$start_date = date('Y-m-d H:i:s');
 
 	$diff = abs(strtotime($start_date) - $time);

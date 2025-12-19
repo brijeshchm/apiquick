@@ -50,6 +50,14 @@ class LeadBusinessController extends Controller
 
             if (!empty($leads)) {
                 foreach ($leads->items() as $key => $val) {
+                    $coins= "";
+                if(!empty($val->scrapLead)) { 
+                $coins  = ['color'=>'green','coin'=>$val->coins]; 
+                }else if($val->coins){ 
+                $coins =  ['color'=>'red','coin'=>$val->coins]; 
+                }  
+                 
+                $created = get_time(strtotime($val->created)) . ' ago';
                     $leads_list[$key] = array(
                         'lead_id' => $val->lead_id,
                         'name' => $val->name,
@@ -64,7 +72,8 @@ class LeadBusinessController extends Controller
                         'kw_id' => $val->kw_id,
                         'kw_text' => $val->kw_text,
                         'client_id' => $val->client_id,
-                        'createdDate' => $val->created,
+                        'createdDate' => $created,
+                   	    'coins' => $coins,
                     );
                 }
                 $data['leadslist'] = $leads_list;
@@ -127,6 +136,14 @@ class LeadBusinessController extends Controller
 
             if (!empty($leads)) {
                 foreach ($leads->items() as $key => $val) {
+                    $coins= "";
+                if(!empty($val->scrapLead)) { 
+                $coins  = ['color'=>'green','coin'=>$val->coins]; 
+                }else if($val->coins){ 
+                $coins =  ['color'=>'red','coin'=>$val->coins]; 
+                }  
+                 
+                $created = get_time(strtotime($val->created)) . ' ago';
                     $leads_list[$key] = array(
                         'lead_id' => $val->lead_id,
                         'name' => $val->name,
@@ -141,7 +158,8 @@ class LeadBusinessController extends Controller
                         'kw_id' => $val->kw_id,
                         'kw_text' => $val->kw_text,
                         'client_id' => $val->client_id,
-                        'createdDate' => $val->created,
+                        'createdDate' => $created,
+                   	    'coins' => $coins,
                     );
                 }
                 $data['leadslist'] = $leads_list;

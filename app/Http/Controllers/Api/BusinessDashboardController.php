@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Helpers;
 class BusinessDashboardController extends Controller
 {
     protected $danger_message = '';
@@ -82,7 +83,7 @@ class BusinessDashboardController extends Controller
             ->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
             ->leftjoin('areas', 'leads.area_id', '=', 'areas.id')
             ->leftjoin('zones', 'leads.zone_id', '=', 'zones.id')
-            ->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone')
+            ->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone', 'assigned_leads.id as assingId')
 
             ->orderBy('assigned_leads.created_at', 'desc')
             ->where('assigned_leads.client_id', $user->id)
@@ -95,8 +96,17 @@ class BusinessDashboardController extends Controller
                 } else {
                     $zonename = "";
                 }
+                 $coins= "";
+                if(!empty($val->scrapLead)) { 
+                $coins  = ['color'=>'green','coin'=>$val->coins]; 
+                }else if($val->coins){ 
+                $coins =  ['color'=>'red','coin'=>$val->coins]; 
+                }  
+                 
+                $created = get_time(strtotime($val->created)) . ' ago';
                 $leads_list[$key] = array(
                     'lead_id' => $val->lead_id,
+                    'assingId' => $val->assingId,
                     'name' => $val->name,
                     'mobile' => $val->mobile,
                     'email' => $val->email,
@@ -109,7 +119,8 @@ class BusinessDashboardController extends Controller
                     'kw_id' => $val->kw_id,
                     'kw_text' => $val->kw_text,
                     'client_id' => $val->client_id,
-                    'createdDate' => $val->created,
+                    'createdDate' => $created,
+                    'coins' => $coins,
                 );
             }
             $data['leadslist'] = $leads_list;

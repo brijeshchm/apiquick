@@ -437,7 +437,7 @@ class EnquiryController extends Controller
 		if (!$assignedLead) {
 			return response()->json([
 				'status' => false,
-				'message' => 'Assigned lead not found or unauthorized'
+				'message' => 'Assigned lead not found'
 			], 404);
 		}
 
@@ -900,6 +900,14 @@ class EnquiryController extends Controller
 				} else {
 					$zonename = "";
 				}
+				$coins= "";
+                if(!empty($val->scrapLead)) { 
+                $coins  = ['color'=>'green','coin'=>$val->coins]; 
+                }else if($val->coins){ 
+                $coins =  ['color'=>'red','coin'=>$val->coins]; 
+                }  
+                 
+                $created = get_time(strtotime($val->created)) . ' ago';
 				$leads_list[$key] = array(
 					'lead_id' => $val->lead_id,
 					'assingId' => $val->assingId,
@@ -910,8 +918,9 @@ class EnquiryController extends Controller
 					'cityName' => $val->city_name,
 					'kw_id' => $val->kw_id,
 					'kw_text' => $val->kw_text,
-					'client_id' => $val->client_id,
-					'createdDate' => $val->created,
+					'client_id' => $val->client_id,					 
+					'createdDate' => $created,
+                    'coins' => $coins,
 				);
 			}
 			$data['leadslist'] = $leads_list;
@@ -1000,6 +1009,14 @@ class EnquiryController extends Controller
 
 			if (!empty($leads)) {
 				foreach ($leads->items() as $key => $val) {
+					$coins= "";
+                if(!empty($val->scrapLead)) { 
+                $coins  = ['color'=>'green','coin'=>$val->coins]; 
+                }else if($val->coins){ 
+                $coins =  ['color'=>'red','coin'=>$val->coins]; 
+                }  
+                 
+                $created = get_time(strtotime($val->created)) . ' ago';
 					$leads_list[$key] = array(
 						'lead_id' => $val->lead_id,
 						'assingId' => $val->assingId,
@@ -1015,7 +1032,8 @@ class EnquiryController extends Controller
 						'kw_id' => $val->kw_id,
 						'kw_text' => $val->kw_text,
 						'client_id' => $val->client_id,
-						'createdDate' => $val->created,
+						'createdDate' => $created,
+                   		'coins' => $coins,
 					);
 				}
 				$data['leadslist'] = $leads_list;
@@ -1117,6 +1135,14 @@ class EnquiryController extends Controller
 		if (!empty($leads)) {
 			$leads_list = [];
 			foreach ($leads as $key => $val) {
+				$coins= "";
+                if(!empty($val->scrapLead)) { 
+                $coins  = ['color'=>'green','coin'=>$val->coins]; 
+                }else if($val->coins){ 
+                $coins =  ['color'=>'red','coin'=>$val->coins]; 
+                }  
+                 
+                $created = get_time(strtotime($val->created)) . ' ago';
 				$leads_list[$key] = array(
 					'lead_id' => $val->lead_id,
 					'assingId' => $val->assingId,
@@ -1132,7 +1158,8 @@ class EnquiryController extends Controller
 					'kw_id' => $val->kw_id,
 					'kw_text' => $val->kw_text,
 					'client_id' => $val->client_id,
-					'createdDate' => $val->created,
+					'createdDate' => $created,
+                   	'coins' => $coins,
 				);
 			}
 			$data['leadslist'] = $leads_list;
@@ -1225,6 +1252,14 @@ class EnquiryController extends Controller
 		if (!empty($leads)) {
 			$leads_list = [];
 			foreach ($leads as $key => $val) {
+				$coins= "";
+                if(!empty($val->scrapLead)) { 
+                $coins  = ['color'=>'green','coin'=>$val->coins]; 
+                }else if($val->coins){ 
+                $coins =  ['color'=>'red','coin'=>$val->coins]; 
+                }  
+                 
+                $created = get_time(strtotime($val->created)) . ' ago';
 				$leads_list[$key] = array(
 					'lead_id' => $val->lead_id,
 					'assingId' => $val->assingId,
@@ -1240,7 +1275,8 @@ class EnquiryController extends Controller
 					'kw_id' => $val->kw_id,
 					'kw_text' => $val->kw_text,
 					'client_id' => $val->client_id,
-					'createdDate' => $val->created,
+					'createdDate' => $created,
+                   	'coins' => $coins,
 				);
 			}
 			$data['leadslist'] = $leads_list;
@@ -1330,6 +1366,14 @@ class EnquiryController extends Controller
 		if (!empty($leads)) {
 			$leads_list = [];
 			foreach ($leads as $key => $val) {
+				$coins= "";
+                if(!empty($val->scrapLead)) { 
+                $coins  = ['color'=>'green','coin'=>$val->coins]; 
+                }else if($val->coins){ 
+                $coins =  ['color'=>'red','coin'=>$val->coins]; 
+                }  
+                 
+                $created = get_time(strtotime($val->created)) . ' ago';
 				$leads_list[$key] = array(
 					'lead_id' => $val->lead_id,
 					'assingId' => $val->assingId,
@@ -1345,7 +1389,8 @@ class EnquiryController extends Controller
 					'kw_id' => $val->kw_id,
 					'kw_text' => $val->kw_text,
 					'client_id' => $val->client_id,
-					'createdDate' => $val->created,
+					'createdDate' => $created,
+                   	'coins' => $coins,
 				);
 			}
 			$data['leadslist'] = $leads_list;
@@ -1435,6 +1480,14 @@ class EnquiryController extends Controller
 			->where('assigned_leads.lead_id', $id)
 			->first();
 
+			$coins= "";
+                if(!empty($val->scrapLead)) { 
+                $coins  = ['color'=>'green','coin'=>$leads->coins]; 
+                }else if($leads->coins){ 
+                $coins =  ['color'=>'red','coin'=>$leads->coins]; 
+                }  
+                 
+                $created = get_time(strtotime($leads->created)) . ' ago';
 		$data = [
 
 			'lead_id' => $leads->lead_id,
@@ -1442,7 +1495,8 @@ class EnquiryController extends Controller
 			'assingId' => $leads->assingId,
 			'email' => $leads->email,
 			'kw_text' => $leads->kw_text,
-			'created' => $leads->created,
+			'createdDate' => $created,
+            'coins' => $coins,
 			'city_name' => $leads->city_name,
 			'mobile' => $leads->mobile,
 			'status_name' => $leads->status_name,

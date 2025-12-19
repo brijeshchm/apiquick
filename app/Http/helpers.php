@@ -129,7 +129,7 @@ function get_time($time)
 		$interval = preg_replace('/(^0| 0) (hours|minutes)/', '', $interval);
 	}
 
-	echo $interval;
+	return $interval;
 
 
 
@@ -262,7 +262,7 @@ function getFolderStructure()
 	}
 }
 
-
+ 
 
 
 // SUBSTRING GETTER

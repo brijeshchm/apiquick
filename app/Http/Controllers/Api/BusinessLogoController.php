@@ -320,55 +320,114 @@ class BusinessLogoController extends Controller
 	 *     )
 	 * )
 	 */
+public function getGalleryPictures(Request $request)
+{
+    // 🔐 Sanctum authentication
+    if (!Auth::guard('sanctum')->check()) {
+        return response()->json([
+            'status'  => false,
+            'message' => 'Unauthenticated: Token is missing or invalid',
+            'error'   => 'token_missing_or_invalid'
+        ], 401);
+    }
+
+    $user = auth('sanctum')->user();
+    if (!$user) {
+        return response()->json([
+            'status'  => false,
+            'message' => 'Unauthenticated: Token is missing or invalid',
+            'error'   => 'token_missing_or_invalid'
+        ], 401);
+    }
+
+    $client = Client::find($user->id);
+
+    $data = [];
+    $pictures = [];
+
+    // ✅ Safely unserialize pictures
+    if (!empty($client->pictures)) {
+        $pictures = @unserialize($client->pictures);
+
+        if (!is_array($pictures)) {
+            $pictures = [];
+        }
+    }
+
+    // ✅ Always return exactly 12 slots
+    for ($i = 0; $i < 12; $i++) {
+        $data[$i] = '';
+
+        if (
+            isset($pictures[$i]['large']['src']) &&
+            !empty($pictures[$i]['large']['src'])
+        ) {
+            $data[$i] = $pictures[$i]['large']['src'];
+        }
+    }
+
+    // ✅ Add business_id separately
+    $response = [
+        'pictures'    => $data,
+        'business_id' => $user->id
+    ];
+
+    return response()->json([
+        'status'  => true,
+        'message' => 'Successfully',
+        'data'    => $response
+    ], 200);
+}
 
 
-	public function getGalleryPictures(Request $request)
-	{
-		if (!Auth::guard('sanctum')->check()) {
-			return response()->json([
-				'status' => false,
-				'message' => 'Unauthenticated: Token is missing or invalid',
-				'error' => 'token_missing_or_invalid'
-			], 401);
-		}
+	// public function getGalleryPictures(Request $request)
+	// {
+	// 	if (!Auth::guard('sanctum')->check()) {
+	// 		return response()->json([
+	// 			'status' => false,
+	// 			'message' => 'Unauthenticated: Token is missing or invalid',
+	// 			'error' => 'token_missing_or_invalid'
+	// 		], 401);
+	// 	}
 
-		// Check if user is active
-		$user = auth('sanctum')->user();
-		if (!$user) {
-			return response()->json([
-				'status' => false,
-				'message' => 'Unauthenticated: Token is missing or invalid',
-				'error' => 'token_missing_or_invalid'
-			], 401);
-		}
+	// 	// Check if user is active
+	// 	$user = auth('sanctum')->user();
+	// 	if (!$user) {
+	// 		return response()->json([
+	// 			'status' => false,
+	// 			'message' => 'Unauthenticated: Token is missing or invalid',
+	// 			'error' => 'token_missing_or_invalid'
+	// 		], 401);
+	// 	}
 
-		$client = Client::find($user->id);
+	// 	$client = Client::find($user->id);
 
 
-		if (!empty($client->pictures)) {
-			$picture = unserialize($client->pictures);
-			$picture['large']['name'] = '';
-			for ($i = 0; $i < 12; $i++) {
-				if (!isset($picture[$i])) {
-					$picture[$i]['large']['name'] = '';
-				}
-			}
-		}
-		for ($i = 0; $i < 12; $i++) {
-			if (isset($picture[$i]['large']['src']) && !empty($picture[$i]['large']['src'])) {
-				$data[$i][$picture[$i]['large']['src']] = $picture[$i]['large']['src'];
+	// 	if (!empty($client->pictures)) {
+	// 		$picture = unserialize($client->pictures);
+	// 		$picture['large']['name'] = '';
+	// 		for ($i = 0; $i < 12; $i++) {
+	// 			if (!isset($picture[$i])) {
+	// 				$picture[$i]['large']['name'] = '';
+	// 			}
+	// 		}
+	// 	}
+	// 	for ($i = 0; $i < 12; $i++) {
+	// 		if (isset($picture[$i]['large']['src']) && !empty($picture[$i]['large']['src'])) {
+	// 			$data[$i] = $picture[$i]['large']['src'];
+	// 			//$data[$i][$picture[$i]['large']['src']] = $picture[$i]['large']['src'];
 
-			}
-		}
-		$data['business_id'] = $user->id;
-		return response()->json([
-			'status' => true,
-			'message' => "Successfully",
-			'data' => $data,
+	// 		}
+	// 	}
+	// 	$data['business_id'] = $user->id;
+	// 	return response()->json([
+	// 		'status' => true,
+	// 		'message' => "Successfully",
+	// 		'data' => $data,
 
-		], 200);
+	// 	], 200);
 
-	}
+	// }
 	/**
 	 * @OA\Post(
 	 *     path="https://www.quickdials.com/api/business/save-gallery",

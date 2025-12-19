@@ -45,7 +45,8 @@ Route::post('/business/save-favorite',[EnquiryController::class, 'saveFavoritlea
 Route::post('/business/save-readLead',[EnquiryController::class, 'readLead']);
 Route::post('/business/scrap-lead',[EnquiryController::class, 'scrapLead']);
 Route::post('/business/pause-lead',[EnquiryController::class, 'pauseLead']);
-Route::get('/business/get-scrap',[EnquiryController::class, 'getScrapLead']);
+Route::get('/business/get-scrap/{assignId}',[EnquiryController::class, 'getScrapLead']);
+Route::post('/business/save-scrap-lead',[EnquiryController::class, 'saveScrapLead']);
 Route::get('/business/enquiry',[EnquiryController::class,'enquiry']);
 Route::get('/business/get-new-enquiry',[EnquiryController::class,'getNewEnquiry']);
 Route::get('/business/get-myLead',[EnquiryController::class,'getMyLead']);

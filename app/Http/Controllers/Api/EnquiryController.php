@@ -328,9 +328,6 @@ class EnquiryController extends Controller
 	 *     )
 	 * )
 	 */
-
-
-
 	public function pauseLead(Request $request)
 	{
 		if (!Auth::guard('sanctum')->check()) {
@@ -358,9 +355,9 @@ class EnquiryController extends Controller
 		}
 
 		if ($request->pauseLead == 'true') {
-			$client->pauseLead = 1;
+			$client->pauseLead = '1';
 		} else {
-			$client->pauseLead = 0;
+			$client->pauseLead = '0';
 		}
 		if ($client->save()) {
 			$data['status'] = true;
@@ -386,7 +383,6 @@ class EnquiryController extends Controller
 	 *     summary="Save scrap lead",
 	 *     description="Scrap a lead and refund coins if all businesses scrap the lead",
 	 *     security={{"bearerAuth":{}}},
-	 *
 	 *     @OA\RequestBody(
 	 *         required=true,
 	 *         @OA\JsonContent(
@@ -510,7 +506,7 @@ class EnquiryController extends Controller
 	 *         name="assignId",
 	 *         in="path",
 	 *         required=true,
-	 *         description="Assigned lead ID",
+	 *         description="Assigned lead id",
 	 *         @OA\Schema(type="integer", example=101)
 	 *     ),
 	 *

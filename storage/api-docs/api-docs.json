@@ -3228,7 +3228,7 @@
                     {
                         "name": "assignId",
                         "in": "path",
-                        "description": "Assigned lead ID",
+                        "description": "Assigned lead id",
                         "required": true,
                         "schema": {
                             "type": "integer",

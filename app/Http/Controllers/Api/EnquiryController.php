@@ -889,7 +889,7 @@ class EnquiryController extends Controller
 		$perPage = $request->query('per_page', 10);
 		$leads = DB::table('leads')
 			->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
-			->select('leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'assigned_leads.id as assingId')
+			->select('leads.*', 'assigned_leads.*','assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'assigned_leads.id as assingId')
 			->orderBy('assigned_leads.created_at', 'desc')
 			->where('assigned_leads.client_id', $user->id)
 			->paginate($perPage);
@@ -1481,7 +1481,7 @@ class EnquiryController extends Controller
 			->first();
 
 			$coins= "";
-                if(!empty($val->scrapLead)) { 
+                if(!empty($leads->scrapLead)) { 
                 $coins  = ['color'=>'green','coin'=>$leads->coins]; 
                 }else if($leads->coins){ 
                 $coins =  ['color'=>'red','coin'=>$leads->coins]; 

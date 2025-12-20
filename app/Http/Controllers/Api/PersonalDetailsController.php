@@ -208,94 +208,100 @@ class PersonalDetailsController extends Controller
  */
 
 	public function savePersonalDetails(Request $request)
-	{
-		try {
- 
-			if (!Auth::guard('sanctum')->check()) {
-				return response()->json([
-					'status' => false,
-					'message' => 'Unauthenticated: Token is missing or invalid',
-					'error' => 'token_missing_or_invalid'
-				], 401);
-			}
+{
+    try {
 
-			// Check if user is active
-			$user = auth('sanctum')->user();
-			if (!$user) {
-				return response()->json([
-					'status' => false,
-					'message' => 'Unauthenticated: Token is missing or invalid',
-					'error' => 'token_missing_or_invalid'
-				], 401);
-			}
-			if (!$user->active_status) {
-				$user->tokens()->delete();
-				return response()->json(['status' => false, 'message' => 'User account is inactive',], 403);
-			}
+        // ✅ Sanctum Authentication
+        $user = auth('sanctum')->user();
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Unauthenticated: Token is missing or invalid',
+                'error'   => 'token_missing_or_invalid'
+            ], 401);
+        }
 
+        // ✅ Check active user
+        if (!$user->active_status) {
+            $user->tokens()->delete();
+            return response()->json([
+                'status' => false,
+                'message' => 'User account is inactive'
+            ], 403);
+        }
 
-			$validator = Validator::make($request->all(), [
+        // ✅ Fetch client
+        $client = Client::where('id', $user->id)->first();
+        if (!$client) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Client not found'
+            ], 404);
+        }
 
-				'first_name' => 'required|string|min:3|max:255',
-				'dob' => 'required|date|before:today',			 
-				'email' => 'required|email|unique:clients,email',
-				'marital' => 'required',
-				'mobile' => 'required',
-				'city' => 'required|integer|exists:citylists,id',
-				'sirName' => 'required|string|max:15',
+        // ✅ Validation (email unique on update)
+        $validator = Validator::make($request->all(), [
+            'sirName'     => 'required|string|max:15',
+            'first_name'  => 'required|string|min:3|max:255',
+            'dob'         => 'required|date|before:today',
+            'email'       => 'required|email|unique:clients,email,' . $client->id,
+            'marital'     => 'required|string',
+            'mobile'      => 'required|string|max:15',
+            'city'        => 'required|integer|exists:citylists,id',
+            'middle_name' => 'nullable|string|max:255',
+            'last_name'   => 'nullable|string|max:255',
+            'sec_mobile'  => 'nullable|string|max:15',
+            'area'        => 'nullable|string|max:255',
+            'pincode'     => 'nullable|string|max:10',
+            'occupation'  => 'nullable|string|max:255',
+            'gender'      => 'nullable|in:Male,Female,Other',
+        ]);
 
-			]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
 
-			if ($validator->fails()) {
-				$errorsBag = $validator->getMessageBag()->toArray();
-				return response()->json(['status' => true, 'errors' => $errorsBag], 400);
-			}
+        // ✅ City lookup
+        $city = Citieslists::find($request->city);
 
-			 
-			$client = Client::find($user->id);
-			$client->sirName = $request->input('sirName');
-			$client->first_name = ucfirst($request->input('first_name'));
-			$client->middle_name = $request->input('middle_name');
-			$client->last_name = $request->input('last_name');
-			$client->dob = date('Y-m-d', strtotime($request->input('dob')));
-			$client->email = $request->input('email');
-			$client->marital = $request->input('marital');
-			$client->mobile = $request->input('mobile');
-			$client->sec_mobile = $request->input('sec_mobile');
+        // ✅ Update client
+        $client->update([
+            'sirName'      => $request->sirName,
+            'first_name'   => ucfirst($request->first_name),
+            'middle_name'  => $request->middle_name,
+            'last_name'    => $request->last_name,
+            'dob'          => $request->dob,
+            // 'email'        => $request->email,
+            'marital'      => $request->marital,
+            'mobile'       => $request->mobile,
+            'sec_mobile'   => $request->sec_mobile,
+            'city_id'      => $city?->id,
+            'city'         => $city?->city,
+            'area'         => $request->area,
+            'pincode'      => $request->pincode,
+            'occupation'   => $request->occupation,
+            'gender'       => $request->gender,
+        ]);
 
-			$cityName = Citieslists::where('id',$request->input('city'))->first();
-			if($cityName){
-				$client->city_id = $cityName->id;
-				$client->city = $cityName->city;
-			}
-			$client->area = $request->input('area');
-			$client->pincode = $request->input('pincode');
-			$client->occupation = $request->input('occupation');
-			$client->gender = $request->input('gender');
-		 
-			if ($client->save()) {
-				$data['status'] = true;
-				$data['code'] = 200;
-				$data['message'] = "Personal Details updated successfully !";
-			} else {
-				$data['status'] = false;
-				$data['code'] = 400;
-				$data['message'] = "Personal Details could not be successfully, Please try again !";
-			}
+        return response()->json([
+            'status' => true,
+            'message' => 'Personal details updated successfully',
+            'data' => $client
+        ], 200);
 
-		}catch (\Exception $e) {
-				$data['status'] = false;
-				$data['code'] = 400;
-				$data['message'] = $e->getMessage();
-		}
-		 
-		return response()->json([
-			'status' => true,
-			'message' => "Successfully",
-			'data' => $data,
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Something went wrong',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
 
-		], 200);
-	}
 
 
 	/**

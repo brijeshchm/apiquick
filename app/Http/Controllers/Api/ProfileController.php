@@ -59,7 +59,7 @@ class ProfileController extends Controller
      * )
      */
     public function profileInfo(Request $request)
-    {   
+    {
         try {
 
             if (!Auth::guard('sanctum')->check()) {
@@ -96,12 +96,12 @@ class ProfileController extends Controller
             } else {
                 $certifications = "";
             }
-            
+
 
             $data['businessInformation'] = array(
-                'client_id' => $user->id,              
-                'business_name' => $user->business_name,                
-                'email' => $user->email,                
+                'client_id' => $user->id,
+                'business_name' => $user->business_name,
+                'email' => $user->email,
                 'address' => $user->address,
                 'landmark' => $user->landmark,
                 'business_city_id' => $user->business_city_id,
@@ -109,18 +109,18 @@ class ProfileController extends Controller
                 'business_state' => $user->business_state,
                 'business_state_id' => $user->business_state_id,
                 'country' => $user->country,
-                'business_intro' => $user->business_intro,                
-                'client_type' => $user->client_type,                 
+                'business_intro' => $user->business_intro,
+                'client_type' => $user->client_type,
                 'certified_status' => $user->certified_status,
                 'time' => $time,
                 'days' => $days,
                 'times' => $times,
-                 "area"=>$user->area,
-                "pincode"=> $user->pincode,
+                "area" => $user->area,
+                "pincode" => $user->pincode,
                 'certifications' => $certifications,
                 'year_of_estb' => $user->year_of_estb,
                 'display_hofo' => $user->display_hofo,
-                 
+
             );
 
             return response()->json([
@@ -191,7 +191,10 @@ class ProfileController extends Controller
     public function saveProfileInfo(Request $request)
     {
         try {
-            if (!Auth::guard('sanctum')->check()) {
+
+            // ✅ Sanctum Authentication
+            $authUser = auth('sanctum')->user();
+            if (!$authUser) {
                 return response()->json([
                     'status' => false,
                     'message' => 'Unauthenticated: Token is missing or invalid',
@@ -199,79 +202,82 @@ class ProfileController extends Controller
                 ], 401);
             }
 
-            $user = auth('sanctum')->user();
-            if (!$user) {
+            // ✅ Get Client
+            $client = Client::where('id', $authUser->id)->first();
+            if (!$client) {
                 return response()->json([
                     'status' => false,
-                    'message' => 'Unauthenticated: Token is missing or invalid',
-                    'error' => 'token_missing_or_invalid'
-                ], 401);
+                    'message' => 'Client not found'
+                ], 404);
             }
 
+            // ✅ Validation
             $validator = Validator::make($request->all(), [
                 'year_of_estb' => 'required|digits:4|integer|min:1900|max:' . date('Y'),
                 'business_name' => 'required|string|max:255',
                 'business_intro' => 'required|string',
-                'address' => 'required|string',
+                'address' => 'required|string|max:255',
                 'certifications' => 'required|string|max:255',
-                'business_city'  => 'required|integer|exists:citylists,id',
+                'business_city' => 'required|integer|exists:citylists,id',
                 'business_state' => 'required|integer|exists:state,id',
                 'pincode' => 'required|digits:6',
-                'area' => 'required|string',
+                'area' => 'required|string|max:255',
+
+                // Optional
+                'landmark' => 'nullable|string|max:255',
+                'display_hofo' => 'nullable|string|max:255',
+                'country' => 'nullable|string|max:255',
+                'time' => 'nullable|string|max:255',
             ]);
 
             if ($validator->fails()) {
-                $errorsBag = $validator->getMessageBag()->toArray();
-                return response()->json(['status' => 1, 'errors' => $errorsBag], 400);
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validation failed',
+                    'errors' => $validator->errors()
+                ], 422);
             }
 
-            $user = Client::find($user->id);
-            $user->business_name = $request->input('business_name');
-            $user->address = $request->input('address');
-            $user->landmark = $request->input('landmark');
-            $user->display_hofo = $request->input('display_hofo');
-            $state = State::where('id',$request->input('business_state'))->first();
-            if($state){
-                $user->business_state_id = $state->id;
-                $user->business_state = $state->name;
+            // ✅ State
+            $state = State::find($request->business_state);
 
-            }
-           $cityName = Citieslists::where('id',$request->input('business_city'))->first();
-			if($cityName){
-				$user->business_city_id = $cityName->id;
-				$user->business_city = $cityName->city;
-			}
-           
+            // ✅ City
+            $city = Citieslists::find($request->business_city);
 
-            $user->area = $request->input('area');
-            $user->pincode = $request->input('pincode');
-            $user->country = $request->input('country');
-            $user->business_intro = $request->input('business_intro');
-            $user->year_of_estb = $request->input('year_of_estb');
-            $user->certifications = $request->input('certifications');
-            $user->time = $request->input('time');
+            // ✅ Update Client
+            $client->update([
+                'business_name' => $request->business_name,
+                'address' => $request->address,
+                'landmark' => $request->landmark,
+                'display_hofo' => $request->display_hofo,
+                'business_state_id' => $state?->id,
+                'business_state' => $state?->name,
+                'business_city_id' => $city?->id,
+                'business_city' => $city?->city,
+                'area' => $request->area,
+                'pincode' => $request->pincode,
+                'country' => $request->country,
+                'business_intro' => $request->business_intro,
+                'year_of_estb' => $request->year_of_estb,
+                'certifications' => $request->certifications,
+                'time' => $request->time,
+            ]);
 
+            return response()->json([
+                'status' => true,
+                'message' => 'Business information updated successfully',
+                'data' => $client
+            ], 200);
 
-            if ($user->save()) {
-               
-                $data['status'] = true;
-                $data['message'] = "Business Information updated successfully!";
-
-
-            } else {
-                $data['status'] = false;
-                $data['message'] = "Business Information not updated successfully!";
-            }
         } catch (\Exception $e) {
-            $data['status'] = false;
-            $data['message'] = 'Failed to : ' . $e->getMessage();
-
+            return response()->json([
+                'status' => false,
+                'message' => 'Something went wrong',
+                'error' => $e->getMessage()
+            ], 500);
         }
-        return response()->json([
-            'data' => $data,
-        ], 200);
-
     }
+
 
 
     /**

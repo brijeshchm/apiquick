@@ -94,10 +94,10 @@ class AuthController extends Controller
             );
             $message = "{$otp} is QuickDials Verification Code for {$user->email} .";
             $subject = "{$otp} is QuickDials Verification Code";
-            // Mail::send('emails.sendotp_to_email', ['msg' => $message], function ($m) use ($message, $request, $subject) {
-            //     $m->from('leads@quickdials.com', 'Login OTP');
-            //     $m->to($request->input('email'), "")->subject($subject);
-            // });
+            Mail::send('emails.sendotp_to_email', ['msg' => $message], function ($m) use ($message, $request, $subject) {
+                $m->from('leads@quickdials.com', 'Login OTP');
+                $m->to($request->input('email'), "")->subject($subject);
+            });
 
         }
         // Generate new Sanctum token
@@ -263,7 +263,7 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/api/business/saveBusinessOwners",
-     *     tags={"Registration Business"},
+     *     tags={"Frontend Registration Business"},
      *     summary="List Your Business",
      *     description="Registration of business business name, email, mobile.",     *      
      *     @OA\RequestBody(

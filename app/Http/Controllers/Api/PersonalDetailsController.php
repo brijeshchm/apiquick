@@ -154,7 +154,7 @@ class PersonalDetailsController extends Controller
 					'first_name' => $client->first_name,
 					'middle_name' => $client->middle_name,
 					'last_name' => $client->last_name,
-					'dob' => $client->dob?->format('Y-m-d'),
+					'dob' => date('Y-m-d',strtotime($client->dob)),
 					'personal_email' => $client->personal_email,
 					'marital' => $client->marital,
 					'personal_phone' => $client->personal_phone,				 

@@ -288,9 +288,10 @@ class SiteController extends Controller
 				'certified_status' => $client->certified_status,
 				'website' => $client->website,
 				'city' => $client->city,
-				'business_state' => $client->business_state,
+				'state' => $client->state,
 				'area' => $client->area,
-				'business_city' => $client->business_city,
+				'zone' => $client->zone,
+
 				'address' => $client->address,
 				'pincode' => $client->pincode,
 				'country' => $client->country,
@@ -1313,9 +1314,8 @@ class SiteController extends Controller
 	public function getKeyword(Request $request)
 	{
 		$search_kw = $request->input('keyword');
-		$city = $request->input('city');
-
-		$data['keyword'] = DB::table('keyword')
+		$city ='';
+		$keywordDetails = DB::table('keyword')
 			->join('parent_category', 'keyword.parent_category_id', '=', 'parent_category.id')
 			->join('child_category', 'keyword.child_category_id', '=', 'child_category.id')
 			->where('keyword', 'LIKE', '%' . ucwords(str_replace('-', ' ', $search_kw)) . '%')
@@ -1323,34 +1323,226 @@ class SiteController extends Controller
 			->first();
 
 
+		$category_banner = "";
+		$alt = "";
 
-		$clientsList = DB::table('clients')
-			->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
-			->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
-			->join('citylists', 'assigned_kwds.city_id', '=', 'citylists.id')
-			->leftJoin(DB::raw('(SELECT SUM(rating) AS rating,comment_client_ID,COUNT(comment_ID) AS comment_count FROM comments GROUP BY comment_client_ID) c'), 'c.comment_client_ID', '=', 'clients.id')
-			->select('clients.*', 'citylists.city', 'assigned_kwds.sold_on_position', 'c.rating', 'c.comment_count')
+		if (!empty($keywordDetails->category_banner)) {
+			$cicons = unserialize($keywordDetails->category_banner);
 
-			//->where('clients.active_status','1')	 
-			->where('keyword.keyword', 'LIKE', '%' . ucwords(str_replace('-', ' ', $search_kw)) . '%')
+			if (!empty($cicons)) {
+				$category_banner = config('app.website') . $cicons['category_banner']['src'];
+				$alt = $cicons['category_banner']['name'];
+			}
+		}
 
-			->orderby(DB::raw('(CASE `assigned_kwds`.`sold_on_position` WHEN \'platinum\' THEN 1 WHEN \'diamond\' THEN 2 WHEN \'FreeListing\' THEN 3 END)'), 'asc')
-			//	->orderby(DB::raw('(CASE `assigned_kwds`.`sold_on_position` WHEN \'platinum\' THEN 1 WHEN \'diamond\' THEN 2 END)'),'asc')
-			//->orderby(DB::raw('(CASE `assigned_kwds`.`sold_on_position` WHEN \'premium\' THEN 1 WHEN \'platinum\' THEN 2 WHEN \'royal\' THEN 3 WHEN \'preferred\' THEN 4 END)'),'asc')
-			// ->groupBy('client_id')
-			//->orderby(DB::raw('(CASE `clients`.`certified_status` WHEN \'1\' THEN 1 END)'),'DESC')		
+		if (!empty($keywordDetails->meta_title)) {
+			$meta_title = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->meta_title);
+		} else {
+			$meta_title = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->keyword);
+
+		}
+		if (!empty($keywordDetails->meta_keywords)) {
+			$meta_keywords = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->meta_keywords);
+
+
+		} else {
+			$meta_keywords = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->keyword);
+
+		}
+
+
+		if (!empty($keywordDetails->meta_description)) {
+			$meta_description = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->meta_description);
+
+
+		} else {
+			$meta_description = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->keyword);
+
+		}
+
+		$top_description = "";
+		if (!empty($keywordDetails->top_description)) {
+			$top_description = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->top_description);
+		}
+		$bottom_description = "";
+		if (!empty($keywordDetails->bottom_description)) {
+			$bottom_description = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->bottom_description);
+		}
+
+
+		$data['keyword'] = array(
+			'keyword' => $keywordDetails->keyword,
+			'keyword_slug' => generate_slug($keywordDetails->keyword),
+			'category_banner' => $category_banner,
+			'alt' => $alt,
+			'meta_title' => $meta_title,
+			'meta_keywords' => $meta_keywords,
+			'meta_description' => $meta_description,
+			'top_description' => $top_description,
+			'bottom_description' => $bottom_description,
+			'faqq1' => $keywordDetails->faqq1,
+			'faqa1' => $keywordDetails->faqa1,
+			'faqq2' => $keywordDetails->faqq2,
+			'faqa2' => $keywordDetails->faqa2,
+			'faqq3' => $keywordDetails->faqq3,
+			'faqa3' => $keywordDetails->faqa3,
+			'faqq4' => $keywordDetails->faqq4,
+			'faqa4' => $keywordDetails->faqa4,
+			'faqq5' => $keywordDetails->faqq5,
+			'faqa5' => $keywordDetails->faqa5,
+			'ratingvalue' => $keywordDetails->ratingvalue,
+			'ratingcount' => $keywordDetails->ratingcount,
+			'parent_category' => $keywordDetails->parent_category,
+			'parent_slug' => $keywordDetails->parent_slug,
+			'child_category' => $keywordDetails->child_category,
+			'child_slug' => $keywordDetails->child_slug,
+
+		);
+		 
+		$keywordName = ucwords(str_replace('-', ' ', $search_kw));
+			$clientsList = DB::table('clients')
+				->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
+				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+			 
+				->leftJoin(DB::raw('(
+            SELECT SUM(rating) AS rating, comment_client_ID, COUNT(comment_ID) AS comment_count
+            FROM comments GROUP BY comment_client_ID
+        ) c'), 'c.comment_client_ID', '=', 'clients.id')
+				->select(
+					'clients.*',
+
+					'assigned_kwds.*',
+					 
+					'assigned_kwds.sold_on_position',
+					'c.rating',
+					'c.comment_count'
+				)
+				->where('keyword.keyword', 'LIKE', '%' . $keywordName . '%')
+				->orderByRaw("
+            CASE assigned_kwds.sold_on_position
+                WHEN 'platinum' THEN 1
+                WHEN 'diamond' THEN 2
+                WHEN 'FreeListing' THEN 3
+                ELSE 4
+            END
+        ")
+				->get();
+	 
+
+		$data['clientsList'] = $clientsList->map(function ($client) {
+
+			$logoImage = 'client/images/default_pp_small.jpg';
+			$altLogo = "Business Logo";
+			if (!empty($client->logo)) {
+				$cicons = unserialize($client->logo);
+
+				if (!empty($cicons)) {
+					$logoImage = config('app.website') . $cicons['large']['src'];
+					$altLogo = $cicons['large']['name'];
+				}
+			}
+
+
+			$galleryArray = array();
+			if (!empty($client->pictures)) {
+				$galleryList = unserialize($client->pictures);
+				if (!empty($galleryList)) {
+					foreach ($galleryList as $key => $value) {
+
+						$galleryArray[$key] = array(
+							'galley' => $value
+
+						);
+
+					}
+				}
+			}
+
+			return [
+				'business_id' => $client->id,
+				'business_name' => $client->business_name,
+				'business_slug' => $client->business_slug,
+				'logo' => $logoImage ?? '',
+				'altLogo' => $altLogo ?? '',
+				'gallery' => $galleryArray ?? '',
+				'certifications' => $client->certifications,
+				'sirName' => $client->sirName,
+				'first_name' => $client->first_name,
+				'middle_name' => $client->middle_name,
+				'last_name' => $client->last_name,
+				'certified_status' => $client->certified_status,
+				'website' => $client->website,
+				'city' => $client->city,
+				'state' => $client->state,
+				'area' => $client->area,
+				'zone' => $client->zone,
+				'address' => $client->address,
+				'pincode' => $client->pincode,
+				'country' => $client->country,
+				'year_of_estb' => $client->year_of_estb,
+				'landmark' => $client->landmark,
+
+
+				'rating' => $client->rating,
+				'comment_count' => $client->comment_count,
+			];
+		});
+
+
+		$servicesRelated = Keyword::where('child_category_id', $keywordDetails->child_category_id)
+			->where('parent_category_id', $keywordDetails->parent_category_id)
+			->select('keyword', 'icon')
+			->distinct()
 			->get();
 
+		$servicesRelatedList = $servicesRelated->map(function ($keyword) {
+			$img = "";
+			$alt = "";
+
+			if (!empty($keyword->icon)) {
+
+				$data = json_decode($keyword->icon, true);
+				if (is_array($data) && !empty($data['src'])) {
+					$img = config('app.website') . $data['src'];
+					$alt = $data['name'] ?? $keyword->keyword;
+				}
+
+			}
+
+			return [
+				'url' => '/' . generate_slug($keyword->keyword),
+				'img' => $img,
+				'alt' => $alt,
+				'title' => $keyword->keyword,
+			];
+		})->values()->toArray();
 
 
 
+		$data['servicesRelated'] = $servicesRelatedList;
 
-		$data['clientsList'] = $clientsList;
+		$cities = City::where('popular', '1')->get();
+		$cityList = array();
+		if ($cities) {
+			foreach ($cities as $ckey => $cvalue) {
 
+				$cityList[$ckey] = array(
+					'url' => '/' . strtolower($cvalue->city) . '/' . generate_slug($keywordDetails->keyword),
+					'title' => $keywordDetails->keyword . ' in ' . $cvalue->city,
+
+				);
+
+			}
+		}
+
+		$data['findOtherLocation'] = $cityList;
+		// dd($data['FindOtherLocation']);
+		// Return JSON response
 		return response()->json([
 			'success' => true,
 			'data' => $data,
 		], 200);
+
 
 
 	}
@@ -1924,9 +2116,9 @@ class SiteController extends Controller
 				'certified_status' => $clientscheck->certified_status,
 				'website' => $clientscheck->website,
 				'city' => $clientscheck->city,
-				'business_state' => $clientscheck->business_state,
+				'state' => $clientscheck->state,
 				'area' => $clientscheck->area,
-				'business_city' => $clientscheck->business_city,
+				'zone' => $clientscheck->zone,
 				'address' => $clientscheck->address,
 				'pincode' => $clientscheck->pincode,
 				'country' => $clientscheck->country,

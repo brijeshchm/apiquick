@@ -5478,6 +5478,96 @@
                 ]
             }
         },
+        "/api/business/{client_id}/saveReview": {
+            "post": {
+                "tags": [
+                    "Frontend Reviews"
+                ],
+                "summary": "Submit a business review",
+                "description": "Allows a user to submit a review. One review per email per client per 30 days.",
+                "operationId": "904738fb8fb7523fa18839d20b3a5261",
+                "parameters": [
+                    {
+                        "name": "client_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 101
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "comment_author",
+                                    "comment_author_phone",
+                                    "comment_author_email",
+                                    "comment_content",
+                                    "s_rating"
+                                ],
+                                "properties": {
+                                    "comment_author": {
+                                        "type": "string",
+                                        "example": "Rahul Sharma"
+                                    },
+                                    "comment_author_phone": {
+                                        "type": "string",
+                                        "example": "9876543210"
+                                    },
+                                    "comment_author_email": {
+                                        "type": "string",
+                                        "example": "rahul@gmail.com"
+                                    },
+                                    "comment_content": {
+                                        "type": "string",
+                                        "example": "Very good service"
+                                    },
+                                    "s_rating": {
+                                        "type": "integer",
+                                        "maximum": 5,
+                                        "minimum": 1,
+                                        "example": 5
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Review submitted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Review successfully submitted."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "429": {
+                        "description": "Review limit exceeded"
+                    }
+                }
+            }
+        },
         "/api/site/city/keyword": {
             "get": {
                 "tags": [
@@ -7213,6 +7303,10 @@
         {
             "name": "Occupation",
             "description": "Occupation"
+        },
+        {
+            "name": "Frontend Reviews",
+            "description": "Frontend Reviews"
         },
         {
             "name": "Frontend Search city and keyword",

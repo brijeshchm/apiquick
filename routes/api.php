@@ -31,9 +31,8 @@ Route::post('/login', [AuthController::class, 'login']);
 
 
 Route::post('/verifyOtp', [AuthController::class, 'verifyOtp']);
-Route::post('/business/saveBusinessOwners', [AuthController::class, 'saveBusinessOwners']);
- 
-
+Route::post('/business/saveBusinessOwners', [AuthController::class, 'saveBusinessOwners']); 
+Route::post('/business/{client_id}/saveReview', [App\Http\Controllers\Api\ReviewController::class, 'store']);
 Route::middleware('auth:sanctum')->group(function () {
     
 Route::post('/logout', [AuthController::class, 'logout']);

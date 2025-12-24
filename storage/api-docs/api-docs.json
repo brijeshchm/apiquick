@@ -3069,6 +3069,100 @@
                 }
             }
         },
+        "/api/site/saveEnquiry": {
+            "post": {
+                "tags": [
+                    "Frontend Save Enquiry"
+                ],
+                "summary": "Submit enquiry",
+                "description": "Creates a new enquiry. Duplicate enquiries with same mobile and keyword within last 4 days are not allowed.",
+                "operationId": "a18de563d77162a185b5181a86d49c22",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "mobile",
+                                    "kw_text"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Rahul Sharma"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "rahul@gmail.com"
+                                    },
+                                    "mobile": {
+                                        "type": "string",
+                                        "example": "9876543210"
+                                    },
+                                    "kw_text": {
+                                        "type": "string",
+                                        "example": "Physics Tuition"
+                                    },
+                                    "city": {
+                                        "description": "City ID (optional)",
+                                        "type": "integer",
+                                        "example": "hyderabad",
+                                        "nullable": true
+                                    },
+                                    "lead_form": {
+                                        "type": "string",
+                                        "example": "search list",
+                                        "nullable": true
+                                    },
+                                    "from_page": {
+                                        "type": "string",
+                                        "example": "web-design",
+                                        "nullable": true
+                                    },
+                                    "remark": {
+                                        "type": "string",
+                                        "example": "Customer wants urgent callback",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Enquiry created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Enquiry created successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "429": {
+                        "description": "Duplicate enquiry"
+                    }
+                }
+            }
+        },
         "/api/business/pause-lead": {
             "post": {
                 "tags": [
@@ -3175,12 +3269,12 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "assingId",
+                                    "assignId",
                                     "clientId",
                                     "scrapValue"
                                 ],
                                 "properties": {
-                                    "assingId": {
+                                    "assignId": {
                                         "type": "integer",
                                         "example": 101
                                     },
@@ -3285,10 +3379,10 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "assingId"
+                                    "assignId"
                                 ],
                                 "properties": {
-                                    "assingId": {
+                                    "assignId": {
                                         "type": "integer",
                                         "example": 11
                                     }
@@ -3323,7 +3417,7 @@
                                                     "type": "integer",
                                                     "example": 1
                                                 },
-                                                "assingId": {
+                                                "assignId": {
                                                     "type": "integer",
                                                     "example": 101
                                                 }
@@ -3402,10 +3496,10 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "assingId"
+                                    "assignId"
                                 ],
                                 "properties": {
-                                    "assingId": {
+                                    "assignId": {
                                         "type": "integer",
                                         "example": 101
                                     }
@@ -3440,7 +3534,124 @@
                                                     "type": "integer",
                                                     "example": 1
                                                 },
-                                                "assingId": {
+                                                "assignId": {
+                                                    "type": "integer",
+                                                    "example": 101
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "lead_id": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The lead_id field is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/un-favorite": {
+            "post": {
+                "tags": [
+                    "Leads"
+                ],
+                "summary": "Save favorite lead",
+                "description": "Mark a lead as favorite for the authenticated user.",
+                "operationId": "49ff64266ef75b8d32df0971fbc3fd17",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "assignId"
+                                ],
+                                "properties": {
+                                    "assignId": {
+                                        "type": "integer",
+                                        "example": 101
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Lead added to favorites successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lead marked as favorite."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "assignId": {
                                                     "type": "integer",
                                                     "example": 101
                                                 }
@@ -7279,6 +7490,10 @@
         {
             "name": "Gallery",
             "description": "Gallery"
+        },
+        {
+            "name": "Frontend Save Enquiry",
+            "description": "Frontend Save Enquiry"
         },
         {
             "name": "Leads",

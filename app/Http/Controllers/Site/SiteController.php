@@ -2089,7 +2089,7 @@ class SiteController extends Controller
 
 			$time = "";
 			if ($clientscheck->time) {
-				$time = unserialize($clientscheck->time);
+				$time = json_decode($clientscheck->time);
 
 			}
 
@@ -2192,7 +2192,7 @@ class SiteController extends Controller
 
 			if (!empty($clientscheck->time)) {
 
-				$times = unserialize($clientscheck->time);
+				$times = json_decode($clientscheck->time);
 				$today = strtolower(date('l'));
 
 				// Today

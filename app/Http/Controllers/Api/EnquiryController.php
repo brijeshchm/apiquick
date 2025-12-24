@@ -386,8 +386,8 @@ class EnquiryController extends Controller
 	 *     @OA\RequestBody(
 	 *         required=true,
 	 *         @OA\JsonContent(
-	 *             required={"assingId","clientId","scrapValue"},
-	 *             @OA\Property(property="assingId", type="integer", example=101),
+	 *             required={"assignId","clientId","scrapValue"},
+	 *             @OA\Property(property="assignId", type="integer", example=101),
 	 *             @OA\Property(property="clientId", type="integer", example=1748),
 	 *             @OA\Property(property="scrapValue", type="integer", example=3)
 	 *         )
@@ -416,7 +416,7 @@ class EnquiryController extends Controller
 
 		// Validation
 		$validator = Validator::make($request->all(), [
-			'assingId' => 'required|integer|exists:assigned_leads,id',
+			'assignId' => 'required|integer|exists:assigned_leads,id',
 			'clientId' => 'required|integer|exists:clients,id',
 			'scrapValue' => 'required|integer|between:1,8',
 		]);
@@ -430,7 +430,7 @@ class EnquiryController extends Controller
 		}
 
 		// Fetch assigned lead
-		$assignedLead = AssignedLead::where('id', $request->assingId)
+		$assignedLead = AssignedLead::where('id', $request->assignId)
 			->where('client_id', $request->clientId)
 			->first();
 
@@ -450,7 +450,7 @@ class EnquiryController extends Controller
 				->get();
 
 			$scrapCount = AssignedLead::where('lead_id', $assignedLead->lead_id)
-				->where('scrapLead', 1)
+				->where('scrapLead', '1')
 				->count();
 
 			// Refund coins when last business scraps
@@ -477,7 +477,7 @@ class EnquiryController extends Controller
 				'status' => true,
 				'message' => 'Lead scrapped successfully',
 				'data' => [
-					'assingId' => $assignedLead->id,
+					'assignId' => $assignedLead->id,
 					'lead_id' => $assignedLead->lead_id,
 					'scrapValue' => $request->scrapValue
 				]
@@ -661,8 +661,8 @@ class EnquiryController extends Controller
 	 *     @OA\RequestBody(
 	 *         required=true,
 	 *         @OA\JsonContent(
-	 *             required={"assingId"},
-	 *             @OA\Property(property="assingId", type="integer", example=11),
+	 *             required={"assignId"},
+	 *             @OA\Property(property="assignId", type="integer", example=11),
 	 *            
 	 *         )
 	 *     ),
@@ -675,7 +675,7 @@ class EnquiryController extends Controller
 	 *             @OA\Property(property="data", type="object",
 	 *                 @OA\Property(property="id", type="integer", example=5),
 	 *                 @OA\Property(property="user_id", type="integer", example=1),
-	 *                 @OA\Property(property="assingId", type="integer", example=101)
+	 *                 @OA\Property(property="assignId", type="integer", example=101)
 	 *             )
 	 *         )
 	 *     ),
@@ -718,7 +718,7 @@ class EnquiryController extends Controller
 				'error' => 'token_missing_or_invalid'
 			], 401);
 		}
-		$assignedLead = AssignedLead::find($request->assingId);
+		$assignedLead = AssignedLead::find($request->assignId);
 		if (!$assignedLead) {
 			$data['status'] = true;
 			$data['message'] = 'Read Lead not found';
@@ -749,8 +749,8 @@ class EnquiryController extends Controller
 	 *     @OA\RequestBody(
 	 *         required=true,
 	 *         @OA\JsonContent(
-	 *             required={"assingId"},
-	 *             @OA\Property(property="assingId", type="integer", example=101)
+	 *             required={"assignId"},
+	 *             @OA\Property(property="assignId", type="integer", example=101)
 	 *         )
 	 *     ),
 	 *     @OA\Response(
@@ -762,7 +762,7 @@ class EnquiryController extends Controller
 	 *             @OA\Property(property="data", type="object",
 	 *                 @OA\Property(property="id", type="integer", example=5),
 	 *                 @OA\Property(property="user_id", type="integer", example=1),
-	 *                 @OA\Property(property="assingId", type="integer", example=101)
+	 *                 @OA\Property(property="assignId", type="integer", example=101)
 	 *             )
 	 *         )
 	 *     ),
@@ -788,8 +788,110 @@ class EnquiryController extends Controller
 	 * )
 	 */
 
-	public function saveFavoritleads(Request $request)
+	 public function saveFavoritleads(Request $request)
+{
+    // Auth check
+    if (!Auth::guard('sanctum')->check()) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Unauthenticated: Token is missing or invalid',
+            'error' => 'token_missing_or_invalid'
+        ], 401);
+    }
+
+    $user = auth('sanctum')->user();
+    if (!$user) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Unauthenticated: Token is missing or invalid',
+            'error' => 'token_missing_or_invalid'
+        ], 401);
+    }
+
+    // Validate request
+    $request->validate([
+        'assignId' => 'required|integer|exists:assigned_leads,id',
+    ]);
+
+    // Fetch lead
+    $assignedLead = AssignedLead::find($request->assignId);
+
+    if (!$assignedLead) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Assigned lead not found'
+        ], 404);
+    }
+
+    // Update favorite status
+    $assignedLead->favorite_lead = '1';
+
+    if (!$assignedLead->save()) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Favorite lead not updated'
+        ], 500);
+    }
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Favorite lead updated successfully',
+        'data' => $assignedLead
+    ], 200);
+}
+
+	/**
+	 * @OA\Post(
+	 *     path="/api/business/un-favorite",
+	 *     tags={"Leads"},
+	 *     summary="Save favorite lead",
+	 *     description="Mark a lead as favorite for the authenticated user.",
+	 *     security={{"bearerAuth":{}}},
+	 *     @OA\RequestBody(
+	 *         required=true,
+	 *         @OA\JsonContent(
+	 *             required={"assignId"},
+	 *             @OA\Property(property="assignId", type="integer", example=101)
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Lead added to favorites successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Lead marked as favorite."),
+	 *             @OA\Property(property="data", type="object",
+	 *                 @OA\Property(property="id", type="integer", example=5),
+	 *                 @OA\Property(property="user_id", type="integer", example=1),
+	 *                 @OA\Property(property="assignId", type="integer", example=101)
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=422,
+	 *         description="Validation error",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+	 *             @OA\Property(property="errors", type="object",
+	 *                 @OA\Property(property="lead_id", type="array",
+	 *                     @OA\Items(type="string", example="The lead_id field is required.")
+	 *                 )
+	 *             )
+	 *         )
+	 *     )
+	 * )
+	 */
+
+	public function unFavoritleads(Request $request)
 	{
+		// Auth check
 		if (!Auth::guard('sanctum')->check()) {
 			return response()->json([
 				'status' => false,
@@ -797,7 +899,7 @@ class EnquiryController extends Controller
 				'error' => 'token_missing_or_invalid'
 			], 401);
 		}
-		// Check if user is active
+
 		$user = auth('sanctum')->user();
 		if (!$user) {
 			return response()->json([
@@ -807,29 +909,34 @@ class EnquiryController extends Controller
 			], 401);
 		}
 
-		$assignedLead = AssignedLead::find($request->assingId);
+		// Validate request
+		$request->validate([
+			'assignId' => 'required|integer|exists:assigned_leads,id',
+		]);
+
+		// Fetch lead
+		$assignedLead = AssignedLead::where('id', $request->assignId)
+			->where('scrapPay', '0')
+			->first();
 
 		if (!$assignedLead) {
-			$data['status'] = false;
-			$data['message'] = 'assignedLead not found';
-
+			return response()->json([
+				'status' => false,
+				'message' => 'Assigned lead not found or scrap pay'
+			], 404);
 		}
 
-		$assignedLead->favoriteLead = '1';
-		if ($assignedLead->save()) {
-			$data['status'] = true;
-			$data['message'] = 'favorit leads updated';
-		} else {
-			$data['status'] = true;
-			$data['message'] = 'favorit leads not updated';
-		}
+		// Update favorite status
+		$assignedLead->favorite_lead = '0'; // IMPORTANT
+		$assignedLead->save();
+
 		return response()->json([
 			'status' => true,
-			'message' => "Successfully",
-			'data' => $data,
-
+			'message' => 'Lead unfavorited successfully',
+			'data' => $assignedLead
 		], 200);
 	}
+
 	/**
 	 * @OA\Get(
 	 *     path="/api/business/get-leads",
@@ -889,7 +996,7 @@ class EnquiryController extends Controller
 		$perPage = $request->query('per_page', 10);
 		$leads = DB::table('leads')
 			->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
-			->select('leads.*', 'assigned_leads.*','assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'assigned_leads.id as assingId')
+			->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'assigned_leads.id as assignId')
 			->orderBy('assigned_leads.created_at', 'desc')
 			->where('assigned_leads.client_id', $user->id)
 			->paginate($perPage);
@@ -900,17 +1007,17 @@ class EnquiryController extends Controller
 				} else {
 					$zonename = "";
 				}
-				$coins= "";
-                if(!empty($val->scrapLead)) { 
-                $coins  = ['color'=>'green','coin'=>$val->coins]; 
-                }else if($val->coins){ 
-                $coins =  ['color'=>'red','coin'=>$val->coins]; 
-                }  
-                 
-                $created = get_time(strtotime($val->created)) . ' ago';
+				$coins = "";
+				if (!empty($val->scrapLead)) {
+					$coins = ['color' => 'green', 'coin' => $val->coins];
+				} else if ($val->coins) {
+					$coins = ['color' => 'red', 'coin' => $val->coins];
+				}
+
+				$created = get_time(strtotime($val->created)) . ' ago';
 				$leads_list[$key] = array(
 					'lead_id' => $val->lead_id,
-					'assingId' => $val->assingId,
+					'assignId' => $val->assignId,
 					'name' => $val->name,
 					'mobile' => $val->mobile,
 					'email' => $val->email,
@@ -918,9 +1025,9 @@ class EnquiryController extends Controller
 					'cityName' => $val->city_name,
 					'kw_id' => $val->kw_id,
 					'kw_text' => $val->kw_text,
-					'client_id' => $val->client_id,					 
+					'client_id' => $val->client_id,
 					'createdDate' => $created,
-                    'coins' => $coins,
+					'coins' => $coins,
 				);
 			}
 			$data['leadslist'] = $leads_list;
@@ -1002,24 +1109,24 @@ class EnquiryController extends Controller
 				->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
 				->leftjoin('areas', 'leads.area_id', '=', 'areas.id')
 				->leftjoin('zones', 'leads.zone_id', '=', 'zones.id')
-				->select('leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone', 'assigned_leads.id as assingId')
+				->select('leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone', 'assigned_leads.id as assignId')
 				->orderBy('assigned_leads.created_at', 'desc')
 				->where('assigned_leads.client_id', $currentUser->id)
 				->paginate($perPage);
 
 			if (!empty($leads)) {
 				foreach ($leads->items() as $key => $val) {
-					$coins= "";
-                if(!empty($val->scrapLead)) { 
-                $coins  = ['color'=>'green','coin'=>$val->coins]; 
-                }else if($val->coins){ 
-                $coins =  ['color'=>'red','coin'=>$val->coins]; 
-                }  
-                 
-                $created = get_time(strtotime($val->created)) . ' ago';
+					$coins = "";
+					if (!empty($val->scrapLead)) {
+						$coins = ['color' => 'green', 'coin' => $val->coins];
+					} else if ($val->coins) {
+						$coins = ['color' => 'red', 'coin' => $val->coins];
+					}
+
+					$created = get_time(strtotime($val->created)) . ' ago';
 					$leads_list[$key] = array(
 						'lead_id' => $val->lead_id,
-						'assingId' => $val->assingId,
+						'assignId' => $val->assignId,
 						'name' => $val->name,
 						'mobile' => $val->mobile,
 						'email' => $val->email,
@@ -1033,7 +1140,7 @@ class EnquiryController extends Controller
 						'kw_text' => $val->kw_text,
 						'client_id' => $val->client_id,
 						'createdDate' => $created,
-                   		'coins' => $coins,
+						'coins' => $coins,
 					);
 				}
 				$data['leadslist'] = $leads_list;
@@ -1128,24 +1235,24 @@ class EnquiryController extends Controller
 			->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
 			->leftjoin('areas', 'leads.area_id', '=', 'areas.id')
 			->leftjoin('zones', 'leads.zone_id', '=', 'zones.id')
-			->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id as clientId', 'assigned_leads.lead_id', 'assigned_leads.id as assignId', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone', 'assigned_leads.id as assingId')
+			->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id as clientId', 'assigned_leads.lead_id', 'assigned_leads.id as assignId', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone', 'assigned_leads.id as assignId')
 			->orderBy('assigned_leads.created_at', 'desc')
 			->where('assigned_leads.readLead', '0')
 			->where('assigned_leads.client_id', $currentUser->id)->get();
 		if (!empty($leads)) {
 			$leads_list = [];
 			foreach ($leads as $key => $val) {
-				$coins= "";
-                if(!empty($val->scrapLead)) { 
-                $coins  = ['color'=>'green','coin'=>$val->coins]; 
-                }else if($val->coins){ 
-                $coins =  ['color'=>'red','coin'=>$val->coins]; 
-                }  
-                 
-                $created = get_time(strtotime($val->created)) . ' ago';
+				$coins = "";
+				if (!empty($val->scrapLead)) {
+					$coins = ['color' => 'green', 'coin' => $val->coins];
+				} else if ($val->coins) {
+					$coins = ['color' => 'red', 'coin' => $val->coins];
+				}
+
+				$created = get_time(strtotime($val->created)) . ' ago';
 				$leads_list[$key] = array(
 					'lead_id' => $val->lead_id,
-					'assingId' => $val->assingId,
+					'assignId' => $val->assignId,
 					'name' => $val->name,
 					'mobile' => $val->mobile,
 					'email' => $val->email,
@@ -1159,7 +1266,7 @@ class EnquiryController extends Controller
 					'kw_text' => $val->kw_text,
 					'client_id' => $val->client_id,
 					'createdDate' => $created,
-                   	'coins' => $coins,
+					'coins' => $coins,
 				);
 			}
 			$data['leadslist'] = $leads_list;
@@ -1243,26 +1350,26 @@ class EnquiryController extends Controller
 			->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
 			->leftjoin('areas', 'leads.area_id', '=', 'areas.id')
 			->leftjoin('zones', 'leads.zone_id', '=', 'zones.id')
-			->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id as clientId', 'assigned_leads.lead_id', 'assigned_leads.id as assignId', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone', 'assigned_leads.id as assingId')
+			->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id as clientId', 'assigned_leads.lead_id', 'assigned_leads.id as assignId', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone', 'assigned_leads.id as assignId')
 
 			->orderBy('assigned_leads.created_at', 'desc')
-			->where('assigned_leads.favoriteLead', '!=', '1')
+			->where('assigned_leads.favorite_lead', '!=', '1')
 
 			->where('assigned_leads.client_id', $currentUser->id)->get();
 		if (!empty($leads)) {
 			$leads_list = [];
 			foreach ($leads as $key => $val) {
-				$coins= "";
-                if(!empty($val->scrapLead)) { 
-                $coins  = ['color'=>'green','coin'=>$val->coins]; 
-                }else if($val->coins){ 
-                $coins =  ['color'=>'red','coin'=>$val->coins]; 
-                }  
-                 
-                $created = get_time(strtotime($val->created)) . ' ago';
+				$coins = "";
+				if (!empty($val->scrapLead)) {
+					$coins = ['color' => 'green', 'coin' => $val->coins];
+				} else if ($val->coins) {
+					$coins = ['color' => 'red', 'coin' => $val->coins];
+				}
+
+				$created = get_time(strtotime($val->created)) . ' ago';
 				$leads_list[$key] = array(
 					'lead_id' => $val->lead_id,
-					'assingId' => $val->assingId,
+					'assignId' => $val->assignId,
 					'name' => $val->name,
 					'mobile' => $val->mobile,
 					'email' => $val->email,
@@ -1276,7 +1383,7 @@ class EnquiryController extends Controller
 					'kw_text' => $val->kw_text,
 					'client_id' => $val->client_id,
 					'createdDate' => $created,
-                   	'coins' => $coins,
+					'coins' => $coins,
 				);
 			}
 			$data['leadslist'] = $leads_list;
@@ -1357,26 +1464,26 @@ class EnquiryController extends Controller
 			->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
 			->leftjoin('areas', 'leads.area_id', '=', 'areas.id')
 			->leftjoin('zones', 'leads.zone_id', '=', 'zones.id')
-			->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id as clientId', 'assigned_leads.lead_id', 'assigned_leads.id as assignId', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone', 'assigned_leads.id as assingId')
+			->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id as clientId', 'assigned_leads.lead_id', 'assigned_leads.id as assignId', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone', 'assigned_leads.id as assignId')
 
 			->orderBy('assigned_leads.created_at', 'desc')
-			->where('assigned_leads.favoriteLead', '1')
+			->where('assigned_leads.favorite_lead', '1')
 			->where('assigned_leads.client_id', $currentUser->id)->get();
 
 		if (!empty($leads)) {
 			$leads_list = [];
 			foreach ($leads as $key => $val) {
-				$coins= "";
-                if(!empty($val->scrapLead)) { 
-                $coins  = ['color'=>'green','coin'=>$val->coins]; 
-                }else if($val->coins){ 
-                $coins =  ['color'=>'red','coin'=>$val->coins]; 
-                }  
-                 
-                $created = get_time(strtotime($val->created)) . ' ago';
+				$coins = "";
+				if (!empty($val->scrapLead)) {
+					$coins = ['color' => 'green', 'coin' => $val->coins];
+				} else if ($val->coins) {
+					$coins = ['color' => 'red', 'coin' => $val->coins];
+				}
+
+				$created = get_time(strtotime($val->created)) . ' ago';
 				$leads_list[$key] = array(
 					'lead_id' => $val->lead_id,
-					'assingId' => $val->assingId,
+					'assignId' => $val->assignId,
 					'name' => $val->name,
 					'mobile' => $val->mobile,
 					'email' => $val->email,
@@ -1390,7 +1497,7 @@ class EnquiryController extends Controller
 					'kw_text' => $val->kw_text,
 					'client_id' => $val->client_id,
 					'createdDate' => $created,
-                   	'coins' => $coins,
+					'coins' => $coins,
 				);
 			}
 			$data['leadslist'] = $leads_list;
@@ -1472,7 +1579,7 @@ class EnquiryController extends Controller
 			->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
 			->leftjoin('areas', 'leads.area_id', '=', 'areas.id')
 			->leftjoin('zones', 'leads.zone_id', '=', 'zones.id')
-			->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id as clientId', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone', 'assigned_leads.id as assingId')
+			->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id as clientId', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone', 'assigned_leads.id as assignId')
 
 			->orderBy('assigned_leads.created_at', 'desc')
 
@@ -1480,23 +1587,23 @@ class EnquiryController extends Controller
 			->where('assigned_leads.lead_id', $id)
 			->first();
 
-			$coins= "";
-                if(!empty($leads->scrapLead)) { 
-                $coins  = ['color'=>'green','coin'=>$leads->coins]; 
-                }else if($leads->coins){ 
-                $coins =  ['color'=>'red','coin'=>$leads->coins]; 
-                }  
-                 
-                $created = get_time(strtotime($leads->created)) . ' ago';
+		$coins = "";
+		if (!empty($leads->scrapLead)) {
+			$coins = ['color' => 'green', 'coin' => $leads->coins];
+		} else if ($leads->coins) {
+			$coins = ['color' => 'red', 'coin' => $leads->coins];
+		}
+
+		$created = get_time(strtotime($leads->created)) . ' ago';
 		$data = [
 
 			'lead_id' => $leads->lead_id,
 			'name' => $leads->name,
-			'assingId' => $leads->assingId,
+			'assignId' => $leads->assignId,
 			'email' => $leads->email,
 			'kw_text' => $leads->kw_text,
 			'createdDate' => $created,
-            'coins' => $coins,
+			'coins' => $coins,
 			'city_name' => $leads->city_name,
 			'mobile' => $leads->mobile,
 			'status_name' => $leads->status_name,
@@ -1615,7 +1722,7 @@ class EnquiryController extends Controller
 				'leads.kw_text',
 				'leads.city_name',
 				'assigned_leads.created_at',
-				'assigned_leads.id as assingId'
+				'assigned_leads.id as assignId'
 			)
 			->orderBy('assigned_leads.created_at', 'desc');
 
@@ -1744,12 +1851,12 @@ class EnquiryController extends Controller
 				'Date' => date('d M, Y H:i:s', strtotime($row->created_at)),
 			];
 		}
- 
+
 		return response()->json([
 			'success' => true,
 			'data' => $rows,
 		], 200);
-		 
+
 	}
 	/**
 	 * @OA\Get(

@@ -6,6 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class LeadFollowUp extends Model
 {
+     protected $table = 'lead_follow_ups'; 
+    protected $fillable = [
+        'status',
+        'expected_date_time',
+        'remark',
+        'lead_id',
+        'client_id',
+        'remark_by',
+    ];
     protected $guarded = [];
 
     public function lead()

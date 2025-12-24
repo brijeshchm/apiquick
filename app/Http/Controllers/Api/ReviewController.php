@@ -106,7 +106,7 @@ class ReviewController extends Controller
         ]);
 
         return response()->json([
-            'status'  => 1,
+            'status'  => true,
             'message' => 'Review successfully submitted.'
         ], 200);
     }

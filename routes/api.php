@@ -33,6 +33,8 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/verifyOtp', [AuthController::class, 'verifyOtp']);
 Route::post('/business/saveBusinessOwners', [AuthController::class, 'saveBusinessOwners']); 
 Route::post('/business/{client_id}/saveReview', [App\Http\Controllers\Api\ReviewController::class, 'store']);
+Route::post('/site/saveEnquiry', [App\Http\Controllers\Api\ContactController::class, 'saveEnquiry']);
+
 Route::middleware('auth:sanctum')->group(function () {
     
 Route::post('/logout', [AuthController::class, 'logout']);
@@ -41,6 +43,7 @@ Route::get('/business/review', [ProfileController::class, 'profileReview']);
 Route::get('/business/dashboard',[App\Http\Controllers\Api\BusinessDashboardController::class, 'dashboard'])->name('business.dashboard');
 Route::get('/business/get-leads',[EnquiryController::class, 'getLeads']);
 Route::post('/business/save-favorite',[EnquiryController::class, 'saveFavoritleads']);
+Route::post('/business/un-favorite',[EnquiryController::class, 'unFavoritleads']);
 Route::post('/business/save-readLead',[EnquiryController::class, 'readLead']);
 Route::post('/business/scrap-lead',[EnquiryController::class, 'scrapLead']);
 Route::post('/business/pause-lead',[EnquiryController::class, 'pauseLead']);
@@ -80,8 +83,7 @@ Route::post('/business/saveLocationInformation',[App\Http\Controllers\Api\Busine
 Route::post('/business/pauseLead',[App\Http\Controllers\Api\EnquiryController::class, 'pauseLead']);
 Route::post('/business/scrapLead',[App\Http\Controllers\Api\EnquiryController::class, 'scrapLead']);
 Route::post('/business/readLead',[App\Http\Controllers\Api\EnquiryController::class, 'readLead']);
-Route::post('/business/saveFavoritleads',[App\Http\Controllers\Api\EnquiryController::class, 'saveFavoritleads']);
-
+ 
 Route::get('/business/cities/get-cities',[App\Http\Controllers\Api\BusinessController::class, 'getCities']);
 Route::post('/business/cities/getajaxcities',[App\Http\Controllers\Api\BusinessController::class, 'getAjaxCities']);
 Route::get('/business/state/get-state',[App\Http\Controllers\Api\BusinessController::class, 'getState']);

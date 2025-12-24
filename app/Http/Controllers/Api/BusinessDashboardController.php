@@ -83,7 +83,7 @@ class BusinessDashboardController extends Controller
             ->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
             ->leftjoin('areas', 'leads.area_id', '=', 'areas.id')
             ->leftjoin('zones', 'leads.zone_id', '=', 'zones.id')
-            ->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone', 'assigned_leads.id as assingId')
+            ->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone', 'assigned_leads.id as assignId')
 
             ->orderBy('assigned_leads.created_at', 'desc')
             ->where('assigned_leads.client_id', $user->id)
@@ -106,7 +106,7 @@ class BusinessDashboardController extends Controller
                 $created = get_time(strtotime($val->created)) . ' ago';
                 $leads_list[$key] = array(
                     'lead_id' => $val->lead_id,
-                    'assingId' => $val->assingId,
+                    'assignId' => $val->assignId,
                     'name' => $val->name,
                     'mobile' => $val->mobile,
                     'email' => $val->email,

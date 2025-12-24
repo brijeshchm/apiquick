@@ -482,403 +482,521 @@ function str_limit_custom($value, $limit = 100, $end = '...', $more = 'More', $t
 }
 
 
-function leadassignWithoutZoneCounsellor($leads)
+// function leadassignWithoutZoneCounsellor($leads)
+// {
+// 	if ($leads) {
+// 		$lead = App\Models\Lead::findOrFail($leads->id);
+
+// 		if ($lead) {
+
+// 			$city = App\Models\Citieslists::findOrFail($lead->city_id);
+
+// 			if ($city) {
+// 				if (!empty($lead->kw_id)) {
+
+// 					$keyword = App\Models\Keyword::findOrFail($lead->kw_id);
+
+// 					if ($keyword) {
+
+// 						$bucketIndex = $keyword->bucket;
+// 						$clientsList = DB::table('clients');
+// 						$clientsList = $clientsList->join('assigned_zones', 'clients.id', '=', 'assigned_zones.client_id');
+// 						//$clientsList = $clientsList->join('assignedd_areas','assignedd_areas.assigned_zone_id','=','assigned_zones.id');
+
+// 						$clientsList = $clientsList->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id');
+// 						$clientsList = $clientsList->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id');
+// 						$clientsList = $clientsList->join('keyword_sell_count', 'keyword_sell_count.slug', '=', 'assigned_kwds.sold_on_position');
+// 						$clientsList = $clientsList->select('clients.*', 'assigned_kwds.*', 'assigned_zones.*', 'assigned_zones.city_id as assgn_city_id', 'keyword.keyword', 'keyword.category', 'keyword.bucket', 'keyword_sell_count.*', 'keyword_sell_count.cat1_price', 'keyword_sell_count.cat2_price', 'keyword_sell_count.cat3_price', 'keyword_sell_count.cat4_price', 'keyword_sell_count.cat5_price');
+// 						$clientsList = $clientsList->where('keyword.id', '=', $lead->kw_id);
+// 						$clientsList = $clientsList->where('assigned_zones.city_id', '=', $lead->city_id);
+
+// 						//$clientsList = $clientsList->where('assigned_zones.zone_id','=',$request->input('area_zone'))
+// 						//	$clientsList = $clientsList->where('assigned_zones.zone_id','=',$lead->zone_id);
+// 						//	$clientsList = $clientsList->where('assignedd_areas.area_id','=',$lead->area_id);
+
+// 						$clientsList = $clientsList->whereNull('clients.deleted_at');
+// 						$clientsList = $clientsList->where('clients.coins_amt', '>', '0');
+// 						//$clientsList = $clientsList->where('clients.coins_amt','>',50);
+// 						//$clientsList = $clientsList->where('clients.expired_on','>',date("Y-m-d H:i:s"));
+// 						/* 
+// 						$clientsList = $clientsList->where(function($query){
+// 						$query->where(function($query){
+// 						$query->where('clients.leads_remaining','>','0')								
+// 						->orWhere('clients.coins_amt','>','50') 				
+// 						->orWhere('clients.expired_on','>',date("Y-m-d H:i:s"));					
+// 						}); */
+
+// 						/* ->orWhere(function($query){
+// 						$query->where(function($query){
+// 						$query->where('clients.client_type','free_subscription')
+// 						->orWhere('clients.client_type','yearly_subscription');
+// 						})
+// 						->whereDate('clients.yrly_subs_end_date','>',date('Y-m-d'));
+// 						})
+// 						->orWhere(function($query){
+// 						$query->where('clients.client_type','count_based_subscription')
+// 						->where('clients.leads_remaining','>','0');
+// 						}); */
+
+// 						$clientsList = $clientsList->groupby('clients.id');
+// 						$clientsList = $clientsList->where('active_status', '1');
+// 						$clientsList = $clientsList->orderBy(DB::raw('(CASE `assigned_kwds`.`sold_on_position` WHEN \'diamond\' THEN 1 WHEN \'platinum\' THEN 2 WHEN \'gold\' THEN 3 WHEN \'silver\' THEN 4 END)'), 'asc');
+// 						$clientsList = $clientsList->get();
+
+// 						$defaulterClientsList = DB::table('clients');
+// 						//	$defaulterClientsList = $defaulterClientsList->join('assigned_zones','clients.id','=','assigned_zones.client_id');
+// 						//$defaulterClientsList = $defaulterClientsList->join('assignedd_areas','assignedd_areas.assigned_zone_id','=','assigned_zones.id');
+
+// 						$defaulterClientsList = $defaulterClientsList->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id');
+// 						$defaulterClientsList = $defaulterClientsList->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id');
+// 						$defaulterClientsList = $defaulterClientsList->join('keyword_sell_count', 'keyword_sell_count.slug', '=', 'assigned_kwds.sold_on_position');
+// 						$defaulterClientsList = $defaulterClientsList->select('clients.*', 'assigned_kwds.*', 'keyword.keyword', 'keyword.category', 'keyword.bucket');
+// 						$defaulterClientsList = $defaulterClientsList->where('keyword.id', '=', $lead->kw_id);
+
+// 						//	$defaulterClientsList = $defaulterClientsList->where('assigned_zones.zone_id','=',$lead->zone_id);
+// 						//$defaulterClientsList = $defaulterClientsList->where('assignedd_areas.area_id','=',$lead->area_id);
+
+// 						$defaulterClientsList = $defaulterClientsList->whereNull('clients.deleted_at');
+// 						$defaulterClientsList = $defaulterClientsList->where(function ($query) {
+// 							$query->where(function ($query) {
+
+// 								//$query->whereIn('clients.client_type','lead_based')
+// 								$query->where('clients.coins_amt', '>', '0');
+// 								// ->where('clients.leads_remaining','>','0');
+// 							});
+// 							/* ->orWhere(function($query){
+// 								$query->where(function($query){
+// 									$query->where('clients.client_type','free_subscription')
+// 									->orWhere('clients.client_type','yearly_subscription');
+// 								})
+// 								->whereDate('clients.yrly_subs_end_date','<=',date('Y-m-d'));
+// 							})
+// 							->orWhere(function($query){
+// 								$query->where('clients.client_type','count_based_subscription')
+// 									  ->where('clients.leads_remaining','=','0');
+// 							}); */
+
+
+// 						});
+// 						$defaulterClientsList = $defaulterClientsList->orderby(DB::raw('(CASE `assigned_kwds`.`sold_on_position` WHEN \'platinum\' THEN 1 WHEN \'diamond\' THEN 2 END)'), 'asc');
+// 						//$defaulterClientsList = $defaulterClientsList->orderby(DB::raw('(CASE `clients`.`client_type` WHEN \'Platinum\' THEN 1 WHEN \'Diamond\' THEN 2 END)'),'asc');
+// 						//->orderby('comment_count','desc')
+// 						//->tosql();
+// 						$defaulterClientsList = $defaulterClientsList->get();
+
+// 						// BUCKET CALCULATION
+// 						// ******************
+// 						$max = $mCount = 5;
+// 						$i = 0;
+// 						$totalClients = count($clientsList);
+// 						$buckets = [];
+// 						foreach ($clientsList as $client) {
+// 							if ($mCount == 0) {
+// 								$j = $i;
+// 								$buckets[++$j] = $buckets[$i++];
+// 								$buckets[$j]['diamond'] = [];
+// 								$mCount = $max - (count($buckets[$j], 1) - 5);
+// 							}
+// 							if ($client->sold_on_position == 'platinum') {
+// 								$buckets[$i]['platinum'][] = $client;
+// 							}
+// 							if ($client->sold_on_position == 'diamond') {
+// 								$buckets[$i]['diamond'][] = $client;
+// 							}
+
+// 							if ($client->sold_on_position == 'gold') {
+// 								$buckets[$i]['gold'][] = $client;
+// 							}
+
+// 							if ($client->sold_on_position == 'silver') {
+// 								$buckets[$i]['silver'][] = $client;
+// 							}
+
+
+// 							--$mCount;
+// 						}
+
+// 						$i = 0;
+// 						$bucketCount = count($buckets);
+
+
+// 						if (!empty($clientsList)) {
+// 							foreach ($buckets as $bucket) {
+// 								if ($bucketCount <= $bucketIndex || $bucketIndex == 0) {
+// 									$bucketIndex = 0;
+// 								}
+
+// 								if ($bucketIndex == $i) {
+// 									foreach ($bucket as $position => $clientss) {
+
+// 										foreach ($clientss as $clientC) {
+
+// 											if ($clientC->client_type) {
+// 												$clnt = App\Models\Client\Client::find($clientC->client_id);
+
+// 												if ($clnt) {
+// 													$dontSave = 0;
+// 													switch ($clientC->client_type) {
+// 														case 'Platinum':
+// 															/*if($clientC->coins_amt-$clientC->cost_per_lead<0){
+// 																	$dontSave = 1;
+// 																}else{
+// 																	$clnt->coins_amt = $clnt->coins_amt - $clientC->cost_per_lead;
+// 																}*/
+
+// 															if ($clientC->coins_amt - 1 < 0) {
+// 																$dontSave = 1;
+// 															} else {
+
+
+
+
+// 																$keyword = App\Models\Keyword::find($lead->kw_id);
+
+// 																$keywordSellCount = App\Models\KeywordSellCount::where('slug', strtolower($clnt->client_type))->first();
+
+
+// 																if ($keyword->category == 'Category 1') {
+// 																	$coinsAmt = $keywordSellCount->cat1_price;
+// 																} else if ($keyword->category == 'Category 2') {
+// 																	$coinsAmt = $keywordSellCount->cat2_price;
+// 																} else if ($keyword->category == 'Category 3') {
+// 																	$coinsAmt = $keywordSellCount->cat3_price;
+// 																} else if ($keyword->category == 'Category 4') {
+// 																	$coinsAmt = $keywordSellCount->cat4_price;
+// 																} else if ($keyword->category == 'Category 5') {
+// 																	$coinsAmt = $keywordSellCount->cat5_price;
+// 																} else if ($keyword->category == 'Category 6') {
+// 																	$coinsAmt = $keywordSellCount->cat6_price;
+// 																}else if ($keyword->category == 'Category 7') {
+// 																	$coinsAmt = $keywordSellCount->cat7_price;
+// 																}else if ($keyword->category == 'Category 8') {
+// 																	$coinsAmt = $keywordSellCount->cat8_price;
+// 																}else if ($keyword->category == 'Category 9') {
+// 																	$coinsAmt = $keywordSellCount->cat9_price;
+// 																}else if ($keyword->category == 'Category 10') {
+// 																	$coinsAmt = $keywordSellCount->cat10_price;
+// 																}else {
+// 																	$coinsAmt = '130';
+// 																}
+
+
+// 																$clnt->coins_amt = $clnt->coins_amt - $coinsAmt;
+
+// 															}
+
+// 															/* if($clnt->coins_amt<50){
+// 																$clnt->expired_on = date("Y-m-d H:i:s");
+// 															} */
+// 															break;
+// 														case 'Diamond':
+// 															/* if($clientC->coins_amt-$clientC->cost_per_lead<0){
+// 																	$dontSave = 1;
+// 																}else{
+// 																	$clnt->coins_amt = $clnt->coins_amt - $clientC->cost_per_lead;
+// 																} */
+
+// 															if ($clientC->coins_amt - 1 < 0) {
+// 																$dontSave = 1;
+// 															} else {
+
+
+
+// 																$keyword = App\Models\Keyword::find($lead->kw_id);
+
+// 																$keywordSellCount = App\Models\KeywordSellCount::where('slug', strtolower($clnt->client_type))->first();
+
+
+// 																if ($keyword->category == 'Category 1') {
+// 																	$coinsAmt = $keywordSellCount->cat1_price;
+// 																} else if ($keyword->category == 'Category 2') {
+// 																	$coinsAmt = $keywordSellCount->cat2_price;
+// 																} else if ($keyword->category == 'Category 3') {
+// 																	$coinsAmt = $keywordSellCount->cat3_price;
+// 																} else if ($keyword->category == 'Category 4') {
+// 																	$coinsAmt = $keywordSellCount->cat4_price;
+// 																} else if ($keyword->category == 'Category 5') {
+// 																	$coinsAmt = $keywordSellCount->cat5_price;
+// 																} else if ($keyword->category == 'Category 6') {
+// 																	$coinsAmt = $keywordSellCount->cat6_price;
+// 																}else if ($keyword->category == 'Category 7') {
+// 																	$coinsAmt = $keywordSellCount->cat7_price;
+// 																}else if ($keyword->category == 'Category 8') {
+// 																	$coinsAmt = $keywordSellCount->cat8_price;
+// 																}else if ($keyword->category == 'Category 9') {
+// 																	$coinsAmt = $keywordSellCount->cat9_price;
+// 																}else if ($keyword->category == 'Category 10') {
+// 																	$coinsAmt = $keywordSellCount->cat10_price;
+// 																}else {
+// 																	$coinsAmt = 130;
+// 																}
+
+
+// 																$clnt->coins_amt = $clnt->coins_amt - $coinsAmt;
+
+// 															}
+
+// 															/* if($clnt->coins_amt<50){
+// 																$clnt->expired_on = date("Y-m-d H:i:s");
+// 															} */
+// 															break;
+
+
+
+// 													}
+// 													switch ($clientC->category) {
+// 														case 'Category 1':
+// 															if ($clientC->coins_amt - $clientC->cat1_price < 0) {
+// 																$dontSave = 1;
+// 															} else {
+// 																$clnt->coins_amt = $clnt->coins_amt - $clientC->cat1_price;
+// 															}
+// 															break;
+// 														case 'Category 2':
+// 															if ($clientC->coins_amt - $clientC->cat2_price < 0) {
+// 																$dontSave = 1;
+// 															} else {
+// 																$clnt->coins_amt = $clientC->coins_amt - $client->cat2_price;
+// 															}
+// 															break;
+// 														case 'Category 3':
+// 															if ($clientC->coins_amt - $clientC->cat3_price < 0) {
+// 																$dontSave = 1;
+// 															} else {
+// 																$clnt->coins_amt = $clientC->coins_amt - $clientC->cat3_price;
+// 															}
+// 															break;
+// 														case 'Category 4':
+// 															if ($clientC->coins_amt - $clientC->cat4_price < 0) {
+// 																$dontSave = 1;
+// 															} else {
+// 																$clnt->coins_amt = $clientC->coins_amt - $clientC->cat4_price;
+// 															}
+// 															break;
+// 														case 'Category 5':
+// 															if ($clientC->coins_amt - $clientC->cat5_price < 0) {
+// 																$dontSave = 1;
+// 															} else {
+// 																$clnt->coins_amt = $clientC->coins_amt - $clientC->cat5_price;
+// 															}
+// 															break;
+// 														case 'Category X':
+// 															if ($clientC->sold_on_position == 'premium') {
+// 																$amtToDeduct = $clientC->premium_price;
+// 															}
+// 															if ($clientC->sold_on_position == 'platinum') {
+// 																$amtToDeduct = $clientC->platinum_price;
+// 															}
+// 															if ($clientC->sold_on_position == 'king') {
+// 																$amtToDeduct = $clientC->king_price;
+// 															}
+// 															if ($clientC->sold_on_position == 'royal') {
+// 																$amtToDeduct = $clientC->royal_price;
+// 															}
+// 															if ($clientC->sold_on_position == 'preferred') {
+// 																$amtToDeduct = $clientC->preferred_price;
+// 															}
+// 															if ($clientC->coins_amt - $amtToDeduct < 0) {
+// 																$dontSave = 1;
+// 															} else {
+// 																$clnt->coins_amt = $clientC->coins_amt - $amtToDeduct;
+// 															}
+// 															break;
+// 													}
+// 													if ($dontSave) {
+// 														//$this->intimateDefaulterClients($client, $lead);
+// 														continue;
+// 													} else {
+// 														$clnt->save();
+// 													}
+// 												}
+// 											}
+// 											/* else if($client->client_type == 'count_based_subscription'){
+// 												$clnt = Client::find($client->id);
+// 												if($clnt){
+// 													//$dontSave = 0;
+// 													if($clnt->leads_remaining==0){
+// 														$this->intimateDefaulterClients($client, $lead);
+// 														continue;
+// 													}
+// 													else{
+// 														$clnt->leads_remaining = $clnt->leads_remaining-1;	
+// 														if($clnt->leads_remaining==0){
+// 															$clnt->expired_on = date("Y-m-d H:i:s");
+// 														}
+// 														$clnt->save();
+// 													}
+// 												}
+// 											} */
+
+// 											$assignvalidation = App\Models\AssignedLead::where('client_id', $clientC->client_id)->where('kw_id', $lead->kw_id)->where('lead_id', $lead->id)->get()->count();
+// 											if ($assignvalidation == 0) {
+
+// 												$assignedLead = new App\Models\AssignedLead;
+// 												$assignedLead->kw_id = $lead->kw_id;
+// 												$assignedLead->client_id = $clientC->client_id;
+// 												$assignedLead->lead_id = $lead->id;
+// 												$assignedLead->coins = $coinsAmt;
+
+// 												if ($assignedLead->save()) {
+// 													$lead->push_by = 1;
+// 													$lead->assign_status = 1;
+// 													$lead->save();
+// 													$followUp = new App\Models\LeadFollowUp;
+// 													$followUp->status = App\Models\Status::where('name', 'LIKE', 'New Lead')->first()->id;
+// 													$followUp->lead_id = $lead->id;
+// 													$followUp->client_id = $clientC->client_id;
+// 													$followUp->save();
+
+// 												}
+// 											}
+
+
+
+// 										}
+
+// 									}
+// 									$kw = App\Models\Keyword::find($lead->kw_id);
+// 									$kw->bucket = $i + 1;
+// 									$kw->save();
+// 								}
+// 								$i++;
+
+
+
+// 							}
+
+
+
+
+// 						}
+
+// 					}
+
+// 				}
+
+
+
+// 			}
+// 		}
+// 	}
+
+// }
+
+
+
+
+function leadassignWithoutZoneCounsellor($lead)
 {
-	if ($leads) {
-		$lead = App\Models\Lead::findOrFail($leads->id);
-
-		if ($lead) {
-
-			$city = App\Models\Citieslists::findOrFail($lead->city_id);
-
-			if ($city) {
-				if (!empty($lead->kw_id)) {
-
-					$keyword = App\Models\Keyword::findOrFail($lead->kw_id);
-
-					if ($keyword) {
-
-						$bucketIndex = $keyword->bucket;
-						$clientsList = DB::table('clients');
-						$clientsList = $clientsList->join('assigned_zones', 'clients.id', '=', 'assigned_zones.client_id');
-						//$clientsList = $clientsList->join('assignedd_areas','assignedd_areas.assigned_zone_id','=','assigned_zones.id');
-
-						$clientsList = $clientsList->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id');
-						$clientsList = $clientsList->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id');
-						$clientsList = $clientsList->join('keyword_sell_count', 'keyword_sell_count.slug', '=', 'assigned_kwds.sold_on_position');
-						$clientsList = $clientsList->select('clients.*', 'assigned_kwds.*', 'assigned_zones.*', 'assigned_zones.city_id as assgn_city_id', 'keyword.keyword', 'keyword.category', 'keyword.bucket', 'keyword_sell_count.*', 'keyword_sell_count.cat1_price', 'keyword_sell_count.cat2_price', 'keyword_sell_count.cat3_price', 'keyword_sell_count.cat4_price', 'keyword_sell_count.cat5_price');
-						$clientsList = $clientsList->where('keyword.id', '=', $lead->kw_id);
-						$clientsList = $clientsList->where('assigned_zones.city_id', '=', $lead->city_id);
-
-						//$clientsList = $clientsList->where('assigned_zones.zone_id','=',$request->input('area_zone'))
-						//	$clientsList = $clientsList->where('assigned_zones.zone_id','=',$lead->zone_id);
-						//	$clientsList = $clientsList->where('assignedd_areas.area_id','=',$lead->area_id);
-
-						$clientsList = $clientsList->whereNull('clients.deleted_at');
-						$clientsList = $clientsList->where('clients.coins_amt', '>', '0');
-						//$clientsList = $clientsList->where('clients.coins_amt','>',50);
-						//$clientsList = $clientsList->where('clients.expired_on','>',date("Y-m-d H:i:s"));
-						/* 
-						$clientsList = $clientsList->where(function($query){
-						$query->where(function($query){
-						$query->where('clients.leads_remaining','>','0')								
-						->orWhere('clients.coins_amt','>','50') 				
-						->orWhere('clients.expired_on','>',date("Y-m-d H:i:s"));					
-						}); */
-
-						/* ->orWhere(function($query){
-						$query->where(function($query){
-						$query->where('clients.client_type','free_subscription')
-						->orWhere('clients.client_type','yearly_subscription');
-						})
-						->whereDate('clients.yrly_subs_end_date','>',date('Y-m-d'));
-						})
-						->orWhere(function($query){
-						$query->where('clients.client_type','count_based_subscription')
-						->where('clients.leads_remaining','>','0');
-						}); */
-
-						$clientsList = $clientsList->groupby('clients.id');
-						$clientsList = $clientsList->where('active_status', '1');
-						$clientsList = $clientsList->orderBy(DB::raw('(CASE `assigned_kwds`.`sold_on_position` WHEN \'diamond\' THEN 1 WHEN \'platinum\' THEN 2 WHEN \'gold\' THEN 3 WHEN \'silver\' THEN 4 END)'), 'asc');
-						$clientsList = $clientsList->get();
-
-						$defaulterClientsList = DB::table('clients');
-						//	$defaulterClientsList = $defaulterClientsList->join('assigned_zones','clients.id','=','assigned_zones.client_id');
-						//$defaulterClientsList = $defaulterClientsList->join('assignedd_areas','assignedd_areas.assigned_zone_id','=','assigned_zones.id');
-
-						$defaulterClientsList = $defaulterClientsList->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id');
-						$defaulterClientsList = $defaulterClientsList->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id');
-						$defaulterClientsList = $defaulterClientsList->join('keyword_sell_count', 'keyword_sell_count.slug', '=', 'assigned_kwds.sold_on_position');
-						$defaulterClientsList = $defaulterClientsList->select('clients.*', 'assigned_kwds.*', 'keyword.keyword', 'keyword.category', 'keyword.bucket');
-						$defaulterClientsList = $defaulterClientsList->where('keyword.id', '=', $lead->kw_id);
-
-						//	$defaulterClientsList = $defaulterClientsList->where('assigned_zones.zone_id','=',$lead->zone_id);
-						//$defaulterClientsList = $defaulterClientsList->where('assignedd_areas.area_id','=',$lead->area_id);
-
-						$defaulterClientsList = $defaulterClientsList->whereNull('clients.deleted_at');
-						$defaulterClientsList = $defaulterClientsList->where(function ($query) {
-							$query->where(function ($query) {
-
-								//$query->whereIn('clients.client_type','lead_based')
-								$query->where('clients.coins_amt', '>', '0');
-								// ->where('clients.leads_remaining','>','0');
-							});
-							/* ->orWhere(function($query){
-								$query->where(function($query){
-									$query->where('clients.client_type','free_subscription')
-									->orWhere('clients.client_type','yearly_subscription');
-								})
-								->whereDate('clients.yrly_subs_end_date','<=',date('Y-m-d'));
-							})
-							->orWhere(function($query){
-								$query->where('clients.client_type','count_based_subscription')
-									  ->where('clients.leads_remaining','=','0');
-							}); */
-
-
-						});
-						$defaulterClientsList = $defaulterClientsList->orderby(DB::raw('(CASE `assigned_kwds`.`sold_on_position` WHEN \'platinum\' THEN 1 WHEN \'diamond\' THEN 2 END)'), 'asc');
-						//$defaulterClientsList = $defaulterClientsList->orderby(DB::raw('(CASE `clients`.`client_type` WHEN \'Platinum\' THEN 1 WHEN \'Diamond\' THEN 2 END)'),'asc');
-						//->orderby('comment_count','desc')
-						//->tosql();
-						$defaulterClientsList = $defaulterClientsList->get();
-
-						// BUCKET CALCULATION
-						// ******************
-						$max = $mCount = 5;
-						$i = 0;
-						$totalClients = count($clientsList);
-						$buckets = [];
-						foreach ($clientsList as $client) {
-							if ($mCount == 0) {
-								$j = $i;
-								$buckets[++$j] = $buckets[$i++];
-								$buckets[$j]['diamond'] = [];
-								$mCount = $max - (count($buckets[$j], 1) - 5);
-							}
-							if ($client->sold_on_position == 'platinum') {
-								$buckets[$i]['platinum'][] = $client;
-							}
-							if ($client->sold_on_position == 'diamond') {
-								$buckets[$i]['diamond'][] = $client;
-							}
-
-							if ($client->sold_on_position == 'gold') {
-								$buckets[$i]['gold'][] = $client;
-							}
-
-							if ($client->sold_on_position == 'silver') {
-								$buckets[$i]['silver'][] = $client;
-							}
-
-
-							--$mCount;
-						}
-
-						$i = 0;
-						$bucketCount = count($buckets);
-
-
-						if (!empty($clientsList)) {
-							foreach ($buckets as $bucket) {
-								if ($bucketCount <= $bucketIndex || $bucketIndex == 0) {
-									$bucketIndex = 0;
-								}
-
-								if ($bucketIndex == $i) {
-									foreach ($bucket as $position => $clientss) {
-
-										foreach ($clientss as $clientC) {
-
-											if ($clientC->client_type) {
-												$clnt = App\Models\Client\Client::find($clientC->client_id);
-
-												if ($clnt) {
-													$dontSave = 0;
-													switch ($clientC->client_type) {
-														case 'Platinum':
-															/*if($clientC->coins_amt-$clientC->cost_per_lead<0){
-																	$dontSave = 1;
-																}else{
-																	$clnt->coins_amt = $clnt->coins_amt - $clientC->cost_per_lead;
-																}*/
-
-															if ($clientC->coins_amt - 1 < 0) {
-																$dontSave = 1;
-															} else {
-
-
-
-
-																$keyword = App\Models\Keyword::find($lead->kw_id);
-
-																$keywordSellCount = App\Models\KeywordSellCount::where('slug', strtolower($clnt->client_type))->first();
-
-
-																if ($keyword->category == 'Category 1') {
-																	$coinsAmt = $keywordSellCount->cat1_price;
-																} else if ($keyword->category == 'Category 2') {
-																	$coinsAmt = $keywordSellCount->cat2_price;
-																} else if ($keyword->category == 'Category 3') {
-																	$coinsAmt = $keywordSellCount->cat3_price;
-																} else if ($keyword->category == 'Category 4') {
-																	$coinsAmt = $keywordSellCount->cat4_price;
-																} else if ($keyword->category == 'Category 5') {
-																	$coinsAmt = $keywordSellCount->cat5_price;
-																} else if ($keyword->category == 'Category 6') {
-																	$coinsAmt = $keywordSellCount->cat6_price;
-																}else if ($keyword->category == 'Category 7') {
-																	$coinsAmt = $keywordSellCount->cat7_price;
-																}else if ($keyword->category == 'Category 8') {
-																	$coinsAmt = $keywordSellCount->cat8_price;
-																}else if ($keyword->category == 'Category 9') {
-																	$coinsAmt = $keywordSellCount->cat9_price;
-																}else if ($keyword->category == 'Category 10') {
-																	$coinsAmt = $keywordSellCount->cat10_price;
-																}else {
-																	$coinsAmt = '130';
-																}
-
-
-																$clnt->coins_amt = $clnt->coins_amt - $coinsAmt;
-
-															}
-
-															/* if($clnt->coins_amt<50){
-																$clnt->expired_on = date("Y-m-d H:i:s");
-															} */
-															break;
-														case 'Diamond':
-															/* if($clientC->coins_amt-$clientC->cost_per_lead<0){
-																	$dontSave = 1;
-																}else{
-																	$clnt->coins_amt = $clnt->coins_amt - $clientC->cost_per_lead;
-																} */
-
-															if ($clientC->coins_amt - 1 < 0) {
-																$dontSave = 1;
-															} else {
-
-
-
-																$keyword = App\Models\Keyword::find($lead->kw_id);
-
-																$keywordSellCount = App\Models\KeywordSellCount::where('slug', strtolower($clnt->client_type))->first();
-
-
-																if ($keyword->category == 'Category 1') {
-																	$coinsAmt = $keywordSellCount->cat1_price;
-																} else if ($keyword->category == 'Category 2') {
-																	$coinsAmt = $keywordSellCount->cat2_price;
-																} else if ($keyword->category == 'Category 3') {
-																	$coinsAmt = $keywordSellCount->cat3_price;
-																} else if ($keyword->category == 'Category 4') {
-																	$coinsAmt = $keywordSellCount->cat4_price;
-																} else if ($keyword->category == 'Category 5') {
-																	$coinsAmt = $keywordSellCount->cat5_price;
-																} else if ($keyword->category == 'Category 6') {
-																	$coinsAmt = $keywordSellCount->cat6_price;
-																}else if ($keyword->category == 'Category 7') {
-																	$coinsAmt = $keywordSellCount->cat7_price;
-																}else if ($keyword->category == 'Category 8') {
-																	$coinsAmt = $keywordSellCount->cat8_price;
-																}else if ($keyword->category == 'Category 9') {
-																	$coinsAmt = $keywordSellCount->cat9_price;
-																}else if ($keyword->category == 'Category 10') {
-																	$coinsAmt = $keywordSellCount->cat10_price;
-																}else {
-																	$coinsAmt = 130;
-																}
-
-
-																$clnt->coins_amt = $clnt->coins_amt - $coinsAmt;
-
-															}
-
-															/* if($clnt->coins_amt<50){
-																$clnt->expired_on = date("Y-m-d H:i:s");
-															} */
-															break;
-
-
-
-													}
-													switch ($clientC->category) {
-														case 'Category 1':
-															if ($clientC->coins_amt - $clientC->cat1_price < 0) {
-																$dontSave = 1;
-															} else {
-																$clnt->coins_amt = $clnt->coins_amt - $clientC->cat1_price;
-															}
-															break;
-														case 'Category 2':
-															if ($clientC->coins_amt - $clientC->cat2_price < 0) {
-																$dontSave = 1;
-															} else {
-																$clnt->coins_amt = $clientC->coins_amt - $client->cat2_price;
-															}
-															break;
-														case 'Category 3':
-															if ($clientC->coins_amt - $clientC->cat3_price < 0) {
-																$dontSave = 1;
-															} else {
-																$clnt->coins_amt = $clientC->coins_amt - $clientC->cat3_price;
-															}
-															break;
-														case 'Category 4':
-															if ($clientC->coins_amt - $clientC->cat4_price < 0) {
-																$dontSave = 1;
-															} else {
-																$clnt->coins_amt = $clientC->coins_amt - $clientC->cat4_price;
-															}
-															break;
-														case 'Category 5':
-															if ($clientC->coins_amt - $clientC->cat5_price < 0) {
-																$dontSave = 1;
-															} else {
-																$clnt->coins_amt = $clientC->coins_amt - $clientC->cat5_price;
-															}
-															break;
-														case 'Category X':
-															if ($clientC->sold_on_position == 'premium') {
-																$amtToDeduct = $clientC->premium_price;
-															}
-															if ($clientC->sold_on_position == 'platinum') {
-																$amtToDeduct = $clientC->platinum_price;
-															}
-															if ($clientC->sold_on_position == 'king') {
-																$amtToDeduct = $clientC->king_price;
-															}
-															if ($clientC->sold_on_position == 'royal') {
-																$amtToDeduct = $clientC->royal_price;
-															}
-															if ($clientC->sold_on_position == 'preferred') {
-																$amtToDeduct = $clientC->preferred_price;
-															}
-															if ($clientC->coins_amt - $amtToDeduct < 0) {
-																$dontSave = 1;
-															} else {
-																$clnt->coins_amt = $clientC->coins_amt - $amtToDeduct;
-															}
-															break;
-													}
-													if ($dontSave) {
-														//$this->intimateDefaulterClients($client, $lead);
-														continue;
-													} else {
-														$clnt->save();
-													}
-												}
-											}
-											/* else if($client->client_type == 'count_based_subscription'){
-												$clnt = Client::find($client->id);
-												if($clnt){
-													//$dontSave = 0;
-													if($clnt->leads_remaining==0){
-														$this->intimateDefaulterClients($client, $lead);
-														continue;
-													}
-													else{
-														$clnt->leads_remaining = $clnt->leads_remaining-1;	
-														if($clnt->leads_remaining==0){
-															$clnt->expired_on = date("Y-m-d H:i:s");
-														}
-														$clnt->save();
-													}
-												}
-											} */
-
-											$assignvalidation = App\Models\AssignedLead::where('client_id', $clientC->client_id)->where('kw_id', $lead->kw_id)->where('lead_id', $lead->id)->get()->count();
-											if ($assignvalidation == 0) {
-
-												$assignedLead = new App\Models\AssignedLead;
-												$assignedLead->kw_id = $lead->kw_id;
-												$assignedLead->client_id = $clientC->client_id;
-												$assignedLead->lead_id = $lead->id;
-												$assignedLead->coins = $coinsAmt;
-
-												if ($assignedLead->save()) {
-													$lead->push_by = 1;
-													$lead->assign_status = 1;
-													$lead->save();
-													$followUp = new App\Models\LeadFollowUp;
-													$followUp->status = App\Models\Status::where('name', 'LIKE', 'New Lead')->first()->id;
-													$followUp->lead_id = $lead->id;
-													$followUp->client_id = $clientC->client_id;
-													$followUp->save();
-
-												}
-											}
-
-
-
-										}
-
-									}
-									$kw = App\Models\Keyword::find($lead->kw_id);
-									$kw->bucket = $i + 1;
-									$kw->save();
-								}
-								$i++;
-
-
-
-							}
-
-
-
-
-						}
-
-					}
-
-				}
-
-
-
-			}
-		}
-	}
-
+    if (!$lead || empty($lead->id)) {
+        return;
+    }
+
+    $lead = App\Models\Lead::find($lead->id);
+    if (!$lead || !$lead->kw_id || !$lead->city_id) {
+        return;
+    }
+
+    $city = App\Models\Citieslists::find($lead->city_id);
+    $keyword = App\Models\Keyword::find($lead->kw_id);
+
+    if (!$city || !$keyword) {
+        return;
+    }
+
+    $statusNewLead = App\Models\Status::where('name', 'New Lead')->value('id');
+
+    $clients = DB::table('clients')
+        ->join('assigned_zones', 'clients.id', '=', 'assigned_zones.client_id')
+        ->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
+        ->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+        ->join('keyword_sell_count', 'keyword_sell_count.slug', '=', 'assigned_kwds.sold_on_position')
+        ->where('keyword.id', $lead->kw_id)
+        ->where('assigned_zones.city_id', $lead->city_id)
+        ->whereNull('clients.deleted_at')
+        ->where('clients.coins_amt', '>', 0)
+        ->where('clients.active_status', 1)
+        ->distinct('clients.id')
+        ->orderByRaw("
+            CASE assigned_kwds.sold_on_position
+                WHEN 'diamond' THEN 1
+                WHEN 'platinum' THEN 2
+                WHEN 'gold' THEN 3
+                WHEN 'silver' THEN 4
+            END
+        ")
+        ->get();
+
+    foreach ($clients as $clientRow) {
+
+        $client = App\Models\Client\Client::find($clientRow->client_id);
+        if (!$client) {
+            continue;
+        }
+
+        $sellPrice = App\Models\KeywordSellCount::where(
+            'slug',
+            strtolower($client->client_type)
+        )->first();
+
+        if (!$sellPrice) {
+            continue;
+        }
+
+        // CATEGORY PRICE
+        $category = $keyword->category;
+        $coinsToDeduct = match ($category) {
+            'Category 1' => $sellPrice->cat1_price,
+            'Category 2' => $sellPrice->cat2_price,
+            'Category 3' => $sellPrice->cat3_price,
+            'Category 4' => $sellPrice->cat4_price,
+            'Category 5' => $sellPrice->cat5_price,
+            'Category 6' => $sellPrice->cat6_price,
+            'Category 7' => $sellPrice->cat7_price,
+            'Category 8' => $sellPrice->cat8_price,
+            'Category 9' => $sellPrice->cat9_price,
+            'Category 10' => $sellPrice->cat10_price,
+            default => 130,
+        };
+
+        if ($client->coins_amt < $coinsToDeduct) {
+            continue;
+        }
+
+        // DEDUCT COINS ONCE
+        $client->coins_amt -= $coinsToDeduct;
+        $client->save();
+
+        // ASSIGN LEAD
+        $alreadyAssigned = App\Models\AssignedLead::where([
+            'client_id' => $client->id,
+            'kw_id' => $lead->kw_id,
+            'lead_id' => $lead->id
+        ])->exists();
+
+        if ($alreadyAssigned) {
+            continue;
+        }
+
+        App\Models\AssignedLead::create([
+            'client_id' => $client->id,
+            'lead_id' => $lead->id,
+            'kw_id' => $lead->kw_id,
+            'coins' => $coinsToDeduct,
+        ]);
+
+        App\Models\LeadFollowUp::create([
+            'status' => $statusNewLead,
+            'lead_id' => $lead->id,
+            'client_id' => $client->id,
+        ]);
+
+        $lead->update([
+            'push_by' => '1',
+            'assign_status' => '1',
+        ]);
+    }
+
+    // ROTATE BUCKET
+    $keyword->increment('bucket');
 }

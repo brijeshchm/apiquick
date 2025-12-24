@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class AssignedLead extends Model
 {
-    protected $fillable = ['kw_id', 'client_id', 'lead_id','favoriteLead','scrapLead','scrapPay','scrapValue','primeLead','coins'];
+    protected $fillable = ['kw_id', 'client_id', 'lead_id','favorite_lead','scrapLead','scrapPay','scrapValue','primeLead','coins'];
 }

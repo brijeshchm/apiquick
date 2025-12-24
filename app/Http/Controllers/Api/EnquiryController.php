@@ -1744,6 +1744,117 @@ class EnquiryController extends Controller
 				'Date' => date('d M, Y H:i:s', strtotime($row->created_at)),
 			];
 		}
+ 
+		return response()->json([
+			'success' => true,
+			'data' => $rows,
+		], 200);
+		 
+	}
+	/**
+	 * @OA\Get(
+	 *     path="/api/business/export-enquiry-download",
+	 *     tags={"Enquiries"},
+	 *     summary="Get all export enquiries",
+	 *     description="Fetch a paginated list of enquiries with optional date filters",
+	 *     security={{"bearerAuth":{}}},
+	 *     @OA\Parameter(
+	 *         name="date_from",
+	 *         in="query",
+	 *         description="Start date (YYYY-MM-DD)",
+	 *         required=false,
+	 *         @OA\Schema(type="string", format="date", example="2025-01-01")
+	 *     ),
+	 *
+	 *     @OA\Parameter(
+	 *         name="date_to",
+	 *         in="query",
+	 *         description="End date (YYYY-MM-DD)",
+	 *         required=false,
+	 *         @OA\Schema(type="string", format="date", example="2025-01-31")
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Enquiries fetched successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=201),
+	 *                     @OA\Property(property="name", type="string", example="Jane Smith"),
+	 *                     @OA\Property(property="email", type="string", example="jane@example.com"),
+	 *                     @OA\Property(property="mobile", type="string", example="+911234567891"),
+	 *                     @OA\Property(property="area", type="string", example="Andheri"),
+	 *                     @OA\Property(property="zone", type="string", example="West"),
+	 *                     @OA\Property(property="created_at", type="string", example="2025-09-06")
+	 *                 )
+	 *             ),
+	 *             @OA\Property(property="pagination", type="object",
+	 *                 @OA\Property(property="page", type="integer", example=1),
+	 *                 @OA\Property(property="limit", type="integer", example=20),
+	 *                 @OA\Property(property="total", type="integer", example=50)
+	 *             )
+	 *         )
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated"
+	 *     )
+	 * )
+	 */
+	public function exportEnquiryDownload(Request $request)
+	{
+		// 🔐 Auth check
+		if (!Auth::guard('sanctum')->check()) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Unauthenticated'
+			], 401);
+		}
+
+		$user = auth('sanctum')->user();
+
+		$query = DB::table('leads')
+			->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
+			->leftJoin('citylists', 'leads.city_id', '=', 'citylists.id')
+			->leftJoin('areas', 'leads.area_id', '=', 'areas.id')
+			->leftJoin('zones', 'leads.zone_id', '=', 'zones.id')
+			->where('assigned_leads.client_id', $user->id)
+			->select(
+				'leads.name',
+				'leads.email',
+				'leads.mobile',
+				'leads.kw_text',
+				'leads.city_name',
+				'assigned_leads.created_at'
+			)
+			->orderBy('assigned_leads.created_at', 'desc');
+
+		// 📅 Date filters
+		if ($request->filled('date_from')) {
+			$query->whereDate('assigned_leads.created_at', '>=', $request->date_from);
+		}
+
+		if ($request->filled('date_to')) {
+			$query->whereDate('assigned_leads.created_at', '<=', $request->date_to);
+		}
+
+		$enquiries = $query->get();
+
+		// 🧾 Prepare Excel rows
+		$rows = [];
+		foreach ($enquiries as $row) {
+			$rows[] = [
+				'Name' => $row->name,
+				'Mobile' => $row->mobile,
+				'Email' => $row->email,
+				'Course' => $row->kw_text,
+				'City' => $row->city_name,
+				'Date' => date('d M, Y H:i:s', strtotime($row->created_at)),
+			];
+		}
 
 		// 📥 Download Excel
 		return Excel::download(

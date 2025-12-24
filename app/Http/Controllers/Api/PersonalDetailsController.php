@@ -138,7 +138,7 @@ class PersonalDetailsController extends Controller
 			}
 
 			// ✅ Get client
-			$client = Client::where('user_id', $authUser->id)->first();
+			$client = Client::where('id', $authUser->id)->first();
 			if (!$client) {
 				return response()->json([
 					'status' => false,

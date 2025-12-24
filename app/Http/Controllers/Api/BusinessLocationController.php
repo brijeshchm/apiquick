@@ -369,7 +369,7 @@ class BusinessLocationController extends Controller
 	 *             @OA\Property(property="landmark", type="string", example="Near Sector 18 Metro Station"),
 	 *             @OA\Property(property="address", type="string", example="123 MG Road, Sector 45"),
 	 *             @OA\Property(property="city", type="string", example="Noida"),
-	 *             @OA\Property(property="business_city", type="string", example="Delhi NCR"),
+	 *             @OA\Property(property="zone", type="string", example="Delhi NCR"),
 	 *             @OA\Property(property="state", type="string", example="Uttar Pradesh"),
 	 *             @OA\Property(property="country", type="string", example="India"),
 	 *             @OA\Property(property="pincode", type="string", example="201301"),
@@ -388,7 +388,7 @@ class BusinessLocationController extends Controller
 	 *                 @OA\Property(property="landmark", type="string", example="Near Sector 18 Metro Station"),
 	 *                 @OA\Property(property="address", type="string", example="123 MG Road, Sector 45"),
 	 *                 @OA\Property(property="city", type="string", example="Noida"),
-	 *                 @OA\Property(property="business_city", type="string", example="Delhi NCR"),
+	 *                 @OA\Property(property="zone", type="string", example="Delhi NCR"),
 	 *                 @OA\Property(property="state", type="string", example="Uttar Pradesh"),
 	 *                 @OA\Property(property="country", type="string", example="India"),
 	 *                 @OA\Property(property="pincode", type="string", example="201301"),
@@ -458,12 +458,16 @@ class BusinessLocationController extends Controller
 		$string = filter_var($string, FILTER_SANITIZE_STRING);
 		$string = preg_replace('/[^A-Za-z0-9]/', ' ', $string);
 		$string = preg_replace('/\s+/', ' ', str_replace('&', '', trim($string)));
-
+		$state = State::find($request->state);
+		$city = Citieslists::find($request->city);
+		
 		$client->business_name = $string;
 		$client->address = $request->input('address');
 		$client->landmark = $request->input('landmark');
-		$client->business_city = $request->input('city');
-		$client->state = $request->input('state');
+		$client->state_id = $state?->id;
+		$client->state = $state?->name;
+		$client->city_id = $city?->id;
+		$client->city = $city?->city;
 		$client->country = $request->input('country');
 
 		if ($client->save()) {

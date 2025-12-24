@@ -13,6 +13,7 @@ use App\Models\Client\Client;
 use DB;
 use Log;
 use Validator;
+use Illuminate\Validation\Rule;
 use function PHPUnit\Framework\isFalse;
 
 /**
@@ -84,10 +85,11 @@ class ProfileController extends Controller
                 return response()->json(['status' => false, 'message' => 'User account is inactive',], 403);
             }
 
+
             $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
             $times = ["24:00" => "Open 24 Hrs", "00:00" => "00:00", "00:30" => "00:30", "01:00" => "01:00", "01:30" => "01:30", "02:00" => "02:00", "02:30" => "02:30", "03:00" => "03:00", "03:30" => "03:30", "04:00" => "04:00", "04:30" => "04:30", "05:00" => "05:00", "05:30" => "05:30", "06:00" => "06:00", "06:30" => "06:30", "07:00" => "07:00", "07:30" => "07:30", "08:00" => "08:00", "08:30" => "08:30", "09:00" => "09:00", "09:30" => "09:30", "10:00" => "10:00", "10:30" => "10:30", "11:00" => "11:00", "11:30" => "11:30", "12:00" => "12:00", "12:30" => "12:30", "13:00" => "13:00", "13:30" => "13:30", "14:00" => "14:00", "14:30" => "14:30", "15:00" => "15:00", "15:30" => "15:30", "16:00" => "16:00", "16:30" => "16:30", "17:00" => "17:00", "17:30" => "17:30", "18:00" => "18:00", "18:30" => "18:30", "19:00" => "19:00", "19:30" => "19:30", "20:00" => "20:00", "20:30" => "20:30", "21:00" => "21:00", "21:30" => "21:30", "22:00" => "22:00", "22:30" => "22:30", "23:00" => "23:00", "23:30" => "23:30", "closed" => "Closed"];
             if (!empty($user->time)) {
-                $time = unserialize($user->time);
+                $time = json_decode($user->time);
             } else {
                 $time = "";
             }
@@ -102,12 +104,16 @@ class ProfileController extends Controller
                 'client_id' => $user->id,
                 'business_name' => $user->business_name,
                 'email' => $user->email,
+                'mobile' => $user->mobile,
+                'sec_mobile' => $user->sec_mobile,
                 'address' => $user->address,
                 'landmark' => $user->landmark,
-                'business_city_id' => $user->business_city_id,
-                'business_city' => $user->business_city,
-                'business_state' => $user->business_state,
-                'business_state_id' => $user->business_state_id,
+                'zone' => $user->zone,
+                'occupation' => $user->occupation,
+                'city_id' => $user->city_id,
+                'city' => $user->city,
+                'state' => $user->state,
+                'state_id' => $user->state_id,
                 'country' => $user->country,
                 'business_intro' => $user->business_intro,
                 'client_type' => $user->client_type,
@@ -153,11 +159,16 @@ class ProfileController extends Controller
      *             @OA\Property(property="business_name", type="string", example="business name"),
      *             @OA\Property(property="address", type="string", example=" E-23 sector -3 noida"),
      *             @OA\Property(property="landmark", type="string", example="landmark"),
-     *             @OA\Property(property="business_state", type="integer", example=10),
-     *             @OA\Property(property="business_city", type="integer", example=961),
+     *             @OA\Property(property="email", type="string", example="email"),
+     *             @OA\Property(property="mobile", type="integer", example="234567986"),
+     *             @OA\Property(property="sec_mobile", type="integer", example="234567986"),
+     *             @OA\Property(property="state", type="integer", example=39),
+     *             @OA\Property(property="city", type="integer", example=961),
+     *             @OA\Property(property="zone", type="string", example="Noida"),
      *             @OA\Property(property="area", type="string", example="sector-3"),
      *             @OA\Property(property="pincode", type="integer", example="201301"),
      *             @OA\Property(property="country", type="string", example="india"),
+     *             @OA\Property(property="occupation", type="string", example="Engineer"),
      *             @OA\Property(property="year_of_estb", type="integer", example=2020),
      *             @OA\Property(property="display_hofo", type="string", example="0"),
      *             @OA\Property(property="business_intro", type="string", example="We are a leading provider of IT services established in 2020."),
@@ -210,16 +221,28 @@ class ProfileController extends Controller
                     'message' => 'Client not found'
                 ], 404);
             }
-
+ 
             // ✅ Validation
             $validator = Validator::make($request->all(), [
                 'year_of_estb' => 'required|digits:4|integer|min:1900|max:' . date('Y'),
-                'business_name' => 'required|string|max:255',
+
+                'business_name' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    Rule::unique('clients', 'business_name')->ignore($client->id),
+                ],
                 'business_intro' => 'required|string',
+                'email' => 'required|email|unique:clients,email,' . $client->id,
+                'mobile' => [
+                    'required',
+                    'digits_between:10,15',
+                    Rule::unique('clients', 'mobile')->ignore($client->id),
+                ],
                 'address' => 'required|string|max:255',
                 'certifications' => 'required|string|max:255',
-                'business_city' => 'required|integer|exists:citylists,id',
-                'business_state' => 'required|integer|exists:state,id',
+                'city' => 'required|integer|exists:citylists,id',
+                'state' => 'required|integer|exists:state,id',
                 'pincode' => 'required|digits:6',
                 'area' => 'required|string|max:255',
 
@@ -239,28 +262,42 @@ class ProfileController extends Controller
             }
 
             // ✅ State
-            $state = State::find($request->business_state);
+            $state = State::find($request->state);
 
             // ✅ City
-            $city = Citieslists::find($request->business_city);
+            $cityDetails = Citieslists::find($request->city);
+            $string = $request->business_name;
+            $string = filter_var($string, FILTER_SANITIZE_STRING);
+            $string = preg_replace('/[^A-Za-z0-9]/', ' ', $string);
+            $string = preg_replace('/\s+/', ' ', str_replace('&', '', trim($string)));
+ 
+            $time = "";
+            if (!empty($request->time)) {
+                $time = json_encode($request->time);
+            }
 
             // ✅ Update Client
             $client->update([
-                'business_name' => $request->business_name,
+                'business_name' => $string,
+                'email' => $request->email,
+                'mobile' => $request->mobile,
+                'sec_mobile' => $request->sec_mobile,
                 'address' => $request->address,
                 'landmark' => $request->landmark,
                 'display_hofo' => $request->display_hofo,
-                'business_state_id' => $state?->id,
-                'business_state' => $state?->name,
-                'business_city_id' => $city?->id,
-                'business_city' => $city?->city,
+                'state_id' => $state?->id,
+                'state' => $state?->name,
+                'city_id' =>$cityDetails?->id,
+                'city' => $cityDetails?->city,
                 'area' => $request->area,
+                'zone' => $request->zone,
+                'occupation' => $request->occupation,
                 'pincode' => $request->pincode,
                 'country' => $request->country,
                 'business_intro' => $request->business_intro,
                 'year_of_estb' => $request->year_of_estb,
                 'certifications' => $request->certifications,
-                'time' => $request->time,
+                'time' => $time,
             ]);
 
             return response()->json([

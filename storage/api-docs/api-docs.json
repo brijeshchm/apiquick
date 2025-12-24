@@ -451,7 +451,7 @@
         "/api/business/saveBusinessOwners": {
             "post": {
                 "tags": [
-                    "Registration Business"
+                    "Frontend Registration Business"
                 ],
                 "summary": "List Your Business",
                 "description": "Registration of business business name, email, mobile.",
@@ -2198,7 +2198,7 @@
                                         "type": "string",
                                         "example": "Noida"
                                     },
-                                    "business_city": {
+                                    "zone": {
                                         "type": "string",
                                         "example": "Delhi NCR"
                                     },
@@ -2261,7 +2261,7 @@
                                                     "type": "string",
                                                     "example": "Noida"
                                                 },
-                                                "business_city": {
+                                                "zone": {
                                                     "type": "string",
                                                     "example": "Delhi NCR"
                                                 },
@@ -4327,6 +4327,119 @@
                 ]
             }
         },
+        "/api/business/export-enquiry-download": {
+            "get": {
+                "tags": [
+                    "Enquiries"
+                ],
+                "summary": "Get all export enquiries",
+                "description": "Fetch a paginated list of enquiries with optional date filters",
+                "operationId": "b08575ba8ac33f0ebd937ea2f27cedb0",
+                "parameters": [
+                    {
+                        "name": "date_from",
+                        "in": "query",
+                        "description": "Start date (YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2025-01-01"
+                        }
+                    },
+                    {
+                        "name": "date_to",
+                        "in": "query",
+                        "description": "End date (YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2025-01-31"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Enquiries fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 201
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Jane Smith"
+                                                    },
+                                                    "email": {
+                                                        "type": "string",
+                                                        "example": "jane@example.com"
+                                                    },
+                                                    "mobile": {
+                                                        "type": "string",
+                                                        "example": "+911234567891"
+                                                    },
+                                                    "area": {
+                                                        "type": "string",
+                                                        "example": "Andheri"
+                                                    },
+                                                    "zone": {
+                                                        "type": "string",
+                                                        "example": "West"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "example": "2025-09-06"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "pagination": {
+                                            "properties": {
+                                                "page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "limit": {
+                                                    "type": "integer",
+                                                    "example": 20
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 50
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/business/get-invoice-history": {
             "get": {
                 "tags": [
@@ -4653,7 +4766,7 @@
                 ],
                 "summary": "Get personal details",
                 "description": "Fetch the personal details of the authenticated user",
-                "operationId": "de40ff3df630c731299c7e8b99511612",
+                "operationId": "getPersonalDetails",
                 "responses": {
                     "200": {
                         "description": "Personal details retrieved successfully",
@@ -4661,41 +4774,137 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "success": {
+                                        "status": {
                                             "type": "boolean",
                                             "example": true
                                         },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Personal details retrieved successfully"
+                                        },
                                         "data": {
                                             "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 101
+                                                "occupation": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Software Engineer"
+                                                            },
+                                                            "status": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
                                                 },
-                                                "name": {
-                                                    "type": "string",
-                                                    "example": "John Doe"
+                                                "cities": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 10
+                                                            },
+                                                            "city": {
+                                                                "type": "string",
+                                                                "example": "Delhi"
+                                                            },
+                                                            "state_id": {
+                                                                "type": "integer",
+                                                                "example": 5
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
                                                 },
-                                                "email": {
-                                                    "type": "string",
-                                                    "example": "john@example.com"
-                                                },
-                                                "phone": {
-                                                    "type": "string",
-                                                    "example": "+911234567890"
-                                                },
-                                                "address": {
-                                                    "type": "string",
-                                                    "example": "123, Example Street, City"
-                                                },
-                                                "created_at": {
-                                                    "type": "string",
-                                                    "format": "date-time",
-                                                    "example": "2025-09-06T12:00:00Z"
-                                                },
-                                                "updated_at": {
-                                                    "type": "string",
-                                                    "format": "date-time",
-                                                    "example": "2025-09-06T12:30:00Z"
+                                                "edit_data": {
+                                                    "properties": {
+                                                        "client_id": {
+                                                            "type": "integer",
+                                                            "example": 101
+                                                        },
+                                                        "sirName": {
+                                                            "type": "string",
+                                                            "example": "Mr"
+                                                        },
+                                                        "first_name": {
+                                                            "type": "string",
+                                                            "example": "John"
+                                                        },
+                                                        "middle_name": {
+                                                            "type": "string",
+                                                            "example": "A"
+                                                        },
+                                                        "last_name": {
+                                                            "type": "string",
+                                                            "example": "Doe"
+                                                        },
+                                                        "dob": {
+                                                            "type": "string",
+                                                            "format": "date",
+                                                            "example": "1995-08-15"
+                                                        },
+                                                        "personal_email": {
+                                                            "type": "string",
+                                                            "example": "john@example.com"
+                                                        },
+                                                        "marital": {
+                                                            "type": "string",
+                                                            "example": "Single"
+                                                        },
+                                                        "mobile": {
+                                                            "type": "string",
+                                                            "example": "9876543210"
+                                                        },
+                                                        "sec_mobile": {
+                                                            "type": "string",
+                                                            "example": "9123456789"
+                                                        },
+                                                        "city_id": {
+                                                            "type": "integer",
+                                                            "example": 10
+                                                        },
+                                                        "city": {
+                                                            "type": "string",
+                                                            "example": "Delhi"
+                                                        },
+                                                        "state_id": {
+                                                            "type": "integer",
+                                                            "example": 5
+                                                        },
+                                                        "state": {
+                                                            "type": "string",
+                                                            "example": "Delhi"
+                                                        },
+                                                        "country": {
+                                                            "type": "string",
+                                                            "example": "India"
+                                                        },
+                                                        "area": {
+                                                            "type": "string",
+                                                            "example": "Karol Bagh"
+                                                        },
+                                                        "pincode": {
+                                                            "type": "string",
+                                                            "example": "110005"
+                                                        },
+                                                        "gender": {
+                                                            "type": "string",
+                                                            "example": "Male"
+                                                        },
+                                                        "occupation": {
+                                                            "type": "string",
+                                                            "example": "Engineer"
+                                                        }
+                                                    },
+                                                    "type": "object"
                                                 }
                                             },
                                             "type": "object"
@@ -4707,18 +4916,38 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "Unauthenticated",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "success": {
+                                        "status": {
                                             "type": "boolean",
                                             "example": false
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Unauthorized access"
+                                            "example": "Unauthenticated: Token is missing or invalid"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Inactive user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User account is inactive"
                                         }
                                     },
                                     "type": "object"
@@ -4741,12 +4970,22 @@
                 ],
                 "summary": "Save or update personal details",
                 "description": "Save or update the personal details of the authenticated user",
-                "operationId": "c214fadab032e5941fa0811ace53c0bc",
+                "operationId": "savePersonalDetails",
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
+                                "required": [
+                                    "sirName",
+                                    "first_name",
+                                    "dob",
+                                    "personal_email",
+                                    "mobile",
+                                    "city",
+                                    "state",
+                                    "country"
+                                ],
                                 "properties": {
                                     "sirName": {
                                         "type": "string",
@@ -4769,32 +5008,40 @@
                                         "format": "date",
                                         "example": "1990-01-01"
                                     },
-                                    "email": {
+                                    "personal_email": {
                                         "type": "string",
                                         "format": "email",
                                         "example": "john@example.com"
                                     },
                                     "marital": {
                                         "type": "string",
-                                        "example": "single"
+                                        "example": "Single"
                                     },
-                                    "mobile": {
+                                    "personal_phone": {
                                         "type": "string",
-                                        "example": "+911234567890"
+                                        "example": "9876543210"
                                     },
-                                    "sec_mobile": {
+                                    "personal_city": {
+                                        "type": "integer",
+                                        "example": 10
+                                    },
+                                    "personal_state": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "country": {
                                         "type": "string",
-                                        "example": "+911234567891"
+                                        "example": "India"
                                     },
-                                    "city": {
-                                        "type": "string",
-                                        "example": "1011"
-                                    },
-                                    "area": {
+                                    "personal_area": {
                                         "type": "string",
                                         "example": "Connaught Place"
                                     },
-                                    "pincode": {
+                                    "personal_address": {
+                                        "type": "string",
+                                        "example": "Sector Delhi"
+                                    },
+                                    "personal_pincode": {
                                         "type": "string",
                                         "example": "110001"
                                     },
@@ -4804,7 +5051,7 @@
                                     },
                                     "gender": {
                                         "type": "string",
-                                        "example": "male"
+                                        "example": "Male"
                                     }
                                 },
                                 "type": "object"
@@ -4814,12 +5061,12 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Personal details saved successfully",
+                        "description": "Personal details updated successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "success": {
+                                        "status": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -4833,19 +5080,18 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Invalid request",
+                    "422": {
+                        "description": "Validation failed",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "success": {
+                                        "status": {
                                             "type": "boolean",
                                             "example": false
                                         },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Invalid parameters"
+                                        "errors": {
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -4859,13 +5105,13 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "success": {
+                                        "status": {
                                             "type": "boolean",
                                             "example": false
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Unauthorized access"
+                                            "example": "Unauthenticated"
                                         }
                                     },
                                     "type": "object"
@@ -5040,13 +5286,29 @@
                                         "type": "string",
                                         "example": "landmark"
                                     },
-                                    "business_state": {
-                                        "type": "integer",
-                                        "example": 10
+                                    "email": {
+                                        "type": "string",
+                                        "example": "email"
                                     },
-                                    "business_city": {
+                                    "mobile": {
+                                        "type": "integer",
+                                        "example": "234567986"
+                                    },
+                                    "sec_mobile": {
+                                        "type": "integer",
+                                        "example": "234567986"
+                                    },
+                                    "state": {
+                                        "type": "integer",
+                                        "example": 39
+                                    },
+                                    "city": {
                                         "type": "integer",
                                         "example": 961
+                                    },
+                                    "zone": {
+                                        "type": "string",
+                                        "example": "Noida"
                                     },
                                     "area": {
                                         "type": "string",
@@ -5059,6 +5321,10 @@
                                     "country": {
                                         "type": "string",
                                         "example": "india"
+                                    },
+                                    "occupation": {
+                                        "type": "string",
+                                        "example": "Engineer"
                                     },
                                     "year_of_estb": {
                                         "type": "integer",
@@ -6869,8 +7135,8 @@
             "description": "Auth Logout"
         },
         {
-            "name": "Registration Business",
-            "description": "Registration Business"
+            "name": "Frontend Registration Business",
+            "description": "Frontend Registration Business"
         },
         {
             "name": "business-location",

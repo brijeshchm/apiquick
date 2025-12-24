@@ -271,9 +271,10 @@ class ProfileController extends Controller
             $string = preg_replace('/[^A-Za-z0-9]/', ' ', $string);
             $string = preg_replace('/\s+/', ' ', str_replace('&', '', trim($string)));
  
-            $time = "";
+          
             if (!empty($request->time)) {
                 $time = json_encode($request->time);
+                $client->update(['time' => $time]);
             }
 
             // ✅ Update Client
@@ -296,8 +297,7 @@ class ProfileController extends Controller
                 'country' => $request->country,
                 'business_intro' => $request->business_intro,
                 'year_of_estb' => $request->year_of_estb,
-                'certifications' => $request->certifications,
-                'time' => $time,
+                'certifications' => $request->certifications,                
             ]);
 
             return response()->json([

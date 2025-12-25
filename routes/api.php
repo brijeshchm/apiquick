@@ -47,6 +47,10 @@ Route::post('/business/un-favorite',[EnquiryController::class, 'unFavoritleads']
 Route::post('/business/save-readLead',[EnquiryController::class, 'readLead']);
 Route::post('/business/scrap-lead',[EnquiryController::class, 'scrapLead']);
 Route::post('/business/pause-lead',[EnquiryController::class, 'pauseLead']);
+Route::get('/business/{id}/follow-up',[EnquiryController::class, 'getFollowUps']);
+Route::post('/business/{id}/save-follow-up',[EnquiryController::class, 'storeFollowUp']);
+
+
 Route::get('/business/get-scrap/{assignId}',[EnquiryController::class, 'getScrapLead']);
 Route::post('/business/save-scrap-lead',[EnquiryController::class, 'saveScrapLead']);
 Route::get('/business/enquiry',[EnquiryController::class,'enquiry']);

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\LeadFollowUp;
 use App\Models\Status;
 use App\Models\AssignedLead;
+use Illuminate\Validation\Rule;
 
 class EnquiryController extends Controller
 {
@@ -34,257 +35,427 @@ class EnquiryController extends Controller
 
 	}
 
-
-
-
 	/**
-	 * Update the specified resource in storage.
+	 * @OA\Get(
+	 *     path="/api/business/{id}/follow-up",
+	 *     summary="Get lead details with follow-up history",
+	 *     description="Returns lead information, follow-up history with pagination, and available statuses",
+	 *     tags={"Leads"},
+	 *      security={{"bearerAuth":{}}},
 	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 *     @OA\Parameter(
+	 *         name="id",
+	 *         in="path",
+	 *         required=true,
+	 *         description="Lead ID",
+	 *         @OA\Schema(type="integer", example=12)
+	 *     ),
+	 *
+	 *     @OA\Parameter(
+	 *         name="length",
+	 *         in="query",
+	 *         required=false,
+	 *         description="Pagination length",
+	 *         @OA\Schema(type="integer", example=10)
+	 *     ),
+	 *
+	 *     @OA\Parameter(
+	 *         name="count",
+	 *         in="query",
+	 *         required=false,
+	 *         description="Limit records count or use 'all'",
+	 *         @OA\Schema(type="string", example="all")
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Successful response",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="status", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Successfully"),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="object",
+	 *
+	 *                 @OA\Property(
+	 *                     property="lead",
+	 *                     type="object",
+	 *                     @OA\Property(property="lead_id", type="integer", example=12),
+	 *                     @OA\Property(property="assignId", type="integer", example=45),
+	 *                     @OA\Property(property="name", type="string", example="John Doe"),
+	 *                     @OA\Property(property="email", type="string", example="john@example.com"),
+	 *                     @OA\Property(property="city", type="string", example="Delhi"),
+	 *                     @OA\Property(property="city_id", type="integer", example=3),
+	 *                     @OA\Property(property="kw_id", type="integer", example=8),
+	 *                     @OA\Property(property="kw_text", type="string", example="Web Development"),
+	 *                     @OA\Property(property="status_id", type="integer", example=2),
+	 *                     @OA\Property(property="status", type="string", example="Open"),
+	 *                     @OA\Property(property="created", type="string", example="2025-01-15")
+	 *                 ),
+	 *
+	 *                 @OA\Property(
+	 *                     property="lead_follow_up",
+	 *                     type="array",
+	 *                     @OA\Items(
+	 *                         type="object",
+	 *                         @OA\Property(property="id", type="integer", example=101),
+	 *                         @OA\Property(property="lead_id", type="integer", example=12),
+	 *                         @OA\Property(property="status", type="string", example="Follow Up"),
+	 *                         @OA\Property(property="remarks", type="string", example="Client interested"),
+	 *                         @OA\Property(property="follow_up_date", type="string", example="25 Jan 2025"),
+	 *                         @OA\Property(property="created_at", type="string", example="25 Jan 2025 04:30 PM")
+	 *                     )
+	 *                 ),
+	 *
+	 *                 @OA\Property(
+	 *                     property="statuses",
+	 *                     type="array",
+	 *                     @OA\Items(
+	 *                         type="object",
+	 *                         @OA\Property(property="id", type="integer", example=1),
+	 *                         @OA\Property(property="name", type="string", example="Open")
+	 *                     )
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="status", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated: Token is missing or invalid"),
+	 *             @OA\Property(property="error", type="string", example="token_missing_or_invalid")
+	 *         )
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="Client not found"
+	 *     )
+	 * )
 	 */
-	public function followUp(Request $request, $id)
+
+
+	public function getFollowUps(Request $request, $id)
 	{
-		if ($request->ajax()) {
 
-			$clientID = auth()->guard('clients')->user()->id;
-			$lead = DB::table('leads')
-				->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
-				->select('leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created')
-				->orderBy('assigned_leads.created_at', 'desc')
-				->where('assigned_leads.client_id', $clientID)->where('leads.id', $id)->first();
-
-			$leadLastFollowUp = DB::table('lead_follow_ups as lead_follow_ups')
-				->where('lead_follow_ups.lead_id', '=', $id)
-				->where('lead_follow_ups.client_id', '=', $clientID)
-				->select('lead_follow_ups.*')
-				->orderBy('lead_follow_ups.id', 'desc')
-				->first();
-
-			$statuses = DB::table('status')->where('lead_follow_up', 1)->get();
-
-			$statusHtml = '';
-			$disabled = '';
-			$dateValue = '';
-			if (count($statuses) > 0) {
-				foreach ($statuses as $status) {
-					if (strcasecmp($status->name, 'new lead')) {
-						$selected = '';
-						if (isset($leadLastFollowUp->status) && $leadLastFollowUp->status == $status->id) {
-							$selected = 'selected';
-
-							if ($leadLastFollowUp->expected_date_time != NULL) {
-								$dateValue = date_format(date_create($leadLastFollowUp->expected_date_time), 'd-F-Y g:i A');
-							}
-
-						}
-						$statusHtml .= '<option data-value="' . $status->show_exp_date . '" value="' . $status->id . '" ' . $selected . '>' . $status->name . '</option>';
-					}
-				}
-			}
-
-			$html = '<div class="row">
-						<div class="x_content" style="padding:0">';
-			$number = $lead->mobile;
-			$html .= '<form class="form-label-left" method="post" onsubmit="return enquiryController.storeFollowUp(' . $id . ',this)">
-				 
-					 
-				    <div class="row">
-                        <div class="col-md-4" style="display:flex;">
-                        <label for=" " class="col-md-3 col-lg-3 col-form-label">Name :</label>
-                        
-                        <p name="name" type="text" class="form-control-static" > ' . $lead->name . '</p>
-                        </div>
-                        	
-                        <div class="col-md-4" style="display:flex;">
-                        <label for="" class="col-md-3 col-lg-3 col-form-label">Email :</label>
-                         	 <p name="email" type="text" class="form-control-static" > ' . $lead->email . '</p>
-                        </div>
-                        
-                         <div class="col-md-4" style="display:flex;">
-                         <label for=" " class="col-md-3 col-lg-3 col-form-label">Mobile :</label>
-                         <p name="mobile" type="tel" class="form-control-static" > ' . $lead->mobile . '</p>
-                        </div>
-                        
-                    </div>
-				 					 
-				     <div class="row">
-                           <div class="col-md-4" style="display:flex;">
-                         <label for="" class="col-md-3 col-lg-3 col-form-label">City :</label>
-                         	 <p name="city name" type="text" class="form-control-static" > ' . $lead->city_name . '</p>
-                        </div>
-                       
-                        <div class="col-md-4" style="display:flex;">
-                         <label for="" class="col-md-3 col-lg-4 col-form-label">Keyword :</label>
-                         	 <p name="keyword" type="text" class="form-control-static" > ' . $lead->kw_text . '</p>
-                        </div>
-                        
-                         <div class="col-md-4" style="display:flex;">
-                         <label for="" class="col-md-3 col-lg-3 col-form-label">Date :</label>
-                         	 <p name="date" type="text" class="form-control-static" > ' . date('d M Y', strtotime($lead->created)) . '</p>
-                        </div>                        
-                    </div>
-								 
-                <div class="row mb-3">
-                
-                <div class="col-md-4">
-                <label for="" class="">Status :</label>
-                <select class="select2_single form-control" name="status" tabindex="-1">
-                <option value="">-- SELECT STATUS --</option> 
-                ' . $statusHtml . '
-                </select>
-                
-                </div>
-                
-                <div class="col-md-4">
-                <label for="expected_date_time">Expected Date &amp; Time <span class="required">*</span></label>
-                <input type="text" id="expected_date_time" name="expected_date_time" class="form-control" value="' . $dateValue . '" placeholder="Expected Date &amp; Time" ' . $disabled . ' autocomplete="off">
-                </div>
-                
-                <div class="col-md-4">
-                <label for="remark">Counsellor Remark <span class="required">*</span></label>
-                <textarea name="remark" rows="1" class="form-control col-md-7 col-xs-12"></textarea>
-                </div>
-                </div>
-                <div class="form-group" style="float:right;">
-                <div class="col-md-11" style="float:right;">
-                	<label style="visibility:hidden">Submit</label>
-                	<button type="submit" class="btn btn-success btn-block" name="submit" value="Submit">Submit</button>
-                </div>
-                </div>
-							</form>';
-
-			$html .= '</div>
-					</div> 
-					<p style="margin-top:10px;margin-bottom:3px;"><strong>Follow Up Status</strong>  <select onchange="javascript:enquiryController.getAllFollowUps()" class="follow-up-count"><option value="5">Last 5</option><option value="all">All</option></select></p>
-					<div class="" style="overflow-x: none;">
-						<table id="datatable-enquiry-followups" class="table table-bordered table-striped table-hover">
-							<thead>
-								<tr>
-									<th>Date</th>
-									<th>Counsellor Remark</th>
-									<th>Status</th>
-									<th>Expected Date</th>
-								</tr>
-							</thead>
-						</table>
-					</div>';
-
-			return response()->json(['status' => 1, 'html' => $html], 200);
+		if (!Auth::guard('sanctum')->check()) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
 		}
+
+		// Check if user is active
+		$user = auth('sanctum')->user();
+		if (!$user) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
+		}
+
+		// ✅ Validation
+		$validator = Validator::make(
+			['lead_id' => $id],
+			[
+				'lead_id' => [
+					'required',
+					'integer',
+					Rule::exists('assigned_leads', 'lead_id')
+						->where(function ($query) use ($user) {
+							$query->where('client_id', $user->id);
+						}),
+				],
+			]
+		);
+
+
+		if ($validator->fails()) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Validation failed',
+				'errors' => $validator->errors()
+			], 422);
+		}
+
+
+		$client = Client::find($user->id);
+		if (!$client) {
+			$data['status'] = false;
+			$data['message'] = 'Client not found';
+		}
+		$clientID = $client->id;
+		$lead = DB::table('leads')
+			->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
+			->select('leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'assigned_leads.id as assignId')
+			->orderBy('assigned_leads.created_at', 'desc')
+			->where('assigned_leads.client_id', $clientID)->where('leads.id', $id)->first();
+		if (!$lead) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Lead not found'
+			], 404);
+		}
+		$data['lead'] = [
+			'lead_id' => $lead->id,
+			'assignId' => $lead->assignId,
+			'name' => $lead->name,
+			'email' => $lead->email,
+			'city' => $lead->city_name,
+			'city_id' => $lead->city_id,
+			'kw_id' => $lead->kw_id,
+			'kw_text' => $lead->kw_text,
+			'status_id' => $lead->status_id,
+			'status' => $lead->status_name,
+			'created' => date('Y-m-d', strtotime($lead->created)),
+		];
+
+
+		$leadLastFollowUp = DB::table('lead_follow_ups as lfu')
+			->join('status as s', 's.id', '=', 'lfu.status')
+			->where('lfu.lead_id', $id)
+			->where('lfu.client_id', $user->id)
+			->select(
+				'lfu.*',
+				's.name as status_name'
+			)
+			->orderByDesc('lfu.id');
+
+		/* ---------- PAGINATION ---------- */
+		$length = (int) $request->input('length', 10);
+
+		$leads = $leadLastFollowUp->paginate($length);
+
+		/* ---------- OPTIONAL LIMIT ---------- */
+		if ($request->input('count') !== 'all') {
+			$leads->getCollection()->splice(
+				(int) $request->input('count')
+			);
+		}
+
+		/* ---------- MAP DATA ---------- */
+		$leadFollowUp = $leads->getCollection()->transform(function ($item) {
+
+			return [
+				'id' => $item->id,
+				'lead_id' => $item->lead_id,
+				'status' => $item->status_name,
+				'remarks' => $item->remark ?? '',
+				'follow_up_date' => $item->expected_date_time
+					? date('d M Y', strtotime($item->expected_date_time))
+					: null,
+				'created_at' => date('d M Y h:i A', strtotime($item->created_at)),
+			];
+		});
+
+
+
+		$data['lead_follow_up'] = $leadFollowUp;
+
+		$data['statuses'] = DB::table('status')->where('lead_follow_up', 1)->get();
+
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
+
+
 	}
 
 	/**
-	 * Update the specified resource in storage.
+	 * @OA\Post(
+	 *     path="/api/business/{id}/save-follow-up",
+	 *     summary="Create lead follow-up",
+	 *     description="Store a new follow-up entry for a lead",
+	 *     tags={"Leads"},
+	 *       security={{"bearerAuth":{}}},
 	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 *     @OA\Parameter(
+	 *         name="id",
+	 *         in="path",
+	 *         required=true,
+	 *         description="Lead ID",
+	 *         @OA\Schema(type="integer", example=15)
+	 *     ),
+	 *
+	 *     @OA\RequestBody(
+	 *         required=true,
+	 *         @OA\JsonContent(
+	 *             required={"status","remark"},
+	 *             type="object",
+	 *
+	 *             @OA\Property(
+	 *                 property="status",
+	 *                 type="integer",
+	 *                 description="Status ID",
+	 *                 example=3
+	 *             ),
+	 *
+	 *             @OA\Property(
+	 *                 property="remark",
+	 *                 type="string",
+	 *                 description="Follow-up remarks",
+	 *                 example="Client asked for a call back"
+	 *             ),
+	 *
+	 *             @OA\Property(
+	 *                 property="expected_date_time",
+	 *                 type="string",
+	 *                 format="date-time",
+	 *                 nullable=true,
+	 *                 example="2025-01-25 15:30:00",
+	 *                 description="Required if selected status expects date/time"
+	 *             )
+	 *         )
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Follow-up stored successfully",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="status", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Successfully")
+	 *         )
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=400,
+	 *         description="Validation error",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="status", type="integer", example=1),
+	 *             @OA\Property(
+	 *                 property="errors",
+	 *                 type="object",
+	 *                 example={
+	 *                     "status": {"The status field is required."},
+	 *                     "remark": {"The remark field is required."}
+	 *                 }
+	 *             )
+	 *         )
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="status", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated: Token is missing or invalid"),
+	 *             @OA\Property(property="error", type="string", example="token_missing_or_invalid")
+	 *         )
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="Lead not found",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="status", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="Enquiry not found")
+	 *         )
+	 *     )
+	 * )
 	 */
+
 	public function storeFollowUp(Request $request, $id)
 	{
-		if ($request->ajax()) {
+		if (!Auth::guard('sanctum')->check()) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
+		}
+
+		// Check if user is active
+		$user = auth('sanctum')->user();
+		if (!$user) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
+		}
+
+		$validator = Validator::make($request->all(), [
+
+			'status' => 'required|integer',
+			'remark' => 'required',
+
+		]);
+		if ($validator->fails()) {
+			$errorsBag = $validator->getMessageBag()->toArray();
+			return response()->json(['status' => 1, 'errors' => $errorsBag], 400);
+		}
+
+		// check now expected date and time if status is not - not interested/location issue
+		$statusModel = Status::find($request->input('status'));
+
+		if ($statusModel->show_exp_date) {
 			$validator = Validator::make($request->all(), [
-
-				'status' => 'required',
-				'remark' => 'required',
-
+				'expected_date_time' => 'required',
 			]);
 			if ($validator->fails()) {
 				$errorsBag = $validator->getMessageBag()->toArray();
 				return response()->json(['status' => 1, 'errors' => $errorsBag], 400);
 			}
+		}
 
-			// check now expected date and time if status is not - not interested/location issue
-			$statusModel = Status::find($request->input('status'));
-			//if($statusModel->name!='Not Interested' && $statusModel->name!='Location Issue'){
-			if ($statusModel->show_exp_date) {
-				$validator = Validator::make($request->all(), [
-					'expected_date_time' => 'required',
-				]);
-				if ($validator->fails()) {
-					$errorsBag = $validator->getMessageBag()->toArray();
-					return response()->json(['status' => 1, 'errors' => $errorsBag], 400);
-				}
-			}
-
-			$lead = Lead::find($id);
-			if (!empty($lead)) {
-				$leadFollowUp = new LeadFollowUp;
-				$status = Status::findorFail($request->input('status'));
-				if (!strcasecmp($status->name, 'npup')) {
-					$npupCount = LeadFollowUp::where('lead_id', $id)->where('status', $status->id)->count();
-					if ($npupCount >= 15) {
-						$status = Status::where('name', 'LIKE', 'Not Interested')->first();
-						$leadFollowUp->status = $status->id;
-					} else {
-						$leadFollowUp->status = $request->input('status');
-					}
+		$lead = Lead::find($id);
+		if (!empty($lead)) {
+			$leadFollowUp = new LeadFollowUp;
+			$status = Status::findorFail($request->input('status'));
+			if (!strcasecmp($status->name, 'npup')) {
+				$npupCount = LeadFollowUp::where('lead_id', $id)->where('status', $status->id)->count();
+				if ($npupCount >= 15) {
+					$status = Status::where('name', 'LIKE', 'Not Interested')->first();
+					$leadFollowUp->status = $status->id;
 				} else {
 					$leadFollowUp->status = $request->input('status');
 				}
-
-
-				$leadFollowUp->remark = trim($request->input('remark'));
-				$leadFollowUp->lead_id = $id;
-				$leadFollowUp->client_id = auth()->guard('clients')->user()->id;
-				$leadFollowUp->expected_date_time = NULL;
-				if ($request->input('expected_date_time') != '') {
-					$leadFollowUp->expected_date_time = date('Y-m-d H:i:s', strtotime($request->input('expected_date_time')));
-				}
-				if ($leadFollowUp->save()) {
-					return response()->json(['status' => 1], 200);
-				}
 			} else {
-
-				return response()->json(['status' => 0, '' => "Enquiry not found"], 200);
+				$leadFollowUp->status = $request->input('status');
 			}
+
+
+			$leadFollowUp->remark = trim($request->input('remark'));
+			$leadFollowUp->lead_id = $id;
+			$leadFollowUp->client_id = $user->id;
+			$leadFollowUp->expected_date_time = NULL;
+			if ($request->input('expected_date_time') != '') {
+				$leadFollowUp->expected_date_time = date('Y-m-d H:i:s', strtotime($request->input('expected_date_time')));
+			}
+			if ($leadFollowUp->save()) {
+
+
+				return response()->json([
+					'status' => true,
+					'message' => "Successfully",
+				], 200);
+			}
+		} else {
+
+			return response()->json([
+				'status' => false,
+				'message' => "Enquiry not found",
+			], 200);
 		}
+
 	}
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function getFollowUps(Request $request, $id)
-	{
-		if ($request->ajax()) {
-
-			$leads = DB::table('lead_follow_ups as lead_follow_ups')
-				->join('status as status', 'status.id', '=', 'lead_follow_ups.status')
-				->where('lead_follow_ups.lead_id', '=', $id)
-				->where('lead_follow_ups.client_id', '=', auth()->guard('clients')->user()->id)
-				->select('lead_follow_ups.*', 'status.name as status_name')
-				->orderBy('lead_follow_ups.id', 'desc');
-			if ($request->input('count') != 'all') {
-				$leads = $leads->take($request->input('count'));
-			} else {
-				$leads = $leads->take(100);
-			}
-			$leads = $leads->paginate($request->input('length'));
 
 
-			$returnLeads = [];
-			$data = [];
-			$returnLeads['draw'] = $request->input('draw');
-			$returnLeads['recordsTotal'] = $leads->total();
-			$returnLeads['recordsFiltered'] = $leads->total();
-			foreach ($leads as $lead) {
-				$data[] = [
-					(date('d-m-y h:i:s', strtotime($lead->created_at))),
-					$lead->remark,
-					$lead->status_name,
-					(isset($lead->expected_date_time) ? date('d-m-y h:i A', strtotime($lead->expected_date_time)) : "")
-				];
-			}
-			$returnLeads['data'] = $data;
-			return response()->json($returnLeads);
-		}
-	}
+
 	/**
 	 * @OA\Post(
 	 *     path="/api/business/pause-lead",
@@ -788,57 +959,57 @@ class EnquiryController extends Controller
 	 * )
 	 */
 
-	 public function saveFavoritleads(Request $request)
-{
-    // Auth check
-    if (!Auth::guard('sanctum')->check()) {
-        return response()->json([
-            'status' => false,
-            'message' => 'Unauthenticated: Token is missing or invalid',
-            'error' => 'token_missing_or_invalid'
-        ], 401);
-    }
+	public function saveFavoritleads(Request $request)
+	{
+		// Auth check
+		if (!Auth::guard('sanctum')->check()) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
+		}
 
-    $user = auth('sanctum')->user();
-    if (!$user) {
-        return response()->json([
-            'status' => false,
-            'message' => 'Unauthenticated: Token is missing or invalid',
-            'error' => 'token_missing_or_invalid'
-        ], 401);
-    }
+		$user = auth('sanctum')->user();
+		if (!$user) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
+		}
 
-    // Validate request
-    $request->validate([
-        'assignId' => 'required|integer|exists:assigned_leads,id',
-    ]);
+		// Validate request
+		$request->validate([
+			'assignId' => 'required|integer|exists:assigned_leads,id',
+		]);
 
-    // Fetch lead
-    $assignedLead = AssignedLead::find($request->assignId);
+		// Fetch lead
+		$assignedLead = AssignedLead::find($request->assignId);
 
-    if (!$assignedLead) {
-        return response()->json([
-            'status' => false,
-            'message' => 'Assigned lead not found'
-        ], 404);
-    }
+		if (!$assignedLead) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Assigned lead not found'
+			], 404);
+		}
 
-    // Update favorite status
-    $assignedLead->favorite_lead = '1';
+		// Update favorite status
+		$assignedLead->favorite_lead = '1';
 
-    if (!$assignedLead->save()) {
-        return response()->json([
-            'status' => false,
-            'message' => 'Favorite lead not updated'
-        ], 500);
-    }
+		if (!$assignedLead->save()) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Favorite lead not updated'
+			], 500);
+		}
 
-    return response()->json([
-        'status' => true,
-        'message' => 'Favorite lead updated successfully',
-        'data' => $assignedLead
-    ], 200);
-}
+		return response()->json([
+			'status' => true,
+			'message' => 'Favorite lead updated successfully',
+			'data' => $assignedLead
+		], 200);
+	}
 
 	/**
 	 * @OA\Post(

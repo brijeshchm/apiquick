@@ -29,11 +29,14 @@ Route::get('/api/site/studyAbroad', [App\Http\Controllers\Site\SiteController::c
 Route::get('/api/site/getKeyword', [App\Http\Controllers\Site\SiteController::class, 'getKeyword']);
 Route::get('/api/site/getBlog', [App\Http\Controllers\Site\SiteController::class, 'getBlog']);
 Route::get('/api/site/blog/{slug}', [App\Http\Controllers\Site\SiteController::class, 'getBlogDetails']);
+
  
 
  Route::get('/api/site/categories', [App\Http\Controllers\Site\SiteController::class, 'getCategories']);
  Route::get('/api/site/child', [App\Http\Controllers\Site\SiteController::class, 'getChild']);
  Route::get('/api/site/getCityList', [App\Http\Controllers\Site\SiteController::class, 'getCityList']);
+ Route::get('/api/site/get-keyword-list', [App\Http\Controllers\Site\SiteController::class, 'getKeywordList']);
+ Route::get('/api/site/getZoneByCityList', [App\Http\Controllers\Site\SiteController::class, 'getZoneByCityList']);
  Route::get('/api/site/business-services', [App\Http\Controllers\Site\SiteController::class, 'businessServices']);
  Route::get('/api/site/footer-links', [App\Http\Controllers\Site\SiteController::class, 'footerLinks']);
  Route::get('/api/site/common-linked', [App\Http\Controllers\Site\SiteController::class, 'commonLinked']);

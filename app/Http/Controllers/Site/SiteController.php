@@ -1838,9 +1838,9 @@ class SiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/getCityList",
-	 *     tags={"Frontend get get City List"},
-	 *     summary="Search records",
+	 *     path="/api/site/getZoneByCityList",
+	 *     tags={"Frontend get City List"},
+	 *     summary="Search Zone records by City ",
 	 *     description="Search records dynamically based on a city",
 	 *            
 	 *     @OA\Parameter(
@@ -1884,7 +1884,7 @@ class SiteController extends Controller
 	 *     )
 	 * )
 	 */
-	public function getCityList(Request $request)
+	public function getZoneByCityList(Request $request)
 	{
 
 		$city = $request->input('city');
@@ -1930,6 +1930,203 @@ class SiteController extends Controller
 				$entry['area'] = strtolower($data->area);
 			}
 			$html[$index] = $entry;
+		}
+
+		// Handle empty results
+		if (empty($html)) {
+			return response()->json([
+				'success' => false,
+				'message' => 'No locations found.',
+			], 404);
+		}
+
+		// Return JSON response
+		return response()->json([
+			'success' => true,
+			'data' => array_values($html),
+		], 200);
+	}
+	
+	/**
+	 * @OA\Get(
+	 *     path="/api/site/getCityList",
+	 *     tags={"Frontend get City List"},
+	 *     summary="Search Zone records by City ",
+	 *     description="Search records dynamically based on a city",
+	 *            
+	 *     @OA\Parameter(
+	 *         name="city",
+	 *         in="query",
+	 *         required=false,
+	 *         description="Search city",
+	 *         @OA\Schema(type="string", example="noida")
+	 *     ),
+	 *        
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=101),
+	 *                     @OA\Property(property="name", type="string", example="ABC Coaching Center"),
+	 *                     
+	 *                     @OA\Property(property="category", type="string", example="Education"),
+	 *                     @OA\Property(property="rating", type="number", format="float", example=4.5)
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function getCityList(Request $request)
+	{
+
+		$city = $request->input('city');
+	 
+		// Initialize query
+		$query = DB::table('citylists');
+			 
+
+		// Apply filters
+		if (is_null($city)) {
+			$query->whereIn('citylists.id', ['278', '596', '961', '428','29','1100','1003','1002','917','874','758','643']);
+		} else {
+			$query->where(function ($q) use ($city) {
+				$q->where('citylists.city', 'LIKE', '%' . $city . '%')
+					->orWhere('citylists.id', 'LIKE', '%' . $city . '%')
+					->orWhere('citylists.state', 'LIKE', '%' . $city . '%');
+			});
+		}
+
+		// Get results
+		$locations = $query->get();
+
+		// Transform results
+		$html = [];
+		foreach ($locations as $index => $data) {
+			$html[$index]=
+			 [
+				'city' => $data->city,
+				'id' => $data->id
+			
+			];
+			 
+			 
+		}
+
+		// Handle empty results
+		if (empty($html)) {
+			return response()->json([
+				'success' => false,
+				'message' => 'No locations found.',
+			], 404);
+		}
+
+		// Return JSON response
+		return response()->json([
+			'success' => true,
+			'data' => array_values($html),
+		], 200);
+	}
+
+	/**
+	 * @OA\Get(
+	 *     path="/api/site/get-keyword-list",
+	 *     tags={"Frontend get Keyword List"},
+	 *     summary="Search Keyword records",
+	 *     description="Search records dynamically based on a Keyword",
+	 *            
+	 *     @OA\Parameter(
+	 *         name="keyword",
+	 *         in="query",
+	 *         required=false,
+	 *         description="Search keyword",
+	 *         @OA\Schema(type="string", example="java")
+	 *     ),
+	 *        
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=101),
+	 *                     @OA\Property(property="name", type="string", example="ABC Coaching Center"),
+	 *                     
+	 *                     @OA\Property(property="category", type="string", example="Education"),
+	 *                     @OA\Property(property="rating", type="number", format="float", example=4.5)
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function getKeywordList(Request $request)
+	{
+
+		$keyword = $request->input('keyword');
+	 
+		// Initialize query
+		$query = DB::table('keyword');
+			 
+
+		// Apply filters
+		if (is_null($keyword)) {
+			$query->whereIn('keyword.id', ['288', '601', '1517', '159','602','1624','166','536','1937','1481','570','1665']);
+		} else {
+			$query->where(function ($q) use ($keyword) {
+				$q->where('keyword.keyword', 'LIKE', '%' . $keyword . '%');
+					 
+			});
+		}
+
+		// Get results
+		$locations = $query->get();
+
+		// Transform results
+		$html = [];
+		foreach ($locations as $index => $data) {
+			$html[$index]=
+			 [
+				'keyword' => $data->keyword,
+				'id' => $data->id
+			
+			];
+			 
+			 
 		}
 
 		// Handle empty results

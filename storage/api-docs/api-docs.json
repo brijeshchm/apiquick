@@ -3163,6 +3163,357 @@
                 }
             }
         },
+        "/api/business/{id}/follow-up": {
+            "get": {
+                "tags": [
+                    "Leads"
+                ],
+                "summary": "Get lead details with follow-up history",
+                "description": "Returns lead information, follow-up history with pagination, and available statuses",
+                "operationId": "3e325cc095eb053512790c49c7d74723",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Lead ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 12
+                        }
+                    },
+                    {
+                        "name": "length",
+                        "in": "query",
+                        "description": "Pagination length",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    },
+                    {
+                        "name": "count",
+                        "in": "query",
+                        "description": "Limit records count or use 'all'",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "all"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "lead": {
+                                                    "properties": {
+                                                        "lead_id": {
+                                                            "type": "integer",
+                                                            "example": 12
+                                                        },
+                                                        "assignId": {
+                                                            "type": "integer",
+                                                            "example": 45
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "John Doe"
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "example": "john@example.com"
+                                                        },
+                                                        "city": {
+                                                            "type": "string",
+                                                            "example": "Delhi"
+                                                        },
+                                                        "city_id": {
+                                                            "type": "integer",
+                                                            "example": 3
+                                                        },
+                                                        "kw_id": {
+                                                            "type": "integer",
+                                                            "example": 8
+                                                        },
+                                                        "kw_text": {
+                                                            "type": "string",
+                                                            "example": "Web Development"
+                                                        },
+                                                        "status_id": {
+                                                            "type": "integer",
+                                                            "example": 2
+                                                        },
+                                                        "status": {
+                                                            "type": "string",
+                                                            "example": "Open"
+                                                        },
+                                                        "created": {
+                                                            "type": "string",
+                                                            "example": "2025-01-15"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "lead_follow_up": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 101
+                                                            },
+                                                            "lead_id": {
+                                                                "type": "integer",
+                                                                "example": 12
+                                                            },
+                                                            "status": {
+                                                                "type": "string",
+                                                                "example": "Follow Up"
+                                                            },
+                                                            "remarks": {
+                                                                "type": "string",
+                                                                "example": "Client interested"
+                                                            },
+                                                            "follow_up_date": {
+                                                                "type": "string",
+                                                                "example": "25 Jan 2025"
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "example": "25 Jan 2025 04:30 PM"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "statuses": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Open"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated: Token is missing or invalid"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "token_missing_or_invalid"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Client not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/{id}/save-follow-up": {
+            "post": {
+                "tags": [
+                    "Leads"
+                ],
+                "summary": "Create lead follow-up",
+                "description": "Store a new follow-up entry for a lead",
+                "operationId": "c267ab7921b01377606d3432b75a12f4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Lead ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 15
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "status",
+                                    "remark"
+                                ],
+                                "properties": {
+                                    "status": {
+                                        "description": "Status ID",
+                                        "type": "integer",
+                                        "example": 3
+                                    },
+                                    "remark": {
+                                        "description": "Follow-up remarks",
+                                        "type": "string",
+                                        "example": "Client asked for a call back"
+                                    },
+                                    "expected_date_time": {
+                                        "description": "Required if selected status expects date/time",
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-01-25 15:30:00",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Follow-up stored successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "example": {
+                                                "status": [
+                                                    "The status field is required."
+                                                ],
+                                                "remark": [
+                                                    "The remark field is required."
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated: Token is missing or invalid"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "token_missing_or_invalid"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Lead not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Enquiry not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/business/pause-lead": {
             "post": {
                 "tags": [
@@ -6746,14 +7097,14 @@
                 }
             }
         },
-        "/api/site/getCityList": {
+        "/api/site/getZoneByCityList": {
             "get": {
                 "tags": [
-                    "Frontend get get City List"
+                    "Frontend get City List"
                 ],
-                "summary": "Search records",
+                "summary": "Search Zone records by City ",
                 "description": "Search records dynamically based on a city",
-                "operationId": "7235818f30f4aa79bce005f631cdce59",
+                "operationId": "6fdcb5efe13f7a1cf897b7e5f8364058",
                 "parameters": [
                     {
                         "name": "city",
@@ -6763,6 +7114,208 @@
                         "schema": {
                             "type": "string",
                             "example": "noida"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "ABC Coaching Center"
+                                                    },
+                                                    "category": {
+                                                        "type": "string",
+                                                        "example": "Education"
+                                                    },
+                                                    "rating": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 4.5
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/site/getCityList": {
+            "get": {
+                "tags": [
+                    "Frontend get City List"
+                ],
+                "summary": "Search Zone records by City ",
+                "description": "Search records dynamically based on a city",
+                "operationId": "7235818f30f4aa79bce005f631cdce59",
+                "parameters": [
+                    {
+                        "name": "city",
+                        "in": "query",
+                        "description": "Search city",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "noida"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "ABC Coaching Center"
+                                                    },
+                                                    "category": {
+                                                        "type": "string",
+                                                        "example": "Education"
+                                                    },
+                                                    "rating": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 4.5
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/site/get-keyword-list": {
+            "get": {
+                "tags": [
+                    "Frontend get Keyword List"
+                ],
+                "summary": "Search Keyword records",
+                "description": "Search records dynamically based on a Keyword",
+                "operationId": "325438a0ab5aec2fca45824427a904a5",
+                "parameters": [
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Search keyword",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "java"
                         }
                     }
                 ],
@@ -7568,8 +8121,12 @@
             "description": "Frontend get child"
         },
         {
-            "name": "Frontend get get City List",
-            "description": "Frontend get get City List"
+            "name": "Frontend get City List",
+            "description": "Frontend get City List"
+        },
+        {
+            "name": "Frontend get Keyword List",
+            "description": "Frontend get Keyword List"
         },
         {
             "name": "Frontend Search business details",

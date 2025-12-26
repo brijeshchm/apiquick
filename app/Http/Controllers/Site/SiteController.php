@@ -1314,7 +1314,7 @@ class SiteController extends Controller
 	public function getKeyword(Request $request)
 	{
 		$search_kw = $request->input('keyword');
-		$city ='';
+		$city = '';
 		$keywordDetails = DB::table('keyword')
 			->join('parent_category', 'keyword.parent_category_id', '=', 'parent_category.id')
 			->join('child_category', 'keyword.child_category_id', '=', 'child_category.id')
@@ -1398,41 +1398,41 @@ class SiteController extends Controller
 			'child_slug' => $keywordDetails->child_slug,
 
 		);
-		 
+
 		$keywordName = ucwords(str_replace('-', ' ', $search_kw));
 		// $clientsList = DB::table('clients')
 		// 		->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
 		// 		->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
-			 
+
 		// 		->leftJoin(DB::raw('(
-        //     SELECT SUM(rating) AS rating, comment_client_ID, COUNT(comment_ID) AS comment_count
-        //     FROM comments GROUP BY comment_client_ID
-        // ) c'), 'c.comment_client_ID', '=', 'clients.id')
+		//     SELECT SUM(rating) AS rating, comment_client_ID, COUNT(comment_ID) AS comment_count
+		//     FROM comments GROUP BY comment_client_ID
+		// ) c'), 'c.comment_client_ID', '=', 'clients.id')
 		// 		->select(
 		// 			'clients.*','clients.id as client_id',
 
 		// 			'assigned_kwds.*',
-					 
+
 		// 			'assigned_kwds.sold_on_position',
 		// 			'c.rating',
 		// 			'c.comment_count'
 		// 		)
 		// 		->where('keyword.keyword', 'LIKE', '%' . $keywordName . '%')
 		// 		->orderByRaw("
-        //     CASE assigned_kwds.sold_on_position
-        //         WHEN 'platinum' THEN 1
-        //         WHEN 'diamond' THEN 2
-        //         WHEN 'FreeListing' THEN 3
-        //         ELSE 4
-        //     END
-        // ")
+		//     CASE assigned_kwds.sold_on_position
+		//         WHEN 'platinum' THEN 1
+		//         WHEN 'diamond' THEN 2
+		//         WHEN 'FreeListing' THEN 3
+		//         ELSE 4
+		//     END
+		// ")
 		// 		->get();
-	 
-		$clientsList = DB::table('clients')
-    ->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
-    ->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
 
-    ->leftJoin(DB::raw('(
+		$clientsList = DB::table('clients')
+			->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
+			->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+
+			->leftJoin(DB::raw('(
         SELECT 
             comment_client_ID,
             SUM(rating) AS rating,
@@ -1441,20 +1441,21 @@ class SiteController extends Controller
         GROUP BY comment_client_ID
     ) c'), 'c.comment_client_ID', '=', 'clients.id')
 
-    ->select('clients.*',
-        'clients.id as client_id',
-        'clients.business_slug',
-        
-        DB::raw('MAX(assigned_kwds.sold_on_position) as sold_on_position'),
-        DB::raw('MAX(c.rating) as rating'),
-        DB::raw('MAX(c.comment_count) as comment_count')
-    )
+			->select(
+				'clients.*',
+				'clients.id as client_id',
+				'clients.business_slug',
 
-    ->where('keyword.keyword', 'LIKE', "%{$keywordName}%")
+				DB::raw('MAX(assigned_kwds.sold_on_position) as sold_on_position'),
+				DB::raw('MAX(c.rating) as rating'),
+				DB::raw('MAX(c.comment_count) as comment_count')
+			)
 
-    ->groupBy('clients.id')
+			->where('keyword.keyword', 'LIKE', "%{$keywordName}%")
 
-    ->orderByRaw("
+			->groupBy('clients.id')
+
+			->orderByRaw("
         CASE MAX(assigned_kwds.sold_on_position)
             WHEN 'platinum' THEN 1
             WHEN 'diamond' THEN 2
@@ -1463,7 +1464,7 @@ class SiteController extends Controller
         END
     ")
 
-    ->get();
+			->get();
 
 
 		$data['clientsList'] = $clientsList->map(function ($client) {
@@ -1478,6 +1479,14 @@ class SiteController extends Controller
 					$altLogo = $cicons['large']['name'];
 				}
 			}
+
+			$assignedKwds = DB::table('assigned_kwds')
+				->join('keyword', 'keyword.id', '=', 'assigned_kwds.kw_id')
+				->join('child_category', 'child_category.id', '=', 'assigned_kwds.child_cat_id')
+				->select('keyword.keyword', 'child_category.child_category as child_category_name')
+				->where('assigned_kwds.client_id', '=', $client->client_id)
+				->limit(5)
+				->get();
 
 
 			$galleryArray = array();
@@ -1522,6 +1531,7 @@ class SiteController extends Controller
 
 				'rating' => $client->rating,
 				'comment_count' => $client->comment_count,
+				'keywords' => $assignedKwds ?? null,
 			];
 		});
 
@@ -1983,7 +1993,7 @@ class SiteController extends Controller
 			'data' => array_values($html),
 		], 200);
 	}
-	
+
 	/**
 	 * @OA\Get(
 	 *     path="/api/site/getCityList",
@@ -2036,14 +2046,14 @@ class SiteController extends Controller
 	{
 
 		$city = $request->input('city');
-	 
+
 		// Initialize query
 		$query = DB::table('citylists');
-			 
+
 
 		// Apply filters
 		if (is_null($city)) {
-			$query->whereIn('citylists.id', ['278', '596', '961', '428','29','1100','1003','1002','917','874','758','643']);
+			$query->whereIn('citylists.id', ['278', '596', '961', '428', '29', '1100', '1003', '1002', '917', '874', '758', '643']);
 		} else {
 			$query->where(function ($q) use ($city) {
 				$q->where('citylists.city', 'LIKE', '%' . $city . '%')
@@ -2058,14 +2068,14 @@ class SiteController extends Controller
 		// Transform results
 		$html = [];
 		foreach ($locations as $index => $data) {
-			$html[$index]=
-			 [
-				'city' => $data->city,
-				'id' => $data->id
-			
-			];
-			 
-			 
+			$html[$index] =
+				[
+					'city' => $data->city,
+					'id' => $data->id
+
+				];
+
+
 		}
 
 		// Handle empty results
@@ -2135,18 +2145,18 @@ class SiteController extends Controller
 	{
 
 		$keyword = $request->input('keyword');
-	 
+
 		// Initialize query
 		$query = DB::table('keyword');
-			 
+
 
 		// Apply filters
 		if (is_null($keyword)) {
-			$query->whereIn('keyword.id', ['288', '601', '1517', '159','602','1624','166','536','1937','1481','570','1665']);
+			$query->whereIn('keyword.id', ['288', '601', '1517', '159', '602', '1624', '166', '536', '1937', '1481', '570', '1665']);
 		} else {
 			$query->where(function ($q) use ($keyword) {
 				$q->where('keyword.keyword', 'LIKE', '%' . $keyword . '%');
-					 
+
 			});
 		}
 
@@ -2156,14 +2166,14 @@ class SiteController extends Controller
 		// Transform results
 		$html = [];
 		foreach ($locations as $index => $data) {
-			$html[$index]=
-			 [
-				'keyword' => $data->keyword,
-				'id' => $data->id
-			
-			];
-			 
-			 
+			$html[$index] =
+				[
+					'keyword' => $data->keyword,
+					'id' => $data->id
+
+				];
+
+
 		}
 
 		// Handle empty results

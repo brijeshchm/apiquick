@@ -1400,34 +1400,71 @@ class SiteController extends Controller
 		);
 		 
 		$keywordName = ucwords(str_replace('-', ' ', $search_kw));
-			$clientsList = DB::table('clients')
-				->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
-				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+		// $clientsList = DB::table('clients')
+		// 		->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
+		// 		->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
 			 
-				->leftJoin(DB::raw('(
-            SELECT SUM(rating) AS rating, comment_client_ID, COUNT(comment_ID) AS comment_count
-            FROM comments GROUP BY comment_client_ID
-        ) c'), 'c.comment_client_ID', '=', 'clients.id')
-				->select(
-					'clients.*',
+		// 		->leftJoin(DB::raw('(
+        //     SELECT SUM(rating) AS rating, comment_client_ID, COUNT(comment_ID) AS comment_count
+        //     FROM comments GROUP BY comment_client_ID
+        // ) c'), 'c.comment_client_ID', '=', 'clients.id')
+		// 		->select(
+		// 			'clients.*','clients.id as client_id',
 
-					'assigned_kwds.*',
+		// 			'assigned_kwds.*',
 					 
-					'assigned_kwds.sold_on_position',
-					'c.rating',
-					'c.comment_count'
-				)
-				->where('keyword.keyword', 'LIKE', '%' . $keywordName . '%')
-				->orderByRaw("
-            CASE assigned_kwds.sold_on_position
-                WHEN 'platinum' THEN 1
-                WHEN 'diamond' THEN 2
-                WHEN 'FreeListing' THEN 3
-                ELSE 4
-            END
-        ")
-				->get();
+		// 			'assigned_kwds.sold_on_position',
+		// 			'c.rating',
+		// 			'c.comment_count'
+		// 		)
+		// 		->where('keyword.keyword', 'LIKE', '%' . $keywordName . '%')
+		// 		->orderByRaw("
+        //     CASE assigned_kwds.sold_on_position
+        //         WHEN 'platinum' THEN 1
+        //         WHEN 'diamond' THEN 2
+        //         WHEN 'FreeListing' THEN 3
+        //         ELSE 4
+        //     END
+        // ")
+		// 		->get();
 	 
+		$clientsList = DB::table('clients')
+    ->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
+    ->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+
+    ->leftJoin(DB::raw('(
+        SELECT 
+            comment_client_ID,
+            SUM(rating) AS rating,
+            COUNT(comment_ID) AS comment_count
+        FROM comments
+        GROUP BY comment_client_ID
+    ) c'), 'c.comment_client_ID', '=', 'clients.id')
+
+    ->select('clients.*',
+        'clients.id as client_id',
+        'clients.business_slug',
+        
+        DB::raw('MAX(assigned_kwds.sold_on_position) as sold_on_position'),
+        DB::raw('MAX(c.rating) as rating'),
+        DB::raw('MAX(c.comment_count) as comment_count')
+    )
+
+    ->where('keyword.keyword', 'LIKE', "%{$keywordName}%")
+
+    ->groupBy('clients.id')
+
+    ->orderByRaw("
+        CASE MAX(assigned_kwds.sold_on_position)
+            WHEN 'platinum' THEN 1
+            WHEN 'diamond' THEN 2
+            WHEN 'FreeListing' THEN 3
+            ELSE 4
+        END
+    ")
+
+    ->get();
+
 
 		$data['clientsList'] = $clientsList->map(function ($client) {
 
@@ -1459,7 +1496,7 @@ class SiteController extends Controller
 			}
 
 			return [
-				'business_id' => $client->id,
+				'business_id' => $client->client_id,
 				'business_name' => $client->business_name,
 				'business_slug' => $client->business_slug,
 				'logo' => $logoImage ?? '',

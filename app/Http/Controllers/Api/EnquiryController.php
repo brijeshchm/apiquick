@@ -244,7 +244,7 @@ class EnquiryController extends Controller
 		$leadFollowUp = $leads->getCollection()->transform(function ($item) {
 
 			return [
-				'id' => $item->id,
+				'follow_id' => $item->id,
 				'lead_id' => $item->lead_id,
 				'client_id' => $item->client_id,
 				'status' => $item->status_name,

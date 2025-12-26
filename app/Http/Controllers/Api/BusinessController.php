@@ -51,7 +51,7 @@ class BusinessController extends Controller
 	/**
 	 * @OA\Get(
 	 *     path="/api/business/get-assigned-zones",
-	 *     tags={"business-location"},
+	 *     tags={"Business-location"},
 	 *     summary="Get paginated assigned zones",
 	 *     description="Fetch a paginated list of zones assigned to the authenticated user.",
 	 *     security={{"bearerAuth":{}}},

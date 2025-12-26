@@ -186,7 +186,7 @@ class AccountController extends Controller
 	/**
 	 * @OA\Get(
 	 *     path="/api/business/account-settings",
-	 *     tags={"account settings"},
+	 *     tags={"Account settings"},
 	 *     summary="Get all packages",
 	 *     description="Fetch all available packages for businesses.",
 	 *     security={{"bearerAuth":{}}},

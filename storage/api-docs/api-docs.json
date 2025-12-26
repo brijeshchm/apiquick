@@ -79,7 +79,7 @@
         "/api/business/account-settings": {
             "get": {
                 "tags": [
-                    "account settings"
+                    "Account settings"
                 ],
                 "summary": "Get all packages",
                 "description": "Fetch all available packages for businesses.",
@@ -548,7 +548,7 @@
         "/api/business/get-assigned-zones": {
             "get": {
                 "tags": [
-                    "business-location"
+                    "Business-location"
                 ],
                 "summary": "Get paginated assigned zones",
                 "description": "Fetch a paginated list of zones assigned to the authenticated user.",
@@ -8029,8 +8029,8 @@
             "description": "Package"
         },
         {
-            "name": "account settings",
-            "description": "account settings"
+            "name": "Account settings",
+            "description": "Account settings"
         },
         {
             "name": "Buy Package",
@@ -8053,8 +8053,8 @@
             "description": "Frontend Registration Business"
         },
         {
-            "name": "business-location",
-            "description": "business-location"
+            "name": "Business-location",
+            "description": "Business-location"
         },
         {
             "name": "Cities",

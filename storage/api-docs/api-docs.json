@@ -747,20 +747,28 @@
                     "Cities"
                 ],
                 "summary": "Get cities by state",
-                "description": "Fetch a list of cities dynamically based on state_id (used for AJAX calls in dropdowns).",
+                "description": "Fetch a list of cities dynamically based on state_id (AJAX dropdown support).",
                 "operationId": "449cb77c9e40eb701d21172e5cad4002",
-                "parameters": [
-                    {
-                        "name": "state_id",
-                        "in": "query",
-                        "description": "ID of the state",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "example": 10
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "state_id"
+                                ],
+                                "properties": {
+                                    "state_id": {
+                                        "description": "ID of the state",
+                                        "type": "integer",
+                                        "example": 10
+                                    }
+                                },
+                                "type": "object"
+                            }
                         }
                     }
-                ],
+                },
                 "responses": {
                     "200": {
                         "description": "Cities retrieved successfully",
@@ -768,15 +776,19 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "success": {
+                                        "status": {
                                             "type": "boolean",
                                             "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Successfully"
                                         },
                                         "data": {
                                             "type": "array",
                                             "items": {
                                                 "properties": {
-                                                    "id": {
+                                                    "city_id": {
                                                         "type": "integer",
                                                         "example": 101
                                                     },
@@ -816,13 +828,32 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "success": {
+                                        "status": {
                                             "type": "boolean",
                                             "example": false
                                         },
                                         "message": {
                                             "type": "string",
                                             "example": "No cities found for this state."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -3979,8 +4010,8 @@
                 "tags": [
                     "Leads"
                 ],
-                "summary": "Save favorite lead",
-                "description": "Mark a lead as favorite for the authenticated user.",
+                "summary": "Remove lead from favorites",
+                "description": "Unmark a previously favorited lead for the authenticated client.",
                 "operationId": "49ff64266ef75b8d32df0971fbc3fd17",
                 "requestBody": {
                     "required": true,
@@ -3992,6 +4023,7 @@
                                 ],
                                 "properties": {
                                     "assignId": {
+                                        "description": "Assigned lead ID",
                                         "type": "integer",
                                         "example": 101
                                     }
@@ -4003,32 +4035,28 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Lead added to favorites successfully",
+                        "description": "Lead removed from favorites successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "success": {
+                                        "status": {
                                             "type": "boolean",
                                             "example": true
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Lead marked as favorite."
+                                            "example": "Lead removed from favorites."
                                         },
                                         "data": {
                                             "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 5
-                                                },
-                                                "user_id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
                                                 "assignId": {
                                                     "type": "integer",
                                                     "example": 101
+                                                },
+                                                "favoriteLead": {
+                                                    "type": "integer",
+                                                    "example": 0
                                                 }
                                             },
                                             "type": "object"
@@ -4045,9 +4073,13 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
                                         "message": {
                                             "type": "string",
-                                            "example": "Unauthenticated."
+                                            "example": "Unauthenticated: Token is missing or invalid"
                                         }
                                     },
                                     "type": "object"
@@ -4061,17 +4093,21 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
                                         "message": {
                                             "type": "string",
-                                            "example": "The given data was invalid."
+                                            "example": "Validation failed"
                                         },
                                         "errors": {
                                             "properties": {
-                                                "lead_id": {
+                                                "assignId": {
                                                     "type": "array",
                                                     "items": {
                                                         "type": "string",
-                                                        "example": "The lead_id field is required."
+                                                        "example": "The assignId field is required."
                                                     }
                                                 }
                                             },

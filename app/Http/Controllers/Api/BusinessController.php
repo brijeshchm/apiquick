@@ -208,56 +208,84 @@ class BusinessController extends Controller
 
 	public function getCities(Request $request)
 	{
+		// Validate input
+		$request->validate([
+			'city' => 'nullable|string|min:1|max:100',
+		]);
+
 		$city = trim($request->input('city'));
 
 		$query = DB::table('citylists')
-			->select('id as city_id', 'city');
+			->select('id as city_id', 'city')
+			->orderBy('city', 'asc');
 
-		// Default cities if no search
-		if (empty($city)) {
-			$query->whereIn('id', ['278', '596', '961', '428', '29', '1100', '1003', '1002', '917', '874', '758', '643']);
+		// Default cities when search is empty
+		if ($city === null || $city === '') {
+			$query->whereIn('id', [
+				278,
+				596,
+				961,
+				428,
+				29,
+				1100,
+				1003,
+				1002,
+				917,
+				874,
+				758,
+				643
+			]);
 		} else {
-			$query->where('city', 'LIKE', "%{$city}%");
+			$query->where('city', 'LIKE', '%' . $city . '%');
 		}
 
-		$locations = $query->get();
+		$locations = $query->limit(20)->get();
 
 		return response()->json([
 			'status' => true,
 			'message' => 'Successfully',
-			'data' => $locations, // empty array is OK
+			'data' => $locations, // empty array allowed
 		], 200);
 	}
-
-
 
 	/**
 	 * @OA\Post(
 	 *     path="/api/business/city/get-city-by-state",
 	 *     tags={"Cities"},
 	 *     summary="Get cities by state",
-	 *     description="Fetch a list of cities dynamically based on state_id (used for AJAX calls in dropdowns).",
+	 *     description="Fetch a list of cities dynamically based on state_id (AJAX dropdown support).",
 	 *     security={{"bearerAuth":{}}},
-	 *     @OA\Parameter(
-	 *         name="state_id",
-	 *         in="query",
+	 *
+	 *     @OA\RequestBody(
 	 *         required=true,
-	 *         description="ID of the state",
-	 *         @OA\Schema(type="integer", example=10)
+	 *         @OA\JsonContent(
+	 *             required={"state_id"},
+	 *             @OA\Property(
+	 *                 property="state_id",
+	 *                 type="integer",
+	 *                 example=10,
+	 *                 description="ID of the state"
+	 *             )
+	 *         )
 	 *     ),
+	 *
 	 *     @OA\Response(
 	 *         response=200,
 	 *         description="Cities retrieved successfully",
 	 *         @OA\JsonContent(
-	 *             @OA\Property(property="success", type="boolean", example=true),
-	 *             @OA\Property(property="data", type="array",
+	 *             @OA\Property(property="status", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Successfully"),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="array",
 	 *                 @OA\Items(
-	 *                     @OA\Property(property="id", type="integer", example=101),
+	 *                     @OA\Property(property="city_id", type="integer", example=101),
 	 *                     @OA\Property(property="city", type="string", example="Noida")
 	 *                 )
 	 *             )
 	 *         )
 	 *     ),
+	 *
 	 *     @OA\Response(
 	 *         response=401,
 	 *         description="Unauthenticated",
@@ -265,49 +293,63 @@ class BusinessController extends Controller
 	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
 	 *         )
 	 *     ),
+	 *
 	 *     @OA\Response(
 	 *         response=404,
 	 *         description="No cities found",
 	 *         @OA\JsonContent(
-	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="status", type="boolean", example=false),
 	 *             @OA\Property(property="message", type="string", example="No cities found for this state.")
+	 *         )
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=422,
+	 *         description="Validation Error",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+	 *             @OA\Property(property="errors", type="object")
 	 *         )
 	 *     )
 	 * )
 	 */
 	public function getCityByState(Request $request)
 	{
-		$sid = $request->input('state_id');
+		// ✅ Validation
+		$validator = Validator::make($request->all(), [
+			'state_id' => 'required|integer|exists:states,id',
+		]);
 
-		$data = [];
-		$cityslist = Citieslists::where('state_id', $sid)->get();
-
-		if (!$cityslist) {
+		if ($validator->fails()) {
 			return response()->json([
-				'status' => true,
-				'message' => "City not Found",
-				'data' => '',
-
-			], 200);
+				'status' => false,
+				'message' => 'Validation failed',
+				'errors' => $validator->errors(),
+			], 422);
 		}
-		if ($cityslist) {
-			foreach ($cityslist as $city) {
-				$data[] = [
-					'city_id' => $city->id,
-					'city' => $city->city,
-					'state_id' => $city->state_id,
 
-				];
-			}
+		$stateId = $request->input('state_id');
+
+		// ✅ Fetch cities
+		$cities = Citieslists::where('state_id', $stateId)
+			->select('id as city_id', 'city', 'state_id')
+			->get();
+
+		// ✅ Empty check (correct way)
+		if ($cities->isEmpty()) {
+			return response()->json([
+				'status' => false,
+				'message' => 'City not found',
+				'data' => [],
+			], 404);
 		}
+
 		return response()->json([
 			'status' => true,
-			'message' => "Successfully",
-			'data' => $data,
-
+			'message' => 'Successfully',
+			'data' => $cities,
 		], 200);
 	}
-
 
 	/**
 	 * @OA\Get(

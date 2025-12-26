@@ -16,7 +16,7 @@ use App\Models\LeadFollowUp;
 use App\Models\Status;
 use App\Models\AssignedLead;
 use Illuminate\Validation\Rule;
- 
+
 
 class EnquiryController extends Controller
 {
@@ -872,11 +872,11 @@ class EnquiryController extends Controller
 	 *     )
 	 * )
 	 */
-	
+
 
 	public function readLead(Request $request)
 	{
-		/* ---------- AUTH ---------- */
+
 		if (!Auth::guard('sanctum')->check()) {
 			return response()->json([
 				'status' => false,
@@ -887,7 +887,7 @@ class EnquiryController extends Controller
 
 		$user = auth('sanctum')->user();
 
-		/* ---------- VALIDATION ---------- */
+
 		$validator = Validator::make($request->all(), [
 			'assignId' => 'required|integer|exists:assigned_leads,id'
 		]);
@@ -1027,54 +1027,71 @@ class EnquiryController extends Controller
 	 * @OA\Post(
 	 *     path="/api/business/un-favorite",
 	 *     tags={"Leads"},
-	 *     summary="Save favorite lead",
-	 *     description="Mark a lead as favorite for the authenticated user.",
+	 *     summary="Remove lead from favorites",
+	 *     description="Unmark a previously favorited lead for the authenticated client.",
 	 *     security={{"bearerAuth":{}}},
+	 *
 	 *     @OA\RequestBody(
 	 *         required=true,
 	 *         @OA\JsonContent(
 	 *             required={"assignId"},
-	 *             @OA\Property(property="assignId", type="integer", example=101)
-	 *         )
-	 *     ),
-	 *     @OA\Response(
-	 *         response=200,
-	 *         description="Lead added to favorites successfully",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="success", type="boolean", example=true),
-	 *             @OA\Property(property="message", type="string", example="Lead marked as favorite."),
-	 *             @OA\Property(property="data", type="object",
-	 *                 @OA\Property(property="id", type="integer", example=5),
-	 *                 @OA\Property(property="user_id", type="integer", example=1),
-	 *                 @OA\Property(property="assignId", type="integer", example=101)
+	 *             @OA\Property(
+	 *                 property="assignId",
+	 *                 type="integer",
+	 *                 example=101,
+	 *                 description="Assigned lead ID"
 	 *             )
 	 *         )
 	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Lead removed from favorites successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="status", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Lead removed from favorites."),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="object",
+	 *                 @OA\Property(property="assignId", type="integer", example=101),
+	 *                 @OA\Property(property="favoriteLead", type="integer", example=0)
+	 *             )
+	 *         )
+	 *     ),
+	 *
 	 *     @OA\Response(
 	 *         response=401,
 	 *         description="Unauthenticated",
 	 *         @OA\JsonContent(
-	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *             @OA\Property(property="status", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated: Token is missing or invalid")
 	 *         )
 	 *     ),
+	 *
 	 *     @OA\Response(
 	 *         response=422,
 	 *         description="Validation error",
 	 *         @OA\JsonContent(
-	 *             @OA\Property(property="message", type="string", example="The given data was invalid."),
-	 *             @OA\Property(property="errors", type="object",
-	 *                 @OA\Property(property="lead_id", type="array",
-	 *                     @OA\Items(type="string", example="The lead_id field is required.")
+	 *             @OA\Property(property="status", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="Validation failed"),
+	 *             @OA\Property(
+	 *                 property="errors",
+	 *                 type="object",
+	 *                 @OA\Property(
+	 *                     property="assignId",
+	 *                     type="array",
+	 *                     @OA\Items(type="string", example="The assignId field is required.")
 	 *                 )
 	 *             )
 	 *         )
 	 *     )
 	 * )
 	 */
+ 
 
 	public function unFavoritleads(Request $request)
 	{
-		// Auth check
+		 
 		if (!Auth::guard('sanctum')->check()) {
 			return response()->json([
 				'status' => false,
@@ -1087,38 +1104,56 @@ class EnquiryController extends Controller
 		if (!$user) {
 			return response()->json([
 				'status' => false,
-				'message' => 'Unauthenticated: Token is missing or invalid',
-				'error' => 'token_missing_or_invalid'
+				'message' => 'Unauthenticated',
 			], 401);
 		}
 
-		// Validate request
-		$request->validate([
+		 
+		$validator = Validator::make($request->all(), [
 			'assignId' => 'required|integer|exists:assigned_leads,id',
 		]);
 
-		// Fetch lead
+		if ($validator->fails()) {
+			return response()->json([
+				'status' => false,
+				'errors' => $validator->errors()
+			], 422);
+		}
+
+		 
 		$assignedLead = AssignedLead::where('id', $request->assignId)
-			->where('scrapPay', '0')
+			->where('client_id', $user->id)
 			->first();
 
 		if (!$assignedLead) {
 			return response()->json([
 				'status' => false,
-				'message' => 'Assigned lead not found or scrap pay'
+				'message' => 'Assigned lead not found'
 			], 404);
 		}
 
-		// Update favorite status
-		$assignedLead->favorite_lead = '0'; // IMPORTANT
+	 
+		if ((int) $assignedLead->scrapPay === 1) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Already scrap paid this lead'
+			], 403);
+		}
+
+	 
+		$assignedLead->favorite_lead = '0';  
 		$assignedLead->save();
 
 		return response()->json([
 			'status' => true,
 			'message' => 'Lead unfavorited successfully',
-			'data' => $assignedLead
+			'data' => [
+				'assignId' => $assignedLead->id,
+				'favorite_lead' => $assignedLead->favorite_lead
+			]
 		], 200);
 	}
+
 
 	/**
 	 * @OA\Get(

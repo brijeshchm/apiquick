@@ -246,6 +246,7 @@ class EnquiryController extends Controller
 			return [
 				'id' => $item->id,
 				'lead_id' => $item->lead_id,
+				'client_id' => $item->client_id,
 				'status' => $item->status_name,
 				'remarks' => $item->remark ?? '',
 				'follow_up_date' => $item->expected_date_time

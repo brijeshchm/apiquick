@@ -259,7 +259,10 @@ class EnquiryController extends Controller
 
 		$data['lead_follow_up'] = $leadFollowUp;
 
-		$data['statuses'] = DB::table('status')->where('lead_follow_up', 1)->get();
+		$data['statuses'] = DB::table('status')
+		->where('lead_follow_up', 1)
+		->select('id', 'name')
+		->get();
 
 		return response()->json([
 			'status' => true,

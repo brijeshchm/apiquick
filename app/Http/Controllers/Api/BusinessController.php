@@ -317,7 +317,7 @@ class BusinessController extends Controller
 	{
 		// ✅ Validation
 		$validator = Validator::make($request->all(), [
-			'state_id' => 'required|integer|exists:states,id',
+			'state_id' => 'required|integer|exists:state,id',
 		]);
 
 		if ($validator->fails()) {

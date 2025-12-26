@@ -16,6 +16,7 @@ use App\Models\LeadFollowUp;
 use App\Models\Status;
 use App\Models\AssignedLead;
 use Illuminate\Validation\Rule;
+ 
 
 class EnquiryController extends Controller
 {
@@ -871,45 +872,56 @@ class EnquiryController extends Controller
 	 *     )
 	 * )
 	 */
+	
+
 	public function readLead(Request $request)
 	{
+		/* ---------- AUTH ---------- */
 		if (!Auth::guard('sanctum')->check()) {
 			return response()->json([
 				'status' => false,
-				'message' => 'Unauthenticated: Token is missing or invalid',
+				'message' => 'Unauthenticated',
 				'error' => 'token_missing_or_invalid'
 			], 401);
 		}
-		// Check if user is active
+
 		$user = auth('sanctum')->user();
-		if (!$user) {
+
+		/* ---------- VALIDATION ---------- */
+		$validator = Validator::make($request->all(), [
+			'assignId' => 'required|integer|exists:assigned_leads,id'
+		]);
+
+		if ($validator->fails()) {
 			return response()->json([
 				'status' => false,
-				'message' => 'Unauthenticated: Token is missing or invalid',
-				'error' => 'token_missing_or_invalid'
-			], 401);
-		}
-		$assignedLead = AssignedLead::find($request->assignId);
-		if (!$assignedLead) {
-			$data['status'] = true;
-			$data['message'] = 'Read Lead not found';
+				'message' => 'Validation failed',
+				'errors' => $validator->errors()
+			], 422);
 		}
 
-		$assignedLead->readLead = '1';
-		if ($assignedLead->save()) {
-			$data['status'] = true;
-			$data['message'] = 'Read Lead updated';
-		} else {
-			$data['status'] = false;
-			$data['message'] = 'Read Lead not update';
+		/* ---------- AUTHORIZE ---------- */
+		$assignedLead = AssignedLead::where('id', $request->assignId)
+			->where('client_id', $user->id)
+			->first();
+
+		if (!$assignedLead) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Assigned lead not found'
+			], 404);
 		}
+
+		/* ---------- UPDATE ---------- */
+		$assignedLead->readLead = '1';
+		$assignedLead->save();
+
 		return response()->json([
 			'status' => true,
-			'message' => "Successfully",
-			'data' => $data,
-
+			'message' => 'Lead marked as read'
 		], 200);
 	}
+
 	/**
 	 * @OA\Post(
 	 *     path="/api/business/save-favorite",

@@ -125,7 +125,7 @@ class BusinessController extends Controller
 			->where('assigned_zones.client_id', $user->id)
 			//->paginate($request->input('length'));
 			->paginate($perPage);
-		$leads_list= [];
+		$leads_list = [];
 		if (!empty($leads)) {
 			foreach ($leads->items() as $key => $val) {
 				if (!empty($val->zone)) {
@@ -150,24 +150,31 @@ class BusinessController extends Controller
 		return response()->json([
 			'status' => true,
 			'current_page' => $leads->currentPage(),
-				'per_page' => $leads->perPage(),
-				'total' => $leads->total(),
-				'last_page' => $leads->lastPage(),
+			'per_page' => $leads->perPage(),
+			'total' => $leads->total(),
+			'last_page' => $leads->lastPage(),
 			'data' => $data,
-			 
-				
-			
+
+
+
 		], 200);
 
 	}
- 
+
 	/**
 	 * @OA\Get(
 	 *     path="/api/business/cities/get-cities",
 	 *     tags={"Cities"},
 	 *     summary="Get cities by state",
 	 *     description="Fetch a list of cities dynamically based on state_id (used for AJAX calls in dropdowns).",
-	 *     security={{"bearerAuth":{}}},	 *   
+	 *     security={{"bearerAuth":{}}},
+	 * 		@OA\Parameter(
+	 *         name="city",
+	 *         in="query",
+	 *         required=false,
+	 *         description="Search city",
+	 *         @OA\Schema(type="string", example="noida")
+	 *     ),
 	 *     @OA\Response(
 	 *         response=200,
 	 *         description="Cities retrieved successfully",
@@ -201,24 +208,27 @@ class BusinessController extends Controller
 
 	public function getCities(Request $request)
 	{
+		$city = trim($request->input('city'));
 
-		$citieslists = Citieslists::get();
-		if ($citieslists) {
-			foreach ($citieslists as $city) {
-				$data[] = [
-					'city_id' => $city->id,
-					'city' => $city->city,
+		$query = DB::table('citylists')
+			->select('id as city_id', 'city');
 
-				];
-			}
+		// Default cities if no search
+		if (empty($city)) {
+			$query->whereIn('id', ['278', '596', '961', '428', '29', '1100', '1003', '1002', '917', '874', '758', '643']);
+		} else {
+			$query->where('city', 'LIKE', "%{$city}%");
 		}
+
+		$locations = $query->get();
+
 		return response()->json([
 			'status' => true,
-			'message' => "Successfully",
-			'data' => $data,
-
+			'message' => 'Successfully',
+			'data' => $locations, // empty array is OK
 		], 200);
 	}
+
 
 
 	/**
@@ -268,7 +278,7 @@ class BusinessController extends Controller
 	public function getCityByState(Request $request)
 	{
 		$sid = $request->input('state_id');
-	
+
 		$data = [];
 		$cityslist = Citieslists::where('state_id', $sid)->get();
 
@@ -298,7 +308,7 @@ class BusinessController extends Controller
 		], 200);
 	}
 
-	
+
 	/**
 	 * @OA\Get(
 	 *     path="/api/business/country/get-country",
@@ -406,7 +416,7 @@ class BusinessController extends Controller
 	public function getStateByCountry(Request $request)
 	{
 		$cid = $request->input('country_id');
-	
+
 		$data = [];
 		$statelist = State::where('country_id', $cid)->get();
 
@@ -565,8 +575,9 @@ class BusinessController extends Controller
 			}
 		}
 		$data[] = [
-					'zone_id' => 'Other',
-					'zone' => 'Other',				];
+			'zone_id' => 'Other',
+			'zone' => 'Other',
+		];
 		return response()->json([
 			'status' => true,
 			'message' => "Successfully",
@@ -682,7 +693,7 @@ class BusinessController extends Controller
 	public function getAreaByZone(Request $request)
 	{
 		$zid = $request->input('zone_id');
-	 
+
 		$data = [];
 		$areaslist = Area::where('zone_id', $zid)->get();
 
@@ -768,7 +779,7 @@ class BusinessController extends Controller
 
 		], 200);
 	}
-	 
+
 	/**
 	 * @OA\Get(
 	 *     path="/api/business/help",

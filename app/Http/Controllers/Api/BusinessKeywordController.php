@@ -241,6 +241,13 @@ class BusinessKeywordController extends Controller
 	 *     summary="Get all keywords",
 	 *     description="Fetches a list of available keywords.",
 	 *     security={{"bearerAuth":{}}},
+	 *  	@OA\Parameter(
+	 *         name="keyword",
+	 *         in="query",
+	 *         required=false,
+	 *         description="Search keyword",
+	 *         @OA\Schema(type="string", example="java")
+	 *     ),
 	 *     @OA\Response(
 	 *         response=200,
 	 *         description="Keywords retrieved successfully",
@@ -282,19 +289,49 @@ class BusinessKeywordController extends Controller
 				'error' => 'token_missing_or_invalid'
 			], 401);
 		}
-		$search = [];
-		if ($request->has('search')) {
-			$search = $request->input('search');
+		$query = DB::table('keyword');
+		$keyword = $request->input('keyword');
+
+		// Apply filters
+		if (is_null($keyword)) {
+			$query->whereIn('keyword.id', ['288', '601', '1517', '159','602','1624','166','536','1937','1481','570','1665']);
+		} else {
+			$query->where(function ($q) use ($keyword) {
+				$q->where('keyword.keyword', 'LIKE', '%' . $keyword . '%');
+					 
+			});
 		}
-		// $data['citylist'] = Citieslists::get();
-		$data['keywordlist'] = Keyword::select('id', 'keyword', 'child_category_id', 'parent_category_id', 'city_id')->get();
-		$data['clientID'] = $user->id;
+
+		// Get results
+		$locations = $query->get();
+
+		// Transform results
+		$html = [];
+		foreach ($locations as $index => $data) {
+			$html[$index]=
+			 [
+				'keyword' => $data->keyword,
+				'id' => $data->id
+			
+			];
+			 
+			 
+		}
+
+		// Handle empty results
+		if (empty($html)) {
+			return response()->json([
+				'success' => false,
+				'message' => 'No keyword found.',
+			], 404);
+		}
+		 
 		 
 
 		return response()->json([
 			'status' => true,
 			'message' => "Successfully",
-			'data' => $data,
+			'data' => $html,
 
 		], 200);
 	}

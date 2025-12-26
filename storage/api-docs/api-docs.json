@@ -652,6 +652,18 @@
                 "summary": "Get cities by state",
                 "description": "Fetch a list of cities dynamically based on state_id (used for AJAX calls in dropdowns).",
                 "operationId": "11e46168b1ff2aeb9034a147edd08c40",
+                "parameters": [
+                    {
+                        "name": "city",
+                        "in": "query",
+                        "description": "Search city",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "noida"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Cities retrieved successfully",
@@ -1882,6 +1894,18 @@
                 "summary": "Get all keywords",
                 "description": "Fetches a list of available keywords.",
                 "operationId": "adfe4de1a6327417d28ee5fc648a012f",
+                "parameters": [
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Search keyword",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "java"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Keywords retrieved successfully",

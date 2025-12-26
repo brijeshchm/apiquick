@@ -2133,7 +2133,7 @@ class SiteController extends Controller
 		if (empty($html)) {
 			return response()->json([
 				'success' => false,
-				'message' => 'No locations found.',
+				'message' => 'No keyword found.',
 			], 404);
 		}
 

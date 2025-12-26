@@ -5387,8 +5387,8 @@
                     "Profile"
                 ],
                 "summary": "Get personal details",
-                "description": "Fetch the personal details of the authenticated user",
-                "operationId": "getPersonalDetails",
+                "description": "Fetch personal details of the authenticated client",
+                "operationId": "personalDetails",
                 "responses": {
                     "200": {
                         "description": "Personal details retrieved successfully",
@@ -5406,127 +5406,82 @@
                                         },
                                         "data": {
                                             "properties": {
+                                                "client_id": {
+                                                    "type": "integer",
+                                                    "example": 101
+                                                },
+                                                "sirName": {
+                                                    "type": "string",
+                                                    "example": "Mr"
+                                                },
+                                                "first_name": {
+                                                    "type": "string",
+                                                    "example": "Rahul"
+                                                },
+                                                "middle_name": {
+                                                    "type": "string",
+                                                    "example": "K"
+                                                },
+                                                "last_name": {
+                                                    "type": "string",
+                                                    "example": "Sharma"
+                                                },
+                                                "dob": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "1995-08-15"
+                                                },
+                                                "personal_email": {
+                                                    "type": "string",
+                                                    "example": "rahul@gmail.com"
+                                                },
+                                                "marital": {
+                                                    "type": "string",
+                                                    "example": "Single"
+                                                },
+                                                "personal_phone": {
+                                                    "type": "string",
+                                                    "example": "9876543210"
+                                                },
+                                                "personal_city_id": {
+                                                    "type": "integer",
+                                                    "example": 10
+                                                },
+                                                "personal_city": {
+                                                    "type": "string",
+                                                    "example": "Delhi"
+                                                },
+                                                "personal_state_id": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "personal_state": {
+                                                    "type": "string",
+                                                    "example": "Delhi"
+                                                },
+                                                "country": {
+                                                    "type": "string",
+                                                    "example": "India"
+                                                },
+                                                "personal_area": {
+                                                    "type": "string",
+                                                    "example": "Karol Bagh"
+                                                },
+                                                "personal_pincode": {
+                                                    "type": "string",
+                                                    "example": "110005"
+                                                },
+                                                "personal_zone": {
+                                                    "type": "string",
+                                                    "example": "Central"
+                                                },
+                                                "gender": {
+                                                    "type": "string",
+                                                    "example": "Male"
+                                                },
                                                 "occupation": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "properties": {
-                                                            "id": {
-                                                                "type": "integer",
-                                                                "example": 1
-                                                            },
-                                                            "name": {
-                                                                "type": "string",
-                                                                "example": "Software Engineer"
-                                                            },
-                                                            "status": {
-                                                                "type": "integer",
-                                                                "example": 1
-                                                            }
-                                                        },
-                                                        "type": "object"
-                                                    }
-                                                },
-                                                "cities": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "properties": {
-                                                            "id": {
-                                                                "type": "integer",
-                                                                "example": 10
-                                                            },
-                                                            "city": {
-                                                                "type": "string",
-                                                                "example": "Delhi"
-                                                            },
-                                                            "state_id": {
-                                                                "type": "integer",
-                                                                "example": 5
-                                                            }
-                                                        },
-                                                        "type": "object"
-                                                    }
-                                                },
-                                                "edit_data": {
-                                                    "properties": {
-                                                        "client_id": {
-                                                            "type": "integer",
-                                                            "example": 101
-                                                        },
-                                                        "sirName": {
-                                                            "type": "string",
-                                                            "example": "Mr"
-                                                        },
-                                                        "first_name": {
-                                                            "type": "string",
-                                                            "example": "John"
-                                                        },
-                                                        "middle_name": {
-                                                            "type": "string",
-                                                            "example": "A"
-                                                        },
-                                                        "last_name": {
-                                                            "type": "string",
-                                                            "example": "Doe"
-                                                        },
-                                                        "dob": {
-                                                            "type": "string",
-                                                            "format": "date",
-                                                            "example": "1995-08-15"
-                                                        },
-                                                        "personal_email": {
-                                                            "type": "string",
-                                                            "example": "john@example.com"
-                                                        },
-                                                        "marital": {
-                                                            "type": "string",
-                                                            "example": "Single"
-                                                        },
-                                                        "mobile": {
-                                                            "type": "string",
-                                                            "example": "9876543210"
-                                                        },
-                                                        "sec_mobile": {
-                                                            "type": "string",
-                                                            "example": "9123456789"
-                                                        },
-                                                        "city_id": {
-                                                            "type": "integer",
-                                                            "example": 10
-                                                        },
-                                                        "city": {
-                                                            "type": "string",
-                                                            "example": "Delhi"
-                                                        },
-                                                        "state_id": {
-                                                            "type": "integer",
-                                                            "example": 5
-                                                        },
-                                                        "state": {
-                                                            "type": "string",
-                                                            "example": "Delhi"
-                                                        },
-                                                        "country": {
-                                                            "type": "string",
-                                                            "example": "India"
-                                                        },
-                                                        "area": {
-                                                            "type": "string",
-                                                            "example": "Karol Bagh"
-                                                        },
-                                                        "pincode": {
-                                                            "type": "string",
-                                                            "example": "110005"
-                                                        },
-                                                        "gender": {
-                                                            "type": "string",
-                                                            "example": "Male"
-                                                        },
-                                                        "occupation": {
-                                                            "type": "string",
-                                                            "example": "Engineer"
-                                                        }
-                                                    },
-                                                    "type": "object"
+                                                    "type": "string",
+                                                    "example": "Engineer"
                                                 }
                                             },
                                             "type": "object"
@@ -5550,6 +5505,10 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Unauthenticated: Token is missing or invalid"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "token_missing_or_invalid"
                                         }
                                     },
                                     "type": "object"
@@ -5570,6 +5529,26 @@
                                         "message": {
                                             "type": "string",
                                             "example": "User account is inactive"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Something went wrong"
                                         }
                                     },
                                     "type": "object"

@@ -27,92 +27,76 @@ class PersonalDetailsController extends Controller
 
 	}
 	/**
-	 * @OA\Get(
-	 *     path="/api/business/personal-details",
-	 *     operationId="getPersonalDetails",
-	 *     tags={"Profile"},
-	 *     summary="Get personal details",
-	 *     description="Fetch the personal details of the authenticated user",
-	 *     security={{"bearerAuth":{}}},
-	 *
-	 *     @OA\Response(
-	 *         response=200,
-	 *         description="Personal details retrieved successfully",
-	 *         @OA\JsonContent(
-	 *             type="object",
-	 *             @OA\Property(property="status", type="boolean", example=true),
-	 *             @OA\Property(property="message", type="string", example="Personal details retrieved successfully"),
-	 *             @OA\Property(
-	 *                 property="data",
-	 *                 type="object",
-	 *
-	 *                 @OA\Property(
-	 *                     property="occupation",
-	 *                     type="array",
-	 *                     @OA\Items(
-	 *                         @OA\Property(property="id", type="integer", example=1),
-	 *                         @OA\Property(property="name", type="string", example="Software Engineer"),
-	 *                         @OA\Property(property="status", type="integer", example=1)
-	 *                     )
-	 *                 ),
-	 *
-	 *                 @OA\Property(
-	 *                     property="cities",
-	 *                     type="array",
-	 *                     @OA\Items(
-	 *                         @OA\Property(property="id", type="integer", example=10),
-	 *                         @OA\Property(property="city", type="string", example="Delhi"),
-	 *                         @OA\Property(property="state_id", type="integer", example=5)
-	 *                     )
-	 *                 ),
-	 *
-	 *                 @OA\Property(
-	 *                     property="edit_data",
-	 *                     type="object",
-	 *                     @OA\Property(property="client_id", type="integer", example=101),
-	 *                     @OA\Property(property="sirName", type="string", example="Mr"),
-	 *                     @OA\Property(property="first_name", type="string", example="John"),
-	 *                     @OA\Property(property="middle_name", type="string", example="A"),
-	 *                     @OA\Property(property="last_name", type="string", example="Doe"),
-	 *                     @OA\Property(property="dob", type="string", format="date", example="1995-08-15"),
-	 *                     @OA\Property(property="personal_email", type="string", example="john@example.com"),
-	 *                     @OA\Property(property="marital", type="string", example="Single"),
-	 *                     @OA\Property(property="mobile", type="string", example="9876543210"),
-	 *                     @OA\Property(property="sec_mobile", type="string", example="9123456789"),
-	 *                     @OA\Property(property="city_id", type="integer", example=10),
-	 *                     @OA\Property(property="city", type="string", example="Delhi"),
-	 *                     @OA\Property(property="state_id", type="integer", example=5),
-	 *                     @OA\Property(property="state", type="string", example="Delhi"),
-	 *                     @OA\Property(property="country", type="string", example="India"),
-	 *                     @OA\Property(property="area", type="string", example="Karol Bagh"),
-	 *                     @OA\Property(property="pincode", type="string", example="110005"),
-	 *                     @OA\Property(property="gender", type="string", example="Male"),
-	 *                     @OA\Property(property="occupation", type="string", example="Engineer")
-	 *                 )
-	 *             )
-	 *         )
-	 *     ),
-	 *
-	 *     @OA\Response(
-	 *         response=401,
-	 *         description="Unauthenticated",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="status", type="boolean", example=false),
-	 *             @OA\Property(property="message", type="string", example="Unauthenticated: Token is missing or invalid")
-	 *         )
-	 *     ),
-	 *
-	 *     @OA\Response(
-	 *         response=403,
-	 *         description="Inactive user",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="status", type="boolean", example=false),
-	 *             @OA\Property(property="message", type="string", example="User account is inactive")
-	 *         )
-	 *     )
-	 * )
-	 */
-
+ * @OA\Get(
+ *     path="/api/business/personal-details",
+ *     operationId="personalDetails",
+ *     tags={"Profile"},
+ *     summary="Get personal details",
+ *     description="Fetch personal details of the authenticated client",
+ *     security={{"bearerAuth":{}}},
+ *
+ *     @OA\Response(
+ *         response=200,
+ *         description="Personal details retrieved successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Personal details retrieved successfully"),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="client_id", type="integer", example=101),
+ *                 @OA\Property(property="sirName", type="string", example="Mr"),
+ *                 @OA\Property(property="first_name", type="string", example="Rahul"),
+ *                 @OA\Property(property="middle_name", type="string", example="K"),
+ *                 @OA\Property(property="last_name", type="string", example="Sharma"),
+ *                 @OA\Property(property="dob", type="string", format="date", example="1995-08-15"),
+ *                 @OA\Property(property="personal_email", type="string", example="rahul@gmail.com"),
+ *                 @OA\Property(property="marital", type="string", example="Single"),
+ *                 @OA\Property(property="personal_phone", type="string", example="9876543210"),
+ *                 @OA\Property(property="personal_city_id", type="integer", example=10),
+ *                 @OA\Property(property="personal_city", type="string", example="Delhi"),
+ *                 @OA\Property(property="personal_state_id", type="integer", example=5),
+ *                 @OA\Property(property="personal_state", type="string", example="Delhi"),
+ *                 @OA\Property(property="country", type="string", example="India"),
+ *                 @OA\Property(property="personal_area", type="string", example="Karol Bagh"),
+ *                 @OA\Property(property="personal_pincode", type="string", example="110005"),
+ *                 @OA\Property(property="personal_zone", type="string", example="Central"),
+ *                 @OA\Property(property="gender", type="string", example="Male"),
+ *                 @OA\Property(property="occupation", type="string", example="Engineer")
+ *             )
+ *         )
+ *     ),
+ *
+ *     @OA\Response(
+ *         response=401,
+ *         description="Unauthenticated",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Unauthenticated: Token is missing or invalid"),
+ *             @OA\Property(property="error", type="string", example="token_missing_or_invalid")
+ *         )
+ *     ),
+ *
+ *     @OA\Response(
+ *         response=403,
+ *         description="Inactive user",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="User account is inactive")
+ *         )
+ *     ),
+ *
+ *     @OA\Response(
+ *         response=500,
+ *         description="Server error",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Something went wrong")
+ *         )
+ *     )
+ * )
+ */
 
 	public function personalDetails(Request $request)
 	{

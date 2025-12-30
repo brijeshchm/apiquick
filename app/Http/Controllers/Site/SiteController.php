@@ -2320,14 +2320,17 @@ class SiteController extends Controller
 			}
 
 
-			$assignedKeywords = DB::table('assigned_kwds')
-				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
-				->where('assigned_kwds.client_id', $clientscheck->business_id)
-				->pluck('keyword.keyword')
-				->toArray();
+			
+				$assignedKeywords = DB::table('assigned_kwds')
+    ->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+    ->where('assigned_kwds.client_id', $clientscheck->business_id)
+    ->distinct()
+    ->pluck('keyword.keyword')
+    ->toArray();
 			$assignedCity = DB::table('assigned_kwds')
 				->join('citylists', 'assigned_kwds.city_id', '=', 'citylists.id')
 				->where('assigned_kwds.client_id', $clientscheck->business_id)
+				->distinct()
 				->pluck('citylists.city')
 				->toArray();
 

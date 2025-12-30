@@ -1822,10 +1822,11 @@ class SiteController extends Controller
 
 				if (!empty($keyword->icon)) {
 
-					$cicons = @unserialize($keyword->icon);
-					if ($cicons !== false && !empty($cicons['pc_icon']['src']) && !empty($cicons['pc_icon']['name'])) {
-						$image = config('app.website') . $cicons['pc_icon']['src'];
-						$alt = $cicons['pc_icon']['name'];
+					$cicons = json_decode($keyword->icon);
+ 
+					if ($cicons !== false && !empty($cicons->src) && !empty($cicons->name)) {
+						$image = config('app.website') . $cicons->src;
+						$alt = $cicons->name;
 					}
 
 				}

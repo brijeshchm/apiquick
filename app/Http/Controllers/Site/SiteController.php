@@ -22,7 +22,7 @@ use App\Models\ChildCategory;
 use Session;
 use App\Models\ParentCategory;
 use App\Models\Client\Comment;
-
+use App\Models\HomeSlider; 
 class SiteController extends Controller
 {
 
@@ -1476,7 +1476,7 @@ class SiteController extends Controller
 
 				if (!empty($cicons)) {
 					$logoImage = config('app.website') . $cicons['large']['src'];
-					$altLogo = $cicons['large']['name'];
+					$altLogo = $cicons['large']['alt'];
 				}
 			}
 
@@ -1551,7 +1551,7 @@ class SiteController extends Controller
 				$data = json_decode($keyword->icon, true);
 				if (is_array($data) && !empty($data['src'])) {
 					$img = config('app.website') . $data['src'];
-					$alt = $data['name'] ?? $keyword->keyword;
+					$alt = $data['alt'] ?? $keyword->keyword;
 				}
 
 			}
@@ -1683,7 +1683,7 @@ class SiteController extends Controller
 
 					if (!empty($cicons)) {
 						$image = config('app.website') . $cicons['pc_icon']['src'];
-						$alt = $cicons['pc_icon']['name'];
+						$alt = $cicons['pc_icon']['alt'];
 					}
 				}
 				return [
@@ -1706,7 +1706,7 @@ class SiteController extends Controller
 
 			if (!empty($cicons)) {
 				$image = config('app.website') . $cicons['category_banner']['src'];
-				$alt = $cicons['category_banner']['name'];
+				$alt = $cicons['category_banner']['alt'];
 			}
 		}
 		$data['keyword'] = array(
@@ -1826,7 +1826,7 @@ class SiteController extends Controller
  
 					if ($cicons !== false && !empty($cicons->src) && !empty($cicons->name)) {
 						$image = config('app.website') . $cicons->src;
-						$alt = $cicons->name;
+						$alt = $cicons->alt;
 					}
 
 				}
@@ -1849,7 +1849,7 @@ class SiteController extends Controller
 
 			if (!empty($cicons)) {
 				$image = config('app.website') . $cicons['child_banner']['src'];
-				$alt = $cicons['child_banner']['name'];
+				$alt = $cicons['child_banner']['alt'];
 			}
 		}
 		$data['keyword'] = array(
@@ -1876,6 +1876,85 @@ class SiteController extends Controller
 			'ratingcount' => $childDetails->ratingcount,
 
 		);
+
+		return response()->json([
+			'success' => true,
+			'data' => $data,
+		], 200);
+
+	}
+	/**
+	 * @OA\Get(
+	 *     path="/api/site/home-slider",
+	 *     tags={"Frontend Home slider"},
+	 *     summary="Home slider records",
+	 *     description="Home slider records dynamically based on a child",       
+	 *     
+	 *        
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=101),
+	 *                     @OA\Property(property="name", type="string", example="ABC Coaching Center"),
+	 *                     
+	 *                     @OA\Property(property="category", type="string", example="Education"),
+	 *                     @OA\Property(property="rating", type="number", format="float", example=4.5)
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+
+
+	public function getHomeSlider(Request $request)
+	{	 
+
+		$data = HomeSlider::where('status','1')->get()
+			->map(function ($slider) {
+				$image = "";
+				$alt = "";
+
+				if (!empty($slider->image)) {
+
+					$cicons = json_decode($slider->image);
+ 
+					if ($cicons !== false && !empty($cicons->src) && !empty($cicons->name)) {
+						$image = config('app.website') . $cicons->src;
+						$alt = $cicons->alt;
+					}
+
+				}
+
+				return [
+					 
+					'img' => $image ?: '',
+					'alt' => $alt ?: $slider->title,
+					'title' => $slider->title,
+				];
+			});
+
+		 
+		 
 
 		return response()->json([
 			'success' => true,

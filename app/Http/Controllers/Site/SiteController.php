@@ -2390,10 +2390,7 @@ class SiteController extends Controller
 				$galleryList = unserialize($clientscheck->pictures);
 				if (!empty($galleryList)) {
 					foreach ($galleryList as $pkey => $gvalue) {
-
-						$galleryArray[$pkey] = array(
-							'gallery' => $gvalue
-						);
+						$galleryArray[] = config('app.website') . $gvalue['large']['src']; 
 
 					}
 				}
@@ -2401,7 +2398,7 @@ class SiteController extends Controller
 
 
 			
-				$assignedKeywords = DB::table('assigned_kwds')
+	$assignedKeywords = DB::table('assigned_kwds')
     ->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
     ->where('assigned_kwds.client_id', $clientscheck->business_id)
     ->distinct()

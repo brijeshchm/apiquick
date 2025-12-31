@@ -2514,24 +2514,24 @@ class SiteController extends Controller
 
 			$workingHoursHtml = '';
 
-			// if (!empty($clientscheck->time)) {
+			if (!empty($clientscheck->time)) {
 
-			// 	$times = json_decode($clientscheck->time);
-			// 	$today = strtolower(date('l'));
+				$times = json_decode($clientscheck->time);
+				$today = strtolower(date('l'));
 
-			// 	// Today
-			// 	if (isset($times[$today])) {
-			// 		$workingHoursHtml .= $times->$today->from . ' - ' . $times->$today->to;
-			// 	}
+				// Today
+				if (isset($times[$today])) {
+					$workingHoursHtml .= $times->$today->from . ' - ' . $times->$today->to;
+				}
 
-			// 	// Other days
-			// 	foreach ($times as $day => $time) {
-			// 		$workingHoursHtml .= ucfirst($day) . ' ' . $time['from'] . ' - ' . $time['to'];
-			// 	}
+				// Other days
+				foreach ($times as $day => $time) {
+					$workingHoursHtml .= ucfirst($day) . ' ' . $time->from . ' - ' . $time->to;
+				}
 
-			// } else {
-			// 	$workingHoursHtml .= '';
-			// }
+			} else {
+				$workingHoursHtml .= '';
+			}
 
 			$overviewParagraph = ($clientscheck->business_name ?? '') . ' in ' .
 				($clientscheck->area ?? '') . ', ' .

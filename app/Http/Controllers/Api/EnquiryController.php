@@ -261,9 +261,9 @@ class EnquiryController extends Controller
 		$data['lead_follow_up'] = $leadFollowUp;
 
 		$data['statuses'] = DB::table('status')
-		->where('lead_follow_up', 1)
-		->select('id', 'name')
-		->get();
+			->where('lead_follow_up', 1)
+			->select('id', 'name')
+			->get();
 
 		return response()->json([
 			'status' => true,
@@ -913,7 +913,7 @@ class EnquiryController extends Controller
 			return response()->json([
 				'status' => false,
 				'message' => 'Assigned lead not found'
-			], 404);
+			], 200);
 		}
 
 		/* ---------- UPDATE ---------- */
@@ -1091,11 +1091,11 @@ class EnquiryController extends Controller
 	 *     )
 	 * )
 	 */
- 
+
 
 	public function unFavoritleads(Request $request)
 	{
-		 
+
 		if (!Auth::guard('sanctum')->check()) {
 			return response()->json([
 				'status' => false,
@@ -1112,7 +1112,7 @@ class EnquiryController extends Controller
 			], 401);
 		}
 
-		 
+
 		$validator = Validator::make($request->all(), [
 			'assignId' => 'required|integer|exists:assigned_leads,id',
 		]);
@@ -1124,7 +1124,7 @@ class EnquiryController extends Controller
 			], 422);
 		}
 
-		 
+
 		$assignedLead = AssignedLead::where('id', $request->assignId)
 			->where('client_id', $user->id)
 			->first();
@@ -1136,7 +1136,7 @@ class EnquiryController extends Controller
 			], 404);
 		}
 
-	 
+
 		if ((int) $assignedLead->scrapPay === 1) {
 			return response()->json([
 				'status' => false,
@@ -1144,8 +1144,8 @@ class EnquiryController extends Controller
 			], 403);
 		}
 
-	 
-		$assignedLead->favorite_lead = '0';  
+
+		$assignedLead->favorite_lead = '0';
 		$assignedLead->save();
 
 		return response()->json([
@@ -1254,6 +1254,7 @@ class EnquiryController extends Controller
 			}
 			$data['leadslist'] = $leads_list;
 		}
+
 		return response()->json([
 			'status' => true,
 			'data' => $data,
@@ -1461,6 +1462,12 @@ class EnquiryController extends Controller
 			->orderBy('assigned_leads.created_at', 'desc')
 			->where('assigned_leads.readLead', '0')
 			->where('assigned_leads.client_id', $currentUser->id)->get();
+		if (!$leads) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Lead not found'
+			], 200);
+		}
 		if (!empty($leads)) {
 			$leads_list = [];
 			foreach ($leads as $key => $val) {
@@ -1578,6 +1585,13 @@ class EnquiryController extends Controller
 			->where('assigned_leads.favorite_lead', '!=', '1')
 
 			->where('assigned_leads.client_id', $currentUser->id)->get();
+
+		if (!$leads) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Lead not found'
+			], 200);
+		}
 		if (!empty($leads)) {
 			$leads_list = [];
 			foreach ($leads as $key => $val) {
@@ -1691,6 +1705,12 @@ class EnquiryController extends Controller
 			->orderBy('assigned_leads.created_at', 'desc')
 			->where('assigned_leads.favorite_lead', '1')
 			->where('assigned_leads.client_id', $currentUser->id)->get();
+		if (!$leads) {
+			return response()->json([
+				'status' => false,
+				'message' => "Lead not found",
+			], 200);
+		}
 
 		if (!empty($leads)) {
 			$leads_list = [];
@@ -1808,7 +1828,13 @@ class EnquiryController extends Controller
 			->where('assigned_leads.client_id', $currentUser->id)
 			->where('assigned_leads.lead_id', $id)
 			->first();
+		if (!$leads) {
+			return response()->json([
+				'status' => false,
+				'message' => "Lead not found",
+			], 200);
 
+		}
 		$coins = "";
 		if (!empty($leads->scrapLead)) {
 			$coins = ['color' => 'green', 'coin' => $leads->coins];

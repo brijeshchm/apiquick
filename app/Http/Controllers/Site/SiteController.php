@@ -2524,7 +2524,7 @@ class SiteController extends Controller
 
 				// Today
 				if (isset($times[$today])) {
-					$workingHoursHtml .= $times[$today]['from'] . ' - ' . $times[$today]['to'];
+					$workingHoursHtml .= $times->$today->from . ' - ' . $times->$today->to;
 				}
 
 				// Other days

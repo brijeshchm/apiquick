@@ -151,7 +151,7 @@ class PersonalDetailsController extends Controller
 					'personal_pincode' => $client->personal_pincode,
 					'personal_zone' => $client->personal_zone,
 					'gender' => $client->gender,
-					'occupation' => $client->occupation,
+				 
 				 
 			];
 
@@ -279,8 +279,7 @@ class PersonalDetailsController extends Controller
 				'last_name' => 'nullable|string|max:255',				 
 				'personal_area' => 'nullable|string|max:255',
 				'personal_address' => 'nullable|string|max:255',
-				'personal_pincode' => 'nullable|digits:6',
-				'occupation' => 'nullable|string|max:255',
+				'personal_pincode' => 'nullable|digits:6',			 
 				'gender' => 'nullable|in:Male,Female,Other',
 			]);
 
@@ -315,8 +314,7 @@ class PersonalDetailsController extends Controller
 				'personal_area' => $request->personal_area,
 				'personal_zone' => $request->personal_zone,
 				'personal_address' => $request->personal_address,
-				'personal_pincode' => $request->personal_pincode,
-				'occupation' => $request->occupation,
+				'personal_pincode' => $request->personal_pincode,				 
 				'gender' => $request->gender,
 			]);
 

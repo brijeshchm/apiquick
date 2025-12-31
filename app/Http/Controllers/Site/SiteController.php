@@ -789,7 +789,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/banquet-halls',
+				'url' => '/banquet-hall',
 				'img' => config('app.website') . 'popular/Banquet-Halls.jpg',
 				'alt' => 'Banquet Halls',
 				'title' => 'Banquet Halls',

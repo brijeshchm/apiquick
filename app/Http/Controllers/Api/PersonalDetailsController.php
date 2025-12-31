@@ -62,8 +62,8 @@ class PersonalDetailsController extends Controller
  *                 @OA\Property(property="personal_area", type="string", example="Karol Bagh"),
  *                 @OA\Property(property="personal_pincode", type="string", example="110005"),
  *                 @OA\Property(property="personal_zone", type="string", example="Central"),
- *                 @OA\Property(property="gender", type="string", example="Male"),
- *                 @OA\Property(property="occupation", type="string", example="Engineer")
+ *                 @OA\Property(property="gender", type="string", example="Male")
+ *                 
  *             )
  *         )
  *     ),
@@ -198,7 +198,7 @@ class PersonalDetailsController extends Controller
 	 *             @OA\Property(property="personal_area", type="string", example="Connaught Place"),
 	 *             @OA\Property(property="personal_address", type="string", example="Sector Delhi"),
 	 *             @OA\Property(property="personal_pincode", type="string", example="110001"),
-	 *             @OA\Property(property="occupation", type="string", example="Software Engineer"),
+	 *              
 	 *             @OA\Property(property="gender", type="string", example="Male")
 	 *         )
 	 *     ),

@@ -46,8 +46,7 @@ class SiteController extends Controller
 	 *         required=true,
 	 *         description="Search keyword",
 	 *         @OA\Schema(type="string", example="php training")
-	 *     ),
-	 *        
+	 *     ),        
 	 *     @OA\Response(
 	 *         response=200,
 	 *         description="Search results retrieved successfully",

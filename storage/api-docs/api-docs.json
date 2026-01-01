@@ -5478,10 +5478,6 @@
                                                 "gender": {
                                                     "type": "string",
                                                     "example": "Male"
-                                                },
-                                                "occupation": {
-                                                    "type": "string",
-                                                    "example": "Engineer"
                                                 }
                                             },
                                             "type": "object"
@@ -5645,10 +5641,6 @@
                                     "personal_pincode": {
                                         "type": "string",
                                         "example": "110001"
-                                    },
-                                    "occupation": {
-                                        "type": "string",
-                                        "example": "Software Engineer"
                                     },
                                     "gender": {
                                         "type": "string",

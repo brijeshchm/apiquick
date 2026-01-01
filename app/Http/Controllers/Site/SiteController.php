@@ -102,8 +102,9 @@ class SiteController extends Controller
 			->select('keyword.*', 'parent_category.*', 'child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5', 'keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount')
 			->first();
 
-
-		$category_banner = "";
+ 
+		$category_banner = config('app.website') . 'client/images/computer-courses-training.jpg';
+	
 		$alt = "";
 
 		if (!empty($keywordDetails->category_banner)) {
@@ -1223,6 +1224,7 @@ class SiteController extends Controller
 				}
 			}
 			$imageBanner = "";
+			
 			$blogaltB = "";
 
 			if (!empty($blogdetails->image_banner)) {
@@ -1323,7 +1325,9 @@ class SiteController extends Controller
 			->first();
 
 
-		$category_banner = "";
+	 
+		$category_banner = config('app.website') . 'client/images/computer-courses-training.jpg';
+	
 		$alt = "";
 
 		if (!empty($keywordDetails->category_banner)) {
@@ -1400,33 +1404,7 @@ class SiteController extends Controller
 		);
 
 		$keywordName = ucwords(str_replace('-', ' ', $search_kw));
-		// $clientsList = DB::table('clients')
-		// 		->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
-		// 		->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
-
-		// 		->leftJoin(DB::raw('(
-		//     SELECT SUM(rating) AS rating, comment_client_ID, COUNT(comment_ID) AS comment_count
-		//     FROM comments GROUP BY comment_client_ID
-		// ) c'), 'c.comment_client_ID', '=', 'clients.id')
-		// 		->select(
-		// 			'clients.*','clients.id as client_id',
-
-		// 			'assigned_kwds.*',
-
-		// 			'assigned_kwds.sold_on_position',
-		// 			'c.rating',
-		// 			'c.comment_count'
-		// 		)
-		// 		->where('keyword.keyword', 'LIKE', '%' . $keywordName . '%')
-		// 		->orderByRaw("
-		//     CASE assigned_kwds.sold_on_position
-		//         WHEN 'platinum' THEN 1
-		//         WHEN 'diamond' THEN 2
-		//         WHEN 'FreeListing' THEN 3
-		//         ELSE 4
-		//     END
-		// ")
-		// 		->get();
+		 
 
 		$clientsList = DB::table('clients')
 			->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
@@ -1583,8 +1561,7 @@ class SiteController extends Controller
 		}
 
 		$data['findOtherLocation'] = $cityList;
-		// dd($data['FindOtherLocation']);
-		// Return JSON response
+		 
 		return response()->json([
 			'success' => true,
 			'data' => $data,
@@ -1675,7 +1652,7 @@ class SiteController extends Controller
 			)
 			->get()
 			->map(function ($child) {
-				$image = "";
+				$image =   "";
 				$alt = "";
 
 				if (!empty($child->pc_icon)) {
@@ -1698,21 +1675,21 @@ class SiteController extends Controller
 		$categoryDetails = DB::table('parent_category')->where('parent_slug', $slug)->first();
 
 
-		$image = "";
+		$banner_image = config('app.website') . 'client/images/computer-courses-training.jpg';
 		$alt = "";
 
 		if (!empty($categoryDetails->category_banner)) {
 			$cicons = unserialize($categoryDetails->category_banner);
 
 			if (!empty($cicons)) {
-				$image = config('app.website') . $cicons['category_banner']['src'];
+				$banner_image = config('app.website') . $cicons['category_banner']['src'];
 				$alt = $cicons['category_banner']['alt'];
 			}
 		}
 		$data['keyword'] = array(
 			'parent_category' => $categoryDetails->parent_category,
 			'parent_slug' => $categoryDetails->parent_slug,
-			'category_banner' => $image,
+			'category_banner' => $banner_image,
 			'alt' => $alt,
 			'meta_title' => $categoryDetails->meta_title,
 			'meta_keywords' => $categoryDetails->meta_keywords,
@@ -1841,21 +1818,23 @@ class SiteController extends Controller
 
 		$childDetails = ChildCategory::where('child_slug', $slug)->first();
 
-		$image = "";
+	 
+		$banner_image = config('app.website') . 'client/images/computer-courses-training.jpg';
+		
 		$alt = "";
 
 		if (!empty($childDetails->category_banner)) {
 			$cicons = unserialize($childDetails->child_banner);
 
 			if (!empty($cicons)) {
-				$image = config('app.website') . $cicons['child_banner']['src'];
+				$banner_image = config('app.website') . $cicons['child_banner']['src'];
 				$alt = $cicons['child_banner']['alt'];
 			}
 		}
 		$data['keyword'] = array(
 			'child_category' => $childDetails->child_category,
 			'child_slug' => $childDetails->child_slug,
-			'category_banner' => $image,
+			'category_banner' => $banner_image,
 			'alt' => $alt,
 			'meta_title' => $childDetails->meta_title,
 			'meta_keywords' => $childDetails->meta_keywords,

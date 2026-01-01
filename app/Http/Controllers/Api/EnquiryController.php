@@ -1213,8 +1213,48 @@ class EnquiryController extends Controller
 			], 401);
 		}
 
+		$client = Client::select('id', 'address', 'business_name', 'business_slug')->where('id', $user->id)->first();
+
+		if ($client->address) {
+			$address = urlencode($client->address);
+			$url = "https://nominatim.openstreetmap.org/search?q={$address}&format=json&limit=1";
+
+			$options = [
+				"http" => [
+					"header" => "User-Agent: MyWebsite/1.0 (contact@mywebsite.com)\r\n"
+				]
+			];
+
+			$context = stream_context_create($options);
+			$response = file_get_contents($url, false, $context);
+			$geodata = json_decode($response, true);
+
+			if (!empty($geodata[0])) {
+				$latitude = $geodata[0]['lat'];
+				$longitude = $geodata[0]['lon'];
+				$map = 'https://www.google.com/maps?q=' . $latitude . ',' . $longitude;
+			}
 
 
+		} else {
+			$map = "";
+		}
+
+
+		$rating = DB::table('comments')
+			->where('comment_client_ID', $user->id)
+			->selectRaw('
+				COUNT(*) as comment_count,
+				COALESCE(SUM(rating),0) as total_rating
+			')
+			->first();
+		if (!empty($rating)) {
+			$avgRating = ($rating->total_rating / (5 * $rating->comment_count)) * 5;
+			$ratingCount = $rating->comment_count;
+		} else {
+			$avgRating = 0;
+			$ratingCount = 0;
+		}
 		$perPage = $request->query('per_page', 10);
 		$leads = DB::table('leads')
 			->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
@@ -1237,6 +1277,36 @@ class EnquiryController extends Controller
 				}
 
 				$created = get_time(strtotime($val->created)) . ' ago';
+
+				$businessName = !empty($client->business_name) ? $client->business_name : 'our company';
+				$keyword = !empty($val->kw_text) ? $val->kw_text : 'your enquiry';
+				$addressText = !empty($client->address) ? $client->address : '';
+				$mapText = !empty($map) ? '\n Directions: ' . $map : '';
+				$profile_url = 'https://www.quickdials.com/business-details/' . $client->business_slug;
+
+				$address_data = "Greetings from {$businessName},\n"
+					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+					. "For more information"
+					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+					. "{$mapText}";
+
+				$for_service = "Greetings from {$businessName},\n"
+					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+					. "For more information of the services offered by our business please refer "
+					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+					. ", Or {$profile_url}";
+				$for_review = "Greetings from {$businessName}, Rated {$avgRating} Rating out of {$ratingCount} Votes.\n"
+					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+					. "For more information about the services offered by our business"
+					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+					. ". Or visit our profile: {$profile_url}";
+
+				$user_share = array(
+					'address_share' => $address_data,
+					'for_service' => $for_service,
+					'for_review' => $for_review,
+
+				);
 				$leads_list[$key] = array(
 					'lead_id' => $val->lead_id,
 					'assignId' => $val->assignId,
@@ -1250,10 +1320,12 @@ class EnquiryController extends Controller
 					'client_id' => $val->client_id,
 					'createdDate' => $created,
 					'coins' => $coins,
+					'user_share' => $user_share,
 				);
 			}
 			$data['leadslist'] = $leads_list;
 		}
+
 
 		return response()->json([
 			'status' => true,
@@ -1324,7 +1396,48 @@ class EnquiryController extends Controller
 				$currentUser->tokens()->delete();
 				return response()->json(['status' => false, 'message' => 'User account is inactive',], 403);
 			}
-			// Fetch users with pagination
+			$client = Client::select('id', 'address', 'business_name', 'business_slug')->where('id', $currentUser->id)->first();
+
+			if ($client->address) {
+				$address = urlencode($client->address);
+				$url = "https://nominatim.openstreetmap.org/search?q={$address}&format=json&limit=1";
+
+				$options = [
+					"http" => [
+						"header" => "User-Agent: MyWebsite/1.0 (contact@mywebsite.com)\r\n"
+					]
+				];
+
+				$context = stream_context_create($options);
+				$response = file_get_contents($url, false, $context);
+				$geodata = json_decode($response, true);
+
+				if (!empty($geodata[0])) {
+					$latitude = $geodata[0]['lat'];
+					$longitude = $geodata[0]['lon'];
+					$map = 'https://www.google.com/maps?q=' . $latitude . ',' . $longitude;
+				}
+
+
+			} else {
+				$map = "";
+			}
+
+
+			$rating = DB::table('comments')
+				->where('comment_client_ID', $currentUser->id)
+				->selectRaw('
+				COUNT(*) as comment_count,
+				COALESCE(SUM(rating),0) as total_rating
+			')
+				->first();
+			if (!empty($rating)) {
+				$avgRating = ($rating->total_rating / (5 * $rating->comment_count)) * 5;
+				$ratingCount = $rating->comment_count;
+			} else {
+				$avgRating = 0;
+				$ratingCount = 0;
+			}
 			// Fetch users with pagination
 			$perPage = $request->query('per_page', 10); // Default to 15 users per page
 			$leads = DB::table('leads')
@@ -1347,6 +1460,35 @@ class EnquiryController extends Controller
 					}
 
 					$created = get_time(strtotime($val->created)) . ' ago';
+					$businessName = !empty($client->business_name) ? $client->business_name : 'our company';
+					$keyword = !empty($val->kw_text) ? $val->kw_text : 'your enquiry';
+					$addressText = !empty($client->address) ? $client->address : '';
+					$mapText = !empty($map) ? '\n Directions: ' . $map : '';
+					$profile_url = 'https://www.quickdials.com/business-details/' . $client->business_slug;
+
+					$address_data = "Greetings from {$businessName},\n"
+						. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+						. "For more information"
+						. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+						. "{$mapText}";
+
+					$for_service = "Greetings from {$businessName},\n"
+						. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+						. "For more information of the services offered by our business please refer "
+						. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+						. ", Or {$profile_url}";
+					$for_review = "Greetings from {$businessName}, Rated {$avgRating} Rating out of {$ratingCount} Votes.\n"
+						. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+						. "For more information about the services offered by our business"
+						. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+						. ". Or visit our profile: {$profile_url}";
+
+					$user_share = array(
+						'address_share' => $address_data,
+						'for_service' => $for_service,
+						'for_review' => $for_review,
+
+					);
 					$leads_list[$key] = array(
 						'lead_id' => $val->lead_id,
 						'assignId' => $val->assignId,
@@ -1364,6 +1506,7 @@ class EnquiryController extends Controller
 						'client_id' => $val->client_id,
 						'createdDate' => $created,
 						'coins' => $coins,
+						'user_share' => $user_share,
 					);
 				}
 				$data['leadslist'] = $leads_list;
@@ -1452,7 +1595,48 @@ class EnquiryController extends Controller
 			], 401);
 		}
 
+		$client = Client::select('id', 'address', 'business_name', 'business_slug')->where('id', $currentUser->id)->first();
 
+		if ($client->address) {
+			$address = urlencode($client->address);
+			$url = "https://nominatim.openstreetmap.org/search?q={$address}&format=json&limit=1";
+
+			$options = [
+				"http" => [
+					"header" => "User-Agent: MyWebsite/1.0 (contact@mywebsite.com)\r\n"
+				]
+			];
+
+			$context = stream_context_create($options);
+			$response = file_get_contents($url, false, $context);
+			$geodata = json_decode($response, true);
+
+			if (!empty($geodata[0])) {
+				$latitude = $geodata[0]['lat'];
+				$longitude = $geodata[0]['lon'];
+				$map = 'https://www.google.com/maps?q=' . $latitude . ',' . $longitude;
+			}
+
+
+		} else {
+			$map = "";
+		}
+
+
+		$rating = DB::table('comments')
+			->where('comment_client_ID', $currentUser->id)
+			->selectRaw('
+				COUNT(*) as comment_count,
+				COALESCE(SUM(rating),0) as total_rating
+			')
+			->first();
+		if (!empty($rating)) {
+			$avgRating = ($rating->total_rating / (5 * $rating->comment_count)) * 5;
+			$ratingCount = $rating->comment_count;
+		} else {
+			$avgRating = 0;
+			$ratingCount = 0;
+		}
 		$leads = DB::table('leads')
 			->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
 			->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
@@ -1479,6 +1663,35 @@ class EnquiryController extends Controller
 				}
 
 				$created = get_time(strtotime($val->created)) . ' ago';
+				$businessName = !empty($client->business_name) ? $client->business_name : 'our company';
+				$keyword = !empty($val->kw_text) ? $val->kw_text : 'your enquiry';
+				$addressText = !empty($client->address) ? $client->address : '';
+				$mapText = !empty($map) ? '\n Directions: ' . $map : '';
+				$profile_url = 'https://www.quickdials.com/business-details/' . $client->business_slug;
+
+				$address_data = "Greetings from {$businessName},\n"
+					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+					. "For more information"
+					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+					. "{$mapText}";
+
+				$for_service = "Greetings from {$businessName},\n"
+					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+					. "For more information of the services offered by our business please refer "
+					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+					. ", Or {$profile_url}";
+				$for_review = "Greetings from {$businessName}, Rated {$avgRating} Rating out of {$ratingCount} Votes.\n"
+					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+					. "For more information about the services offered by our business"
+					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+					. ". Or visit our profile: {$profile_url}";
+
+				$user_share = array(
+					'address_share' => $address_data,
+					'for_service' => $for_service,
+					'for_review' => $for_review,
+
+				);
 				$leads_list[$key] = array(
 					'lead_id' => $val->lead_id,
 					'assignId' => $val->assignId,
@@ -1496,6 +1709,7 @@ class EnquiryController extends Controller
 					'client_id' => $val->client_id,
 					'createdDate' => $created,
 					'coins' => $coins,
+					'user_share' => $user_share,
 				);
 			}
 			$data['leadslist'] = $leads_list;
@@ -1574,6 +1788,48 @@ class EnquiryController extends Controller
 			], 401);
 		}
 
+			$client = Client::select('id', 'address', 'business_name', 'business_slug')->where('id', $currentUser->id)->first();
+
+		if ($client->address) {
+			$address = urlencode($client->address);
+			$url = "https://nominatim.openstreetmap.org/search?q={$address}&format=json&limit=1";
+
+			$options = [
+				"http" => [
+					"header" => "User-Agent: MyWebsite/1.0 (contact@mywebsite.com)\r\n"
+				]
+			];
+
+			$context = stream_context_create($options);
+			$response = file_get_contents($url, false, $context);
+			$geodata = json_decode($response, true);
+
+			if (!empty($geodata[0])) {
+				$latitude = $geodata[0]['lat'];
+				$longitude = $geodata[0]['lon'];
+				$map = 'https://www.google.com/maps?q=' . $latitude . ',' . $longitude;
+			}
+
+
+		} else {
+			$map = "";
+		}
+
+
+		$rating = DB::table('comments')
+			->where('comment_client_ID', $currentUser->id)
+			->selectRaw('
+				COUNT(*) as comment_count,
+				COALESCE(SUM(rating),0) as total_rating
+			')
+			->first();
+		if (!empty($rating)) {
+			$avgRating = ($rating->total_rating / (5 * $rating->comment_count)) * 5;
+			$ratingCount = $rating->comment_count;
+		} else {
+			$avgRating = 0;
+			$ratingCount = 0;
+		}
 		$leads = DB::table('leads')
 			->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
 			->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
@@ -1603,6 +1859,35 @@ class EnquiryController extends Controller
 				}
 
 				$created = get_time(strtotime($val->created)) . ' ago';
+				$businessName = !empty($client->business_name) ? $client->business_name : 'our company';
+				$keyword = !empty($val->kw_text) ? $val->kw_text : 'your enquiry';
+				$addressText = !empty($client->address) ? $client->address : '';
+				$mapText = !empty($map) ? '\n Directions: ' . $map : '';
+				$profile_url = 'https://www.quickdials.com/business-details/' . $client->business_slug;
+
+				$address_data = "Greetings from {$businessName},\n"
+					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+					. "For more information"
+					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+					. "{$mapText}";
+
+				$for_service = "Greetings from {$businessName},\n"
+					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+					. "For more information of the services offered by our business please refer "
+					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+					. ", Or {$profile_url}";
+				$for_review = "Greetings from {$businessName}, Rated {$avgRating} Rating out of {$ratingCount} Votes.\n"
+					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+					. "For more information about the services offered by our business"
+					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+					. ". Or visit our profile: {$profile_url}";
+
+				$user_share = array(
+					'address_share' => $address_data,
+					'for_service' => $for_service,
+					'for_review' => $for_review,
+
+				);
 				$leads_list[$key] = array(
 					'lead_id' => $val->lead_id,
 					'assignId' => $val->assignId,
@@ -1620,6 +1905,7 @@ class EnquiryController extends Controller
 					'client_id' => $val->client_id,
 					'createdDate' => $created,
 					'coins' => $coins,
+					'user_share' => $user_share,
 				);
 			}
 			$data['leadslist'] = $leads_list;
@@ -1695,6 +1981,48 @@ class EnquiryController extends Controller
 			], 401);
 		}
 
+			$client = Client::select('id', 'address', 'business_name', 'business_slug')->where('id', $currentUser->id)->first();
+
+		if ($client->address) {
+			$address = urlencode($client->address);
+			$url = "https://nominatim.openstreetmap.org/search?q={$address}&format=json&limit=1";
+
+			$options = [
+				"http" => [
+					"header" => "User-Agent: MyWebsite/1.0 (contact@mywebsite.com)\r\n"
+				]
+			];
+
+			$context = stream_context_create($options);
+			$response = file_get_contents($url, false, $context);
+			$geodata = json_decode($response, true);
+
+			if (!empty($geodata[0])) {
+				$latitude = $geodata[0]['lat'];
+				$longitude = $geodata[0]['lon'];
+				$map = 'https://www.google.com/maps?q=' . $latitude . ',' . $longitude;
+			}
+
+
+		} else {
+			$map = "";
+		}
+
+
+		$rating = DB::table('comments')
+			->where('comment_client_ID', $currentUser->id)
+			->selectRaw('
+				COUNT(*) as comment_count,
+				COALESCE(SUM(rating),0) as total_rating
+			')
+			->first();
+		if (!empty($rating)) {
+			$avgRating = ($rating->total_rating / (5 * $rating->comment_count)) * 5;
+			$ratingCount = $rating->comment_count;
+		} else {
+			$avgRating = 0;
+			$ratingCount = 0;
+		}
 		$leads = DB::table('leads')
 			->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
 			->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
@@ -1723,6 +2051,35 @@ class EnquiryController extends Controller
 				}
 
 				$created = get_time(strtotime($val->created)) . ' ago';
+				$businessName = !empty($client->business_name) ? $client->business_name : 'our company';
+				$keyword = !empty($val->kw_text) ? $val->kw_text : 'your enquiry';
+				$addressText = !empty($client->address) ? $client->address : '';
+				$mapText = !empty($map) ? '\n Directions: ' . $map : '';
+				$profile_url = 'https://www.quickdials.com/business-details/' . $client->business_slug;
+
+				$address_data = "Greetings from {$businessName},\n"
+					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+					. "For more information"
+					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+					. "{$mapText}";
+
+				$for_service = "Greetings from {$businessName},\n"
+					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+					. "For more information of the services offered by our business please refer "
+					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+					. ", Or {$profile_url}";
+				$for_review = "Greetings from {$businessName}, Rated {$avgRating} Rating out of {$ratingCount} Votes.\n"
+					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+					. "For more information about the services offered by our business"
+					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+					. ". Or visit our profile: {$profile_url}";
+
+				$user_share = array(
+					'address_share' => $address_data,
+					'for_service' => $for_service,
+					'for_review' => $for_review,
+
+				);
 				$leads_list[$key] = array(
 					'lead_id' => $val->lead_id,
 					'assignId' => $val->assignId,
@@ -1740,6 +2097,7 @@ class EnquiryController extends Controller
 					'client_id' => $val->client_id,
 					'createdDate' => $created,
 					'coins' => $coins,
+					'user_share' => $user_share,
 				);
 			}
 			$data['leadslist'] = $leads_list;
@@ -1816,6 +2174,48 @@ class EnquiryController extends Controller
 			], 401);
 		}
 
+			$client = Client::select('id', 'address', 'business_name', 'business_slug')->where('id', $currentUser->id)->first();
+
+		if ($client->address) {
+			$address = urlencode($client->address);
+			$url = "https://nominatim.openstreetmap.org/search?q={$address}&format=json&limit=1";
+
+			$options = [
+				"http" => [
+					"header" => "User-Agent: MyWebsite/1.0 (contact@mywebsite.com)\r\n"
+				]
+			];
+
+			$context = stream_context_create($options);
+			$response = file_get_contents($url, false, $context);
+			$geodata = json_decode($response, true);
+
+			if (!empty($geodata[0])) {
+				$latitude = $geodata[0]['lat'];
+				$longitude = $geodata[0]['lon'];
+				$map = 'https://www.google.com/maps?q=' . $latitude . ',' . $longitude;
+			}
+
+
+		} else {
+			$map = "";
+		}
+
+
+		$rating = DB::table('comments')
+			->where('comment_client_ID', $currentUser->id)
+			->selectRaw('
+				COUNT(*) as comment_count,
+				COALESCE(SUM(rating),0) as total_rating
+			')
+			->first();
+		if (!empty($rating)) {
+			$avgRating = ($rating->total_rating / (5 * $rating->comment_count)) * 5;
+			$ratingCount = $rating->comment_count;
+		} else {
+			$avgRating = 0;
+			$ratingCount = 0;
+		}
 		$leads = DB::table('leads')
 			->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
 			->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
@@ -1843,6 +2243,35 @@ class EnquiryController extends Controller
 		}
 
 		$created = get_time(strtotime($leads->created)) . ' ago';
+		$businessName = !empty($client->business_name) ? $client->business_name : 'our company';
+				$keyword = !empty($leads->kw_text) ? $leads->kw_text : 'your enquiry';
+				$addressText = !empty($client->address) ? $client->address : '';
+				$mapText = !empty($map) ? '\n Directions: ' . $map : '';
+				$profile_url = 'https://www.quickdials.com/business-details/' . $client->business_slug;
+
+				$address_data = "Greetings from {$businessName},\n"
+					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+					. "For more information"
+					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+					. "{$mapText}";
+
+				$for_service = "Greetings from {$businessName},\n"
+					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+					. "For more information of the services offered by our business please refer "
+					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+					. ", Or {$profile_url}";
+				$for_review = "Greetings from {$businessName}, Rated {$avgRating} Rating out of {$ratingCount} Votes.\n"
+					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+					. "For more information about the services offered by our business"
+					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+					. ". Or visit our profile: {$profile_url}";
+
+				$user_share = array(
+					'address_share' => $address_data,
+					'for_service' => $for_service,
+					'for_review' => $for_review,
+
+				);
 		$data = [
 
 			'lead_id' => $leads->lead_id,
@@ -1857,6 +2286,7 @@ class EnquiryController extends Controller
 			'status_name' => $leads->status_name,
 			'zone' => $leads->zone,
 			'area' => $leads->area,
+			'user_share' => $user_share,
 		];
 
 		return response()->json([

@@ -106,8 +106,7 @@ class Client extends Authenticatable
     'remark',
     'created_by',
 ];
-
-	
+ 
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -119,5 +118,22 @@ class Client extends Authenticatable
 	
 	protected $dates = ['deleted_at'];
 
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'comment_client_ID');
+    }
+
+ 
+
+public function ratingSummary()
+{
+    return $this->comments()
+        ->selectRaw('
+            COALESCE(SUM(rating),0) as total_rating,
+            COUNT(comment_ID) as comment_count
+        ')
+        ->first();
+}
     
 }

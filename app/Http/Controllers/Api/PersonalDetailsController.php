@@ -26,6 +26,8 @@ class PersonalDetailsController extends Controller
 	{
 
 	}
+
+
 	/**
  * @OA\Get(
  *     path="/api/business/personal-details",
@@ -390,6 +392,257 @@ class PersonalDetailsController extends Controller
 			'data' => $data,
 
 		], 200);
+	}
+
+
+	
+	/**
+ * @OA\Get(
+ *     path="/api/business/social-media",
+ *     operationId="getSocialMediaDetails",
+ *     tags={"Social"},
+ *     summary="Get social media details",
+ *     description="Fetch social media links of the authenticated client",
+ *     security={{"bearerAuth":{}}},
+ *
+ *     @OA\Response(
+ *         response=200,
+ *         description="Social media details retrieved successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Social media details retrieved successfully"),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="client_id", type="integer", example=101),
+ *                 @OA\Property(property="facebook_url", type="string", example="https://facebook.com/abc"),
+ *                 @OA\Property(property="twitter_url", type="string", example="https://twitter.com/abc"),
+ *                 @OA\Property(property="instagram_url", type="string", example="https://instagram.com/abc"),
+ *                 @OA\Property(property="pinterest_url", type="string", example="https://pinterest.com/abc"),
+ *                 @OA\Property(property="linkedin_url", type="string", example="https://linkedin.com/in/abc"),
+ *                 @OA\Property(property="youtube_url", type="string", example="https://youtube.com/@abc")
+ *             )
+ *         )
+ *     ),
+ *
+ *     @OA\Response(
+ *         response=401,
+ *         description="Unauthenticated",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Unauthenticated")
+ *         )
+ *     ),
+ *
+ *     @OA\Response(
+ *         response=403,
+ *         description="Inactive user",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="User account is inactive")
+ *         )
+ *     ),
+ *
+ *     @OA\Response(
+ *         response=500,
+ *         description="Server error",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Something went wrong")
+ *         )
+ *     )
+ * )
+ */
+	public function getSocialMedia(Request $request)
+	{
+		try {
+
+			// ✅ Sanctum authentication
+			$authUser = auth('sanctum')->user();
+			if (!$authUser) {
+				return response()->json([
+					'status' => false,
+					'message' => 'Unauthenticated: Token is missing or invalid',
+					'error' => 'token_missing_or_invalid'
+				], 401);
+			}
+
+			// ✅ Active user check
+			if (!$authUser->active_status) {
+				$authUser->tokens()->delete();
+				return response()->json([
+					'status' => false,
+					'message' => 'User account is inactive'
+				], 403);
+			}
+
+			// ✅ Get client
+			$client = Client::where('id', $authUser->id)->first();
+			if (!$client) {
+				return response()->json([
+					'status' => false,
+					'message' => 'Client not found'
+				], 404);
+			}
+
+
+			// ✅ Response data
+			$data = [				 
+					'client_id' => $client->id,
+					'facebook_url' => $client->facebook_url,
+					'twitter_url' => $client->twitter_url,
+					'instagram_url' => $client->instagram_url,
+					'pinterest_url' => $client->pinterest_url,					 
+					'linkedin_url' => $client->linkedin_url,			 
+					'youtube_url' => $client->youtube_url,			 
+			];
+
+			return response()->json([
+				'status' => true,
+				'message' => 'Personal details retrieved successfully',
+				'data' => $data
+			], 200);
+
+		} catch (\Exception $e) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Something went wrong',
+				'error' => $e->getMessage()
+			], 500);
+		}
+	}
+
+
+	
+	/**
+ * @OA\Post(
+ *     path="/api/business/saveSocialMedia",
+ *     operationId="saveSocialMedia",
+ *     tags={"Social"},
+ *     summary="Save or update social media links",
+ *     description="Save or update social media links of the authenticated client",
+ *     security={{"bearerAuth":{}}},
+ *
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="facebook_url", type="string", format="url", example="https://facebook.com/abc"),
+ *             @OA\Property(property="instagram_url", type="string", format="url", example="https://instagram.com/abc"),
+ *             @OA\Property(property="twitter_url", type="string", format="url", example="https://twitter.com/abc"),
+ *             @OA\Property(property="linkedin_url", type="string", format="url", example="https://linkedin.com/in/abc"),
+ *             @OA\Property(property="pinterest_url", type="string", format="url", example="https://pinterest.com/abc"),
+ *             @OA\Property(property="youtube_url", type="string", format="url", example="https://youtube.com/@abc")
+ *         )
+ *     ),
+ *
+ *     @OA\Response(
+ *         response=200,
+ *         description="Social media links updated successfully",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Social media links updated successfully")
+ *         )
+ *     ),
+ *
+ *     @OA\Response(
+ *         response=422,
+ *         description="Validation failed",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="errors", type="object")
+ *         )
+ *     ),
+ *
+ *     @OA\Response(
+ *         response=401,
+ *         description="Unauthenticated",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Unauthenticated")
+ *         )
+ *     )
+ * )
+ */
+
+
+
+	public function saveSocialMedia(Request $request)
+	{
+		try {
+
+			// ✅ Sanctum authentication
+			$authUser = auth('sanctum')->user();
+			if (!$authUser) {
+				return response()->json([
+					'status' => false,
+					'message' => 'Unauthenticated: Token is missing or invalid'
+				], 401);
+			}
+
+			// ✅ Active user check
+			if (!$authUser->active_status) {
+				$authUser->tokens()->delete();
+				return response()->json([
+					'status' => false,
+					'message' => 'User account is inactive'
+				], 403);
+			}
+
+			// ✅ Client fetch (correct mapping)
+			$client = Client::where('id', $authUser->id)->first();
+			if (!$client) {
+				return response()->json([
+					'status' => false,
+					'message' => 'Client not found'
+				], 404);
+			}
+
+			// ✅ Validation
+			$validator = Validator::make($request->all(), [
+				'facebook_url'  => 'nullable|url|max:255',
+				'instagram_url'  => 'nullable|url|max:255',
+				'twitter_url'  => 'nullable|url|max:255',
+				'linkedin_url'  => 'nullable|url|max:255',
+				'pinterest_url'  => 'nullable|url|max:255',
+				'youtube_url'  => 'nullable|url|max:255',
+				 
+			]);
+
+			if ($validator->fails()) {
+				return response()->json([
+					'status' => false,
+					'message' => 'Validation failed',
+					'errors' => $validator->errors()
+				], 422);
+			}
+
+		 
+
+			// ✅ Update client
+			$client->update([
+				'youtube_url' => $request->youtube_url,			 
+				'pinterest_url' => $request->pinterest_url,
+				'twitter_url' => $request->twitter_url,
+				'instagram_url' => $request->instagram_url,
+				'facebook_url' => $request->facebook_url,
+				 
+			]);
+
+			return response()->json([
+				'status' => true,
+				'message' => 'Socials updated successfully',
+				'data' => $client
+			], 200);
+
+		} catch (\Exception $e) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Something went wrong',
+				'error' => $e->getMessage()
+			], 500);
+		}
 	}
 
 }

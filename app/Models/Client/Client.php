@@ -106,6 +106,12 @@ class Client extends Authenticatable
     'time',
     'remark',
     'created_by',
+    'facebook_url',
+    'instagram_url',
+    'twitter_url',
+    'linkedin_url',
+    'pinterest_url',
+    'youtube_url',
 ];
  
     /**

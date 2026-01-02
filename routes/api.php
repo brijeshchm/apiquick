@@ -71,6 +71,11 @@ Route::post('/business/saveProfileInfo',[App\Http\Controllers\Api\ProfileControl
 Route::post('/business/saveBusinessLocation',[App\Http\Controllers\Api\BusinessLocationController::class, 'saveBusinessLocation']);
 Route::post('/business/savePersonalDetails',[App\Http\Controllers\Api\PersonalDetailsController::class, 'savePersonalDetails']);
 
+
+Route::get('/business/social-media',[App\Http\Controllers\Api\PersonalDetailsController::class, 'getSocialMedia']);
+Route::post('/business/saveSocialMedia',[App\Http\Controllers\Api\PersonalDetailsController::class, 'saveSocialMedia']);
+
+
 Route::get('/business/profile-logo',[App\Http\Controllers\Api\BusinessLogoController::class, 'getProfileLogo']);
 Route::post('https://www.quickdials.com/api/business/saveProfileLogo',[App\Http\Controllers\Api\BusinessLogoController::class, 'saveProfileLogo']);
 Route::delete('https://www.quickdials.com/api/business/profileLogo/logoDel/{business_id}',[App\Http\Controllers\Api\BusinessLogoController::class, 'deleteLogo']);

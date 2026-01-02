@@ -627,6 +627,7 @@ class PersonalDetailsController extends Controller
 				'twitter_url' => $request->twitter_url,
 				'instagram_url' => $request->instagram_url,
 				'facebook_url' => $request->facebook_url,
+				'linkedin_url' => $request->linkedin_url,
 				 
 			]);
 

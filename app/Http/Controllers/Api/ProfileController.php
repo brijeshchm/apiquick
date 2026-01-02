@@ -126,6 +126,7 @@ class ProfileController extends Controller
                 'certifications' => $certifications,
                 'year_of_estb' => $user->year_of_estb,
                 'display_hofo' => $user->display_hofo,
+                'business_map' => $user->business_map,
 
             );
 
@@ -277,6 +278,34 @@ class ProfileController extends Controller
                 $client->update(['time' => $time]);
             }
 
+            if ($request->address) {
+                $address = urlencode($request->address);
+              $url = "https://nominatim.openstreetmap.org/search?q={$address}&format=json&limit=1";
+
+              
+                $options = [
+                    "http" => [
+                        "header" => "User-Agent: MyWebsite/1.0 (contact@mywebsite.com)\r\n"
+                    ]
+                ];
+
+                $context = stream_context_create($options);
+                $response = file_get_contents($url, false, $context);
+                $geodata = json_decode($response, true);
+ 
+                if (!empty($geodata[0])) {
+                    $latitude = $geodata[0]['lat'];
+                    $longitude = $geodata[0]['lon'];
+                    $map = 'https://www.google.com/maps?q=' . $latitude . ',' . $longitude;
+                }else{
+                    $map = "";
+                }
+
+            } else {
+                $map = "";
+            }
+
+           
             // ✅ Update Client
             $client->update([
                 'business_name' => $string,
@@ -297,7 +326,9 @@ class ProfileController extends Controller
                 'country' => $request->country,
                 'business_intro' => $request->business_intro,
                 'year_of_estb' => $request->year_of_estb,
-                'certifications' => $request->certifications,                
+                'certifications' => $request->certifications,    
+                'business_map' => $map,    
+
             ]);
 
             return response()->json([

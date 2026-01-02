@@ -37,6 +37,7 @@ class Client extends Authenticatable
     'payment_mode_accepted',
     'logo',
     'profile_pic',
+    'business_map',
     'pictures',
 
     // Contact

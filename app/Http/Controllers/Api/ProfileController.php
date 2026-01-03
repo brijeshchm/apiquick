@@ -127,6 +127,8 @@ class ProfileController extends Controller
                 'year_of_estb' => $user->year_of_estb,
                 'display_hofo' => $user->display_hofo,
                 'business_map' => $user->business_map,
+                'trusted_status' => $user->trusted_status,
+                'gst_status' => $user->gst_status,
 
             );
 
@@ -174,6 +176,7 @@ class ProfileController extends Controller
      *             @OA\Property(property="display_hofo", type="string", example="0"),
      *             @OA\Property(property="business_intro", type="string", example="We are a leading provider of IT services established in 2020."),
      *             @OA\Property(property="certifications", type="string", example="ISO 9001, ISO 27001"),
+     *             @OA\Property(property="business_map", type="string", example="ISO 9001, ISO 27001"),
      *             @OA\Property(property="time", type="string", example=""),
      *         )
      *     ),
@@ -252,6 +255,7 @@ class ProfileController extends Controller
                 'display_hofo' => 'nullable|string|max:255',
                 'country' => 'nullable|string|max:255',
                 'time' => 'nullable|string|max:255',
+                 
             ]);
 
             if ($validator->fails()) {
@@ -277,34 +281,7 @@ class ProfileController extends Controller
                 $time = json_encode($request->time);
                 $client->update(['time' => $time]);
             }
-
-            if ($request->address) {
-                $address = urlencode($request->address);
-              $url = "https://nominatim.openstreetmap.org/search?q={$address}&format=json&limit=1";
-
-              
-                $options = [
-                    "http" => [
-                        "header" => "User-Agent: MyWebsite/1.0 (contact@mywebsite.com)\r\n"
-                    ]
-                ];
-
-                $context = stream_context_create($options);
-                $response = file_get_contents($url, false, $context);
-                $geodata = json_decode($response, true);
  
-                if (!empty($geodata[0])) {
-                    $latitude = $geodata[0]['lat'];
-                    $longitude = $geodata[0]['lon'];
-                    $map = 'https://www.google.com/maps?q=' . $latitude . ',' . $longitude;
-                }else{
-                    $map = "";
-                }
-
-            } else {
-                $map = "";
-            }
-
            
             // ✅ Update Client
             $client->update([
@@ -327,7 +304,7 @@ class ProfileController extends Controller
                 'business_intro' => $request->business_intro,
                 'year_of_estb' => $request->year_of_estb,
                 'certifications' => $request->certifications,    
-                'business_map' => $map,    
+                'business_map' => $request->business_map,    
 
             ]);
 

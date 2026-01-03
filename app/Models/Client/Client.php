@@ -112,6 +112,9 @@ class Client extends Authenticatable
     'linkedin_url',
     'pinterest_url',
     'youtube_url',
+    'gst_no',
+    'cin_no',
+    'iso_no',
 ];
  
     /**

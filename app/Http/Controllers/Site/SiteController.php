@@ -2498,7 +2498,7 @@ class SiteController extends Controller
 				$today = strtolower(date('l'));
 
 				// Today
-				if (isset($times[$today])) {
+				if (isset($times->$today)) {
 					$workingHoursHtml .= $times->$today->from . ' - ' . $times->$today->to;
 				}
 

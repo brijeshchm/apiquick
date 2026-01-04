@@ -99,7 +99,32 @@ class ProfileController extends Controller
                 $certifications = "";
             }
 
+            // if ($request->address) {
+            //     $address = urlencode($request->address);
+            //   $url = "https://nominatim.openstreetmap.org/search?q={$address}&format=json&limit=1";
 
+              
+            //     $options = [
+            //         "http" => [
+            //             "header" => "User-Agent: MyWebsite/1.0 (contact@mywebsite.com)\r\n"
+            //         ]
+            //     ];
+
+            //     $context = stream_context_create($options);
+            //     $response = file_get_contents($url, false, $context);
+            //     $geodata = json_decode($response, true);
+ 
+            //     if (!empty($geodata[0])) {
+            //         $latitude = $geodata[0]['lat'];
+            //         $longitude = $geodata[0]['lon'];
+            //         $map = 'https://www.google.com/maps?q=' . $latitude . ',' . $longitude;
+            //     }else{
+            //         $map = "";
+            //     }
+
+            // } else {
+            //     $map = "";
+            // }
             $data['businessInformation'] = array(
                 'client_id' => $user->id,
                 'business_name' => $user->business_name,

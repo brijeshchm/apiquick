@@ -272,7 +272,9 @@ class SiteController extends Controller
 					}
 				}
 			}
-
+ 			$certified_img= config('app.website') .'img/q_verified.gif';
+           	$trusted_img= config('app.website') . 'img/q_trust.gif';
+           	$gst_img= config('app.website') .'img/q_gst.gif';
 			return [
 				'business_id' => $client->id,
 				'business_name' => $client->business_name,
@@ -288,6 +290,9 @@ class SiteController extends Controller
 				'certified_status' => $client->certified_status,
 				'trusted_status' => $client->trusted_status,
 				'gst_status' => $client->gst_status,
+				'certified_img' => $certified_img,
+				'trusted_img' => $trusted_img,
+				'gst_img' => $gst_img,
 				'website' => $client->website,
 				'city' => $client->city,
 				'state' => $client->state,
@@ -1482,7 +1487,9 @@ class SiteController extends Controller
 					}
 				}
 			}
-
+           $certified_img= config('app.website') .'img/q_verified.gif';
+           $trusted_img= config('app.website') . 'img/q_trust.gif';
+           $gst_img= config('app.website') .'img/q_gst.gif';
 			return [
 				'business_id' => $client->client_id,
 				'business_name' => $client->business_name,
@@ -1498,6 +1505,9 @@ class SiteController extends Controller
 				'certified_status' => $client->certified_status,
 				'trusted_status' => $client->trusted_status,
 				'gst_status' => $client->gst_status,
+				'certified_img' => $certified_img,
+				'trusted_img' => $trusted_img,
+				'gst_img' => $gst_img,
 				'website' => $client->website,
 				'city' => $client->city,
 				'state' => $client->state,
@@ -2399,7 +2409,9 @@ class SiteController extends Controller
 
 			}
 
-
+   		 $certified_img= config('app.website') .'img/q_verified.gif';
+           $trusted_img= config('app.website') . 'img/q_trust.gif';
+           $gst_img= config('app.website') .'img/q_gst.gif';
 			$data['clientsList'] = [
 				'business_id' => $clientscheck->business_id,
 				'business_name' => $clientscheck->business_name,
@@ -2422,6 +2434,9 @@ class SiteController extends Controller
 				'certified_status' => $clientscheck->certified_status,				
 				'trusted_status' => $clientscheck->trusted_status,
 				'gst_status' => $clientscheck->gst_status,
+				'certified_img' => $certified_img,				
+				'trusted_img' => $trusted_img,
+				'gst_img' => $gst_img,
 				'website' => $clientscheck->website,
 				'city' => $clientscheck->city,
 				'state' => $clientscheck->state,

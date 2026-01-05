@@ -2341,8 +2341,7 @@ class SiteController extends Controller
 				'c.rating',
 				'c.comment_count'
 			)
-			->where('clients.business_slug', 'LIKE', "%{$business_slug}%")
-
+			->where('clients.business_slug', $business_slug)			 
 			->orderByRaw("
         CASE assigned_kwds.sold_on_position
             WHEN 'platinum' THEN 1
@@ -2352,6 +2351,7 @@ class SiteController extends Controller
         END
     ")
 			->first();
+ 
 		if (!empty($clientscheck)) {
 
 			$logoImage = 'client/images/default_pp_small.jpg';
@@ -2450,22 +2450,23 @@ class SiteController extends Controller
 				'landmark' => $clientscheck->landmark,
 
 				'rating' => $clientscheck->rating,
-				// 'comment_count' => $clientscheck->comment_count,
+				 //'comment_count' => $clientscheck->comment_count,
 
 			];
 
 
-			$data['comment'] = Comment::where('comment_client_ID', $clientscheck->id)
-				->where('comment_approved', 1)
+			$data['comment'] = Comment::where('comment_client_ID', $clientscheck->business_id)
+				->where('comment_approved', '1')
 				->orderBy('created_at', 'desc')
 				->get()
 				->toArray();
-
-			$sum = Comment::where('comment_client_ID', $clientscheck->id)
-				->where('comment_approved', 1)
+ 
+			$sum = Comment::where('comment_client_ID', $clientscheck->business_id)
+				->where('comment_approved', '1')
 				->sum('rating');
-			$count = Comment::where('comment_client_ID', $clientscheck->id)
-				->where('comment_approved', 1)
+			 
+			$count = Comment::where('comment_client_ID', $clientscheck->business_id)
+				->where('comment_approved', '1')
 				->count();
 
 			$avgRating = 0;

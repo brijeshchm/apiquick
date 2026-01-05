@@ -6183,6 +6183,10 @@
                                         "type": "string",
                                         "example": "ISO 9001, ISO 27001"
                                     },
+                                    "business_map": {
+                                        "type": "string",
+                                        "example": "ISO 9001, ISO 27001"
+                                    },
                                     "time": {
                                         "type": "string",
                                         "example": ""

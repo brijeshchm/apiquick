@@ -45,7 +45,7 @@ return [
             'host' => 'mail.quickdials.com',
             'port' =>  25,
             'username' => 'leads@quickdials.com',
-            'password' => 'quickdials@#$%',
+            'password' => 'quickdials@#321',
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
         ],

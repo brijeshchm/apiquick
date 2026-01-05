@@ -1492,6 +1492,11 @@ class SiteController extends Controller
            $certified_img= config('app.website') .'img/q_verified.gif';
            $trusted_img= config('app.website') . 'img/q_trust.gif';
            $gst_img= config('app.website') .'img/q_gst.gif';
+		   $avgRating="0";
+			if($client->rating){
+			$avgRating = ($client->rating/(5*$client->comment_count))*5;
+			$avgRating = number_format($avgRating, 1, '.', '');
+			}
 			return [
 				'business_id' => $client->client_id,
 				'business_name' => $client->business_name,
@@ -1523,11 +1528,12 @@ class SiteController extends Controller
 
 
 				'rating' => $client->rating,
+				'avgRating' => $avgRating,
 				'comment_count' => $client->comment_count,
 				'keywords' => $assignedKwds ?? null,
 			];
 		});
-
+ 
 
 		$servicesRelated = Keyword::where('child_category_id', $keywordDetails->child_category_id)
 			->where('parent_category_id', $keywordDetails->parent_category_id)

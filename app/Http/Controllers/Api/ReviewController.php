@@ -87,8 +87,8 @@ class ReviewController extends Controller
 
         if ($lastReviewDate && now()->diffInDays($lastReviewDate) <= 30) {
             return response()->json([
-                'status'  => 0,
-                'message' => 'You cannot submit more than one review in a month'
+                'status'  => false,
+                'message' => 'Thanks for your feedback! You are already submitted a review for this business'
             ], 429);
         }
 

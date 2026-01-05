@@ -246,11 +246,10 @@ class SiteController extends Controller
 
 		$data['clientsList'] = $clientsList->map(function ($client) {
 
-			$logoImage = 'client/images/default_pp_small.jpg';
+			$logoImage = config('app.website') .'client/images/default_pp_small.jpg';
 			$altLogo = "Business Logo";
 			if (!empty($client->logo)) {
 				$cicons = unserialize($client->logo);
-
 				if (!empty($cicons)) {
 					$logoImage = config('app.website') . $cicons['large']['src'];
 					$altLogo = $cicons['large']['name'];
@@ -275,6 +274,11 @@ class SiteController extends Controller
  			$certified_img= config('app.website') .'img/q_verified.gif';
            	$trusted_img= config('app.website') . 'img/q_trust.gif';
            	$gst_img= config('app.website') .'img/q_gst.gif';
+			$avgRating="0";
+			if($client->rating){
+			$avgRating = ($client->rating/(5*$client->comment_count))*5;
+			$avgRating = number_format($avgRating, 1, '.', '');
+			}
 			return [
 				'business_id' => $client->id,
 				'business_name' => $client->business_name,
@@ -298,15 +302,13 @@ class SiteController extends Controller
 				'state' => $client->state,
 				'area' => $client->area,
 				'zone' => $client->zone,
-
 				'address' => $client->address,
 				'pincode' => $client->pincode,
 				'country' => $client->country,
 				'year_of_estb' => $client->year_of_estb,
 				'landmark' => $client->landmark,
-
-
 				'rating' => $client->rating,
+				'avgRating' => $avgRating,
 				'comment_count' => $client->comment_count,
 			];
 		});

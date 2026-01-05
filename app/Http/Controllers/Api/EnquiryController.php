@@ -1249,7 +1249,9 @@ class EnquiryController extends Controller
 			')
 			->first();
 		if (!empty($rating)) {
-			$avgRating = ($rating->total_rating / (5 * $rating->comment_count)) * 5;
+			$avgRating = ($rating->comment_count > 0)
+                ? round($rating->total_rating / $rating->comment_count, 1)
+                : 0;
 			$ratingCount = $rating->comment_count;
 		} else {
 			$avgRating = 0;
@@ -1432,7 +1434,9 @@ class EnquiryController extends Controller
 			')
 				->first();
 			if (!empty($rating)) {
-				$avgRating = ($rating->total_rating / (5 * $rating->comment_count)) * 5;
+				$avgRating = ($rating->comment_count > 0)
+                ? round($rating->total_rating / $rating->comment_count, 1)
+                : 0;
 				$ratingCount = $rating->comment_count;
 			} else {
 				$avgRating = 0;
@@ -1631,7 +1635,9 @@ class EnquiryController extends Controller
 			')
 			->first();
 		if (!empty($rating)) {
-			$avgRating = ($rating->total_rating / (5 * $rating->comment_count)) * 5;
+			$avgRating = ($rating->comment_count > 0)
+                ? round($rating->total_rating / $rating->comment_count, 1)
+                : 0;
 			$ratingCount = $rating->comment_count;
 		} else {
 			$avgRating = 0;
@@ -1824,7 +1830,9 @@ class EnquiryController extends Controller
 			')
 			->first();
 		if (!empty($rating)) {
-			$avgRating = ($rating->total_rating / (5 * $rating->comment_count)) * 5;
+			$avgRating = ($rating->comment_count > 0)
+                ? round($rating->total_rating / $rating->comment_count, 1)
+                : 0;
 			$ratingCount = $rating->comment_count;
 		} else {
 			$avgRating = 0;
@@ -2017,7 +2025,9 @@ class EnquiryController extends Controller
 			')
 			->first();
 		if (!empty($rating)) {
-			$avgRating = ($rating->total_rating / (5 * $rating->comment_count)) * 5;
+			$avgRating = ($rating->comment_count > 0)
+                ? round($rating->total_rating / $rating->comment_count, 1)
+                : 0;
 			$ratingCount = $rating->comment_count;
 		} else {
 			$avgRating = 0;
@@ -2210,7 +2220,9 @@ class EnquiryController extends Controller
 			')
 			->first();
 		if (!empty($rating)) {
-			$avgRating = ($rating->total_rating / (5 * $rating->comment_count)) * 5;
+			$avgRating = ($rating->comment_count > 0)
+                ? round($rating->total_rating / $rating->comment_count, 1)
+                : 0;
 			$ratingCount = $rating->comment_count;
 		} else {
 			$avgRating = 0;

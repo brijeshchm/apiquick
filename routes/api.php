@@ -40,7 +40,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/business/profileInfo', [ProfileController::class, 'profileInfo']);
 Route::get('/business/review', [ProfileController::class, 'profileReview']);
-Route::get('/business/dashboard',[App\Http\Controllers\Api\BusinessDashboardController::class, 'dashboard'])->name('business.dashboard');
+Route::get('/business/dashboard',[App\Http\Controllers\Api\BusinessDashboardController::class, 'dashboard']);
 Route::get('/business/get-leads',[EnquiryController::class, 'getLeads']);
 Route::post('/business/save-favorite',[EnquiryController::class, 'saveFavoritleads']);
 Route::post('/business/un-favorite',[EnquiryController::class, 'unFavoritleads']);

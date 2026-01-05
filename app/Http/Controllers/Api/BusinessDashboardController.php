@@ -32,30 +32,43 @@ class BusinessDashboardController extends Controller
      *     summary="Get dashboard data",
      *     description="Fetch user/business dashboard overview. Requires Bearer token.",
      *     security={{"bearerAuth":{}}},
+     *
      *     @OA\Response(
      *         response=200,
-     *         description="Dashboard data",
+     *         description="Dashboard data fetched successfully",
      *         @OA\JsonContent(
+     *             type="object",
      *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="data", type="object",
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
      *                 @OA\Property(property="total_ads", type="integer", example=15),
      *                 @OA\Property(property="active_ads", type="integer", example=10),
      *                 @OA\Property(property="pending_ads", type="integer", example=3),
      *                 @OA\Property(property="messages", type="integer", example=5),
      *                 @OA\Property(property="profile_completed", type="boolean", example=true),
-     *                 @OA\Property(property="last_login", type="string", format="date-time", example="2025-09-04T10:20:30Z")
+     *                 @OA\Property(
+     *                     property="last_login",
+     *                     type="string",
+     *                     format="date-time",
+     *                     example="2025-09-04T10:20:30Z"
+     *                 )
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=401,
-     *         description="Unauthenticated",
+     *         description="Unauthenticated - Invalid or missing token",
      *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=false),
      *             @OA\Property(property="message", type="string", example="Unauthenticated.")
      *         )
      *     )
      * )
      */
+
     public function dashboard(Request $request)
     {
         if (!Auth::guard('sanctum')->check()) {

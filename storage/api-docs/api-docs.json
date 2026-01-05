@@ -1559,7 +1559,7 @@
                 "operationId": "bc2333acb511aa0be013f2840ec8c796",
                 "responses": {
                     "200": {
-                        "description": "Dashboard data",
+                        "description": "Dashboard data fetched successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1605,11 +1605,15 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthenticated",
+                        "description": "Unauthenticated - Invalid or missing token",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
                                         "message": {
                                             "type": "string",
                                             "example": "Unauthenticated."

@@ -75,8 +75,21 @@ class BusinessDashboardController extends Controller
             ], 401);
         }
 
-        $data['clientDetails'] = DB::table('clients')->where('id', $user->id)->first();
-
+        $client = DB::table('clients')->where('id', $user->id)->first();
+        $rating = DB::table('comments')
+			->where('comment_client_ID', $user->id)
+			->selectRaw('
+				COUNT(*) as comment_count,
+				COALESCE(SUM(rating),0) as total_rating
+			')
+			->first();
+		if (!empty($rating)) {
+			$avgRating = ($rating->total_rating / (5 * $rating->comment_count)) * 5;
+			$ratingCount = $rating->comment_count;
+		} else {
+			$avgRating = 0;
+			$ratingCount = 0;
+		}
         $perPage = $request->query('per_page', 10);
         $leads = DB::table('leads')
             ->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
@@ -104,6 +117,36 @@ class BusinessDashboardController extends Controller
                 }  
                  
                 $created = get_time(strtotime($val->created)) . ' ago';
+                
+				$businessName = !empty($client->business_name) ? $client->business_name : 'our company';
+				$keyword = !empty($val->kw_text) ? $val->kw_text : 'your enquiry';
+				$addressText = !empty($client->address) ? $client->address : '';
+				$mapText = !empty($client->business_map) ? '\n Directions: ' . $client->business_map : '';
+				$profile_url = 'https://www.quickdials.com/business-details/' . $client->business_slug;
+
+				$address_data = "Greetings from {$businessName},\n"
+					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+					. "For more information"
+					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+					. "{$mapText}";
+
+				$for_service = "Greetings from {$businessName},\n"
+					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+					. "For more information of the services offered by our business please refer "
+					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+					. ", Or {$profile_url}";
+				$for_review = "Greetings from {$businessName}, Rated {$avgRating} Rating out of {$ratingCount} Votes.\n"
+					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+					. "For more information about the services offered by our business"
+					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+					. ". Or visit our profile: {$profile_url}";
+
+				$user_share = array(
+					'address_share' => $address_data,
+					'for_service' => $for_service,
+					'for_review' => $for_review,
+
+				);
                 $leads_list[$key] = array(
                     'lead_id' => $val->lead_id,
                     'assignId' => $val->assignId,
@@ -121,6 +164,7 @@ class BusinessDashboardController extends Controller
                     'client_id' => $val->client_id,
                     'createdDate' => $created,
                     'coins' => $coins,                    
+                    'user_share' => $user_share,                    
                 );
             }
             $data['leadslist'] = $leads_list;

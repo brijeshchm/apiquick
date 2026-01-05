@@ -1281,7 +1281,7 @@ class EnquiryController extends Controller
 				$businessName = !empty($client->business_name) ? $client->business_name : 'our company';
 				$keyword = !empty($val->kw_text) ? $val->kw_text : 'your enquiry';
 				$addressText = !empty($client->address) ? $client->address : '';
-				$mapText = !empty($map) ? '\n Directions: ' . $map : '';
+				$mapText = !empty($client->business_map) ? '\n Directions: ' . $client->business_map : '';
 				$profile_url = 'https://www.quickdials.com/business-details/' . $client->business_slug;
 
 				$address_data = "Greetings from {$businessName},\n"
@@ -1463,7 +1463,7 @@ class EnquiryController extends Controller
 					$businessName = !empty($client->business_name) ? $client->business_name : 'our company';
 					$keyword = !empty($val->kw_text) ? $val->kw_text : 'your enquiry';
 					$addressText = !empty($client->address) ? $client->address : '';
-					$mapText = !empty($map) ? '\n Directions: ' . $map : '';
+					$mapText = !empty($client->business_map) ? '\n Directions: ' . $client->business_map : '';
 					$profile_url = 'https://www.quickdials.com/business-details/' . $client->business_slug;
 
 					$address_data = "Greetings from {$businessName},\n"
@@ -1666,7 +1666,7 @@ class EnquiryController extends Controller
 				$businessName = !empty($client->business_name) ? $client->business_name : 'our company';
 				$keyword = !empty($val->kw_text) ? $val->kw_text : 'your enquiry';
 				$addressText = !empty($client->address) ? $client->address : '';
-				$mapText = !empty($map) ? '\n Directions: ' . $map : '';
+				$mapText = !empty($client->business_map) ? '\n Directions: ' . $client->business_map : '';
 				$profile_url = 'https://www.quickdials.com/business-details/' . $client->business_slug;
 
 				$address_data = "Greetings from {$businessName},\n"
@@ -1862,7 +1862,7 @@ class EnquiryController extends Controller
 				$businessName = !empty($client->business_name) ? $client->business_name : 'our company';
 				$keyword = !empty($val->kw_text) ? $val->kw_text : 'your enquiry';
 				$addressText = !empty($client->address) ? $client->address : '';
-				$mapText = !empty($map) ? '\n Directions: ' . $map : '';
+				$mapText = !empty($client->business_map) ? '\n Directions: ' . $client->business_map: '';
 				$profile_url = 'https://www.quickdials.com/business-details/' . $client->business_slug;
 
 				$address_data = "Greetings from {$businessName},\n"
@@ -2054,7 +2054,7 @@ class EnquiryController extends Controller
 				$businessName = !empty($client->business_name) ? $client->business_name : 'our company';
 				$keyword = !empty($val->kw_text) ? $val->kw_text : 'your enquiry';
 				$addressText = !empty($client->address) ? $client->address : '';
-				$mapText = !empty($map) ? '\n Directions: ' . $map : '';
+				$mapText = !empty($client->business_map) ? '\n Directions: ' . $client->business_map : '';
 				$profile_url = 'https://www.quickdials.com/business-details/' . $client->business_slug;
 
 				$address_data = "Greetings from {$businessName},\n"
@@ -2246,7 +2246,7 @@ class EnquiryController extends Controller
 		$businessName = !empty($client->business_name) ? $client->business_name : 'our company';
 				$keyword = !empty($leads->kw_text) ? $leads->kw_text : 'your enquiry';
 				$addressText = !empty($client->address) ? $client->address : '';
-				$mapText = !empty($map) ? '\n Directions: ' . $map : '';
+				$mapText = !empty($client->business_map) ? '\n Directions: ' . $client->business_map : '';
 				$profile_url = 'https://www.quickdials.com/business-details/' . $client->business_slug;
 
 				$address_data = "Greetings from {$businessName},\n"

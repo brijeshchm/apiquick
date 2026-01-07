@@ -154,6 +154,10 @@ class ProfileController extends Controller
                 'business_map' => $user->business_map,
                 'trusted_status' => $user->trusted_status,
                 'gst_status' => $user->gst_status,
+                'cin_no' => $user->cin_no,
+                'iso_no' => $user->iso_no,
+                'pan_no' => $user->pan_no,
+                'gsin' => $user->gsin,
 
             );
 
@@ -202,6 +206,11 @@ class ProfileController extends Controller
      *             @OA\Property(property="business_intro", type="string", example="We are a leading provider of IT services established in 2020."),
      *             @OA\Property(property="certifications", type="string", example="ISO 9001, ISO 27001"),
      *             @OA\Property(property="business_map", type="string", example="ISO 9001, ISO 27001"),
+     *             @OA\Property(property="gst_no", type="string", example="gst no"),
+     *             @OA\Property(property="cin_no", type="string", example="cin no"),
+     *             @OA\Property(property="iso_no", type="string", example="iso no"),
+     *             @OA\Property(property="pan_no", type="string", example="pan no"),
+     *             @OA\Property(property="gsin", type="string", example="gsin"),
      *             @OA\Property(property="time", type="string", example=""),
      *         )
      *     ),
@@ -329,7 +338,12 @@ class ProfileController extends Controller
                 'business_intro' => $request->business_intro,
                 'year_of_estb' => $request->year_of_estb,
                 'certifications' => $request->certifications,    
-                'business_map' => $request->business_map,    
+                'business_map' => $request->business_map,  
+                'gst_no' => $request->gst_no,
+                'cin_no' => $request->cin_no,
+                'iso_no' => $request->iso_no,
+                'pan_no' => $request->pan_no,			 
+                'gsin' => $request->gsin	
 
             ]);
 

@@ -6191,6 +6191,26 @@
                                         "type": "string",
                                         "example": "ISO 9001, ISO 27001"
                                     },
+                                    "gst_no": {
+                                        "type": "string",
+                                        "example": "gst no"
+                                    },
+                                    "cin_no": {
+                                        "type": "string",
+                                        "example": "cin no"
+                                    },
+                                    "iso_no": {
+                                        "type": "string",
+                                        "example": "iso no"
+                                    },
+                                    "pan_no": {
+                                        "type": "string",
+                                        "example": "pan no"
+                                    },
+                                    "gsin": {
+                                        "type": "string",
+                                        "example": "gsin"
+                                    },
                                     "time": {
                                         "type": "string",
                                         "example": ""

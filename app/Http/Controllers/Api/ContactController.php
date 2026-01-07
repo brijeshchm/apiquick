@@ -120,7 +120,7 @@ class ContactController extends Controller
 		$validator = Validator::make($request->all(), [
 			'name' => 'required|string|min:3|max:32',
 			'email' => 'required|email',
-			'mobile' => 'required|digits_between:10,15',
+			'mobile' => 'required|digits_between:10,16',
 			'kw_text' => 'required|string',
 		]);
 

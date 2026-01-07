@@ -94,6 +94,14 @@ class InvoiceController extends Controller
 
 		$user = auth('sanctum')->user();
 
+		if (!$user) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
+		}
+
 		$page = (int) $request->input('page', 1);
 		$limit = (int) $request->input('limit', 20);
 
@@ -185,9 +193,16 @@ class InvoiceController extends Controller
 				'error' => 'token_missing_or_invalid'
 			], 401);
 		}
+	 
+		$user = auth('sanctum')->user();
 
-		 
-
+		if (!$user) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
+		}
 		$paymentprint = PaymentHistory::find($invoice_id);
 
 		if (!$paymentprint) {
@@ -197,14 +212,22 @@ class InvoiceController extends Controller
 			], 200);
 		}
 
-		$client = Client::withTrashed()->find($paymentprint->client_id);
+				
+		$client = Client::select('business_name','mobile','email','pan_no','gst_no','sirName','first_name','last_name','address')->where('id', $paymentprint->client_id)->first();
+			
+		 
+		$imagePath = config('app.website').'client/images/small-logo.png';
+		$imageData = base64_encode(file_get_contents($imagePath));
+		$imageSrc  = 'data:image/png;base64,' . $imageData;
 
-		$pdf = Pdf::loadView(
-			'business.getInvoicePrintPdfSlip',
-			compact('paymentprint', 'client')
-		);
+
+			$pdf = Pdf::loadView(
+				'business.getInvoicePrintPdfSlip',
+				compact('paymentprint', 'client','imageSrc')
+			);	  
+
 		return $pdf->download(
-			'invoice_' . $invoice_id . '_' . date('d-m-Y_H-i-s') . '.pdf'
+			'invoice_'.$invoice_id.'_'.date('d-m-Y_H-i-s').'.pdf'
 		);
 	}
 

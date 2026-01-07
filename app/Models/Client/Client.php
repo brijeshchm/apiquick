@@ -114,7 +114,9 @@ class Client extends Authenticatable
     'youtube_url',
     'gst_no',
     'cin_no',
-    'iso_no',
+    'iso_no',					 
+    'pan_no', 		 
+    'gsin' 	
 ];
  
     /**

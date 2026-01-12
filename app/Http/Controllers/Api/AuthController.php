@@ -165,7 +165,7 @@ class AuthController extends Controller
      * )
      */
     public function verifyOtp(Request $request)
-    { //dd($request->email);
+    {  
         $request->validate([
             'email' => 'required|email|exists:clients,email',
             'otp' => 'required|size:6',
@@ -181,11 +181,7 @@ class AuthController extends Controller
 
 
         if ($otp || $master == $request->otp) {
-
-            // if ($otp->isExpired()) {
-            //     $otp->delete();
-            //     return response()->json(['error' => 'OTP has expired.'], 422);
-            // }
+ 
 
             // OTP is valid → delete it (one-time use)
             if ($otp) {
@@ -351,7 +347,7 @@ class AuthController extends Controller
         $client->max_kw = 30;
         $client->active_status = '1';
         $client->username = '';
-        $client->client_type = 'Diamond';
+        $client->client_type = 'diamond';
         if ($client->save()) {
 
             $client = Client::find($client->id);

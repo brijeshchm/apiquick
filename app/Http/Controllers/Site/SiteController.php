@@ -96,8 +96,8 @@ class SiteController extends Controller
 
 		$keywordDetails = DB::table('keyword')
 			->join('parent_category', 'keyword.parent_category_id', '=', 'parent_category.id')
-			->join('child_category', 'keyword.child_category_id', '=', 'child_category.id')
-			->where('keyword', 'LIKE', '%' . ucwords(str_replace('-', ' ', $search_kw)) . '%')
+			->join('child_category', 'keyword.child_category_id', '=', 'child_category.id')	 
+			->where('keyword', 'LIKE', ucwords(str_replace("-", " ", $search_kw)))
 			->select('keyword.*', 'parent_category.*', 'child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5', 'keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount')
 			->first();
 
@@ -199,9 +199,9 @@ class SiteController extends Controller
 				'c.rating',
 				'c.comment_count'
 			)
-			->where('citylists.city', 'LIKE', "%{$cityName}%")
+			->where('citylists.city', 'LIKE', $cityName)
 			// ->where('clients.active_status', '1')
-			->where('keyword.keyword', 'LIKE', "%{$keywordName}%")
+			->where('keyword.keyword', 'LIKE', $keywordName)
 			->orderByRaw("
         CASE assigned_kwds.sold_on_position
             WHEN 'platinum' THEN 1
@@ -232,7 +232,7 @@ class SiteController extends Controller
 					'c.rating',
 					'c.comment_count'
 				)
-				->where('keyword.keyword', 'LIKE', '%' . $keywordName . '%')
+				->where('keyword.keyword', 'LIKE', $keywordName)
 				->orderByRaw("
             CASE assigned_kwds.sold_on_position
                 WHEN 'platinum' THEN 1

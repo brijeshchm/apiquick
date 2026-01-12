@@ -82,7 +82,7 @@ table.meta:after, table.balance:after { clear: both; display: table; }
 
 /* table meta */
 
-table.meta th { width: 30%; height: 1%;border:none}
+table.meta th { width: 13%; height: 1%;border:none}
 table.meta td { width: 30%; height: 1%;border:none}
 table.meta strong { font-weight: 700;}
  
@@ -267,7 +267,7 @@ hr{
 		 		</td>
 		 
 		 		<td>	 
-				<p>Name  : {{$client->sirName??''}}- {{$client->first_name??''}} &nbsp;{{ $client->last_name??''}}</p>
+				<p>Name  : &nbsp;&nbsp;&nbsp;{{$client->sirName??''}}. {{$client->first_name??''}} &nbsp;{{ $client->last_name??''}}</p>
 				<p> Address: {{$client->address??''}} </p>		 
 				<p>GSTIN:&nbsp;&nbsp;&nbsp;&nbsp;{{ $client->gst_no ?? 'N/A' }}</p>
 				</td>

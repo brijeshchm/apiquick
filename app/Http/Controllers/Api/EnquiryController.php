@@ -1449,14 +1449,16 @@ class EnquiryController extends Controller
 				->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
 				->leftjoin('areas', 'leads.area_id', '=', 'areas.id')
 				->leftjoin('zones', 'leads.zone_id', '=', 'zones.id')
-				->select('leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone', 'assigned_leads.id as assignId')
+				->select('leads.*','assigned_leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone', 'assigned_leads.id as assignId')
 				->orderBy('assigned_leads.created_at', 'desc')
 				->where('assigned_leads.client_id', $currentUser->id)
 				->paginate($perPage);
-
+ 
 			if (!empty($leads)) {
-				foreach ($leads->items() as $key => $val) {
+				foreach ($leads as $key => $val) {
+
 					$coins = "";
+				 
 					if (!empty($val->scrapLead)) {
 						$coins = ['color' => 'green', 'coin' => $val->coins];
 					} else if ($val->coins) {

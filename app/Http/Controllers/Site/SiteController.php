@@ -1952,7 +1952,7 @@ class SiteController extends Controller
 					 
 					'img' => $image ?: '',
 					'alt' => $alt ?: $slider->title,
-					'title' => $slider->title,
+					'title' => "",
 				];
 			});
 

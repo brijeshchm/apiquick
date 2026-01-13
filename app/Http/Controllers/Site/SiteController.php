@@ -84,7 +84,7 @@ class SiteController extends Controller
 
 	public function getSearch(Request $request)
 	{
-
+ 
 		$request->validate([
 			'keyword' => 'required',
 			'city' => 'required',
@@ -92,7 +92,8 @@ class SiteController extends Controller
 
 		$search_kw = $request->input('keyword');
 		$city = $request->input('city');
-
+		$cityName = ucwords(str_replace('-', ' ', $city));
+		$keywordName = ucwords(str_replace('-', ' ', $search_kw));
 
 		$keywordDetails = DB::table('keyword')
 			->join('parent_category', 'keyword.parent_category_id', '=', 'parent_category.id')
@@ -100,7 +101,12 @@ class SiteController extends Controller
 			->where('keyword', 'LIKE', '%' . ucwords(str_replace('-', ' ', $search_kw)) . '%')
 			->select('keyword.*', 'parent_category.*', 'child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5', 'keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount')
 			->first();
-
+ 	if (!$keywordDetails) {
+				return response()->json([
+					'status' => false,
+					'message' => 'Keyword not found'
+				], 404);
+			}
  
 		$category_banner = config('app.website') . 'client/images/computer-courses-training.jpg';
 	
@@ -180,8 +186,7 @@ class SiteController extends Controller
 		);
 
 
-		$cityName = ucwords(str_replace('-', ' ', $city));
-		$keywordName = ucwords(str_replace('-', ' ', $search_kw));
+	
 
 		$clientscheck = DB::table('clients')
 			->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
@@ -225,7 +230,6 @@ class SiteController extends Controller
         ) c'), 'c.comment_client_ID', '=', 'clients.id')
 				->select(
 					'clients.*',
-
 					'assigned_kwds.*',
 					'citylists.city',
 					'assigned_kwds.sold_on_position',
@@ -361,8 +365,7 @@ class SiteController extends Controller
 		}
 
 		$data['findOtherLocation'] = $cityList;
-		// dd($data['FindOtherLocation']);
-		// Return JSON response
+	 
 		return response()->json([
 			'success' => true,
 			'data' => $data,

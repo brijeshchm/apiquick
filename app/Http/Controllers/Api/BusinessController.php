@@ -828,6 +828,7 @@ class BusinessController extends Controller
 	 *     tags={"Help"},
 	 *     summary="Get Help Page content",
 	 *     description="Fetches the Help / FAQ page content for the application.",
+	 * 		security={{"bearerAuth":{}}}, 
 	 *     @OA\Response(
 	 *         response=200,
 	 *         description="Help content retrieved successfully",

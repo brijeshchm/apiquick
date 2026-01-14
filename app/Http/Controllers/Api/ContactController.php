@@ -54,6 +54,11 @@ class ContactController extends Controller
 	 *                 example="rahul@gmail.com"
 	 *             ),
 	 *             @OA\Property(
+	 *                 property="country_code",
+	 *                 type="string",
+	 *                 example="91"
+	 *             ),
+	 *             @OA\Property(
 	 *                 property="mobile",
 	 *                 type="string",
 	 *                 example="9876543210"

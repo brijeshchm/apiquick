@@ -3157,6 +3157,10 @@
                                         "format": "email",
                                         "example": "rahul@gmail.com"
                                     },
+                                    "country_code": {
+                                        "type": "string",
+                                        "example": "91"
+                                    },
                                     "mobile": {
                                         "type": "string",
                                         "example": "9876543210"

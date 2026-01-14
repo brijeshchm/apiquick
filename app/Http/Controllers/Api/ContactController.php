@@ -68,19 +68,37 @@ class ContactController extends Controller
 	 *                 type="integer",
 	 *                 nullable=true,
 	 *                 example="hyderabad",
-	 *                 description="City ID (optional)"
+	 *                 description="City name"
+	 *             ),
+	 *             @OA\Property(
+	 *                 property="zone",
+	 *                 type="integer",
+	 *                 nullable=true,
+	 *                 example="sector-3",
+	 *                 description="Zone name"
 	 *             ),
 	 *             @OA\Property(
 	 *                 property="lead_form",
 	 *                 type="string",
 	 *                 nullable=true,
-	 *                 example="search list"
+	 *                 example="1"
 	 *             ),
 	 *             @OA\Property(
 	 *                 property="from_page",
 	 *                 type="string",
 	 *                 nullable=true,
 	 *                 example="web-design"
+	 *             ),
+	 *             @OA\Property(
+	 *                 property="appointment",
+	 *                 type="string",
+	 *                 nullable=true,
+	 *                 example="web-design"
+	 *             ),
+	 *             @OA\Property(
+	 *                 property="frmcheck",
+	 *                 type="string",               
+	 *                 example="multiple check"
 	 *             ),
 	 *             @OA\Property(
 	 *                 property="remark",

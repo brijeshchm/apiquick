@@ -3166,20 +3166,35 @@
                                         "example": "Physics Tuition"
                                     },
                                     "city": {
-                                        "description": "City ID (optional)",
+                                        "description": "City name",
                                         "type": "integer",
                                         "example": "hyderabad",
                                         "nullable": true
                                     },
+                                    "zone": {
+                                        "description": "Zone name",
+                                        "type": "integer",
+                                        "example": "sector-3",
+                                        "nullable": true
+                                    },
                                     "lead_form": {
                                         "type": "string",
-                                        "example": "search list",
+                                        "example": "1",
                                         "nullable": true
                                     },
                                     "from_page": {
                                         "type": "string",
                                         "example": "web-design",
                                         "nullable": true
+                                    },
+                                    "appointment": {
+                                        "type": "string",
+                                        "example": "web-design",
+                                        "nullable": true
+                                    },
+                                    "frmcheck": {
+                                        "type": "string",
+                                        "example": "multiple check"
                                     },
                                     "remark": {
                                         "type": "string",

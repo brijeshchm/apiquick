@@ -1948,8 +1948,7 @@ class SiteController extends Controller
 
 				}
 
-				return [
-					 
+				return [					 
 					'img' => $image ?: '',
 					'alt' => $alt ?: $slider->title,
 					'title' => "",
@@ -2455,7 +2454,8 @@ class SiteController extends Controller
 				'zone' => $clientscheck->zone,
 				'address' => $clientscheck->address,
 				'pincode' => $clientscheck->pincode,
-				'country' => $clientscheck->country,
+				'country_id' => $clientscheck->country,
+				'country' => 'India',
 				'year_of_estb' => $clientscheck->year_of_estb,
 				'time' => $time,
 				'landmark' => $clientscheck->landmark,

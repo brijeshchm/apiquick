@@ -863,11 +863,22 @@ class BusinessController extends Controller
 				'error' => 'token_missing_or_invalid'
 			], 401);
 		}
-		$data['client'] = Client::find($user->id);
+		$business_Details = array(
+		'business_name'=>'Quick Dials Pvt Ltd',
+		'corporate_office'=>'G-13, Sector-3 Noida, U.P, India',
+		'registered_office'=>'DLF Cyber City, Gurgaon',
+		'phone_no'=>'+91-75-5943-5943',
+		'email'=>'info@quickdials.com',
+		'website'=>'www.quickdials.com',
+		'GSTIN'=>'',
+		'pan_no'=>'',
+		'CIN_No'=>''
+		 
+		);
 		return response()->json([
 			'status' => true,
 			'message' => "Successfully",
-			'data' => $data,
+			'data' => $business_Details,
 
 		], 200);
 	}

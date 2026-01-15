@@ -603,7 +603,7 @@ public function getGalleryPictures(Request $request)
 
 	public function savePictures()
 	{
- 		dd('https://www.quickdials.com/api/business/save-pictures');
+ 		 echo "use live";
 	}
 
 }

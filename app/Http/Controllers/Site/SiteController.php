@@ -2419,9 +2419,27 @@ class SiteController extends Controller
 
 			}
 
+
+
    		 $certified_img= config('app.website') .'img/q_verified.gif';
            $trusted_img= config('app.website') . 'img/q_trust.gif';
            $gst_img= config('app.website') .'img/q_gst.gif';
+
+		   $social = array(
+					'facebook_url'=>$clientscheck->facebook_url,
+					'facebook_img'=>'',
+					'instagram_url'=>$clientscheck->instagram_url,
+					'instagram_img'=>'',
+					'twitter_url'=>$clientscheck->twitter_url,
+					'twitter_img'=>'',
+					'linkedin_url'=>$clientscheck->linkedin_url,
+					'linkedin_img'=>'',
+					'pinterest_url'=>$clientscheck->pinterest_url,
+					'pinterest_img'=>'',
+					'youtube_url'=>$clientscheck->youtube_url,
+					'youtube_img'=>'',
+
+		   );
 			$data['clientsList'] = [
 				'business_id' => $clientscheck->business_id,
 				'business_name' => $clientscheck->business_name,
@@ -2441,6 +2459,7 @@ class SiteController extends Controller
 				'middle_name' => $clientscheck->middle_name,
 				'last_name' => $clientscheck->last_name,
 				'email' => $clientscheck->email,
+				'mobile' => $clientscheck->mobile,
 				'certified_status' => $clientscheck->certified_status,				
 				'trusted_status' => $clientscheck->trusted_status,
 				'gst_status' => $clientscheck->gst_status,
@@ -2459,9 +2478,8 @@ class SiteController extends Controller
 				'year_of_estb' => $clientscheck->year_of_estb,
 				'time' => $time,
 				'landmark' => $clientscheck->landmark,
-
 				'rating' => $clientscheck->rating,
-				 //'comment_count' => $clientscheck->comment_count,
+				'social' => $social,		 
 
 			];
 

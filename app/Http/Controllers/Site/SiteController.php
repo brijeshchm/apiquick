@@ -2459,27 +2459,27 @@ class SiteController extends Controller
 
 			$avgRating = 0;
 			if ($count != 0)
-				$avgRating = ($sum / ($count * 5)) * 5;
+				$avgRating = round(($sum / ($count * 5)) * 5, 2);
 			$data['sum'] = $sum;
 			$data['avgRating'] = $avgRating;
 			$data['count'] = $count;
 				$addressText = !empty($clientscheck->address) ? $clientscheck->address : '';
 				$mapText = !empty($clientscheck->business_map) ? '\n Directions: ' . $clientscheck->business_map : '';
 				$profile_url = 'https://www.quickdials.com/business-details/' . $clientscheck->business_slug;
-
+				$keyword = "";
 				$address_data = "Greetings from {$businessName},\n"
-					. "We’re following up on your enquiry made on Quickdials for .\n"
+					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
 					. "For more information"
 					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
 					. "{$mapText}";
 
 				$for_service = "Greetings from {$businessName},\n"
-					. "We’re following up on your enquiry made on Quickdials for .\n"
+					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
 					. "For more information of the services offered by our business please refer "
 					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
 					. ", Or {$profile_url}";
 				$for_review = "Greetings from {$businessName}, Rated {$avgRating} Rating out of {$count} Votes.\n"
-					. "We’re following up on your enquiry made on Quickdials for .\n"
+					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
 					. "For more information about the services offered by our business"
 					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
 					. ". Or visit our profile: {$profile_url}";

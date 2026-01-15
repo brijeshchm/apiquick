@@ -2440,10 +2440,61 @@ class SiteController extends Controller
 					'youtube_img'=>'',
 
 		   );
+
+
+		   $businessName = !empty($client->business_name) ? $clientscheck->business_name : 'our company';
+			 	$data['comment'] = Comment::where('comment_client_ID', $clientscheck->business_id)
+				->where('comment_approved', '1')
+				->orderBy('created_at', 'desc')
+				->get()
+				->toArray();
+ 
+			$sum = Comment::where('comment_client_ID', $clientscheck->business_id)
+				->where('comment_approved', '1')
+				->sum('rating');
+			 
+			$count = Comment::where('comment_client_ID', $clientscheck->business_id)
+				->where('comment_approved', '1')
+				->count();
+
+			$avgRating = 0;
+			if ($count != 0)
+				$avgRating = ($sum / ($count * 5)) * 5;
+			$data['sum'] = $sum;
+			$data['avgRating'] = $avgRating;
+			$data['count'] = $count;
+				$addressText = !empty($clientscheck->address) ? $clientscheck->address : '';
+				$mapText = !empty($clientscheck->business_map) ? '\n Directions: ' . $clientscheck->business_map : '';
+				$profile_url = 'https://www.quickdials.com/business-details/' . $clientscheck->business_slug;
+
+				$address_data = "Greetings from {$businessName},\n"
+					. "We’re following up on your enquiry made on Quickdials for .\n"
+					. "For more information"
+					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+					. "{$mapText}";
+
+				$for_service = "Greetings from {$businessName},\n"
+					. "We’re following up on your enquiry made on Quickdials for .\n"
+					. "For more information of the services offered by our business please refer "
+					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+					. ", Or {$profile_url}";
+				$for_review = "Greetings from {$businessName}, Rated {$avgRating} Rating out of {$count} Votes.\n"
+					. "We’re following up on your enquiry made on Quickdials for .\n"
+					. "For more information about the services offered by our business"
+					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+					. ". Or visit our profile: {$profile_url}";
+
+				$user_share = array(
+					'address_share' => $address_data,
+					'for_service' => $for_service,
+					'for_review' => $for_review,				 
+
+				);
 			$data['clientsList'] = [
 				'business_id' => $clientscheck->business_id,
 				'business_name' => $clientscheck->business_name,
 				'business_slug' => $clientscheck->business_slug,
+				'business_url' => config('app.website').'business-details/'.$clientscheck->business_slug,
 				'logo' => $logoImage ?? '',
 				'altLogo' => $altLogo . ' Logo' ?? '',
 				'profile_banner' => $profile_pic ?? '',
@@ -2479,38 +2530,14 @@ class SiteController extends Controller
 				'time' => $time,
 				'landmark' => $clientscheck->landmark,
 				'rating' => $clientscheck->rating,
-				'social' => $social,		 
-
+				'social' => $social,		
+				'user_share' => $user_share,		
 			];
 
 
-			$data['comment'] = Comment::where('comment_client_ID', $clientscheck->business_id)
-				->where('comment_approved', '1')
-				->orderBy('created_at', 'desc')
-				->get()
-				->toArray();
- 
-			$sum = Comment::where('comment_client_ID', $clientscheck->business_id)
-				->where('comment_approved', '1')
-				->sum('rating');
+		
+
 			 
-			$count = Comment::where('comment_client_ID', $clientscheck->business_id)
-				->where('comment_approved', '1')
-				->count();
-
-			$avgRating = 0;
-			if ($count != 0)
-				$avgRating = ($sum / ($count * 5)) * 5;
-			$data['sum'] = $sum;
-			$data['avgRating'] = $avgRating;
-			$data['count'] = $count;
-
-			// $barGraphQuery = Comment::select(DB::raw('*'))
-			// 	->from(DB::raw('(SELECT COUNT(*) as count, SUM(`rating`) as sum_rating, rating FROM `comments` WHERE `comment_client_ID`=' . $clientscheck->id . ' AND `comment_approved`=1 GROUP BY `rating`) AS temp'))
-			// 	->orderBy('rating', 'desc')
-			// 	->get();
-
-			// $data['barGraphQuery'] = $barGraphQuery;
 
 
 			if (!empty($assignedKeywords)) {

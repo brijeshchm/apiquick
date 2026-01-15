@@ -2459,7 +2459,7 @@ class SiteController extends Controller
 
 			$avgRating = 0;
 			if ($count != 0)
-				$avgRating = round(($sum / ($count * 5)) * 5, 2);
+				$avgRating = round(($sum / ($count * 5)) * 5, 1);
 			$data['sum'] = $sum;
 			$data['avgRating'] = $avgRating;
 			$data['count'] = $count;

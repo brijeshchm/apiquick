@@ -6926,6 +6926,80 @@
                 }
             }
         },
+        "/api/site/wedding-page": {
+            "get": {
+                "tags": [
+                    "Frontend Home Page Wedding page"
+                ],
+                "summary": "Wedding Page records",
+                "description": "Display data page",
+                "operationId": "a9d6fd884617d6afd46eeb3c531eedca",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/site/entranceExams": {
             "get": {
                 "tags": [
@@ -8643,6 +8717,10 @@
         {
             "name": "Frontend Home Page Wedding Planning",
             "description": "Frontend Home Page Wedding Planning"
+        },
+        {
+            "name": "Frontend Home Page Wedding page",
+            "description": "Frontend Home Page Wedding page"
         },
         {
             "name": "Frontend Home Page Entrance Exams",

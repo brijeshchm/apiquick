@@ -854,6 +854,284 @@ class SiteController extends Controller
 		], 200);
 
 	}
+	/**
+	 * @OA\Get(
+	 *     path="/api/site/wedding-page",
+	 *     tags={"Frontend Home Page Wedding page"},
+	 *     summary="Wedding Page records",
+	 *     description="Display data page",
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Data retrieved successfully"),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="array",
+	 *                 @OA\Items(type="object")
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function weddingPage(Request $request)
+	{
+		$url = config('app.url');
+		$data['wedding_banner'] =  config('app.website') . 'popular/wedding_banner.png';
+		$data['wedding_planning'] = [
+			[
+				'url' => '/banquet-hall',
+				'img' => config('app.website') . 'popular/Banquet_Hall.jpg',
+				'alt' => 'Banquet Hall',
+				'title' => 'Banquet Hall',
+
+			],
+			[
+				'url' => '/ghoda-baggi',
+				'img' => config('app.website') . 'popular/Ghoda_Baggi.jpg',
+				'alt' => 'Ghoda Baggi & Rath',
+				'title' => 'Ghoda Baggi & Rath',
+
+			],
+			[
+				'url' => '/fire-works-&-crackers',
+				'img' => config('app.website') . 'popular/Fire_Works_&_Crackers.jpg',
+				'alt' => 'Fire Works Crackers',
+				'title' => 'Fire Works Crackers',
+
+			],
+			[
+				'url' => '/photo-and-videography',
+				'img' => config('app.website') . 'popular/Photo_and_Videography.jpg',
+				'alt' => 'Photo and Videography',
+				'title' => 'Photo and Videography',
+
+			],
+			[
+				'url' => '/flower-decoration',
+				'img' => config('app.website') . 'popular/Flower_Decoration.jpg',
+				'alt' => 'Flower Decoration',
+				'title' => 'Flower Decoration',
+
+			]
+		];
+		$data['wedding_prerequisits'] = [
+			 
+			[
+				'url' => '/banquet-hall',
+				'img' => config('app.website') . 'popular/Banquet-Halls.jpg',
+				'alt' => 'Banquet Halls',
+				'title' => 'Banquet Halls',
+
+			],
+			[
+				'url' => '/dj-sound-system',
+				'img' => config('app.website') . 'popular/DJ_Sound_System.jpg',
+				'alt' => 'DJ Sound Systems',
+				'title' => 'DJ Sound Systems',
+
+			],
+			[
+				'url' => '/party-organisers',
+				'img' => config('app.website') . 'popular/Wedding_Organisers.jpg',
+				'alt' => 'Party Organiser',
+				'title' => 'Party Organiser',
+
+			],
+			[
+				'url' => '/stage-decoratorss',
+				'img' => config('app.website') . 'popular/stage-decoratorss.jpg',
+				'alt' => 'Stage Decoration',
+				'title' => 'Stage Decoration',
+
+			],
+			
+
+
+		];
+
+
+		$data['wedding_planning_for_bride'] = [
+			 
+			[
+				'url' => '/makeup-artists',
+				'img' => config('app.website') . 'popular/Makeup_artist.jpg',
+				'alt' => 'Makeup Artists',
+				'title' => 'Makeup Artists',
+
+			],
+			[
+				'url' => '/mehendi-artists',
+				'img' => config('app.website') . 'popular/Mehendi-Artists.jpg',
+				'alt' => 'Mehendi Artists',
+				'title' => 'Mehendi Artists',
+
+			],
+			[
+				'url' => '/bridal-wear',
+				'img' => config('app.website') . 'popular/Bridal-Wear.jpg',
+				'alt' => 'Bridal Wear',
+				'title' => 'Bridal Wear',
+
+			],
+			[
+				'url' => '/jewellery-designing',
+				'img' => config('app.website') . 'popular/Jewellery.jpg',
+				'alt' => 'Jewellery',
+				'title' => 'Jewellery',
+
+			],
+			[
+				'url' => '/salons',
+				'img' => config('app.website') . 'popular/salon.jpg',
+				'alt' => 'salons',
+				'title' => 'salons',
+
+			],
+			[
+				'url' => '/cosmetics',
+				'img' => config('app.website') . 'popular/Cosmetic.jpg',
+				'alt' => 'Cosmetics',
+				'title' => 'Cosmetics',
+
+			],
+			 
+
+
+		];
+
+		$data['wedding_planning_for_groom'] = [
+			 
+			[
+				'url' => '/wedding-suit-for-groom',
+				'img' => config('app.website') . 'popular/wedding_suit_for_groom.jpg',
+				'alt' => 'Wedding Suit groom',
+				'title' => 'Wedding Suit groom',
+
+			],
+			[
+				'url' => '/makeup-artist-for-groom',
+				'img' => config('app.website') . 'popular/Makeup_artist_for_groom.jpg',
+				'alt' => 'Makeup Artist',
+				'title' => 'Makeup Artist',
+
+			],
+			[
+				'url' => '/ghoda-baggi',
+				'img' => config('app.website') . 'popular/Ghoda_Baggi.jpg',
+				'alt' => 'ghoda baggi',
+				'title' => 'ghoda baggi',
+
+			],
+			[
+				'url' => '/hair-dressing',
+				'img' => config('app.website') . 'popular/Hair_salons_for_groom.jpg',
+				'alt' => 'Hair Salons',
+				'title' => 'Hair Salons',
+
+			],
+			[
+				'url' => '/wedding-band',
+				'img' => config('app.website') . 'popular/Wedding_Band.jpg',
+				'alt' => 'Wedding Band Baja',
+				'title' => 'Wedding Band Baja',
+
+			],
+			[
+				'url' => '/wedding-transport',
+				'img' => config('app.website') . 'popular/Car_Decoration.jpg',
+				'alt' => 'wedding transport',
+				'title' => 'wedding transport',
+
+			],
+			 
+
+
+		];
+		$data['pre-Wedding_planning'] = [
+			 
+			[
+				'url' => '/wedding-choreographer',
+				'img' => config('app.website') . 'popular/wedding-choreographer.jpg',
+				'alt' => 'Wedding choreographer',
+				'title' => 'Wedding choreographer',
+
+			],
+			[
+				'url' => '/wedding-astrologer',
+				'img' => config('app.website') . 'popular/wedding-astrologer.jpg',
+				'alt' => 'Wedding Astrologer',
+				'title' => 'Wedding Astrologer',
+
+			],
+			[
+				'url' => '/wedding-dancer-and-singer',
+				'img' => config('app.website') . 'popular/wedding-dancer-and-singer.jpg',
+				'alt' => 'Wedding Dancer And Singer',
+				'title' => 'gWedding Dancer And Singer',
+
+			],
+			[
+				'url' => '/pandits',
+				'img' => config('app.website') . 'popular/Pandits.jpg',
+				'alt' => 'Pandits',
+				'title' => 'Pandits',
+
+			],
+			[
+				'url' => '/honeymoon-packages',
+				'img' => config('app.website') . 'popular/honeymoon-packages.jpg',
+				'alt' => 'honeymoon packages',
+				'title' => 'honeymoon packages',
+
+			],
+			[
+				'url' => '/stage-show-organisers',
+				'img' => config('app.website') . 'popular/stage-show-organisers.jpg',
+				'alt' => 'Stage Show Organisers',
+				'title' => 'Stage Show Organisers',
+
+			],
+			 
+
+
+		];
+
+
+		if ($data) {
+			$data['status'] = true;
+			$data['code'] = 200;
+			$data['message'] = "Successfully";
+		} else {
+			$data['status'] = false;
+			$data['code'] = 200;
+			$data['message'] = "failed";
+		}
+		return response()->json([
+			'success' => true,
+			'data' => $data,
+		], 200);
+
+	}
 
 	/**
 	 * @OA\Get(

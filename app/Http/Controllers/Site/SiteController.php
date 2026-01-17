@@ -896,7 +896,7 @@ class SiteController extends Controller
 	public function weddingPage(Request $request)
 	{
 		$url = config('app.url');
-		$data['wedding_banner'] =  config('app.website') . 'popular/wedding_banner.png';
+		$data['wedding_banner'] =  config('app.website') . 'popular/wedding_banner.jpg';
 		$data['wedding_planning'] = [
 			[
 				'url' => '/banquet-hall',

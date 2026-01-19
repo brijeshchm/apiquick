@@ -174,8 +174,7 @@ class RazorpayController extends Controller
 			);
 			 
 			$paymentLink = $api->paymentLink->create([
-				// 'amount'   => $data->amt * 100, 
-				'amount' => 11 * 100,
+				'amount'   => $data->total_amount * 100, 			 
 				'currency' => 'INR',
 				'accept_partial' => false,
 				'reference_id' => $orderRef,

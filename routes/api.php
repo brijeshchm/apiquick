@@ -152,6 +152,7 @@ Route::get('/business/assignKeyword/delete/{id}',[App\Http\Controllers\Api\Busin
  
 
  Route::post('/business/razorpay/create-payment-link',[App\Http\Controllers\Api\RazorpayController::class,'createPaymentLink']);
+ Route::post('/business/razorpay/get-initial-payment-key',[App\Http\Controllers\Api\RazorpayController::class,'getInitialPaymentKey']);
  
 
 

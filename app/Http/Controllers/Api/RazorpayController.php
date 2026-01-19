@@ -71,6 +71,167 @@ class RazorpayController extends Controller
 
 	/**
 	 * @OA\Post(
+	 *     path="/api/business/razorpay/get-initial-payment-key",
+	 *     summary="get Razorpay Payment key",
+	 *     description="get a customized Razorpay payment key", 
+	 *     tags={"Razorpay"},
+	 *	   security={{"bearerAuth":{}}},
+	 *     @OA\RequestBody(
+	 *         required=true,
+	 *         @OA\JsonContent(
+	 *             required={"encrypt"},
+	 *             @OA\Property(
+	 *                 property="encrypt",
+	 *                 type="string",
+	 *                 example="U2FsdGVkX19kXzEyMzQ1Ng==",
+	 *                 description="Encrypted payment payload"
+	 *             )
+	 *         )
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Payment initiated successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Payment initiated successfully"),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="object",
+	 *                 @OA\Property(property="payment_id", type="string", example="pay_NXJH123456"),
+	 *                 @OA\Property(property="order_id", type="string", example="ORD123456789"),
+	 *                 @OA\Property(property="amount", type="number", example=100.50),
+	 *                 @OA\Property(property="currency", type="string", example="INR")
+	 *             )
+	 *         )
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=422,
+	 *         description="Validation failed",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="Validation failed"),
+	 *             @OA\Property(property="errors", type="object")
+	 *         )
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=500,
+	 *         description="Server error",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="Failed to initiate payment")
+	 *         )
+	 *     )
+	 * )
+	 */
+
+
+
+	public function getInitialPaymentKey(Request $request)
+	{
+
+		if (!Auth::guard('sanctum')->check()) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
+		}
+		$user = auth('sanctum')->user();
+
+		if (!$user) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
+		}
+		$validator = Validator::make($request->all(), [
+			'encrypt' => 'required|string',
+		]);
+
+		if ($validator->fails()) {
+			return response()->json([
+				'success' => false,
+				'errors' => $validator->errors()
+			], 422);
+		}
+
+		$data = $this->dataDecodeJsonBase64($request->encrypt);
+		$orderRef = 'QD' . strtoupper(Str::random(8));
+		$data->razorpay_order_id= $orderRef;
+
+		try {
+			$api = new Api(
+				config('services.razorpay.key'),
+				config('services.razorpay.secret')
+			);
+			 
+		 
+ 
+		 
+				$client = Client::withTrashed()->where('id', $data->client_id)->first();
+			
+		 
+				$paymenthistory = new PaymentHistory;
+				$paymenthistory->client_id = $client->id;
+				$paymenthistory->customer_name = $client->first_name . ' ' . $client->last_name;
+				$paymenthistory->business_name = trim($client->business_name);
+				$paymenthistory->mobile = $client->mobile;
+				$paymenthistory->email = $client->email;
+				$paymenthistory->package_name = $client->client_type;
+				$paymenthistory->coins_amt = $data->coins;
+				$paymenthistory->paymentcollect = $user->id;
+				$paymenthistory->leads_count = '0';
+				$paymenthistory->cost_per_lead = '0';
+				$paymenthistory->cost_per_lead = '0';
+				$paymenthistory->paid_amount = '0';
+				$paymenthistory->gst_status = $data->gst_status;
+				$paymenthistory->gst_tax = $data->gst_tax;
+				$paymenthistory->gst_total_amount = $data->gst_total_amount;
+				$paymenthistory->tds_amount = '0';
+				$paymenthistory->total_amount = $data->total_amount;
+				$paymenthistory->currency = 'INR';
+				$paymenthistory->payment_url = '';
+				$paymenthistory->payment_link_id ='';
+				$paymenthistory->order_number = $orderRef;
+				$paymenthistory->save();
+			 
+
+			return response()->json([
+				'success' => true,
+				'message' => 'Payment order create successfully',
+				'data' => [
+					'payment_data' => $data,				 
+					'encrypts' => $this->dataEncodeJsonBase64($data),				 
+					'key' => config('services.razorpay.key'),
+					'secret' => config('services.razorpay.secret'),
+					'method_get' => 'https://api.quickdials.com/api/razorpay/verify?encrypt=',
+					'razorpay_payment_status' => '',
+					'razorpay_order_id'   => '',
+            		'razorpay_payment_id' =>  '',
+            		'razorpay_signature'  => '',
+					 
+				]
+			], 200);
+
+
+
+		} catch (\Exception $e) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Failed to generate payment link',
+				'error' => $e->getMessage()
+			], 500);
+		}
+
+
+	}
+
+	/**
+	 * @OA\Post(
 	 *     path="/api/business/razorpay/create-payment-link",
 	 *     summary="Create Razorpay Payment Link",
 	 *     description="Generate a customized Razorpay payment link",
@@ -127,8 +288,6 @@ class RazorpayController extends Controller
 	 *     )
 	 * )
 	 */
-
-
 
 	public function createPaymentLink(Request $request)
 	{
@@ -233,6 +392,8 @@ class RazorpayController extends Controller
 				'data' => [
 					'payment_link_id' => $paymentLink['id'],
 					'payment_url' => $paymentLink['short_url'],
+					'key' => config('services.razorpay.key'),
+					'secret' => config('services.razorpay.secret'),
 					'status' => $paymentLink['status'],
 				]
 			], 200);
@@ -266,7 +427,7 @@ class RazorpayController extends Controller
 
 
 				if ($request->razorpay_payment_link_status == 'paid') {
-// dd($request->razorpay_payment_link_status);
+ 
 					$paymentHistory = PaymentHistory::where('payment_link_id', $request->razorpay_payment_link_id)->first();
 
 				$payment = PaymentHistory::find($paymentHistory->id);

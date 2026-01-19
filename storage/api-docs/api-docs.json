@@ -6499,6 +6499,127 @@
                 ]
             }
         },
+        "/api/business/razorpay/get-initial-payment-key": {
+            "post": {
+                "tags": [
+                    "Razorpay"
+                ],
+                "summary": "get Razorpay Payment key",
+                "description": "get a customized Razorpay payment key",
+                "operationId": "bcf1c4d86d174b1556b1ac0561d37e67",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "encrypt"
+                                ],
+                                "properties": {
+                                    "encrypt": {
+                                        "description": "Encrypted payment payload",
+                                        "type": "string",
+                                        "example": "U2FsdGVkX19kXzEyMzQ1Ng=="
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Payment initiated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Payment initiated successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "payment_id": {
+                                                    "type": "string",
+                                                    "example": "pay_NXJH123456"
+                                                },
+                                                "order_id": {
+                                                    "type": "string",
+                                                    "example": "ORD123456789"
+                                                },
+                                                "amount": {
+                                                    "type": "number",
+                                                    "example": 100.5
+                                                },
+                                                "currency": {
+                                                    "type": "string",
+                                                    "example": "INR"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation failed"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Failed to initiate payment"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/business/razorpay/create-payment-link": {
             "post": {
                 "tags": [

@@ -345,6 +345,8 @@ class AuthController extends Controller
         $client->mobile = $request->input('mobile');
         $client->email = $request->input('email');
         $client->max_kw = 30;
+        $client->expired_from = date('Y-m-d');
+        $client->expired_on = date('Y-m-d', strtotime('+60 days'));
         $client->active_status = '1';
         $client->username = '';
         $client->client_type = 'diamond';

@@ -21,7 +21,9 @@ use Illuminate\Http\Request;
 Route::get('/users', [App\Http\Controllers\Api\ApiController::class, 'index']);
 Route::post('/upload-documents', [App\Http\Controllers\Api\ApiController::class, 'uploadpdf']);
 
-
+Route::get('/razorpay/verify',[App\Http\Controllers\Api\RazorpayController::class,'verifyPayment']);
+Route::get('/razorpay/webhook',[App\Http\Controllers\Api\RazorpayController::class,'webhook']);
+ 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\LeadBusinessController;
 use App\Http\Controllers\Api\ProfileController;
@@ -145,8 +147,14 @@ Route::post('/business/saveKeywordAssign',[App\Http\Controllers\Api\BusinessKeyw
 Route::get('/business/assignKeyword/delete/{id}',[App\Http\Controllers\Api\BusinessKeywordController::class, 'assignKeywordDelete']);
  
 
+
  Route::get('/business/coins-history',[App\Http\Controllers\Api\InvoiceController::class,'coinsHistory']);
  
+
+ Route::post('/business/razorpay/create-payment-link',[App\Http\Controllers\Api\RazorpayController::class,'createPaymentLink']);
+ 
+
+
 
 
 });

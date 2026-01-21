@@ -106,6 +106,7 @@ class AccountController extends Controller
 				'total_amount' => '0',
 				'coins' => 555,
 				'package' => 'Free Package',
+				'package_bottom' => 'Free Package',
 			]);
 
 			$free['encrypt'] = $this->dataEncodeJsonBase64($free);
@@ -125,6 +126,7 @@ class AccountController extends Controller
 				'total_amount' => $amount + $gst,
 				'coins' => $coins,
 				'package' => "{$amount} Rs to {$coins} Coins",
+				'package_bottom' => "Buy Package",
 			]);
 
 			$item['encrypt'] = $this->dataEncodeJsonBase64($item);

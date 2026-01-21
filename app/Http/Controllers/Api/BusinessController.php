@@ -866,7 +866,7 @@ class BusinessController extends Controller
 		$business_Details = array(
 		'business_name'=>'Quick Dials Pvt Ltd',
 		'corporate_office'=>'G-13, Sector-3 Noida, U.P, India',
-		'registered_office'=>'DLF Cyber City, Gurgaon',
+		'registered_office'=>'203, Oxford Towers, 139, HAL Old Airport Rd, Kodihalli, Bengaluru, Karnataka 560008',
 		'phone_no'=>'+91-75-5943-5943',
 		'email'=>'info@quickdials.com',
 		'website'=>'www.quickdials.com',

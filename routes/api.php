@@ -36,6 +36,11 @@ Route::prefix('auth/google')->group(function () {
     Route::post('callback', [AuthController::class, 'handleCallback']);
 });
  
+ 
+Route::get('auth/google-ios/redirect', [AuthController::class, 'getRedirectUrlIos']);
+Route::post('auth/google-ios/callback', [AuthController::class, 'handleCallbackIos']);
+ 
+ 
 
 Route::post('/verifyOtp', [AuthController::class, 'verifyOtp']);
 Route::post('/business/saveBusinessOwners', [AuthController::class, 'saveBusinessOwners']); 

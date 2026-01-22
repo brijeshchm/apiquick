@@ -12,8 +12,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Mail;
 use Carbon\Carbon;
+use Laravel\Socialite\Facades\Socialite;
 use Validator;
-
+use Google\Client as GoogleClient;
 /**
  * @OA\SecurityScheme(
  *     securityScheme="bearerAuth",
@@ -349,7 +350,7 @@ class AuthController extends Controller
         $client->expired_on = date('Y-m-d', strtotime('+60 days'));
         $client->active_status = '1';
         $client->username = '';
-        $client->client_type = 'diamond';
+        $client->client_type = 'gold';
         if ($client->save()) {
 
             $client = Client::find($client->id);
@@ -370,7 +371,7 @@ class AuthController extends Controller
 				%0D%0A--
 				%0D%0ARegards
 				%0D%0AQuickDials Team";
-            sendSMS($client->mobile, $smsMessage);
+            // sendSMS($client->mobile, $smsMessage);
             $data['clientDetails'] = Client::find($client->id);
             $data['status'] = true;
             $data['message'] = "Business registered successfully!";
@@ -384,7 +385,123 @@ class AuthController extends Controller
             'data' => $data,
         ], 200);
 
+    }    
+
+/**
+     * @OA\Get(
+     *     path="/api/auth/google/redirect",
+     *     tags={"Google Auth"},
+     *     summary="Get Google OAuth redirect URL",
+     *     description="Returns the URL where the mobile/web client should redirect the user to start Google login",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Redirect URL",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="url", type="string", example="")
+     *         )
+     *     )
+     * )
+     */
+    public function getRedirectUrl()
+    {
+        $url = Socialite::driver('google')
+            ->stateless()
+            ->scopes(['openid', 'email', 'profile'])
+            ->redirect()
+            ->getTargetUrl();
+
+        return response()->json(['url' => $url]);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/auth/google/callback",
+     *     tags={"Google Auth"},
+     *     summary="Google OAuth callback (for API clients)",
+     *     description="Mobile apps / SPAs send the 'code' received from Google here. Backend exchanges code → token → user info.",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"code"},
+     *             @OA\Property(property="code", type="string", example="4/0AX4XfW...")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful login",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="access_token", type="string"),
+     *             @OA\Property(property="token_type", type="string", example="Bearer"),
+     *             @OA\Property(property="expires_in", type="integer"),
+     *             @OA\Property(property="user", ref="")
+     *         )
+     *     ),
+     *     @OA\Response(response=400, description="Invalid code / state"),
+     *     @OA\Response(response=422, description="Validation error")
+     * )
+     */
+    public function handleCallback()
+    {
+        try {
+            $googleUser = Socialite::driver('google')->stateless()->user();
+
+            $parts = explode(' ', $googleUser->getName(), 2);
+
+		$firstName = $parts[0];
+		$lastName  = $parts[1] ?? '';	 
+		$client = Client::where('email',$googleUser->getEmail())->first();
+
+		if(!$client){			
+
+		 
+			 	$client = Client::create([
+				'email'         => $googleUser->getEmail(),
+				'google_id'     => $googleUser->getId(),
+				'first_name'          => $firstName,
+				'last_name'          => $lastName,
+				'client_type'   => 'gold',
+				'active_status' => 1,
+				 
+			]);
+
+			$emailname = $googleUser->getEmail();
+				$clientIDToAppend = $clientID = $client->id;
+				if (strlen((string) $clientID) < 4) {
+					$clientIDToAppend = str_pad($clientIDToAppend, 4, '0', STR_PAD_LEFT);
+				}
+			Client::where('email', $googleUser->getEmail())
+    		->update(['username' => strtoupper(substr($emailname, 0, 2)) . $clientIDToAppend]);
+
+
+		}else{
+ 
+
+            $client = User::updateOrCreate(
+                ['email' => $googleUser->getEmail()],
+                [
+                 
+                    'google_id'      => $googleUser->getId(),
+                
+                ]
+            );
+		}
+            
+
+            $token = $client->createToken('google-auth-token')->plainTextToken;
+
+            return response()->json([  
+                'status' => true,
+                'message' => 'Your email successfully',
+                'token' => $token,
+                'token_type' => 'Bearer',               
+                'data' => $client,
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+ 
+ 
 
 }

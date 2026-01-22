@@ -155,7 +155,8 @@ class SiteController extends Controller
 			$bottom_description = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->bottom_description);
 		}
 
-
+ 		$zones = DB::table('citylists') ->join('zones', 'zones.city_id', '=', 'citylists.id') ->where('citylists.city', 'LIKE', $city) ->select('zones.id', 'zones.zone') ->distinct() ->get();
+		
 		$data['keyword'] = array(
 			'keyword' => $keywordDetails->keyword,
 			'keyword_slug' => generate_slug($keywordDetails->keyword),
@@ -182,6 +183,7 @@ class SiteController extends Controller
 			'parent_slug' => $keywordDetails->parent_slug,
 			'child_category' => $keywordDetails->child_category,
 			'child_slug' => $keywordDetails->child_slug,
+			'zone' => $zones,
 
 		);
 

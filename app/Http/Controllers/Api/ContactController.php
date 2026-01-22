@@ -26,6 +26,7 @@ use App\Models\Testimonialsdetail;
 use App\Models\LeadFollowUp;
 use App\Models\Status;
 use App\Models\Contacts;
+use App\Models\Zone;
 use App\Models\Client\Comment;
 class ContactController extends Controller
 {
@@ -202,8 +203,21 @@ class ContactController extends Controller
 		$lead->status_id = $status->id;
 		$lead->status_name = $status->name;
 		$lead->b_end = '0';
+		$lead->terms = '1';
 
-		// dd($lead);
+		if($request->zone){
+			 
+				$zone = Zone::where('zone',$request->zone)->first();
+				$lead->zone_id = $zone->id;
+				$lead->zone = $zone->zone;
+			}else{
+				if(!empty($city->id)){
+				$zone = Zone::where('city_id',$city->id)->first();
+				$lead->zone_id = $zone->id;
+				$lead->zone = $zone->zone;
+				}
+			}
+ 
 		$lead->save();
 
 		// ✅ Follow-up

@@ -31,6 +31,11 @@ use App\Http\Controllers\Api\ProfileController;
 
 Route::post('/login', [AuthController::class, 'login']);
 
+Route::prefix('auth/google')->group(function () {
+    Route::get('redirect', [AuthController::class, 'getRedirectUrl']);
+    Route::post('callback', [AuthController::class, 'handleCallback']);
+});
+ 
 
 Route::post('/verifyOtp', [AuthController::class, 'verifyOtp']);
 Route::post('/business/saveBusinessOwners', [AuthController::class, 'saveBusinessOwners']); 

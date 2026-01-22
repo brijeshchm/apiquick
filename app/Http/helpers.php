@@ -85,7 +85,7 @@ function inverse_generate_slug($slug = null)
 
 function getCity()
 {
-	return $cities = App\Models\City::where('popular','1')->get();
+	return $cities = App\Models\City::where('popular', '1')->get();
 }
 
 
@@ -247,7 +247,7 @@ function getFolderStructure()
 		} else if ($day >= 21) {
 			$week = 'week_3';
 		}
-		 
+
 		$partial_str = 'uploads/images/' . date('Y') . '/' . date('m') . '/' . $week;
 		$structure = public_path($partial_str);
 		if (file_exists($structure)) {
@@ -264,7 +264,7 @@ function getFolderStructure()
 	}
 }
 
- 
+
 
 
 // SUBSTRING GETTER
@@ -888,115 +888,212 @@ function str_limit_custom($value, $limit = 100, $end = '...', $more = 'More', $t
 
 function leadassignWithoutZoneCounsellor($lead)
 {
-    if (!$lead || empty($lead->id)) {
-        return;
-    }
+	if (!empty($lead)) {
+		if (App\Models\Citieslists::where('id', $lead->city_id)->exists()) {
 
-    $lead = App\Models\Lead::find($lead->id);
-    if (!$lead || !$lead->kw_id || !$lead->city_id) {
-        return;
-    }
 
-    $city = App\Models\Citieslists::find($lead->city_id);
-    $keyword = App\Models\Keyword::find($lead->kw_id);
+			$keyword = App\Models\Keyword::find($lead->kw_id);
+			if (!empty($keyword)) {
+				$bucketIndex = (int) $keyword->bucket;
+				if (!empty($lead)) {
 
-    if (!$city || !$keyword) {
-        return;
-    }
+					$baseQuery = DB::table('clients')
+						->leftJoin('assigned_zones', 'clients.id', '=', 'assigned_zones.client_id')
+						->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
+						->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+						->join(
+							'keyword_sell_count',
+							'keyword_sell_count.slug',
+							'=',
+							DB::raw('LOWER(clients.client_type)')
+						)
+						->select(
+							'clients.id as client_id',
+							'clients.business_name',
+							'clients.client_type',
+							'clients.coins_amt',
+							'clients.mobile',
+							'clients.email',
+							'keyword.category',
+							'keyword_sell_count.*'
+						)
+						->where('keyword.id', $lead->kw_id)
+						->whereNull('clients.deleted_at')
+						->where('clients.coins_amt', '>', '0');
+					$orderBy = "
+						CASE 
+							WHEN LOWER(clients.client_type) = 'platinum' THEN 1
+							WHEN LOWER(clients.client_type) = 'diamond' THEN 2
+							WHEN LOWER(clients.client_type) = 'gold' THEN 3
+							WHEN LOWER(clients.client_type) = 'silver' THEN 4
+							ELSE 5
+						END
+					";
+					$clientsList = (clone $baseQuery)
+						->where('assigned_zones.city_id', $lead->city_id)
+						->where('assigned_zones.zone_id', $lead->zone_id)
+						->distinct()
+						->orderByRaw($orderBy)
+						->get();
 
-    $statusNewLead = App\Models\Status::where('name', 'New Lead')->value('id');
+					if ($clientsList->isEmpty()) {
+						$clientsList = (clone $baseQuery)
+							->where('assigned_zones.city_id', $lead->city_id)
+							->distinct()
+							->orderByRaw($orderBy)
+							->get();
+					}
 
-    $clients = DB::table('clients')
-        ->join('assigned_zones', 'clients.id', '=', 'assigned_zones.client_id')
-        ->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
-        ->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
-        ->join('keyword_sell_count', 'keyword_sell_count.slug', '=', 'assigned_kwds.sold_on_position')
-        ->where('keyword.id', $lead->kw_id)
-        ->where('assigned_zones.city_id', $lead->city_id)
-        ->whereNull('clients.deleted_at')
-        ->where('clients.coins_amt', '>', 0)
-        ->where('clients.active_status', 1)
-        ->distinct('clients.id')
-        ->orderByRaw("
-            CASE assigned_kwds.sold_on_position
-                WHEN 'diamond' THEN 1
-                WHEN 'platinum' THEN 2
-                WHEN 'gold' THEN 3
-                WHEN 'silver' THEN 4
-            END
-        ")
-        ->get();
+					if ($clientsList->isEmpty()) {
+						$clientsList = (clone $baseQuery)
+							->distinct()
+							->orderByRaw($orderBy)
+							->get();
+					}
 
-    foreach ($clients as $clientRow) {
 
-        $client = App\Models\Client\Client::find($clientRow->client_id);
-        if (!$client) {
-            continue;
-        }
 
-        $sellPrice = App\Models\KeywordSellCount::where(
-            'slug',
-            strtolower($client->client_type)
-        )->first();
+					// ******************
+					$max = $mCount = 4;
+					$i = 0;
+					$totalClients = count($clientsList);
+					$buckets = [];
+					foreach ($clientsList as $client) {
+						if ($mCount == 0) {
+							$j = $i;
+							$buckets[++$j] = $buckets[$i++];
+							$buckets[$j]['diamond'] = [];
+							$mCount = $max - (count($buckets[$j], 1) - 4);
+						}
+						if ($client->client_type == 'platinum') {
+							$buckets[$i]['platinum'][] = $client;
+						}
+						if ($client->client_type == 'diamond') {
+							$buckets[$i]['diamond'][] = $client;
+						}
+						if ($client->client_type == 'gold') {
+							$buckets[$i]['gold'][] = $client;
+						}
+						if ($client->client_type == 'silver') {
+							$buckets[$i]['silver'][] = $client;
+						}
+						--$mCount;
+					}
+					$i = 0;
 
-        if (!$sellPrice) {
-            continue;
-        }
+					$bucketCount = count($buckets);
+					if (!empty($clientsList)) {
+						foreach ($buckets as $bucket) {
+							if ($bucketCount <= $bucketIndex || $bucketIndex == 0) {
+								$bucketIndex = 0;
+							}
 
-        // CATEGORY PRICE
-        $category = $keyword->category;
-        $coinsToDeduct = match ($category) {
-            'Category 1' => $sellPrice->cat1_price,
-            'Category 2' => $sellPrice->cat2_price,
-            'Category 3' => $sellPrice->cat3_price,
-            'Category 4' => $sellPrice->cat4_price,
-            'Category 5' => $sellPrice->cat5_price,
-            'Category 6' => $sellPrice->cat6_price,
-            'Category 7' => $sellPrice->cat7_price,
-            'Category 8' => $sellPrice->cat8_price,
-            'Category 9' => $sellPrice->cat9_price,
-            'Category 10' => $sellPrice->cat10_price,
-            default => 130,
-        };
+							if ($bucketIndex == $i) {
 
-        if ($client->coins_amt < $coinsToDeduct) {
-            continue;
-        }
+								foreach ($bucket as $position => $clientss) {
 
-        // DEDUCT COINS ONCE
-        $client->coins_amt -= $coinsToDeduct;
-        $client->save();
+									foreach ($clientss as $clientC) {
 
-        // ASSIGN LEAD
-        $alreadyAssigned = App\Models\AssignedLead::where([
-            'client_id' => $client->id,
-            'kw_id' => $lead->kw_id,
-            'lead_id' => $lead->id
-        ])->exists();
+										if ($clientC->client_type) {
 
-        if ($alreadyAssigned) {
-            continue;
-        }
 
-        App\Models\AssignedLead::create([
-            'client_id' => $client->id,
-            'lead_id' => $lead->id,
-            'kw_id' => $lead->kw_id,
-            'coins' => $coinsToDeduct,
-        ]);
+											$clnt = App\Models\Client::find($clientC->client_id);
 
-        App\Models\LeadFollowUp::create([
-            'status' => $statusNewLead,
-            'lead_id' => $lead->id,
-            'client_id' => $client->id,
-        ]);
+											if ($clnt) {
+												$dontSave = 0;
+												$keyword = Keyword::find($lead->kw_id);
+												$keywordSellCount = App\Models\KeywordSellCount::where('slug', strtolower($clientC->client_type))->first();
 
-        $lead->update([
-            'push_by' => '1',
-            'assign_status' => '1',
-        ]);
-    }
 
-    // ROTATE BUCKET
-    $keyword->increment('bucket');
+												$coinsAmt = match ($keyword->category) {
+													'Category 1' => $keywordSellCount->cat1_price,
+													'Category 2' => $keywordSellCount->cat2_price,
+													'Category 3' => $keywordSellCount->cat3_price,
+													'Category 4' => $keywordSellCount->cat4_price,
+													'Category 5' => $keywordSellCount->cat5_price,
+													'Category 6' => $keywordSellCount->cat6_price,
+													'Category 7' => $keywordSellCount->cat7_price,
+													'Category 8' => $keywordSellCount->cat8_price,
+													'Category 9' => $keywordSellCount->cat9_price,
+													'Category 10' => $keywordSellCount->cat10_price,
+													default => 95,
+												};
+												if ($clientC->coins_amt < $coinsAmt) {
+													continue;
+												}
+
+												$clnt->coins_amt -= $coinsAmt;
+
+												$assignvalidation = App\Models\AssignedLead::where('client_id', $clientC->client_id)->where('kw_id', $lead->kw_id)->where('lead_id', $lead->id)->get();
+
+												//  dd($assignvalidation);
+												if ($assignvalidation->isEmpty()) {
+
+													$assignedLead = new App\Models\AssignedLead;
+													$assignedLead->kw_id = $lead->kw_id;
+													$assignedLead->client_id = $clientC->client_id;
+													$assignedLead->lead_id = $lead->id;
+													if ($assignedLead->save()) {
+														$lead->push_by = '';
+														$lead->assign_status = '1';
+														$lead->pushed = '1';
+														$lead->save();
+
+														$mobile = "1234556787";
+														if (!empty($clientC->mobile)) {
+															$smsMessage = "Dear," . $clnt->first_name . ' ' . $clnt->last_name;
+															$smsMessage .= "%0D%0A";
+															$smsMessage .= "%0D%0AName: " . ucfirst($lead->name);
+															$smsMessage .= "%0D%0ACourse: " . preg_replace('/&/', '', $lead->kw_text);
+															$smsMessage .= "%0D%0ACity: " . $lead->city_name;
+															if (!empty($lead->email)) {
+																$smsMessage .= "%0D%0AEmail: " . $lead->email;
+															}
+
+															$smsMessage .= "%0D%0AMob: " . $lead->mobile;
+															$smsMessage .= "%0D%0A quickdials Team";
+															//sendSMS(trim($client->mobile),$smsMessage);
+															//sendSMS(trim($mobile),$smsMessage);
+															if (!empty($clnt->sec_mobile)) {
+																//sendSMS($client->sec_mobile,$smsMessage);
+															}
+														}
+														if (!empty($clnt->email)) {
+
+															/* $template = 'emails.assignleadtoclient';
+															$clientname=$client->business_name;
+															$check=  Mail::send($template, ['clientname'=>$clientname,'lead'=>$lead], function ($m) use ($client,$lead) {    
+															$m->from('info@quickdials.in', 'quickdials');             
+															//$client->email
+															$m->to('info@quickdials.in', $lead->name)->subject('quickdials Lead: '.$lead->kw_text)->cc('quickdials1@gmail.com');
+															});	
+															*/
+
+														}
+
+
+													}
+												}
+
+												$clnt->save();
+											}
+
+										}
+
+									}
+
+								}
+								$kw = App\Models\Keyword::find($lead->kw_id);
+								$kw->bucket = $i + 1;
+								$kw->save();
+
+							}
+							$i++;
+						}
+					}
+				}
+			}
+		}
+	}
+
 }

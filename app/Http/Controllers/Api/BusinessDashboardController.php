@@ -165,6 +165,12 @@ class BusinessDashboardController extends Controller
                 $leads_list[$key] = array(
                     'lead_id' => $val->lead_id,
                     'assignId' => $val->assignId,
+                    'favorite_lead' => $val->favorite_lead,
+                    'readLead' => $val->readLead,
+                    'scrapLead' => $val->scrapLead,
+                    'scrapPay' => $val->scrapPay,
+                    'scrapValue' => $val->scrapValue,
+                    'primeLead' => $val->primeLead,
                     'name' => $val->name,
                     'mobile' => $val->mobile,
                     'email' => $val->email,

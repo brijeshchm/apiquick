@@ -521,7 +521,7 @@ class AuthController extends Controller
      */
     public function getRedirectUrlIos()
     {
-        $url = Socialite::driver('google')
+        $url = Socialite::driver('google_ios')
             ->stateless()
             ->scopes(['openid', 'email', 'profile'])
             ->redirect()
@@ -560,7 +560,7 @@ class AuthController extends Controller
     public function handleCallbackIos()
     {
         try {
-            $googleUser = Socialite::driver('google')->stateless()->user();
+            $googleUser = Socialite::driver('google_ios')->stateless()->user();
 
             $parts = explode(' ', $googleUser->getName(), 2);
 

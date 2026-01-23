@@ -44,6 +44,11 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect'      => env('GOOGLE_REDIRECT_URI'),
     ],
-
+    
+   'google_ios' => [
+        'client_id_ios'     => env('GOOGLE_CLIENT_ID_IOS'),
+        'client_secret_ios' => env('GOOGLE_CLIENT_SECRET_IOS'),
+        'redirect_ios'      => env('GOOGLE_REDIRECT_URI_IOS'),
+    ],
 
 ];

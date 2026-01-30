@@ -2610,8 +2610,6 @@ class SiteController extends Controller
 		$request->validate([
 			'business_slug' => 'required|exists:clients,business_slug',
 		]);
-
-
 		$business_slug = $request->input('business_slug');
 
 		$clientscheck = DB::table('clients')
@@ -2813,6 +2811,111 @@ class SiteController extends Controller
 				'social' => $social,		
 				'user_share' => $user_share,		
 			];
+				$isoImage = "";
+				if (!empty($clientscheck->iso_certificate)) {
+				$iso_certificate = json_decode($clientscheck->iso_certificate);
+
+				if (!empty($iso_certificate)) {
+					$isoImage = config('app.website') . $iso_certificate->large->src;				 
+					}
+				}
+				$gstImage = "";
+				if (!empty($clientscheck->gst_certificate)) {
+				$gst_certificate = json_decode($clientscheck->gst_certificate);
+
+				if (!empty($gst_certificate)) {
+					$gstImage = config('app.website') . $gst_certificate->large->src;				 
+					}
+				}
+				$cinImage = "";
+				if (!empty($clientscheck->cin_certificate)) {
+				$cin_certificate = json_decode($clientscheck->cin_certificate);
+
+				if (!empty($cin_certificate)) {
+					$cinImage = config('app.website') . $cin_certificate->large->src;				 
+					}
+				}
+ 
+				$msmeImage = "";
+				if (!empty($clientscheck->msme_certificate)) {
+				$msme_certificate = json_decode($clientscheck->msme_certificate);
+ 
+				if (!empty($msme_certificate)) {
+					$msmeImage = config('app.website') . $msme_certificate->large->src;				 
+					}
+				}
+ 
+				$awardimg1 = "";
+				if (!empty($clientscheck->award_img1)) {
+				$award_img1 = json_decode($clientscheck->award_img1);
+
+				if (!empty($award_img1)) {
+					$awardimg1 = config('app.website') . $award_img1->large->src;				 
+					}
+				}
+ 
+				$awardimg2 = "";
+				if (!empty($clientscheck->award_img2)) {
+				$award_img2 = json_decode($clientscheck->award_img2);
+
+				if (!empty($award_img2)) {
+					$awardimg2 = config('app.website') . $award_img2->large->src;				 
+					}
+				}
+ 
+ 
+				$awardimg3 = "";
+				if (!empty($clientscheck->award_img3)) {
+				$award_img3 = json_decode($clientscheck->award_img3);
+
+				if (!empty($award_img3)) {
+					$awardimg3 = config('app.website') . $award_img3->large->src;				 
+					}
+				}
+ 
+ 
+				$awardimg4 = "";
+				if (!empty($clientscheck->award_img4)) {
+				$award_img4 = json_decode($clientscheck->award_img4);
+
+				if (!empty($award_img4)) {
+					$awardimg4 = config('app.website') . $award_img4->large->src;				 
+					}
+				}
+ 
+ 
+				$awardimg5 = "";
+				if (!empty($clientscheck->award_img5)) {
+				$award_img5 = json_decode($clientscheck->award_img5);
+
+				if (!empty($award_img5)) {
+					$awardimg5 = config('app.website') . $award_img5->large->src;				 
+					}
+				}
+ 
+
+			$data['certificate'] = [
+				'gst_no' => $clientscheck->gst_no??'',
+				'gst_certificate' => $gstImage,
+				'pan_no' => $clientscheck->pan_no,				 
+				'cin_no' => $clientscheck->cin_no ?? '',
+				'cin_certificate' => $cinImage,
+				'iso_no' => $clientscheck->iso_no ?? '',
+				'iso_certificate' => $isoImage ?? '',
+				'msme_no' => $clientscheck->msme_no ?? '',
+				'msme_certificate' => $msmeImage ?? '',
+				'award_name1' => $clientscheck->award_name1,
+				'award_img1' => $awardimg1, 	
+				'award_name2' => $clientscheck->award_name2,
+				'award_img2' => $awardimg2, 	
+				'award_name3' => $clientscheck->award_name3,
+				'award_img3' => $awardimg3, 	
+				'award_name4' => $clientscheck->award_name4,
+				'award_img4' => $awardimg4, 	
+				'award_name5' => $clientscheck->award_name5,
+				'award_img5' => $awardimg5, 	
+			];
+
 
 
 		

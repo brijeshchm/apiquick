@@ -30,6 +30,7 @@ use App\Http\Controllers\Api\ProfileController;
  use App\Http\Controllers\Api\EnquiryController;
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/google-login', [AuthController::class, 'googleLogin']);
 
 Route::prefix('auth/google')->group(function () {
     Route::get('redirect', [AuthController::class, 'getRedirectUrl']);
@@ -110,6 +111,7 @@ Route::get('/business/cities/get-cities',[App\Http\Controllers\Api\BusinessContr
 Route::post('/business/cities/getajaxcities',[App\Http\Controllers\Api\BusinessController::class, 'getAjaxCities']);
 Route::get('/business/state/get-state',[App\Http\Controllers\Api\BusinessController::class, 'getState']);
 Route::get('/business/country/get-country',[App\Http\Controllers\Api\BusinessController::class, 'getCountry']);
+Route::get('/business/status/get-status',[App\Http\Controllers\Api\BusinessController::class, 'getStatus']);
 Route::post('/business/city/get-city-by-state',[App\Http\Controllers\Api\BusinessController::class, 'getCityByState']);
 Route::post('/business/zones/get-zone-by-city',[App\Http\Controllers\Api\BusinessController::class, 'getZoneByCity']);
 Route::get('/business/zones/get-zones',[App\Http\Controllers\Api\BusinessController::class, 'getZones']);

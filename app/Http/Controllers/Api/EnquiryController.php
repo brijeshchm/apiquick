@@ -194,7 +194,7 @@ class EnquiryController extends Controller
 		$clientID = $client->id;
 		$lead = DB::table('leads')
 			->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
-			->select('leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'assigned_leads.id as assignId')
+			->select('leads.*','assigned_leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'assigned_leads.id as assignId')
 			->orderBy('assigned_leads.created_at', 'desc')
 			->where('assigned_leads.client_id', $clientID)->where('leads.id', $id)->first();
 		if (!$lead) {
@@ -263,11 +263,9 @@ class EnquiryController extends Controller
 		});
 
 
-
 		$data['lead_follow_up'] = $leadFollowUp;
-
 		$data['statuses'] = DB::table('status')
-			->where('lead_follow_up', 1)
+			->where('lead_follow_up', '1')
 			->select('id', 'name')
 			->get();
 

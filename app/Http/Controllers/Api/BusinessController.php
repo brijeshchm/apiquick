@@ -412,6 +412,65 @@ class BusinessController extends Controller
 
 
 	/**
+	 * @OA\Get(
+	 *     path="/api/business/status/get-status",
+	 *     tags={"Status"},
+	 *     summary="Get Status",
+	 *     description="Fetch a list of Status.",
+	 *     security={{"bearerAuth":{}}},	 *   
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Status retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=101),
+	 *                     @OA\Property(property="city", type="string", example="Noida")
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No cities found",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No cities found for this state.")
+	 *         )
+	 *     )
+	 * )
+	 */
+
+	public function getStatus(Request $request)
+	{
+
+		$statuslists = Status::where('lead_filter','1')->get();
+		if ($statuslists) {
+			foreach ($statuslists as $status) {
+				$data[] = [
+					'status_id' => $status->id,
+					'status' => $status->name,
+
+				];
+			}
+		}
+		return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $data,
+
+		], 200);
+	}
+
+	/**
 	 * @OA\Post(
 	 *     path="/api/business/state/get-state-by-country",
 	 *     tags={"State"},

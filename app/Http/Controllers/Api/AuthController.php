@@ -114,6 +114,8 @@ class AuthController extends Controller
             'data' => $user,
         ]);
     }
+
+
     /**
      * @OA\Post(
      *     path="/api/verifyOtp",
@@ -214,6 +216,76 @@ class AuthController extends Controller
         }
     }
 
+
+     /**
+     * @OA\Post(
+     *     path="/api/google-login",
+     *     tags={"Socials Login"},
+     *     summary="Login with Token",
+     *     description="This endpoint sends an email to the provided address.",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email","subject","message"},
+     *             @OA\Property(property="email", type="string", format="email", example="test@example.com"),
+     *             @OA\Property(property="fcm_token", type="string", example=""),
+     *                        
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Email sent successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Email sent successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid input"
+     *     )
+     * )
+     */
+    public function googleLogin(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'fcm_token' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $user = Client::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json(['status' => false, 'message' => 'User account not found',], 403);
+        }
+        if (!$user->active_status) {
+            return response()->json(['status' => false, 'message' => 'User account is inactive',], 403);
+        }
+      
+        if ($user) {
+           $user->fcm_token = $request->fcm_token;
+           $user->save();          
+
+        }
+        // Generate new Sanctum token
+        $token = $user->createToken('api-token')->plainTextToken;
+        //$token = $user->createToken('browser-extension')->plainTextToken;
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Login successfully',
+            'token' => $token,
+            'token_type' => 'Bearer',            
+            //  'expires_in' => auth()->factory()->getTTL()*60,
+            'data' => $user,
+        ]);
+    }
+
+    
 
     /**
      * @OA\Post(

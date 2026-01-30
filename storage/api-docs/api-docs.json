@@ -391,6 +391,67 @@
                 }
             }
         },
+        "/api/google-login": {
+            "post": {
+                "tags": [
+                    "Socials Login"
+                ],
+                "summary": "Login with Token",
+                "description": "This endpoint sends an email to the provided address.",
+                "operationId": "1c67ebdf442fbbaa4731abf22958aa8e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "subject",
+                                    "message"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "test@example.com"
+                                    },
+                                    "fcm_token": {
+                                        "type": "string",
+                                        "example": ""
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Email sent successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email sent successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    }
+                }
+            }
+        },
         "/api/logout": {
             "post": {
                 "tags": [
@@ -1060,6 +1121,91 @@
                 "responses": {
                     "200": {
                         "description": "Cities retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "city": {
+                                                        "type": "string",
+                                                        "example": "Noida"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No cities found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No cities found for this state."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/status/get-status": {
+            "get": {
+                "tags": [
+                    "Status"
+                ],
+                "summary": "Get Status",
+                "description": "Fetch a list of Status.",
+                "operationId": "951b6465a501b90181bfcae8891d2331",
+                "responses": {
+                    "200": {
+                        "description": "Status retrieved successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -9029,6 +9175,10 @@
             "description": "Verify Otp"
         },
         {
+            "name": "Socials Login",
+            "description": "Socials Login"
+        },
+        {
             "name": "Auth Logout",
             "description": "Auth Logout"
         },
@@ -9055,6 +9205,10 @@
         {
             "name": "Country",
             "description": "Country"
+        },
+        {
+            "name": "Status",
+            "description": "Status"
         },
         {
             "name": "State",

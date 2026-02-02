@@ -856,96 +856,9 @@ class BusinessLogoController extends Controller
 	}
 
 
-	 
 	/**
 	 * @OA\Post(
 	 *     path="https://www.quickdials.com/api/business/save-gallery",
-	 *     tags={"Gallery"},
-	 *     summary="Upload a new gallery picture",
-	 *     description="Upload a gallery picture for the authenticated user's business.",
-	 *      
-	 *
-	 *     @OA\RequestBody(
-	 *         required=true,
-	 *         @OA\MediaType(
-	 *             mediaType="multipart/form-data",
-	 *             @OA\Schema(
-	 *                 required={"business_id","image"},
-	 *
-	 *                 @OA\Property(
-	 *                     property="business_id",
-	 *                     type="integer",
-	 *                     example=12,
-	 *                     description="Business ID"
-	 *                 ),
-	 *
-	 *                 @OA\Property(
-	 *                     property="image",
-	 *                     type="string",
-	 *                     format="binary",
-	 *                     description="Gallery image file"
-	 *                 ),
-	 *
-	 *                 @OA\Property(
-	 *                     property="title",
-	 *                     type="string",
-	 *                     example="Office Front View"
-	 *                 )
-	 *             )
-	 *         )
-	 *     ),
-	 *
-	 *     @OA\Response(
-	 *         response=200,
-	 *         description="Gallery picture uploaded successfully",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="success", type="boolean", example=true),
-	 *             @OA\Property(property="message", type="string", example="Gallery picture uploaded successfully."),
-	 *             @OA\Property(
-	 *                 property="data",
-	 *                 type="object",
-	 *                 @OA\Property(property="id", type="integer", example=1),
-	 *                 @OA\Property(property="image_url", type="string", example="https://www.quickdials.com/uploads/gallery/office1.jpg"),
-	 *                 @OA\Property(property="title", type="string", example="Office Front View")
-	 *             )
-	 *         )
-	 *     ),
-	 *
-	 *     @OA\Response(
-	 *         response=401,
-	 *         description="Unauthenticated",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
-	 *         )
-	 *     ),
-	 *
-	 *     @OA\Response(
-	 *         response=422,
-	 *         description="Validation error",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="message", type="string", example="The given data was invalid."),
-	 *             @OA\Property(
-	 *                 property="errors",
-	 *                 type="object",
-	 *                 @OA\Property(
-	 *                     property="image",
-	 *                     type="array",
-	 *                     @OA\Items(type="string", example="The image field is required.")
-	 *                 )
-	 *             )
-	 *         )
-	 *     )
-	 * )
-	 */
-
-	public function saveGallary()
-	{
-
-	}
-
-/**
-	 * @OA\Post(
-	 *     path="https://www.quickdials.com/api/business/save-pictures",
 	 *     tags={"Gallery"},
 	 *     summary="Upload Picture",
 	 *     description="Upload a Picture picture for the authenticated user's business.",
@@ -972,17 +885,11 @@ class BusinessLogoController extends Controller
 	 *                     description="Gallery image file"
 	 *                 ),
 	 *                 @OA\Property(
-	 *                     property="delete_images[]",
+	 *                     property="remove_images[]",
 	 *                     type="string",
 	 *                     format="binary",
-	 *                     description="pass image path"
-	 *                 ),
-	 *
-	 *                 @OA\Property(
-	 *                     property="title",
-	 *                     type="string",
-	 *                     example="Office Front View"
-	 *                 )
+	 *                     description="pass image full path uploads/images/2026/01/week_3/Banquet_Hall_1768978927.webp"
+	 *                 )                 
 	 *             )
 	 *         )
 	 *     ),

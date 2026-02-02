@@ -97,7 +97,7 @@ Route::delete('https://www.quickdials.com/api/business/profileLogo/profilePicDel
 Route::get('/business/get-gallery-pictures',[App\Http\Controllers\Api\BusinessLogoController::class, 'getGalleryPictures']);
 
 Route::post('https://www.quickdials.com/api/business/save-gallery',[App\Http\Controllers\Api\BusinessLogoController::class,'saveGallary']); 
-Route::post('https://www.quickdials.com/api/business/save-pictures',[App\Http\Controllers\Api\BusinessLogoController::class,'savePictures']); 
+// Route::post('https://www.quickdials.com/api/business/save-pictures',[App\Http\Controllers\Api\BusinessLogoController::class,'savePictures']); 
 
 Route::get('/business/business-location',[App\Http\Controllers\Api\BusinessLocationController::class, 'businessLocation']);
 Route::post('/business/saveLocationInformation',[App\Http\Controllers\Api\BusinessLocationController::class, 'saveLocationInformation']);

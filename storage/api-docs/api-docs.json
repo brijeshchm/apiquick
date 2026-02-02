@@ -3787,132 +3787,9 @@
                 "tags": [
                     "Gallery"
                 ],
-                "summary": "Upload a new gallery picture",
-                "description": "Upload a gallery picture for the authenticated user's business.",
-                "operationId": "5e7df88b6490cc5aa98adbeb8244d90e",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "required": [
-                                    "business_id",
-                                    "image"
-                                ],
-                                "properties": {
-                                    "business_id": {
-                                        "description": "Business ID",
-                                        "type": "integer",
-                                        "example": 12
-                                    },
-                                    "image": {
-                                        "description": "Gallery image file",
-                                        "type": "string",
-                                        "format": "binary"
-                                    },
-                                    "title": {
-                                        "type": "string",
-                                        "example": "Office Front View"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Gallery picture uploaded successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Gallery picture uploaded successfully."
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "image_url": {
-                                                    "type": "string",
-                                                    "example": "https://www.quickdials.com/uploads/gallery/office1.jpg"
-                                                },
-                                                "title": {
-                                                    "type": "string",
-                                                    "example": "Office Front View"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The given data was invalid."
-                                        },
-                                        "errors": {
-                                            "properties": {
-                                                "image": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The image field is required."
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "https://www.quickdials.com/api/business/save-pictures": {
-            "post": {
-                "tags": [
-                    "Gallery"
-                ],
                 "summary": "Upload Picture",
                 "description": "Upload a Picture picture for the authenticated user's business.",
-                "operationId": "443c30f74a59589709dcb79fba11f45c",
+                "operationId": "2f7e0462689af391dc832f7a723120a3",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -3933,14 +3810,10 @@
                                         "type": "string",
                                         "format": "binary"
                                     },
-                                    "delete_images[]": {
-                                        "description": "pass image path",
+                                    "remove_images[]": {
+                                        "description": "pass image full path uploads/images/2026/01/week_3/Banquet_Hall_1768978927.webp",
                                         "type": "string",
                                         "format": "binary"
-                                    },
-                                    "title": {
-                                        "type": "string",
-                                        "example": "Office Front View"
                                     }
                                 },
                                 "type": "object"

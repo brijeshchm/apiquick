@@ -355,7 +355,7 @@ class BusinessLogoController extends Controller
 		}
 
 		// ✅ Always return exactly 12 slots
-		for ($i = 0; $i < 12; $i++) {
+		for ($i = 0; $i < 21; $i++) {
 			$data[$i] = '';
 
 			if (

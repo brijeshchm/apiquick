@@ -3336,6 +3336,452 @@
                 ]
             }
         },
+        "https://www.quickdials.com/api/business/save-certificate": {
+            "post": {
+                "tags": [
+                    "Certificate"
+                ],
+                "summary": "Upload a new Certificate",
+                "description": "Upload a Certificate",
+                "operationId": "a0808b433d91ae19cb65c2c72157e58d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "business_id",
+                                    "image"
+                                ],
+                                "properties": {
+                                    "business_id": {
+                                        "description": "Business ID",
+                                        "type": "integer",
+                                        "example": 12
+                                    },
+                                    "gst_no": {
+                                        "description": "gst no",
+                                        "type": "string"
+                                    },
+                                    "gst_certificate": {
+                                        "description": "gst certificate",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "iso_no": {
+                                        "description": "ISO no",
+                                        "type": "string"
+                                    },
+                                    "iso_certificate": {
+                                        "description": "ISO certificate",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "cin_no": {
+                                        "description": "CIN no",
+                                        "type": "string"
+                                    },
+                                    "cin_certificate": {
+                                        "description": "CIN certificate",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Certificate picture uploaded successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Certificate picture uploaded successfully."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "image_url": {
+                                                    "type": "string",
+                                                    "example": "https://www.quickdials.com/uploads/gallery/office1.jpg"
+                                                },
+                                                "title": {
+                                                    "type": "string",
+                                                    "example": "Office Front View"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "image": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The image field is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/business/get-certificate": {
+            "get": {
+                "tags": [
+                    "Certificate"
+                ],
+                "summary": "Get business Certificate",
+                "description": "Fetch all Certificate.",
+                "operationId": "6bc1292ab884060b5080b1db75e02ee5",
+                "responses": {
+                    "200": {
+                        "description": "Certificate retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "image_url": {
+                                                        "type": "string",
+                                                        "example": "https://api.quickdials.com/storage/gallery/image1.jpg"
+                                                    },
+                                                    "title": {
+                                                        "type": "string",
+                                                        "example": "Office Front View"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "example": "2025-09-04 12:30:00"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "https://www.quickdials.com/api/business/save-award": {
+            "post": {
+                "tags": [
+                    "Award"
+                ],
+                "summary": "Upload a new award picture",
+                "description": "Upload a award picture for the authenticated user's business.",
+                "operationId": "e0419b899647feb81767ba827fdaeb12",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "business_id",
+                                    "image"
+                                ],
+                                "properties": {
+                                    "business_id": {
+                                        "description": "Business ID",
+                                        "type": "integer",
+                                        "example": 12
+                                    },
+                                    "award_name1": {
+                                        "description": "award name1",
+                                        "type": "string"
+                                    },
+                                    "award_img1": {
+                                        "description": "award img1",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "award_name2": {
+                                        "description": "award name2",
+                                        "type": "string"
+                                    },
+                                    "award_img2": {
+                                        "description": "award img2",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "award_name3": {
+                                        "description": "award name3",
+                                        "type": "string"
+                                    },
+                                    "award_img3": {
+                                        "description": "award img3",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "award_name4": {
+                                        "description": "award name4",
+                                        "type": "string"
+                                    },
+                                    "award_img4": {
+                                        "description": "award img4",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "award_name5": {
+                                        "description": "award name5",
+                                        "type": "string"
+                                    },
+                                    "award_img5": {
+                                        "description": "award img5",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Gallery picture uploaded successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Gallery picture uploaded successfully."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "image_url": {
+                                                    "type": "string",
+                                                    "example": "https://www.quickdials.com/uploads/gallery/office1.jpg"
+                                                },
+                                                "title": {
+                                                    "type": "string",
+                                                    "example": "Office Front View"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "image": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The image field is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/business/get-award": {
+            "get": {
+                "tags": [
+                    "Award"
+                ],
+                "summary": "Get business Award",
+                "description": "Fetch all Award.",
+                "operationId": "35a1306a50dacca220754f791645e37e",
+                "responses": {
+                    "200": {
+                        "description": "Award retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "image_url": {
+                                                        "type": "string",
+                                                        "example": "https://api.quickdials.com/storage/gallery/image1.jpg"
+                                                    },
+                                                    "title": {
+                                                        "type": "string",
+                                                        "example": "Office Front View"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "example": "2025-09-04 12:30:00"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "https://www.quickdials.com/api/business/save-gallery": {
             "post": {
                 "tags": [
@@ -9249,6 +9695,14 @@
         {
             "name": "Gallery",
             "description": "Gallery"
+        },
+        {
+            "name": "Certificate",
+            "description": "Certificate"
+        },
+        {
+            "name": "Award",
+            "description": "Award"
         },
         {
             "name": "Frontend Save Enquiry",

@@ -102,6 +102,10 @@ Route::post('https://www.quickdials.com/api/business/save-pictures',[App\Http\Co
 Route::get('/business/business-location',[App\Http\Controllers\Api\BusinessLocationController::class, 'businessLocation']);
 Route::post('/business/saveLocationInformation',[App\Http\Controllers\Api\BusinessLocationController::class, 'saveLocationInformation']);
 
+Route::get('/business/get-certificate',[App\Http\Controllers\Api\BusinessLogoController::class, 'getCertificate']);
+Route::get('/business/get-award',[App\Http\Controllers\Api\BusinessLogoController::class, 'getAward']);
+
+
 
 Route::post('/business/pauseLead',[App\Http\Controllers\Api\EnquiryController::class, 'pauseLead']);
 Route::post('/business/scrapLead',[App\Http\Controllers\Api\EnquiryController::class, 'scrapLead']);

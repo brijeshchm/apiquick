@@ -2322,7 +2322,7 @@ class EnquiryController extends Controller
 					'for_review' => $for_review,
 
 				);
-		$data = [
+		$data['lead'] = [
 
 			'lead_id' => $leads->lead_id,
 			'name' => $leads->name,
@@ -2344,6 +2344,11 @@ class EnquiryController extends Controller
 			'area' => $leads->area,
 			'user_share' => $user_share,
 		];
+
+		$data['statuses'] = DB::table('status')
+			->where('lead_follow_up', '1')
+			->select('id', 'name')
+			->get();
 
 		return response()->json([
 			'status' => true,

@@ -7265,14 +7265,206 @@
                 ]
             }
         },
-        "/api/business/razorpay/create-payment-link": {
+        "/api/business/razorpay/success": {
             "post": {
                 "tags": [
                     "Razorpay"
                 ],
-                "summary": "Create Razorpay Payment Link",
-                "description": "Generate a customized Razorpay payment link",
-                "operationId": "createPaymentLink",
+                "summary": "Save Razorpay payment success",
+                "description": "Save Razorpay payment success details after successful transaction.",
+                "operationId": "ddc257f7e6dec8bd4a05e1d1b2b68bdb",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "business_id",
+                                    "razorpay_order_id",
+                                    "transaction_id",
+                                    "paid_amount",
+                                    "status",
+                                    "customer_name",
+                                    "email",
+                                    "mobile"
+                                ],
+                                "properties": {
+                                    "business_id": {
+                                        "type": "integer",
+                                        "example": 12
+                                    },
+                                    "razorpay_order_id": {
+                                        "type": "string",
+                                        "example": "order_ABC123"
+                                    },
+                                    "transaction_id": {
+                                        "type": "string",
+                                        "example": "pay_XYZ123"
+                                    },
+                                    "paid_amount": {
+                                        "type": "number",
+                                        "example": 299
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "success"
+                                    },
+                                    "customer_name": {
+                                        "type": "string",
+                                        "example": "Rahul Sharma"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "rahul@gmail.com"
+                                    },
+                                    "mobile": {
+                                        "type": "string",
+                                        "example": "9876543210"
+                                    },
+                                    "coins": {
+                                        "type": "integer",
+                                        "example": 1111
+                                    },
+                                    "payment_mode": {
+                                        "type": "string",
+                                        "example": "Card"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Payment saved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Payment saved successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "payment_id": {
+                                                    "type": "string",
+                                                    "example": "pay_XYZ123"
+                                                },
+                                                "order_id": {
+                                                    "type": "string",
+                                                    "example": "order_ABC123"
+                                                },
+                                                "paid_amount": {
+                                                    "type": "number",
+                                                    "example": 299
+                                                },
+                                                "currency": {
+                                                    "type": "string",
+                                                    "example": "INR"
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "success"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-09-04T12:45:00Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation failed"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Failed to save payment"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/razorpay/subscribe-free": {
+            "post": {
+                "tags": [
+                    "Razorpay"
+                ],
+                "summary": "subscribe free",
+                "description": "subscribe free for customized Razorpay payment",
+                "operationId": "888fdd3f419eae42c79d651054c98c20",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -7386,80 +7578,69 @@
                 ]
             }
         },
-        "/api/business/{client_id}/saveReview": {
-            "post": {
+        "/api/business/get-review": {
+            "get": {
                 "tags": [
-                    "Frontend Reviews"
+                    "Review"
                 ],
-                "summary": "Submit a business review",
-                "description": "Allows a user to submit a review. One review per email per client per 30 days.",
-                "operationId": "904738fb8fb7523fa18839d20b3a5261",
-                "parameters": [
-                    {
-                        "name": "client_id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "example": 101
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "comment_author",
-                                    "comment_author_phone",
-                                    "comment_author_email",
-                                    "comment_content",
-                                    "s_rating"
-                                ],
-                                "properties": {
-                                    "comment_author": {
-                                        "type": "string",
-                                        "example": "Rahul Sharma"
-                                    },
-                                    "comment_author_phone": {
-                                        "type": "string",
-                                        "example": "9876543210"
-                                    },
-                                    "comment_author_email": {
-                                        "type": "string",
-                                        "example": "rahul@gmail.com"
-                                    },
-                                    "comment_content": {
-                                        "type": "string",
-                                        "example": "Very good service"
-                                    },
-                                    "s_rating": {
-                                        "type": "integer",
-                                        "maximum": 5,
-                                        "minimum": 1,
-                                        "example": 5
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
+                "summary": "Get all reviews",
+                "description": "Fetch review list for the authenticated business user. Requires Bearer token.",
+                "operationId": "dce12f4af70b47f6a043b04a9674d263",
                 "responses": {
                     "200": {
-                        "description": "Review submitted successfully",
+                        "description": "Review list fetched successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "lead_id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "rating": {
+                                                        "type": "integer",
+                                                        "example": 4
+                                                    },
+                                                    "comment": {
+                                                        "type": "string",
+                                                        "example": "Great service"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-09-04T12:45:00Z"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "current_page": {
                                             "type": "integer",
                                             "example": 1
                                         },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Review successfully submitted."
+                                        "per_page": {
+                                            "type": "integer",
+                                            "example": 10
+                                        },
+                                        "total": {
+                                            "type": "integer",
+                                            "example": 35
+                                        },
+                                        "last_page": {
+                                            "type": "integer",
+                                            "example": 4
                                         }
                                     },
                                     "type": "object"
@@ -7467,13 +7648,32 @@
                             }
                         }
                     },
-                    "422": {
-                        "description": "Validation error"
-                    },
-                    "429": {
-                        "description": "Review limit exceeded"
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/site/city/keyword": {
@@ -9457,6 +9657,96 @@
                     }
                 }
             }
+        },
+        "/api/business/{client_id}/saveReview": {
+            "post": {
+                "tags": [
+                    "Frontend Reviews"
+                ],
+                "summary": "Submit a business review",
+                "description": "Allows a user to submit a review. One review per email per client per 30 days.",
+                "operationId": "fa31e3cbaae2c4b7614fb10801c978a6",
+                "parameters": [
+                    {
+                        "name": "client_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 101
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "comment_author",
+                                    "comment_author_phone",
+                                    "comment_author_email",
+                                    "comment_content",
+                                    "s_rating"
+                                ],
+                                "properties": {
+                                    "comment_author": {
+                                        "type": "string",
+                                        "example": "Rahul Sharma"
+                                    },
+                                    "comment_author_phone": {
+                                        "type": "string",
+                                        "example": "9876543210"
+                                    },
+                                    "comment_author_email": {
+                                        "type": "string",
+                                        "example": "rahul@gmail.com"
+                                    },
+                                    "comment_content": {
+                                        "type": "string",
+                                        "example": "Very good service"
+                                    },
+                                    "s_rating": {
+                                        "type": "integer",
+                                        "maximum": 5,
+                                        "minimum": 1,
+                                        "example": 5
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Review submitted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Review successfully submitted."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "429": {
+                        "description": "Review limit exceeded"
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -9614,8 +9904,8 @@
             "description": "Razorpay"
         },
         {
-            "name": "Frontend Reviews",
-            "description": "Frontend Reviews"
+            "name": "Review",
+            "description": "Review"
         },
         {
             "name": "Frontend Search city and keyword",
@@ -9704,6 +9994,10 @@
         {
             "name": "Frontend business services",
             "description": "Frontend business services"
+        },
+        {
+            "name": "Frontend Reviews",
+            "description": "Frontend Reviews"
         }
     ],
     "security": {

@@ -48,5 +48,5 @@ Route::get('/api/site/blog/{slug}', [App\Http\Controllers\Site\SiteController::c
  Route::get('/api/site/faq', [App\Http\Controllers\Site\SiteController::class, 'FAQ']);
  Route::get('/api/site/business-owners', [App\Http\Controllers\Site\SiteController::class, 'businessOwners']);
 
-
+Route::post('/api/site/{client_id}/saveReview', [App\Http\Controllers\Site\SiteController::class, 'store']);
  

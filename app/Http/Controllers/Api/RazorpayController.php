@@ -17,6 +17,7 @@ use Mail;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Razorpay\Api\Api;
+use Illuminate\Support\Facades\DB;
 class RazorpayController extends Controller
 {
 	/**
@@ -131,7 +132,6 @@ class RazorpayController extends Controller
 
 	public function getInitialPaymentKey(Request $request)
 	{
-
 		if (!Auth::guard('sanctum')->check()) {
 			return response()->json([
 				'status' => false,
@@ -161,59 +161,59 @@ class RazorpayController extends Controller
 
 		$data = $this->dataDecodeJsonBase64($request->encrypt);
 		$orderRef = 'QD' . strtoupper(Str::random(8));
-		$data->razorpay_order_id= $orderRef;
+		$data->razorpay_order_id = $orderRef;
 
 		try {
 			$api = new Api(
 				config('services.razorpay.key'),
 				config('services.razorpay.secret')
 			);
-			 
-		 
- 
-		 
-				$client = Client::withTrashed()->where('id', $data->client_id)->first();
-			
-		 
-				$paymenthistory = new PaymentHistory;
-				$paymenthistory->client_id = $client->id;
-				$paymenthistory->customer_name = $client->first_name . ' ' . $client->last_name;
-				$paymenthistory->business_name = trim($client->business_name);
-				$paymenthistory->mobile = $client->mobile;
-				$paymenthistory->email = $client->email;
-				$paymenthistory->package_name = $client->client_type;
-				$paymenthistory->coins_amt = $data->coins;
-				$paymenthistory->paymentcollect = $user->id;
-				$paymenthistory->leads_count = '0';
-				$paymenthistory->cost_per_lead = '0';
-				$paymenthistory->cost_per_lead = '0';
-				$paymenthistory->paid_amount = '0';
-				$paymenthistory->gst_status = $data->gst_status;
-				$paymenthistory->gst_tax = $data->gst_tax;
-				$paymenthistory->gst_total_amount = $data->gst_total_amount;
-				$paymenthistory->tds_amount = '0';
-				$paymenthistory->total_amount = $data->total_amount;
-				$paymenthistory->currency = 'INR';
-				$paymenthistory->payment_url = '';
-				$paymenthistory->payment_link_id ='';
-				$paymenthistory->order_number = $orderRef;
-				$paymenthistory->save();
-			 
+
+
+
+
+			$client = Client::withTrashed()->where('id', $data->client_id)->first();
+
+
+			$paymenthistory = new PaymentHistory;
+			$paymenthistory->client_id = $client->id;
+			$paymenthistory->customer_name = $client->first_name . ' ' . $client->last_name;
+			$paymenthistory->business_name = trim($client->business_name);
+			$paymenthistory->mobile = $client->mobile;
+			$paymenthistory->email = $client->email;
+			$paymenthistory->package_name = $client->client_type;
+			$paymenthistory->coins_amt = $data->coins;
+			$paymenthistory->paymentcollect = $user->id;
+			$paymenthistory->leads_count = '0';
+			$paymenthistory->cost_per_lead = '0';
+
+			$paymenthistory->paid_amount = '0';
+			$paymenthistory->gst_status = $data->gst_status;
+			$paymenthistory->gst_tax = $data->gst_tax;
+			$paymenthistory->gst_total_amount = $data->gst_total_amount;
+			$paymenthistory->tds_amount = '0';
+			$paymenthistory->total_amount = $data->total_amount;
+			$paymenthistory->currency = 'INR';
+			$paymenthistory->payment_url = '';
+			$paymenthistory->payment_link_id = '';
+			$paymenthistory->order_number = $orderRef;
+			$paymenthistory->save();
+
 
 			return response()->json([
 				'success' => true,
 				'message' => 'Payment order create successfully',
 				'data' => [
-					'payment_data' => $data,				 
-					'encrypts' => $this->dataEncodeJsonBase64($data),				 
+					'payment_data' => $data,
+					'encrypts' => $this->dataEncodeJsonBase64($data),
 					'key' => config('services.razorpay.key'),
 					'secret' => config('services.razorpay.secret'),
 					'method_get' => 'https://api.quickdials.com/api/razorpay/verify?encrypt=',
 					'razorpay_payment_status' => '',
-					'razorpay_order_id'   => '',
-            		'razorpay_payment_id' =>  '',
-            		'razorpay_signature'  => '',
-					 
+					'razorpay_order_id' => '',
+					'razorpay_payment_id' => '',
+					'razorpay_signature' => '',
+
 				]
 			], 200);
 
@@ -230,64 +230,7 @@ class RazorpayController extends Controller
 
 	}
 
-	/**
-	 * @OA\Post(
-	 *     path="/api/business/razorpay/create-payment-link",
-	 *     summary="Create Razorpay Payment Link",
-	 *     description="Generate a customized Razorpay payment link",
-	 *     operationId="createPaymentLink",
-	 *     tags={"Razorpay"},
-	 *	   security={{"bearerAuth":{}}},
-	 *     @OA\RequestBody(
-	 *         required=true,
-	 *         @OA\JsonContent(
-	 *             required={"encrypt"},
-	 *             @OA\Property(
-	 *                 property="encrypt",
-	 *                 type="string",
-	 *                 example="U2FsdGVkX19kXzEyMzQ1Ng==",
-	 *                 description="Encrypted payment payload"
-	 *             )
-	 *         )
-	 *     ),
-	 *
-	 *     @OA\Response(
-	 *         response=200,
-	 *         description="Payment initiated successfully",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="success", type="boolean", example=true),
-	 *             @OA\Property(property="message", type="string", example="Payment initiated successfully"),
-	 *             @OA\Property(
-	 *                 property="data",
-	 *                 type="object",
-	 *                 @OA\Property(property="payment_id", type="string", example="pay_NXJH123456"),
-	 *                 @OA\Property(property="order_id", type="string", example="ORD123456789"),
-	 *                 @OA\Property(property="amount", type="number", example=100.50),
-	 *                 @OA\Property(property="currency", type="string", example="INR")
-	 *             )
-	 *         )
-	 *     ),
-	 *
-	 *     @OA\Response(
-	 *         response=422,
-	 *         description="Validation failed",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="success", type="boolean", example=false),
-	 *             @OA\Property(property="message", type="string", example="Validation failed"),
-	 *             @OA\Property(property="errors", type="object")
-	 *         )
-	 *     ),
-	 *
-	 *     @OA\Response(
-	 *         response=500,
-	 *         description="Server error",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="success", type="boolean", example=false),
-	 *             @OA\Property(property="message", type="string", example="Failed to initiate payment")
-	 *         )
-	 *     )
-	 * )
-	 */
+
 
 	public function createPaymentLink(Request $request)
 	{
@@ -323,7 +266,7 @@ class RazorpayController extends Controller
 		//  dd($data);
 
 		$orderRef = 'QD' . strtoupper(Str::random(8));
-		$data->razorpay_order_id= $orderRef;
+		$data->razorpay_order_id = $orderRef;
 		$encrypt = $this->dataEncodeJsonBase64($data);
 
 		try {
@@ -331,9 +274,9 @@ class RazorpayController extends Controller
 				config('services.razorpay.key'),
 				config('services.razorpay.secret')
 			);
-			 
+
 			$paymentLink = $api->paymentLink->create([
-				'amount'   => $data->total_amount * 100, 			 
+				'amount' => $data->total_amount * 100,
 				'currency' => 'INR',
 				'accept_partial' => false,
 				'reference_id' => $orderRef,
@@ -356,11 +299,11 @@ class RazorpayController extends Controller
 				'callback_method' => 'get',
 
 			]);
- 
+
 			if ($paymentLink['status'] == 'created') {
 				$client = Client::withTrashed()->where('id', $data->client_id)->first();
-			
-		 
+
+
 				$paymenthistory = new PaymentHistory;
 				$paymenthistory->client_id = $client->id;
 				$paymenthistory->customer_name = $client->first_name . ' ' . $client->last_name;
@@ -414,12 +357,12 @@ class RazorpayController extends Controller
 
 	public function verifyPayment(Request $request)
 	{
-	 
+
 		if ($request->encrypt) {
-		 
+
 			$data = $this->dataDecodeJsonBase64($request->encrypt);
 			try {
- 
+
 				$api = new Api(
 					config('services.razorpay.key'),
 					config('services.razorpay.secret')
@@ -427,11 +370,11 @@ class RazorpayController extends Controller
 
 
 				if ($request->razorpay_payment_link_status == 'paid') {
- 
+
 					$paymentHistory = PaymentHistory::where('payment_link_id', $request->razorpay_payment_link_id)->first();
 
-				$payment = PaymentHistory::find($paymentHistory->id);
- 
+					$payment = PaymentHistory::find($paymentHistory->id);
+
 					$payment->selectproofid = '';
 					$payment->proofid = '';
 					$payment->paid_amount = $data->total_amount;
@@ -462,29 +405,13 @@ class RazorpayController extends Controller
 					$newExpiry = $startDate->addDays($days);
 					$client->expired_on = $newExpiry->format('Y-m-d');
 					$payment->expired_on = $newExpiry->format('Y-m-d');
-				 
+
 					$payment->save();
 					$client->save();
 
 				}
 
-				// dd($request->razorpay_order_id); 
 
-//  $api->utility->verifyPaymentSignature([
-//             'razorpay_order_id'   => $request->razorpay_payment_link_id,
-//             'razorpay_payment_id' =>  $paymentHistory->razorpay_payment_id,
-//             'razorpay_signature'  => $request->razorpay_signature,
-//         ]);
-				// // Verify signature
-				// $api->utility->verifyPaymentSignature([
-				// 	'razorpay_payment_id' => $request->razorpay_payment_id,
-				// 	 'razorpay_order_id' => $paymentHistory->order_number,
-				// 	'razorpay_signature' => $request->razorpay_signature,
-				// ]);
-
-// dd($request);
-
-				// ✅ Payment verified – update DB here
 
 				return response()->json([
 					'success' => true,
@@ -503,22 +430,22 @@ class RazorpayController extends Controller
 
 	public function webhook(Request $request)
 	{
-	Log::info('Payment request data', [
+		Log::info('Payment request data', [
 			'request' => $request->all()
-			]);
-		 $signature = $request->header('X-Razorpay-Signature');
-    $secret = env('RAZORPAY_WEBHOOK_SECRET');
+		]);
+		$signature = $request->header('X-Razorpay-Signature');
+		$secret = env('RAZORPAY_WEBHOOK_SECRET');
 
-    $generated = hash_hmac('sha256', $request->getContent(), $secret);
+		$generated = hash_hmac('sha256', $request->getContent(), $secret);
 
-    if ($generated === $signature) {
+		if ($generated === $signature) {
 
 
-        // Payment success / failed / captured
-        return response()->json(['status' => 'ok']);
-    }
+			// Payment success / failed / captured
+			return response()->json(['status' => 'ok']);
+		}
 
-    return response()->json(['status' => 'invalid'], 403);
+		return response()->json(['status' => 'invalid'], 403);
 	}
 	/**
 	 * Return the specified resource from storage.
@@ -855,20 +782,6 @@ class RazorpayController extends Controller
 
 
 
-	public function feesPayGateway(Request $request)
-	{
-
-
-		if (isset($_GET['status'], $_GET['o']) && !empty($_GET['o'])) {
-			$o = base64_decode($_GET['o'], $strict = false);
-			$data = json_decode($o);
-			$status = $_GET['status'];
-		} else {
-			$data = array();
-		}
-		$paymentMode = PaymentMode::where('status', 1)->get();
-		return view('business.razorpay.fees-pay-page-out', ['paymentMode' => $paymentMode, 'id' => $id, 'data' => $data]);
-	}
 
 
 
@@ -1135,72 +1048,348 @@ class RazorpayController extends Controller
 		return view('business.razorpay.subscribe-free', ['data' => $data, 'oo' => $_GET['o']]);
 
 	}
-	public function saveSubscribeFree(Request $request, $id)
+
+
+	/**
+	 * @OA\Post(
+	 *     path="/api/business/razorpay/success",
+	 *     tags={"Razorpay"},
+	 *     summary="Save Razorpay payment success",
+	 *     description="Save Razorpay payment success details after successful transaction.",
+	 *     security={{"bearerAuth":{}}},
+	 *
+	 *     @OA\RequestBody(
+	 *         required=true,
+	 *         @OA\JsonContent(
+	 *             required={
+	 *                 "business_id",
+	 *                 "razorpay_order_id",
+	 *                 "transaction_id",
+	 *                 "paid_amount",
+	 *                 "status",
+	 *                 "customer_name",
+	 *                 "email",
+	 *                 "mobile"
+	 *             },
+	 *
+	 *             @OA\Property(property="business_id", type="integer", example=12),
+	 *             @OA\Property(property="razorpay_order_id", type="string", example="order_ABC123"),
+	 *             @OA\Property(property="transaction_id", type="string", example="pay_XYZ123"),
+	 *             @OA\Property(property="paid_amount", type="number", example=299.00),
+	 *             @OA\Property(property="status", type="string", example="success"),
+	 *             @OA\Property(property="customer_name", type="string", example="Rahul Sharma"),
+	 *             @OA\Property(property="email", type="string", example="rahul@gmail.com"),
+	 *             @OA\Property(property="mobile", type="string", example="9876543210"),
+	 *
+	 *             @OA\Property(property="coins", type="integer", example=1111),
+	 *             @OA\Property(property="payment_mode", type="string", example="Card")
+	 *         )
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Payment saved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="status", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Payment saved successfully"),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="object",
+	 *                 @OA\Property(property="payment_id", type="string", example="pay_XYZ123"),
+	 *                 @OA\Property(property="order_id", type="string", example="order_ABC123"),
+	 *                 @OA\Property(property="paid_amount", type="number", example=299.00),
+	 *                 @OA\Property(property="currency", type="string", example="INR"),
+	 *                 @OA\Property(property="status", type="string", example="success"),
+	 *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-04T12:45:00Z")
+	 *             )
+	 *         )
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="status", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated")
+	 *         )
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=422,
+	 *         description="Validation failed",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="status", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="Validation failed"),
+	 *             @OA\Property(property="errors", type="object")
+	 *         )
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=500,
+	 *         description="Server error",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="status", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="Failed to save payment")
+	 *         )
+	 *     )
+	 * )
+	 */
+
+
+
+	public function saveSuccess(Request $request)
 	{
-		if ($request->ajax()) {
-			$oo = base64_decode($_POST['oo'], $strict = false);
-			$data = json_decode($oo);
 
+		// ✅ Validate input
+		$request->validate([
+			'business_id' => 'required',
+			'razorpay_order_id' => 'required|string',
+			'customer_name' => 'required|string',
+			'transaction_id' => 'required|string',
+			'paid_amount' => 'required|numeric',
+			'status' => 'required',
+			'email' => 'required|email',
+			'mobile' => 'required|string',
+			'payment_mode' => 'nullable|string',
+		]);
 
-			$clientdeatails = Client::find($data->id);
-			if ($clientdeatails->coins_free == '0') {
-				$paymenthistory = new PaymentHistory;
-				$paymenthistory->client_id = $data->id;
-				$paymenthistory->customer_name = $data->name;
-				$paymenthistory->business_name = $clientdeatails->business_name;
-				$paymenthistory->mobile = $data->phone;
-				$paymenthistory->email = $data->email;
-				$paymenthistory->package_name = 'Diamond';
-				$paymenthistory->coins_amt = $data->coins;
-				$paymenthistory->selectproofid = "";
-				$paymenthistory->proofid = "";
-				$paymenthistory->paid_amount = '0';
-				$paymenthistory->tds_status = "No";
-				$paymenthistory->tds_amount = "0";
-				$paymenthistory->gst_tax = '0';
-				$paymenthistory->gst_total_amount = '0';
-				$paymenthistory->gst_status = "Yes";
-				$paymenthistory->total_amount = '0';
-				$paymenthistory->transactionid = $request->input('merchant_order_id');
-				$paymenthistory->order_number = $request->input('merchant_order_id');
-				$paymenthistory->paymentcollect = 0;
-				$paymenthistory->payment_mode = "free subscribe";
-				$paymenthistory->payment_bank = "";
-				$paymenthistory->invoice_status = '1';
-				$paymenthistory->save();
+		$client = Client::find($request->business_id);
+		if (!$client) {
+			return response()->json([
+				'status' => false,
+				'msg' => 'Client not found'
+			], 404);
+		}
 
+		$payment = PaymentHistory::where('order_number', $request->razorpay_order_id)->first();
+		if (!$payment) {
+			return response()->json([
+				'status' => false,
+				'msg' => 'Payment history not found'
+			], 404);
+		}
 
-				$clientdeatails->coins_amt = $clientdeatails->coins_amt + $data->coins;
-				if ($clientdeatails->expired_on == '0000-00-00 00:00:00' || $clientdeatails->expired_on == 'NULL') {
+		DB::beginTransaction();
 
-					$newDate = date('Y-m-d', strtotime(now() . ' +365 days'));
-
-				} else if (strtotime($clientdeatails->expired_on) > strtotime(date('Y-m-d'))) {
-					$newDate = date('Y-m-d', strtotime($clientdeatails->expired_on . ' +365 days'));
-
-				} else if (strtotime($clientdeatails->expired_on) < strtotime(date('Y-m-d'))) {
-					$newDate = date('Y-m-d', strtotime(now() . ' +365 days'));
-
-				} else {
-					$newDate = date('Y-m-d', strtotime(now() . ' +365 days'));
-				}
-				$clientdeatails->expired_on = $newDate;
-				$clientdeatails->active_status = "1";
-				$clientdeatails->paid_status = "1";
-				$clientdeatails->coins_free = "1";
-				if ($clientdeatails->save()) {
-					$status = true;
-					$msg = "Free subscribed successfully ";
-				} else {
-					$status = false;
-					$msg = "Not subscribed successfully ";
-				}
-			} else {
-				$status = false;
-				$msg = "Already subscribed!";
+		try {
+			if ($request->paid_amount > 0) {
+				// ✅ Update payment status
+				$payment->update([
+					'customer_name' => $request->customer_name,
+					'business_name' => $client->business_name,
+					'mobile' => $request->mobile,
+					'email' => $request->email,
+					'paid_amount' => $request->paid_amount,
+					'transactionid' => $request->transaction_id,
+					'payment_mode' => $request->payment_mode,
+					'invoice_status' => '1',
+					'status' => $request->status,
+				]);
+			}
+			if ($request->status !== 'success') {
+				DB::commit();
+				return response()->json([
+					'status' => true,
+					'msg' => 'Payment status updated'
+				], 200);
 			}
 
-			return response()->json(['status' => $status, 'msg' => $msg], 200);
+
+			$client->coins_amt += (int) $payment->coins_amt;
+
+
+			$today = Carbon::today();
+
+			if (!$client->expired_on || Carbon::parse($client->expired_on)->lt($today)) {
+				$client->expired_on = $today->copy()->addDays(365);
+			} else {
+				$client->expired_on = Carbon::parse($client->expired_on)->addDays(365);
+			}
+
+			// ✅ Activate account
+			$client->active_status = '1';
+			$client->paid_status = '1';
+			$client->save();
+
+			DB::commit();
+
+			return response()->json([
+				'status' => true,
+				'msg' => 'Payment successful'
+			], 200);
+
+		} catch (\Exception $e) {
+			DB::rollBack();
+
+			return response()->json([
+				'status' => false,
+				'msg' => 'Payment processing failed',
+				'error' => $e->getMessage()
+			], 500);
+		}
+
+	}
+
+
+	/**
+	 * @OA\Post(
+	 *     path="/api/business/razorpay/subscribe-free",
+	 *     summary="subscribe free",
+	 *     description="subscribe free for customized Razorpay payment",
+	 *     
+	 *     tags={"Razorpay"},
+	 *	   security={{"bearerAuth":{}}},
+	 *     @OA\RequestBody(
+	 *         required=true,
+	 *         @OA\JsonContent(
+	 *             required={"encrypt"},
+	 *             @OA\Property(
+	 *                 property="encrypt",
+	 *                 type="string",
+	 *                 example="U2FsdGVkX19kXzEyMzQ1Ng==",
+	 *                 description="Encrypted payment payload"
+	 *             )
+	 *         )
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Payment initiated successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Payment initiated successfully"),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="object",
+	 *                 @OA\Property(property="payment_id", type="string", example="pay_NXJH123456"),
+	 *                 @OA\Property(property="order_id", type="string", example="ORD123456789"),
+	 *                 @OA\Property(property="amount", type="number", example=100.50),
+	 *                 @OA\Property(property="currency", type="string", example="INR")
+	 *             )
+	 *         )
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=422,
+	 *         description="Validation failed",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="Validation failed"),
+	 *             @OA\Property(property="errors", type="object")
+	 *         )
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=500,
+	 *         description="Server error",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="Failed to initiate payment")
+	 *         )
+	 *     )
+	 * )
+	 */
+
+
+	public function saveSubscribeFree(Request $request)
+	{
+
+		// dd($request->encrypt);
+		// ✅ Validate request
+		$request->validate([
+			'encrypt' => 'required|string'
+		]);
+
+		try {
+			$data = $this->dataDecodeJsonBase64($request->encrypt);
+
+		} catch (\Exception $e) {
+			return response()->json([
+				'status' => false,
+				'msg' => 'Invalid encrypted data'
+			], 422);
+		}
+
+		// ✅ Client fetch
+		$client = Client::find($data->client_id);
+		if (!$client) {
+			return response()->json([
+				'status' => false,
+				'msg' => 'Client not found'
+			], 404);
+		}
+
+		//  Already used free plan
+		if ($client->coins_free == '1') {
+			return response()->json([
+				'status' => false,
+				'msg' => 'Already subscribed!'
+			], 200);
+		}
+
+		DB::beginTransaction();
+
+		try {
+
+			// ✅ Save payment history
+			PaymentHistory::create([
+				'client_id' => $client->id,
+				'customer_name' => $data->customer_name,
+				'business_name' => $client->business_name,
+				'mobile' => $data->phone,
+				'email' => $data->email,
+				'package_name' => $client->client_type,
+				'coins_amt' => $data->coins,
+				'paid_amount' => 0,
+				'tds_status' => 'No',
+				'tds_amount' => 0,
+				'gst_tax' => 0,
+				'gst_total_amount' => 0,
+				'gst_status' => 'Yes',
+				'total_amount' => 0,
+				'transactionid' => 'FREE-' . time(),
+				'order_number' => 'FREE-' . time(),
+				'paymentcollect' => 0,
+				'payment_mode' => 'free subscribe',
+				'invoice_status' => 1,
+			]);
+
+			// ✅ Coins update
+			$client->coins_amt += $data->coins;
+
+			// ✅ Expiry logic (clean)
+			$today = Carbon::today();
+
+			if (!$client->expired_on || Carbon::parse($client->expired_on)->lt($today)) {
+				$client->expired_on = $today->addDays(365);
+			} else {
+				$client->expired_on = Carbon::parse($client->expired_on)->addDays(365);
+			}
+
+			// ✅ Status update
+			$client->active_status = '1';
+			$client->paid_status = '1';
+			$client->coins_free = '1';
+			$client->save();
+
+			DB::commit();
+
+			return response()->json([
+				'status' => true,
+				'msg' => 'Free subscribed successfully'
+			], 200);
+
+		} catch (\Exception $e) {
+			DB::rollBack();
+
+			return response()->json([
+				'status' => false,
+				'msg' => 'Subscription failed',
+				'error' => $e->getMessage()
+			], 500);
 		}
 	}
+
+
+
 }

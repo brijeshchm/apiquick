@@ -45,7 +45,7 @@ Route::post('auth/google-ios/callback', [AuthController::class, 'handleCallbackI
 
 Route::post('/verifyOtp', [AuthController::class, 'verifyOtp']);
 Route::post('/business/saveBusinessOwners', [AuthController::class, 'saveBusinessOwners']); 
-Route::post('/business/{client_id}/saveReview', [App\Http\Controllers\Api\ReviewController::class, 'store']);
+
 Route::post('/site/saveEnquiry', [App\Http\Controllers\Api\ContactController::class, 'saveEnquiry']);
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -169,6 +169,8 @@ Route::get('/business/assignKeyword/delete/{id}',[App\Http\Controllers\Api\Busin
 
  Route::post('/business/razorpay/create-payment-link',[App\Http\Controllers\Api\RazorpayController::class,'createPaymentLink']);
  Route::post('/business/razorpay/get-initial-payment-key',[App\Http\Controllers\Api\RazorpayController::class,'getInitialPaymentKey']);
+ Route::post('/business/razorpay/success',[App\Http\Controllers\Api\RazorpayController::class,'saveSuccess']);
+ Route::post('/business/razorpay/subscribe-free',[App\Http\Controllers\Api\RazorpayController::class,'saveSubscribeFree']);
  
 
 

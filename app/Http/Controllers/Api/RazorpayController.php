@@ -1141,8 +1141,8 @@ class RazorpayController extends Controller
 	{
 
 		// ✅ Validate input
-		$request->validate([
-			'business_id' => 'required',
+		$request->validate([	 
+			'business_id' => 'required|exists:clients,id',
 			'razorpay_order_id' => 'required|string',
 			'customer_name' => 'required|string',
 			'transaction_id' => 'required|string',
@@ -1165,7 +1165,20 @@ class RazorpayController extends Controller
 		if (!$payment) {
 			return response()->json([
 				'status' => false,
-				'msg' => 'Payment history not found'
+				'msg' => 'Payment record not found'
+			], 404);
+		}
+ 
+		if ($payment->total_amount !=$request->paid_amount) {
+			return response()->json([
+				'status' => false,
+				'msg' => 'Payment amount does not match. Please verify and try again'
+			], 404);
+		}
+		if ($payment->coins_amt !=$request->coins) {
+			return response()->json([
+				'status' => false,
+				'msg' => 'Payment coins does not match. Please verify and try again'
 			], 404);
 		}
 

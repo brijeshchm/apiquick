@@ -264,20 +264,16 @@ class ProfileController extends Controller
             // ✅ Validation
             $validator = Validator::make($request->all(), [
                 'year_of_estb' => 'required|digits:4|integer|min:1900|max:' . date('Y'),
-
                 'business_name' => [
-                    'required',
-                    'string',
-                    'max:255',
-                    Rule::unique('clients', 'business_name')->ignore($client->id),
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('clients', 'business_name')->ignore($client->id, 'id'),
                 ],
                 'business_intro' => 'required|string',
-                'email' => 'required|email|unique:clients,email,' . $client->id,
-                'mobile' => [
-                    'required',
-                    'digits_between:10,15',
-                    Rule::unique('clients', 'mobile')->ignore($client->id),
-                ],
+                'email' => 'required|email|unique:clients,email,' . $client->id . ',id',
+                'mobile' => 'required|unique:clients,mobile,' . $client->id . ',id',     
+            
                 'address' => 'required|string|max:255',
                 'certifications' => 'nullable|string|max:255',
                 'city' => 'required|integer|exists:citylists,id',

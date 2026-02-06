@@ -279,11 +279,11 @@ class ProfileController extends Controller
                     Rule::unique('clients', 'mobile')->ignore($client->id),
                 ],
                 'address' => 'required|string|max:255',
-                'certifications' => 'required|string|max:255',
+                'certifications' => 'nullable|string|max:255',
                 'city' => 'required|integer|exists:citylists,id',
                 'state' => 'required|integer|exists:state,id',
-                'pincode' => 'required|digits:6',
-                'area' => 'required|string|max:255',
+                'pincode' => 'nullable|digits:6',
+                'area' => 'nullable|string|max:255',
 
                 // Optional
                 'landmark' => 'nullable|string|max:255',

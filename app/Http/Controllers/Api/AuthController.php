@@ -262,9 +262,9 @@ class AuthController extends Controller
         if (!$user) {
             return response()->json(['status' => false, 'message' => 'User account not found',], 403);
         }
-        if (!$user->active_status) {
-            return response()->json(['status' => false, 'message' => 'User account is inactive',], 403);
-        }
+        // if (!$user->active_status) {
+        //     return response()->json(['status' => false, 'message' => 'User account is inactive',], 403);
+        // }
       
         if ($user) {
            $user->fcm_token = $request->fcm_token;

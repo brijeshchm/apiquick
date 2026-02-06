@@ -201,7 +201,7 @@ class BusinessDashboardController extends Controller
         $data['clientDetails'] = [
             'business_id'     => $client->id,
             'remaining_cons'  => $client->coins_amt,
-            'package'         => $client->client_type,
+            'package'         => ucfirst($client->client_type),
             'expired_date'    => !empty($client->expired_on)
                                     ? date('d M, Y', strtotime($client->expired_on))
                                     : null,

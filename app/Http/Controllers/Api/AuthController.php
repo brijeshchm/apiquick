@@ -36,6 +36,7 @@ class AuthController extends Controller
      *         @OA\JsonContent(
      *             required={"email","subject","message"},
      *             @OA\Property(property="email", type="string", format="email", example="test@example.com"),
+     *             @OA\Property(property="fcm_token", type="string", example=""),
      *                        
      *         )
      *     ),
@@ -76,6 +77,10 @@ class AuthController extends Controller
         //     return response()->json(['status' => false, 'message' => 'Invalid credentials'], 401);
         // }
         if ($user) {
+            if ($request->fcm_token) {
+                $user->fcm_token = $request->fcm_token;
+                $user->save();
+            }
 
             $otp = mt_rand(100000, 999999);
 
@@ -108,7 +113,7 @@ class AuthController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'OTP has been sent to your email successfully',
-             'token' => $token,
+            'token' => $token,
             'token_type' => 'Bearer',
             //  'expires_in' => auth()->factory()->getTTL()*60,
             'data' => $user,
@@ -127,7 +132,8 @@ class AuthController extends Controller
      *         @OA\JsonContent(
      *             required={"email", "otp"},
      *             @OA\Property(property="email", type="string", format="email", example="user@example.com"),
-     *             @OA\Property(property="otp", type="integer", example=123456, description="6-digit OTP code")
+     *             @OA\Property(property="otp", type="integer", example=123456, description="6-digit OTP code"),
+     *              @OA\Property(property="fcm_token", type="string", example=""),
      *         )
      *     ),
      *     @OA\Response(
@@ -142,7 +148,8 @@ class AuthController extends Controller
      *                 type="object",
      *                 @OA\Property(property="id", type="integer", example=1),
      *                 @OA\Property(property="name", type="string", example="John Doe"),
-     *                 @OA\Property(property="email", type="string", example="user@example.com")
+     *                 @OA\Property(property="email", type="string", example="user@example.com"),
+     *                 @OA\Property(property="fcm_token", type="string", example="")
      *             )
      *         )
      *     ),
@@ -168,7 +175,7 @@ class AuthController extends Controller
      * )
      */
     public function verifyOtp(Request $request)
-    {  
+    {
         $request->validate([
             'email' => 'required|email|exists:clients,email',
             'otp' => 'required|size:6',
@@ -184,7 +191,7 @@ class AuthController extends Controller
 
 
         if ($otp || $master == $request->otp) {
- 
+
 
             // OTP is valid → delete it (one-time use)
             if ($otp) {
@@ -195,6 +202,11 @@ class AuthController extends Controller
                         'code' => 0,
                     ]
                 );
+            }
+
+            if ($request->fcm_token) {
+                $user->fcm_token = $request->fcm_token;
+                $user->save();
             }
 
             // Issue Sanctum token
@@ -217,7 +229,7 @@ class AuthController extends Controller
     }
 
 
-     /**
+    /**
      * @OA\Post(
      *     path="/api/google-login",
      *     tags={"Socials Login"},
@@ -265,10 +277,10 @@ class AuthController extends Controller
         // if (!$user->active_status) {
         //     return response()->json(['status' => false, 'message' => 'User account is inactive',], 403);
         // }
-      
+
         if ($user) {
-           $user->fcm_token = $request->fcm_token;
-           $user->save();          
+            $user->fcm_token = $request->fcm_token;
+            $user->save();
 
         }
         // Generate new Sanctum token
@@ -279,13 +291,13 @@ class AuthController extends Controller
             'status' => true,
             'message' => 'Login successfully',
             'token' => $token,
-            'token_type' => 'Bearer',            
+            'token_type' => 'Bearer',
             //  'expires_in' => auth()->factory()->getTTL()*60,
             'data' => $user,
         ]);
     }
 
-    
+
 
     /**
      * @OA\Post(
@@ -457,10 +469,10 @@ class AuthController extends Controller
             'data' => $data,
         ], 200);
 
-    }    
+    }
 
-    
-/**
+
+    /**
      * @OA\Get(
      *     path="/api/auth/google/redirect",
      *     tags={"Google Auth Login Android"},
@@ -520,53 +532,53 @@ class AuthController extends Controller
 
             $parts = explode(' ', $googleUser->getName(), 2);
 
-		$firstName = $parts[0];
-		$lastName  = $parts[1] ?? '';	 
-		$client = Client::where('email',$googleUser->getEmail())->first();
+            $firstName = $parts[0];
+            $lastName = $parts[1] ?? '';
+            $client = Client::where('email', $googleUser->getEmail())->first();
 
-		if(!$client){			
-
-		 
-			 	$client = Client::create([
-				'email'         => $googleUser->getEmail(),
-				'google_id'     => $googleUser->getId(),
-				'first_name'          => $firstName,
-				'last_name'          => $lastName,
-				'client_type'   => 'gold',
-				'active_status' => 1,
-				 
-			]);
-
-			$emailname = $googleUser->getEmail();
-				$clientIDToAppend = $clientID = $client->id;
-				if (strlen((string) $clientID) < 4) {
-					$clientIDToAppend = str_pad($clientIDToAppend, 4, '0', STR_PAD_LEFT);
-				}
-			Client::where('email', $googleUser->getEmail())
-    		->update(['username' => strtoupper(substr($emailname, 0, 2)) . $clientIDToAppend]);
+            if (!$client) {
 
 
-		}else{
- 
+                $client = Client::create([
+                    'email' => $googleUser->getEmail(),
+                    'google_id' => $googleUser->getId(),
+                    'first_name' => $firstName,
+                    'last_name' => $lastName,
+                    'client_type' => 'gold',
+                    'active_status' => 1,
 
-            $client = User::updateOrCreate(
-                ['email' => $googleUser->getEmail()],
-                [
-                 
-                    'google_id'      => $googleUser->getId(),
-                
-                ]
-            );
-		}
-            
+                ]);
+
+                $emailname = $googleUser->getEmail();
+                $clientIDToAppend = $clientID = $client->id;
+                if (strlen((string) $clientID) < 4) {
+                    $clientIDToAppend = str_pad($clientIDToAppend, 4, '0', STR_PAD_LEFT);
+                }
+                Client::where('email', $googleUser->getEmail())
+                    ->update(['username' => strtoupper(substr($emailname, 0, 2)) . $clientIDToAppend]);
+
+
+            } else {
+
+
+                $client = User::updateOrCreate(
+                    ['email' => $googleUser->getEmail()],
+                    [
+
+                        'google_id' => $googleUser->getId(),
+
+                    ]
+                );
+            }
+
 
             $token = $client->createToken('google-auth-token')->plainTextToken;
 
-            return response()->json([  
+            return response()->json([
                 'status' => true,
                 'message' => 'Your email successfully',
                 'token' => $token,
-                'token_type' => 'Bearer',               
+                'token_type' => 'Bearer',
                 'data' => $client,
             ]);
 
@@ -574,9 +586,9 @@ class AuthController extends Controller
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }
- 
 
-/**
+
+    /**
      * @OA\Get(
      *     path="/api/auth/google-ios/redirect",
      *     tags={"Google Auth Login IOS"},
@@ -636,53 +648,53 @@ class AuthController extends Controller
 
             $parts = explode(' ', $googleUser->getName(), 2);
 
-		$firstName = $parts[0];
-		$lastName  = $parts[1] ?? '';	 
-		$client = Client::where('email',$googleUser->getEmail())->first();
+            $firstName = $parts[0];
+            $lastName = $parts[1] ?? '';
+            $client = Client::where('email', $googleUser->getEmail())->first();
 
-		if(!$client){			
-
-		 
-			 	$client = Client::create([
-				'email'         => $googleUser->getEmail(),
-				'google_id'     => $googleUser->getId(),
-				'first_name'          => $firstName,
-				'last_name'          => $lastName,
-				'client_type'   => 'gold',
-				'active_status' => 1,
-				 
-			]);
-
-			$emailname = $googleUser->getEmail();
-				$clientIDToAppend = $clientID = $client->id;
-				if (strlen((string) $clientID) < 4) {
-					$clientIDToAppend = str_pad($clientIDToAppend, 4, '0', STR_PAD_LEFT);
-				}
-			Client::where('email', $googleUser->getEmail())
-    		->update(['username' => strtoupper(substr($emailname, 0, 2)) . $clientIDToAppend]);
+            if (!$client) {
 
 
-		}else{
- 
+                $client = Client::create([
+                    'email' => $googleUser->getEmail(),
+                    'google_id' => $googleUser->getId(),
+                    'first_name' => $firstName,
+                    'last_name' => $lastName,
+                    'client_type' => 'gold',
+                    'active_status' => 1,
 
-            $client = User::updateOrCreate(
-                ['email' => $googleUser->getEmail()],
-                [
-                 
-                    'google_id'      => $googleUser->getId(),
-                
-                ]
-            );
-		}
-            
+                ]);
+
+                $emailname = $googleUser->getEmail();
+                $clientIDToAppend = $clientID = $client->id;
+                if (strlen((string) $clientID) < 4) {
+                    $clientIDToAppend = str_pad($clientIDToAppend, 4, '0', STR_PAD_LEFT);
+                }
+                Client::where('email', $googleUser->getEmail())
+                    ->update(['username' => strtoupper(substr($emailname, 0, 2)) . $clientIDToAppend]);
+
+
+            } else {
+
+
+                $client = User::updateOrCreate(
+                    ['email' => $googleUser->getEmail()],
+                    [
+
+                        'google_id' => $googleUser->getId(),
+
+                    ]
+                );
+            }
+
 
             $token = $client->createToken('google-auth-token')->plainTextToken;
 
-            return response()->json([  
+            return response()->json([
                 'status' => true,
                 'message' => 'Your email successfully',
                 'token' => $token,
-                'token_type' => 'Bearer',               
+                'token_type' => 'Bearer',
                 'data' => $client,
             ]);
 
@@ -690,7 +702,7 @@ class AuthController extends Controller
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }
- 
- 
+
+
 
 }

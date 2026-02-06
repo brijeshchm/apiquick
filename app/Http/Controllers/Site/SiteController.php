@@ -123,28 +123,19 @@ class SiteController extends Controller
 
 		if (!empty($keywordDetails->meta_title)) {
 			$meta_title = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->meta_title);
-		} else {
-			$meta_title = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->keyword);
-
-		}
+		}  
 		if (!empty($keywordDetails->meta_keywords)) {
 			$meta_keywords = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->meta_keywords);
 
 
-		} else {
-			$meta_keywords = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->keyword);
-
-		}
+		} 
 
 
 		if (!empty($keywordDetails->meta_description)) {
 			$meta_description = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->meta_description);
 
 
-		} else {
-			$meta_description = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->keyword);
-
-		}
+		} 
 
 		$top_description = "";
 		if (!empty($keywordDetails->top_description)) {
@@ -915,7 +906,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/fire-works-&-crackers',
+				'url' => '/fire-works-and-crackers',
 				'img' => config('app.website') . 'popular/Fire_Works_&_Crackers.jpg',
 				'alt' => 'Fire Works Crackers',
 				'title' => 'Fire Works Crackers',

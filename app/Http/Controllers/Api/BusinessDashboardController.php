@@ -190,10 +190,26 @@ class BusinessDashboardController extends Controller
             }
             $data['leadslist'] = $leads_list;
         }
+      
+
+
+        $lead_count = DB::table('leads')
+        ->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
+        ->where('assigned_leads.readLead', '0')
+        ->where('assigned_leads.client_id', $client->id)
+        ->count();
+        $data['clientDetails'] = [
+            'business_id'     => $client->id,
+            'remaining_cons'  => $client->coins_amt,
+            'package'         => $client->client_type,
+            'expired_date'    => !empty($client->expired_on)
+                                    ? date('d M, Y', strtotime($client->expired_on))
+                                    : null,
+            'lead_count'      => $lead_count,
+        ];
         return response()->json([
             'status' => true,
-            'data' => $data,             
-            'current_page' => $leads->currentPage(),
+            'data' => $data,                  
             'per_page' => $leads->perPage(),
             'total' => $leads->total(),
             'last_page' => $leads->lastPage(),

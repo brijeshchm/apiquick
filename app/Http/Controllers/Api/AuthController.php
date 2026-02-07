@@ -281,7 +281,6 @@ class AuthController extends Controller
         if ($user) {
             $user->fcm_token = $request->fcm_token;
             $user->save();
-
         }
         // Generate new Sanctum token
         $token = $user->createToken('api-token')->plainTextToken;

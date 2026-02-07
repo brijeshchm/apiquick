@@ -1355,7 +1355,7 @@ class EnquiryController extends Controller
 	/**
 	 * @OA\Get(
 	 *     path="/api/business/get-enquiry",
-	 *     tags={"Enquiry"},
+	 *     tags={"Enquiries"},
 	 *     summary="Get all enquiries",
 	 *     description="Fetch all enquiries received by the authenticated business. Requires Bearer token.",
 	 *     security={{"bearerAuth":{}}},

@@ -80,8 +80,8 @@ class ContactController extends Controller
 	 *                 property="zone",
 	 *                 type="integer",
 	 *                 nullable=true,
-	 *                 example="sector-3",
-	 *                 description="Zone name"
+	 *                 example="1090",
+	 *                 description="Zone id"
 	 *             ),
 	 *             @OA\Property(
 	 *                 property="lead_form",
@@ -207,7 +207,7 @@ class ContactController extends Controller
 
 		if($request->zone){
 			 
-				$zone = Zone::where('zone',$request->zone)->first();
+				$zone = Zone::where('id',$request->zone)->first();
 				$lead->zone_id = $zone->id;
 				$lead->zone = $zone->zone;
 			}else{
@@ -229,7 +229,7 @@ class ContactController extends Controller
 			
 		 
 		if (!$duplicate) {
-			leadassignWithoutZoneCounsellor($lead);
+			// leadassignWithoutZoneCounsellor($lead);
 		}
 		return response()->json([
 			'status' => true,

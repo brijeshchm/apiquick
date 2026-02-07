@@ -1486,10 +1486,10 @@
                     {
                         "name": "city_id",
                         "in": "query",
-                        "description": "ID of the city",
+                        "description": "Search by city id,city and pincode ",
                         "required": true,
                         "schema": {
-                            "type": "integer",
+                            "type": "string",
                             "example": 278
                         }
                     }
@@ -1545,188 +1545,6 @@
                     },
                     "404": {
                         "description": "No cities found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "No cities found for this state."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/business/area/get-area": {
-            "get": {
-                "tags": [
-                    "Area"
-                ],
-                "summary": "Get Area list",
-                "description": "Fetch a list of areas .",
-                "operationId": "5a149d19d4c8cd842a1d063a28bc3bdf",
-                "responses": {
-                    "200": {
-                        "description": "Area retrieved successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "id": {
-                                                        "type": "integer",
-                                                        "example": 9
-                                                    },
-                                                    "area": {
-                                                        "type": "string",
-                                                        "example": "Sector-2"
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "No area found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "No cities found for this state."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/business/area/get-area-by-zone": {
-            "post": {
-                "tags": [
-                    "Area"
-                ],
-                "summary": "Get area by zone",
-                "description": "Fetch a list of area.",
-                "operationId": "7dfece731b0c4cf22c9c53db25f652da",
-                "parameters": [
-                    {
-                        "name": "zone_id",
-                        "in": "query",
-                        "description": "ID of the zone",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "example": 12
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Area retrieved successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "id": {
-                                                        "type": "integer",
-                                                        "example": 9
-                                                    },
-                                                    "area": {
-                                                        "type": "string",
-                                                        "example": "Sector-2"
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "No area found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -3966,9 +3784,9 @@
                                         "nullable": true
                                     },
                                     "zone": {
-                                        "description": "Zone name",
+                                        "description": "Zone id",
                                         "type": "integer",
-                                        "example": "sector-3",
+                                        "example": "1090",
                                         "nullable": true
                                     },
                                     "lead_form": {
@@ -5029,7 +4847,7 @@
         "/api/business/get-enquiry": {
             "get": {
                 "tags": [
-                    "Enquiry"
+                    "Enquiries"
                 ],
                 "summary": "Get all enquiries",
                 "description": "Fetch all enquiries received by the authenticated business. Requires Bearer token.",
@@ -6962,7 +6780,7 @@
                                     },
                                     "zone": {
                                         "type": "string",
-                                        "example": "Noida"
+                                        "example": "1090"
                                     },
                                     "area": {
                                         "type": "string",
@@ -6998,27 +6816,7 @@
                                     },
                                     "business_map": {
                                         "type": "string",
-                                        "example": "ISO 9001, ISO 27001"
-                                    },
-                                    "gst_no": {
-                                        "type": "string",
-                                        "example": "gst no"
-                                    },
-                                    "cin_no": {
-                                        "type": "string",
-                                        "example": "cin no"
-                                    },
-                                    "iso_no": {
-                                        "type": "string",
-                                        "example": "iso no"
-                                    },
-                                    "pan_no": {
-                                        "type": "string",
-                                        "example": "pan no"
-                                    },
-                                    "gsin": {
-                                        "type": "string",
-                                        "example": "gsin"
+                                        "example": "location map"
                                     },
                                     "time": {
                                         "type": "string",
@@ -7079,68 +6877,6 @@
                                                 }
                                             },
                                             "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/business/review": {
-            "get": {
-                "tags": [
-                    "Profile"
-                ],
-                "summary": "Get authenticated user profile information",
-                "description": "Returns profile details of the logged-in user. Requires Bearer token.",
-                "operationId": "bc5491eff38643834e2907520016f44e",
-                "responses": {
-                    "200": {
-                        "description": "User profile info",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "id": {
-                                            "type": "integer",
-                                            "example": 1
-                                        },
-                                        "name": {
-                                            "type": "string",
-                                            "example": "John Doe"
-                                        },
-                                        "email": {
-                                            "type": "string",
-                                            "example": "john@example.com"
-                                        },
-                                        "created_at": {
-                                            "type": "string",
-                                            "format": "date-time",
-                                            "example": "2025-09-04T12:34:56Z"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
                                         }
                                     },
                                     "type": "object"
@@ -7596,8 +7332,30 @@
                     "Review"
                 ],
                 "summary": "Get all reviews",
-                "description": "Fetch review list for the authenticated business user. Requires Bearer token.",
+                "description": "Fetch paginated review list for authenticated business user.",
                 "operationId": "dce12f4af70b47f6a043b04a9674d263",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Records per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Review list fetched successfully",
@@ -7631,8 +7389,7 @@
                                                     },
                                                     "created_at": {
                                                         "type": "string",
-                                                        "format": "date-time",
-                                                        "example": "2025-09-04T12:45:00Z"
+                                                        "example": "2025-09-04 12:45:00"
                                                     }
                                                 },
                                                 "type": "object"
@@ -7661,7 +7418,124 @@
                         }
                     },
                     "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/review": {
+            "get": {
+                "tags": [
+                    "Review"
+                ],
+                "summary": "Get authenticated user profile information",
+                "description": "Returns profile details of the logged-in user. Requires Bearer token.",
+                "operationId": "cfdb6e6facfc5c32b7ae0525d0571cf8",
+                "responses": {
+                    "200": {
+                        "description": "User profile info",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "John Doe"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "example": "john.com"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-09-04T12:34:56Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
                         "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/{id}/get-review-details": {
+            "get": {
+                "tags": [
+                    "Review"
+                ],
+                "summary": "Get review details by comment ID",
+                "description": "Returns review details for a given comment ID",
+                "operationId": "5f7ae2c6993b9ec0f618ab76ca3ea8c3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Comment ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Review details fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Record found"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Record not found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -7672,13 +7546,73 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Unauthenticated"
+                                            "example": "Record not found"
                                         }
                                     },
                                     "type": "object"
                                 }
                             }
                         }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/business/update-review/{id}": {
+            "post": {
+                "tags": [
+                    "Review"
+                ],
+                "summary": "Update user review",
+                "description": "Update review comment for authenticated business user. Requires Bearer token.",
+                "operationId": "9ac7e9cdb7c1240cf85bda9ad48c8ad7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Comment ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 308
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "comment_content"
+                                ],
+                                "properties": {
+                                    "comment_content": {
+                                        "type": "string",
+                                        "example": "Very good service, highly recommended"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Review updated successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "Review not found"
                     }
                 },
                 "security": [
@@ -8818,107 +8752,6 @@
                 }
             }
         },
-        "/api/site/getZoneByCityList": {
-            "get": {
-                "tags": [
-                    "Frontend get City List"
-                ],
-                "summary": "Search Zone records by City ",
-                "description": "Search records dynamically based on a city",
-                "operationId": "6fdcb5efe13f7a1cf897b7e5f8364058",
-                "parameters": [
-                    {
-                        "name": "city",
-                        "in": "query",
-                        "description": "Search city",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "noida"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Search results retrieved successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "id": {
-                                                        "type": "integer",
-                                                        "example": 101
-                                                    },
-                                                    "name": {
-                                                        "type": "string",
-                                                        "example": "ABC Coaching Center"
-                                                    },
-                                                    "category": {
-                                                        "type": "string",
-                                                        "example": "Education"
-                                                    },
-                                                    "rating": {
-                                                        "type": "number",
-                                                        "format": "float",
-                                                        "example": 4.5
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "No results found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "No records found."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/api/site/getCityList": {
             "get": {
                 "tags": [
@@ -8931,7 +8764,7 @@
                     {
                         "name": "city",
                         "in": "query",
-                        "description": "Search city",
+                        "description": "Search city, area, pincode",
                         "required": false,
                         "schema": {
                             "type": "string",
@@ -9670,14 +9503,14 @@
                 }
             }
         },
-        "/api/business/{client_id}/saveReview": {
+        "/api/site/{client_id}/saveReview": {
             "post": {
                 "tags": [
                     "Frontend Reviews"
                 ],
                 "summary": "Submit a business review",
                 "description": "Allows a user to submit a review. One review per email per client per 30 days.",
-                "operationId": "fa31e3cbaae2c4b7614fb10801c978a6",
+                "operationId": "fb5936cf60e1984fbb5471f6cbc7e508",
                 "parameters": [
                     {
                         "name": "client_id",
@@ -9840,10 +9673,6 @@
             "description": "Zones"
         },
         {
-            "name": "Area",
-            "description": "Area"
-        },
-        {
             "name": "Help",
             "description": "Help"
         },
@@ -9886,10 +9715,6 @@
         {
             "name": "Leads",
             "description": "Leads"
-        },
-        {
-            "name": "Enquiry",
-            "description": "Enquiry"
         },
         {
             "name": "Enquiries",

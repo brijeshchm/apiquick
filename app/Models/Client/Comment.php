@@ -8,7 +8,7 @@ class Comment extends Model
 {
     //
 	protected $table = 'comments';
-
+    protected $primaryKey = 'comment_ID';
     /**
      * The attributes that are mass assignable.
      *

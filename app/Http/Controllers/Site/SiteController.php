@@ -22,7 +22,7 @@ use App\Models\ChildCategory;
 use Session;
 use App\Models\ParentCategory;
 use App\Models\Client\Comment;
-use App\Models\HomeSlider; 
+use App\Models\HomeSlider;
 class SiteController extends Controller
 {
 
@@ -84,7 +84,7 @@ class SiteController extends Controller
 
 	public function getSearch(Request $request)
 	{
- 
+
 		$request->validate([
 			'keyword' => 'required',
 			'city' => 'required',
@@ -101,15 +101,15 @@ class SiteController extends Controller
 			->where('keyword', 'LIKE', '%' . ucwords(str_replace('-', ' ', $search_kw)) . '%')
 			->select('keyword.*', 'parent_category.*', 'child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5', 'keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount')
 			->first();
- 	if (!$keywordDetails) {
-				return response()->json([
-					'status' => false,
-					'message' => 'Keyword not found'
-				], 404);
-			}
- 
+		if (!$keywordDetails) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Keyword not found'
+			], 404);
+		}
+
 		$category_banner = config('app.website') . 'client/images/computer-courses-training.jpg';
-	
+
 		$alt = "";
 
 		if (!empty($keywordDetails->category_banner)) {
@@ -123,19 +123,19 @@ class SiteController extends Controller
 
 		if (!empty($keywordDetails->meta_title)) {
 			$meta_title = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->meta_title);
-		}  
+		}
 		if (!empty($keywordDetails->meta_keywords)) {
 			$meta_keywords = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->meta_keywords);
 
 
-		} 
+		}
 
 
 		if (!empty($keywordDetails->meta_description)) {
 			$meta_description = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->meta_description);
 
 
-		} 
+		}
 
 		$top_description = "";
 		if (!empty($keywordDetails->top_description)) {
@@ -146,8 +146,8 @@ class SiteController extends Controller
 			$bottom_description = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->bottom_description);
 		}
 
- 		$zones = DB::table('citylists') ->join('zones', 'zones.city_id', '=', 'citylists.id') ->where('citylists.city', 'LIKE', $city) ->select('zones.id', 'zones.zone') ->distinct() ->get();
-		
+		$zones = DB::table('citylists')->join('zones', 'zones.city_id', '=', 'citylists.id')->where('citylists.city', 'LIKE', $city)->select('zones.id', 'zones.zone')->distinct()->get();
+
 		$data['keyword'] = array(
 			'keyword' => $keywordDetails->keyword,
 			'keyword_slug' => generate_slug($keywordDetails->keyword),
@@ -179,7 +179,7 @@ class SiteController extends Controller
 		);
 
 
-	
+
 
 		$clientscheck = DB::table('clients')
 			->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
@@ -243,7 +243,7 @@ class SiteController extends Controller
 
 		$data['clientsList'] = $clientsList->map(function ($client) {
 
-			$logoImage = config('app.website') .'client/images/default_pp_small.jpg';
+			$logoImage = config('app.website') . 'client/images/default_pp_small.jpg';
 			$altLogo = "Business Logo";
 			if (!empty($client->logo)) {
 				$cicons = unserialize($client->logo);
@@ -268,13 +268,13 @@ class SiteController extends Controller
 					}
 				}
 			}
- 			$certified_img= config('app.website') .'img/q_verified.gif';
-           	$trusted_img= config('app.website') . 'img/q_trust.gif';
-           	$gst_img= config('app.website') .'img/q_gst.gif';
-			$avgRating="0";
-			if($client->rating){
-			$avgRating = ($client->rating/(5*$client->comment_count))*5;
-			$avgRating = number_format($avgRating, 1, '.', '');
+			$certified_img = config('app.website') . 'img/q_verified.gif';
+			$trusted_img = config('app.website') . 'img/q_trust.gif';
+			$gst_img = config('app.website') . 'img/q_gst.gif';
+			$avgRating = "0";
+			if ($client->rating) {
+				$avgRating = ($client->rating / (5 * $client->comment_count)) * 5;
+				$avgRating = number_format($avgRating, 1, '.', '');
 			}
 			return [
 				'business_id' => $client->id,
@@ -358,7 +358,7 @@ class SiteController extends Controller
 		}
 
 		$data['findOtherLocation'] = $cityList;
-	 
+
 		return response()->json([
 			'success' => true,
 			'data' => $data,
@@ -889,7 +889,7 @@ class SiteController extends Controller
 	public function weddingPage(Request $request)
 	{
 		$url = config('app.url');
-		$data['wedding_banner'] =  config('app.website') . 'popular/wedding_banner.jpg';
+		$data['wedding_banner'] = config('app.website') . 'popular/wedding_banner.jpg';
 		$data['wedding_planning'] = [
 			[
 				'url' => '/banquet-hall',
@@ -928,7 +928,7 @@ class SiteController extends Controller
 			]
 		];
 		$data['wedding_prerequisits'] = [
-			 
+
 			[
 				'url' => '/banquet-hall',
 				'img' => config('app.website') . 'popular/Banquet-Halls.jpg',
@@ -957,14 +957,14 @@ class SiteController extends Controller
 				'title' => 'Stage Decoration',
 
 			],
-			
+
 
 
 		];
 
 
 		$data['wedding_planning_for_bride'] = [
-			 
+
 			[
 				'url' => '/makeup-artists',
 				'img' => config('app.website') . 'popular/Makeup_artist.jpg',
@@ -1007,13 +1007,13 @@ class SiteController extends Controller
 				'title' => 'Cosmetics',
 
 			],
-			 
+
 
 
 		];
 
 		$data['wedding_planning_for_groom'] = [
-			 
+
 			[
 				'url' => '/wedding-suit-for-groom',
 				'img' => config('app.website') . 'popular/wedding_suit_for_groom.jpg',
@@ -1056,12 +1056,12 @@ class SiteController extends Controller
 				'title' => 'wedding transport',
 
 			],
-			 
+
 
 
 		];
 		$data['pre-Wedding_planning'] = [
-			 
+
 			[
 				'url' => '/wedding-choreographer',
 				'img' => config('app.website') . 'popular/wedding-choreographer.jpg',
@@ -1104,7 +1104,7 @@ class SiteController extends Controller
 				'title' => 'Stage Show Organisers',
 
 			],
-			 
+
 
 
 		];
@@ -1506,7 +1506,7 @@ class SiteController extends Controller
 				}
 			}
 			$imageBanner = "";
-			
+
 			$blogaltB = "";
 
 			if (!empty($blogdetails->image_banner)) {
@@ -1607,9 +1607,9 @@ class SiteController extends Controller
 			->first();
 
 
-	 
+
 		$category_banner = config('app.website') . 'client/images/computer-courses-training.jpg';
-	
+
 		$alt = "";
 
 		if (!empty($keywordDetails->category_banner)) {
@@ -1686,7 +1686,7 @@ class SiteController extends Controller
 		);
 
 		$keywordName = ucwords(str_replace('-', ' ', $search_kw));
-		 
+
 
 		$clientsList = DB::table('clients')
 			->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
@@ -1763,13 +1763,13 @@ class SiteController extends Controller
 					}
 				}
 			}
-           $certified_img= config('app.website') .'img/q_verified.gif';
-           $trusted_img= config('app.website') . 'img/q_trust.gif';
-           $gst_img= config('app.website') .'img/q_gst.gif';
-		   $avgRating="0";
-			if($client->rating){
-			$avgRating = ($client->rating/(5*$client->comment_count))*5;
-			$avgRating = number_format($avgRating, 1, '.', '');
+			$certified_img = config('app.website') . 'img/q_verified.gif';
+			$trusted_img = config('app.website') . 'img/q_trust.gif';
+			$gst_img = config('app.website') . 'img/q_gst.gif';
+			$avgRating = "0";
+			if ($client->rating) {
+				$avgRating = ($client->rating / (5 * $client->comment_count)) * 5;
+				$avgRating = number_format($avgRating, 1, '.', '');
 			}
 			return [
 				'business_id' => $client->client_id,
@@ -1807,7 +1807,7 @@ class SiteController extends Controller
 				'keywords' => $assignedKwds ?? null,
 			];
 		});
- 
+
 
 		$servicesRelated = Keyword::where('child_category_id', $keywordDetails->child_category_id)
 			->where('parent_category_id', $keywordDetails->parent_category_id)
@@ -1856,7 +1856,7 @@ class SiteController extends Controller
 		}
 
 		$data['findOtherLocation'] = $cityList;
-		 
+
 		return response()->json([
 			'success' => true,
 			'data' => $data,
@@ -1947,7 +1947,7 @@ class SiteController extends Controller
 			)
 			->get()
 			->map(function ($child) {
-				$image =   "";
+				$image = "";
 				$alt = "";
 
 				if (!empty($child->pc_icon)) {
@@ -2095,7 +2095,7 @@ class SiteController extends Controller
 				if (!empty($keyword->icon)) {
 
 					$cicons = json_decode($keyword->icon);
- 
+
 					if ($cicons !== false && !empty($cicons->src) && !empty($cicons->name)) {
 						$image = config('app.website') . $cicons->src;
 						$alt = $cicons->alt;
@@ -2113,9 +2113,9 @@ class SiteController extends Controller
 
 		$childDetails = ChildCategory::where('child_slug', $slug)->first();
 
-	 
+
 		$banner_image = config('app.website') . 'client/images/computer-courses-training.jpg';
-		
+
 		$alt = "";
 
 		if (!empty($childDetails->category_banner)) {
@@ -2201,9 +2201,9 @@ class SiteController extends Controller
 
 
 	public function getHomeSlider(Request $request)
-	{	 
+	{
 
-		$data = HomeSlider::where('status','1')->get()
+		$data = HomeSlider::where('status', '1')->get()
 			->map(function ($slider) {
 				$image = "";
 				$alt = "";
@@ -2211,7 +2211,7 @@ class SiteController extends Controller
 				if (!empty($slider->image)) {
 
 					$cicons = json_decode($slider->image);
- 
+
 					if ($cicons !== false && !empty($cicons->src) && !empty($cicons->name)) {
 						$image = config('app.website') . $cicons->src;
 						$alt = $cicons->alt;
@@ -2219,132 +2219,21 @@ class SiteController extends Controller
 
 				}
 
-				return [					 
+				return [
 					'img' => $image ?: '',
 					'alt' => $alt ?: $slider->title,
 					'title' => "",
 				];
 			});
 
-		 
-		 
+
+
 
 		return response()->json([
 			'success' => true,
 			'data' => $data,
 		], 200);
 
-	}
-
-	/**
-	 * @OA\Get(
-	 *     path="/api/site/getZoneByCityList",
-	 *     tags={"Frontend get City List"},
-	 *     summary="Search Zone records by City ",
-	 *     description="Search records dynamically based on a city",
-	 *            
-	 *     @OA\Parameter(
-	 *         name="city",
-	 *         in="query",
-	 *         required=true,
-	 *         description="Search city",
-	 *         @OA\Schema(type="string", example="noida")
-	 *     ),
-	 *        
-	 *     @OA\Response(
-	 *         response=200,
-	 *         description="Search results retrieved successfully",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="success", type="boolean", example=true),
-	 *             @OA\Property(property="data", type="array",
-	 *                 @OA\Items(
-	 *                     @OA\Property(property="id", type="integer", example=101),
-	 *                     @OA\Property(property="name", type="string", example="ABC Coaching Center"),
-	 *                     
-	 *                     @OA\Property(property="category", type="string", example="Education"),
-	 *                     @OA\Property(property="rating", type="number", format="float", example=4.5)
-	 *                 )
-	 *             )
-	 *         )
-	 *     ),
-	 *     @OA\Response(
-	 *         response=404,
-	 *         description="No results found",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="success", type="boolean", example=false),
-	 *             @OA\Property(property="message", type="string", example="No records found.")
-	 *         )
-	 *     ),
-	 *     @OA\Response(
-	 *         response=401,
-	 *         description="Unauthorized",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
-	 *         )
-	 *     )
-	 * )
-	 */
-	public function getZoneByCityList(Request $request)
-	{
-
-		$city = $request->input('city');
-		if (!is_null($city) && !is_string($city)) {
-			return response()->json([
-				'success' => false,
-				'message' => 'Invalid city input.',
-			], 400);
-		}
-
-		// Initialize query
-		$query = DB::table('citylists')
-			->select(
-				'citylists.city',
-				'zones.zone',
-				'areas.area'
-			)
-			->leftJoin('zones', 'citylists.id', '=', 'zones.city_id')
-			->leftJoin('areas', 'zones.id', '=', 'areas.zone_id');
-
-		// Apply filters
-		if (is_null($city)) {
-			$query->whereIn('citylists.id', ['278', '596', '961', '428']);
-		} else {
-			$query->where(function ($q) use ($city) {
-				$q->where('citylists.city', 'LIKE', '%' . $city . '%')
-					->orWhere('zones.zone', 'LIKE', '%' . $city . '%')
-					->orWhere('areas.area', 'LIKE', '%' . $city . '%');
-			});
-		}
-
-		// Get results
-		$locations = $query->get();
-
-		// Transform results
-		$html = [];
-		foreach ($locations as $index => $data) {
-			$entry = ['city' => strtolower($data->city)];
-			if (!is_null($data->zone)) {
-				$entry['zone'] = strtolower($data->zone);
-			}
-			if (!is_null($data->area)) {
-				$entry['area'] = strtolower($data->area);
-			}
-			$html[$index] = $entry;
-		}
-
-		// Handle empty results
-		if (empty($html)) {
-			return response()->json([
-				'success' => false,
-				'message' => 'No locations found.',
-			], 404);
-		}
-
-		// Return JSON response
-		return response()->json([
-			'success' => true,
-			'data' => array_values($html),
-		], 200);
 	}
 
 	/**
@@ -2358,7 +2247,7 @@ class SiteController extends Controller
 	 *         name="city",
 	 *         in="query",
 	 *         required=false,
-	 *         description="Search city",
+	 *         description="Search city, area, pincode",
 	 *         @OA\Schema(type="string", example="noida")
 	 *     ),
 	 *        
@@ -2397,53 +2286,140 @@ class SiteController extends Controller
 	 */
 	public function getCityList(Request $request)
 	{
+		$cid = trim($request->input('city'));
+		$data = [];
+		if ($cid) {
+			$zoneslist = DB::table('zones')
+				->join('citylists', 'citylists.id', '=', 'zones.city_id')
+				->when($cid, function ($query) use ($cid) {
+					$query->where('zones.zone', 'LIKE', "%{$cid}%")
+						->orWhere('citylists.city', 'LIKE', "%{$cid}%")
+						->orWhere('zones.city_id', $cid)
+						->orWhere('zones.pincode', 'LIKE', "%{$cid}%");
+				})
+				->select(
+					'zones.id as zone_id',
+					'zones.zone',
+					'citylists.city as cityName',
+					'zones.city_id',
+					'zones.pincode'
+				)
+				->distinct()
+				->get();
 
-		$city = $request->input('city');
-
-		// Initialize query
-		$query = DB::table('citylists');
-
-
-		// Apply filters
-		if (is_null($city)) {
-			$query->whereIn('citylists.id', ['278', '596', '961', '428', '29', '1100', '1003', '1002', '917', '874', '758', '643']);
 		} else {
-			$query->where(function ($q) use ($city) {
-				$q->where('citylists.city', 'LIKE', '%' . $city . '%')
-					->orWhere('citylists.id', 'LIKE', '%' . $city . '%')
-					->orWhere('citylists.state', 'LIKE', '%' . $city . '%');
-			});
+
+			$cityList = [
+				'Hyderabad',
+				'Patna',
+				'Gorakhpur',
+				'Faridabad',
+				'Delhi',
+				'Noida',
+				'Ghaziabad',
+				'Mumbai',
+				'Pune',
+				'Meerut',
+				'Bangalore',
+				'Indore',
+				'Kanpur',
+				'Chennai',
+				'Kolkata',
+				'Coimbatore',
+				'Prayagraj'
+			];
+			$zoneslist = DB::table('zones')
+				->join('citylists', 'citylists.id', '=', 'zones.city_id')
+				->whereIn('citylists.city', $cityList)
+				->select(
+					DB::raw('MIN(zones.id) as zone_id'),
+					DB::raw('MIN(zones.zone) as zone'),
+					'citylists.id as city_id',
+					'citylists.city as cityName'
+				)
+				->groupBy('citylists.id', 'citylists.city')
+				->orderBy('citylists.city')
+				->get();
+
 		}
 
-		// Get results
-		$locations = $query->get();
 
-		// Transform results
-		$html = [];
-		foreach ($locations as $index => $data) {
-			$html[$index] =
-				[
-					'city' => $data->city,
-					'id' => $data->id
+		foreach ($zoneslist as $zone) {
 
-				];
+			$zoneText = '';
 
+			if (!empty($zone->zone)) {
+				$zoneText .= $zone->zone;
+			}
 
+			if (!empty($zone->cityName)) {
+				$zoneText .= ($zoneText ? ', ' : '') . $zone->cityName;
+			}
+
+			if (!empty($zone->pincode)) {
+				$zoneText .= ($zoneText ? ' - ' : '') . $zone->pincode;
+			}
+
+			$data[] = [
+				'id' => $zone->city_id,
+				'city' => $zoneText
+			];
 		}
 
-		// Handle empty results
-		if (empty($html)) {
-			return response()->json([
-				'success' => false,
-				'message' => 'No locations found.',
-			], 404);
-		}
 
-		// Return JSON response
 		return response()->json([
-			'success' => true,
-			'data' => array_values($html),
+			'status' => true,
+			'message' => 'Successfully',
+			'data' => $data
 		], 200);
+
+
+		// $city = $request->input('city');
+
+		// // Initialize query
+		// $query = DB::table('citylists');
+
+
+		// // Apply filters
+		// if (is_null($city)) {
+		// 	$query->whereIn('citylists.id', ['278', '596', '961', '428', '29', '1100', '1003', '1002', '917', '874', '758', '643']);
+		// } else {
+		// 	$query->where(function ($q) use ($city) {
+		// 		$q->where('citylists.city', 'LIKE', '%' . $city . '%')
+		// 			->orWhere('citylists.id', 'LIKE', '%' . $city . '%')
+		// 			->orWhere('citylists.state', 'LIKE', '%' . $city . '%');
+		// 	});
+		// }
+
+		// // Get results
+		// $locations = $query->get();
+
+		// // Transform results
+		// $html = [];
+		// foreach ($locations as $index => $data) {
+		// 	$html[$index] =
+		// 		[
+		// 			'city' => $data->city,
+		// 			'id' => $data->id
+
+		// 		];
+
+
+		// }
+
+		// // Handle empty results
+		// if (empty($html)) {
+		// 	return response()->json([
+		// 		'success' => false,
+		// 		'message' => 'No locations found.',
+		// 	], 404);
+		// }
+
+		// // Return JSON response
+		// return response()->json([
+		// 	'success' => true,
+		// 	'data' => array_values($html),
+		// ], 200);
 	}
 
 	/**
@@ -2497,14 +2473,11 @@ class SiteController extends Controller
 	public function getKeywordList(Request $request)
 	{
 
-		$keyword = $request->input('keyword');
-
+		$keyword = trim($request->input('keyword'));
 		// Initialize query
 		$query = DB::table('keyword');
-
-
 		// Apply filters
-		if (is_null($keyword)) {
+		if (empty($keyword)) {
 			$query->whereIn('keyword.id', ['288', '601', '1517', '159', '602', '1624', '166', '536', '1937', '1481', '570', '1665']);
 		} else {
 			$query->where(function ($q) use ($keyword) {
@@ -2523,10 +2496,7 @@ class SiteController extends Controller
 				[
 					'keyword' => $data->keyword,
 					'id' => $data->id
-
 				];
-
-
 		}
 
 		// Handle empty results
@@ -2542,6 +2512,8 @@ class SiteController extends Controller
 			'success' => true,
 			'data' => array_values($html),
 		], 200);
+
+
 	}
 
 
@@ -2620,7 +2592,7 @@ class SiteController extends Controller
 				'c.rating',
 				'c.comment_count'
 			)
-			->where('clients.business_slug', $business_slug)			 
+			->where('clients.business_slug', $business_slug)
 			->orderByRaw("
         CASE assigned_kwds.sold_on_position
             WHEN 'platinum' THEN 1
@@ -2630,7 +2602,7 @@ class SiteController extends Controller
         END
     ")
 			->first();
- 
+
 		if (!empty($clientscheck)) {
 
 			$logoImage = 'client/images/default_pp_small.jpg';
@@ -2661,20 +2633,20 @@ class SiteController extends Controller
 				$galleryList = unserialize($clientscheck->pictures);
 				if (!empty($galleryList)) {
 					foreach ($galleryList as $pkey => $gvalue) {
-						$galleryArray[] = config('app.website') . $gvalue['large']['src']; 
+						$galleryArray[] = config('app.website') . $gvalue['large']['src'];
 
 					}
 				}
 			}
 
 
-			
-	$assignedKeywords = DB::table('assigned_kwds')
-    ->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
-    ->where('assigned_kwds.client_id', $clientscheck->business_id)
-    ->distinct()
-    ->pluck('keyword.keyword')
-    ->toArray();
+
+			$assignedKeywords = DB::table('assigned_kwds')
+				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+				->where('assigned_kwds.client_id', $clientscheck->business_id)
+				->distinct()
+				->pluck('keyword.keyword')
+				->toArray();
 			$assignedCity = DB::table('assigned_kwds')
 				->join('citylists', 'assigned_kwds.city_id', '=', 'citylists.id')
 				->where('assigned_kwds.client_id', $clientscheck->business_id)
@@ -2690,38 +2662,38 @@ class SiteController extends Controller
 
 
 
-   		 $certified_img= config('app.website') .'img/q_verified.gif';
-           $trusted_img= config('app.website') . 'img/q_trust.gif';
-           $gst_img= config('app.website') .'img/q_gst.gif';
+			$certified_img = config('app.website') . 'img/q_verified.gif';
+			$trusted_img = config('app.website') . 'img/q_trust.gif';
+			$gst_img = config('app.website') . 'img/q_gst.gif';
 
-		   $social = array(
-					'facebook_url'=>$clientscheck->facebook_url,
-					'facebook_img'=>'',
-					'instagram_url'=>$clientscheck->instagram_url,
-					'instagram_img'=>'',
-					'twitter_url'=>$clientscheck->twitter_url,
-					'twitter_img'=>'',
-					'linkedin_url'=>$clientscheck->linkedin_url,
-					'linkedin_img'=>'',
-					'pinterest_url'=>$clientscheck->pinterest_url,
-					'pinterest_img'=>'',
-					'youtube_url'=>$clientscheck->youtube_url,
-					'youtube_img'=>'',
+			$social = array(
+				'facebook_url' => $clientscheck->facebook_url,
+				'facebook_img' => '',
+				'instagram_url' => $clientscheck->instagram_url,
+				'instagram_img' => '',
+				'twitter_url' => $clientscheck->twitter_url,
+				'twitter_img' => '',
+				'linkedin_url' => $clientscheck->linkedin_url,
+				'linkedin_img' => '',
+				'pinterest_url' => $clientscheck->pinterest_url,
+				'pinterest_img' => '',
+				'youtube_url' => $clientscheck->youtube_url,
+				'youtube_img' => '',
 
-		   );
+			);
 
 
-		   $businessName = !empty($client->business_name) ? $clientscheck->business_name : 'our company';
-			 	$data['comment'] = Comment::where('comment_client_ID', $clientscheck->business_id)
+			$businessName = !empty($client->business_name) ? $clientscheck->business_name : 'our company';
+			$data['comment'] = Comment::where('comment_client_ID', $clientscheck->business_id)
 				->where('comment_approved', '1')
 				->orderBy('created_at', 'desc')
 				->get()
 				->toArray();
- 
+
 			$sum = Comment::where('comment_client_ID', $clientscheck->business_id)
 				->where('comment_approved', '1')
 				->sum('rating');
-			 
+
 			$count = Comment::where('comment_client_ID', $clientscheck->business_id)
 				->where('comment_approved', '1')
 				->count();
@@ -2732,38 +2704,38 @@ class SiteController extends Controller
 			$data['sum'] = $sum;
 			$data['avgRating'] = $avgRating;
 			$data['count'] = $count;
-				$addressText = !empty($clientscheck->address) ? $clientscheck->address : '';
-				$mapText = !empty($clientscheck->business_map) ? '\n Directions: ' . $clientscheck->business_map : '';
-				$profile_url = 'https://www.quickdials.com/business-details/' . $clientscheck->business_slug;
-				$keyword = "";
-				$address_data = "Greetings from {$businessName},\n"
-					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
-					. "For more information"
-					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
-					. "{$mapText}";
+			$addressText = !empty($clientscheck->address) ? $clientscheck->address : '';
+			$mapText = !empty($clientscheck->business_map) ? '\n Directions: ' . $clientscheck->business_map : '';
+			$profile_url = 'https://www.quickdials.com/business-details/' . $clientscheck->business_slug;
+			$keyword = "";
+			$address_data = "Greetings from {$businessName},\n"
+				. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+				. "For more information"
+				. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+				. "{$mapText}";
 
-				$for_service = "Greetings from {$businessName},\n"
-					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
-					. "For more information of the services offered by our business please refer "
-					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
-					. ", Or {$profile_url}";
-				$for_review = "Greetings from {$businessName}, Rated {$avgRating} Rating out of {$count} Votes.\n"
-					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
-					. "For more information about the services offered by our business"
-					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
-					. ". Or visit our profile: {$profile_url}";
+			$for_service = "Greetings from {$businessName},\n"
+				. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+				. "For more information of the services offered by our business please refer "
+				. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+				. ", Or {$profile_url}";
+			$for_review = "Greetings from {$businessName}, Rated {$avgRating} Rating out of {$count} Votes.\n"
+				. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+				. "For more information about the services offered by our business"
+				. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+				. ". Or visit our profile: {$profile_url}";
 
-				$user_share = array(
-					'address_share' => $address_data,
-					'for_service' => $for_service,
-					'for_review' => $for_review,				 
+			$user_share = array(
+				'address_share' => $address_data,
+				'for_service' => $for_service,
+				'for_review' => $for_review,
 
-				);
+			);
 			$data['clientsList'] = [
 				'business_id' => $clientscheck->business_id,
 				'business_name' => $clientscheck->business_name,
 				'business_slug' => $clientscheck->business_slug,
-				'business_url' => config('app.website').'business-details/'.$clientscheck->business_slug,
+				'business_url' => config('app.website') . 'business-details/' . $clientscheck->business_slug,
 				'logo' => $logoImage ?? '',
 				'altLogo' => $altLogo . ' Logo' ?? '',
 				'profile_banner' => $profile_pic ?? '',
@@ -2780,10 +2752,10 @@ class SiteController extends Controller
 				'last_name' => $clientscheck->last_name,
 				'email' => $clientscheck->email,
 				'mobile' => $clientscheck->mobile,
-				'certified_status' => $clientscheck->certified_status,				
+				'certified_status' => $clientscheck->certified_status,
 				'trusted_status' => $clientscheck->trusted_status,
 				'gst_status' => $clientscheck->gst_status,
-				'certified_img' => $certified_img,				
+				'certified_img' => $certified_img,
 				'trusted_img' => $trusted_img,
 				'gst_img' => $gst_img,
 				'website' => $clientscheck->website,
@@ -2799,96 +2771,96 @@ class SiteController extends Controller
 				'time' => $time,
 				'landmark' => $clientscheck->landmark,
 				'rating' => $clientscheck->rating,
-				'social' => $social,		
-				'user_share' => $user_share,		
+				'social' => $social,
+				'user_share' => $user_share,
 			];
-				$isoImage = "";
-				if (!empty($clientscheck->iso_certificate)) {
+			$isoImage = "";
+			if (!empty($clientscheck->iso_certificate)) {
 				$iso_certificate = json_decode($clientscheck->iso_certificate);
 
 				if (!empty($iso_certificate)) {
-					$isoImage = config('app.website') . $iso_certificate->large->src;				 
-					}
+					$isoImage = config('app.website') . $iso_certificate->large->src;
 				}
-				$gstImage = "";
-				if (!empty($clientscheck->gst_certificate)) {
+			}
+			$gstImage = "";
+			if (!empty($clientscheck->gst_certificate)) {
 				$gst_certificate = json_decode($clientscheck->gst_certificate);
 
 				if (!empty($gst_certificate)) {
-					$gstImage = config('app.website') . $gst_certificate->large->src;				 
-					}
+					$gstImage = config('app.website') . $gst_certificate->large->src;
 				}
-				$cinImage = "";
-				if (!empty($clientscheck->cin_certificate)) {
+			}
+			$cinImage = "";
+			if (!empty($clientscheck->cin_certificate)) {
 				$cin_certificate = json_decode($clientscheck->cin_certificate);
 
 				if (!empty($cin_certificate)) {
-					$cinImage = config('app.website') . $cin_certificate->large->src;				 
-					}
+					$cinImage = config('app.website') . $cin_certificate->large->src;
 				}
- 
-				$msmeImage = "";
-				if (!empty($clientscheck->msme_certificate)) {
+			}
+
+			$msmeImage = "";
+			if (!empty($clientscheck->msme_certificate)) {
 				$msme_certificate = json_decode($clientscheck->msme_certificate);
- 
+
 				if (!empty($msme_certificate)) {
-					$msmeImage = config('app.website') . $msme_certificate->large->src;				 
-					}
+					$msmeImage = config('app.website') . $msme_certificate->large->src;
 				}
- 
-				$awardimg1 = "";
-				if (!empty($clientscheck->award_img1)) {
+			}
+
+			$awardimg1 = "";
+			if (!empty($clientscheck->award_img1)) {
 				$award_img1 = json_decode($clientscheck->award_img1);
 
 				if (!empty($award_img1)) {
-					$awardimg1 = config('app.website') . $award_img1->large->src;				 
-					}
+					$awardimg1 = config('app.website') . $award_img1->large->src;
 				}
- 
-				$awardimg2 = "";
-				if (!empty($clientscheck->award_img2)) {
+			}
+
+			$awardimg2 = "";
+			if (!empty($clientscheck->award_img2)) {
 				$award_img2 = json_decode($clientscheck->award_img2);
 
 				if (!empty($award_img2)) {
-					$awardimg2 = config('app.website') . $award_img2->large->src;				 
-					}
+					$awardimg2 = config('app.website') . $award_img2->large->src;
 				}
- 
- 
-				$awardimg3 = "";
-				if (!empty($clientscheck->award_img3)) {
+			}
+
+
+			$awardimg3 = "";
+			if (!empty($clientscheck->award_img3)) {
 				$award_img3 = json_decode($clientscheck->award_img3);
 
 				if (!empty($award_img3)) {
-					$awardimg3 = config('app.website') . $award_img3->large->src;				 
-					}
+					$awardimg3 = config('app.website') . $award_img3->large->src;
 				}
- 
- 
-				$awardimg4 = "";
-				if (!empty($clientscheck->award_img4)) {
+			}
+
+
+			$awardimg4 = "";
+			if (!empty($clientscheck->award_img4)) {
 				$award_img4 = json_decode($clientscheck->award_img4);
 
 				if (!empty($award_img4)) {
-					$awardimg4 = config('app.website') . $award_img4->large->src;				 
-					}
+					$awardimg4 = config('app.website') . $award_img4->large->src;
 				}
- 
- 
-				$awardimg5 = "";
-				if (!empty($clientscheck->award_img5)) {
+			}
+
+
+			$awardimg5 = "";
+			if (!empty($clientscheck->award_img5)) {
 				$award_img5 = json_decode($clientscheck->award_img5);
 
 				if (!empty($award_img5)) {
-					$awardimg5 = config('app.website') . $award_img5->large->src;				 
-					}
+					$awardimg5 = config('app.website') . $award_img5->large->src;
 				}
- 
+			}
+
 
 			$data['certificate'] = [
-				'gst_no' => $clientscheck->gst_no??'',
+				'gst_no' => $clientscheck->gst_no ?? '',
 				'gst_certificate' => $gstImage,
-				'pan_no' => $clientscheck->pan_no,				 
+				'pan_no' => $clientscheck->pan_no,
 				'cin_no' => $clientscheck->cin_no ?? '',
 				'cin_certificate' => $cinImage,
 				'iso_no' => $clientscheck->iso_no ?? '',
@@ -2896,22 +2868,22 @@ class SiteController extends Controller
 				'msme_no' => $clientscheck->msme_no ?? '',
 				'msme_certificate' => $msmeImage ?? '',
 				'award_name1' => $clientscheck->award_name1,
-				'award_img1' => $awardimg1, 	
+				'award_img1' => $awardimg1,
 				'award_name2' => $clientscheck->award_name2,
-				'award_img2' => $awardimg2, 	
+				'award_img2' => $awardimg2,
 				'award_name3' => $clientscheck->award_name3,
-				'award_img3' => $awardimg3, 	
+				'award_img3' => $awardimg3,
 				'award_name4' => $clientscheck->award_name4,
-				'award_img4' => $awardimg4, 	
+				'award_img4' => $awardimg4,
 				'award_name5' => $clientscheck->award_name5,
-				'award_img5' => $awardimg5, 	
+				'award_img5' => $awardimg5,
 			];
 
 
 
-		
 
-			 
+
+
 
 
 			if (!empty($assignedKeywords)) {
@@ -3935,101 +3907,102 @@ class SiteController extends Controller
 
 
 
-/**
- * @OA\Post(
- *     path="/api/business/{client_id}/saveReview",
- *     tags={"Frontend Reviews"},
- *     summary="Submit a business review",
- *     description="Allows a user to submit a review. One review per email per client per 30 days.",
- *     
- *
- *     @OA\Parameter(
- *         name="client_id",
- *         in="path",
- *         required=true,
- *         @OA\Schema(type="integer", example=101)
- *     ),
- *
- *     @OA\RequestBody(
- *         required=true,
- *         @OA\JsonContent(
- *             required={
- *                 "comment_author",
- *                 "comment_author_phone",
- *                 "comment_author_email",
- *                 "comment_content",
- *                 "s_rating"
- *             },
- *             @OA\Property(property="comment_author", type="string", example="Rahul Sharma"),
- *             @OA\Property(property="comment_author_phone", type="string", example="9876543210"),
- *             @OA\Property(property="comment_author_email", type="string", example="rahul@gmail.com"),
- *             @OA\Property(property="comment_content", type="string", example="Very good service"),
- *             @OA\Property(property="s_rating", type="integer", example=5, minimum=1, maximum=5)
- *         )
- *     ),
- *
- *     @OA\Response(
- *         response=200,
- *         description="Review submitted successfully",
- *         @OA\JsonContent(
- *             @OA\Property(property="status", type="integer", example=1),
- *             @OA\Property(property="message", type="string", example="Review successfully submitted.")
- *         )
- *     ),
- *
- *     @OA\Response(
- *         response=422,
- *         description="Validation error"
- *     ),
- *
- *     @OA\Response(
- *         response=429,
- *         description="Review limit exceeded"
- *     )
- * )
- */
+	/**
+	 * @OA\Post(
+	 *     path="/api/site/{client_id}/saveReview",
+	 *     tags={"Frontend Reviews"},
+	 *     summary="Submit a business review",
+	 *     description="Allows a user to submit a review. One review per email per client per 30 days.",
+	 *     
+	 *
+	 *     @OA\Parameter(
+	 *         name="client_id",
+	 *         in="path",
+	 *         required=true,
+	 *         @OA\Schema(type="integer", example=101)
+	 *     ),
+	 *
+	 *     @OA\RequestBody(
+	 *         required=true,
+	 *         @OA\JsonContent(
+	 *             required={
+	 *                 "comment_author",
+	 *                 "comment_author_phone",
+	 *                 "comment_author_email",
+	 *                 "comment_content",
+	 *                 "s_rating"
+	 *             },
+	 *             @OA\Property(property="comment_author", type="string", example="Rahul Sharma"),
+	 *             @OA\Property(property="comment_author_phone", type="string", example="9876543210"),
+	 *             @OA\Property(property="comment_author_email", type="string", example="rahul@gmail.com"),
+	 *             @OA\Property(property="comment_content", type="string", example="Very good service"),
+	 *             @OA\Property(property="s_rating", type="integer", example=5, minimum=1, maximum=5)
+	 *         )
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Review submitted successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="status", type="integer", example=1),
+	 *             @OA\Property(property="message", type="string", example="Review successfully submitted.")
+	 *         )
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=422,
+	 *         description="Validation error"
+	 *     ),
+	 *
+	 *     @OA\Response(
+	 *         response=429,
+	 *         description="Review limit exceeded"
+	 *     )
+	 * )
+	 */
 
 	public function store(Request $request, $client_id)
-    {
-        $request->validate([
-            'comment_author'        => 'required|string|regex:/^[A-Za-z ]+$/',
-            'comment_author_phone'  => 'required|digits:10',
-            'comment_author_email'  => 'required|email',
-            'comment_content'       => 'required|string',
-            's_rating'              => 'required|integer|min:1|max:5',
-        ]);
+	{
 
-        // 🔒 Check last review date (30 days rule)
-        $lastReviewDate = DB::table('comments')
-            ->where('comment_author_email', $request->comment_author_email)
-            ->where('comment_client_ID', $client_id)
-            ->max(DB::raw('DATE(created_at)'));
+		$request->validate([
+			'comment_author' => 'required|string|regex:/^[A-Za-z ]+$/',
+			'comment_author_phone' => 'required|digits:10',
+			'comment_author_email' => 'required|email',
+			'comment_content' => 'required|string',
+			's_rating' => 'required|integer|min:1|max:5',
+		]);
 
-        if ($lastReviewDate && now()->diffInDays($lastReviewDate) <= 30) {
-            return response()->json([
-                'status'  => false,
-                'message' => 'Thanks for your feedback! You are already submitted a review for this business'
-            ], 429);
-        }
+		// Check last review date (30 days rule)
+		$lastReviewDate = DB::table('comments')
+			->where('comment_author_email', $request->comment_author_email)
+			->where('comment_client_ID', $client_id)
+			->max(DB::raw('DATE(created_at)'));
 
-        // 💾 Save review
-        Comment::create([
-            'comment_client_ID'      => $client_id,
-            'comment_author'         => $request->comment_author,
-            'comment_author_phone'   => $request->comment_author_phone,
-            'comment_author_email'   => $request->comment_author_email,
-            'comment_content'        => $request->comment_content,
-            'rating'                 => $request->s_rating,
-            'admin_id'                 => '0',
-            'OTP'                 => '0',
-            'comment_author_IP'      => $request->ip(),
-        ]);
+		if ($lastReviewDate && now()->diffInDays($lastReviewDate) <= 30) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Thanks for your feedback! You are already submitted a review for this business'
+			], 429);
+		}
 
-        return response()->json([
-            'status'  => true,
-            'message' => 'Review successfully submitted.'
-        ], 200);
-    }
+		// 💾 Save review
+		Comment::create([
+			'comment_client_ID' => $client_id,
+			'comment_author' => $request->comment_author,
+			'comment_author_phone' => $request->comment_author_phone,
+			'comment_author_email' => $request->comment_author_email,
+			'comment_content' => $request->comment_content,
+			'rating' => $request->s_rating,
+			'admin_id' => '0',
+			'OTP' => '0',
+			'comment_author_IP' => $request->ip(),
+		]);
+
+		return response()->json([
+			'status' => true,
+			'message' => 'Review successfully submitted.'
+		], 200);
+	}
 
 
 

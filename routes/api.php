@@ -28,6 +28,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\LeadBusinessController;
 use App\Http\Controllers\Api\ProfileController;
  use App\Http\Controllers\Api\EnquiryController;
+ use App\Http\Controllers\Api\ReviewController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/google-login', [AuthController::class, 'googleLogin']);
@@ -48,11 +49,21 @@ Route::post('/business/saveBusinessOwners', [AuthController::class, 'saveBusines
 
 Route::post('/site/saveEnquiry', [App\Http\Controllers\Api\ContactController::class, 'saveEnquiry']);
 
+Route::post('/site/{client_id}/saveReview', [App\Http\Controllers\Site\SiteController::class, 'store']);
+ 
+
 Route::middleware('auth:sanctum')->group(function () {
     
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/business/profileInfo', [ProfileController::class, 'profileInfo']);
-Route::get('/business/review', [ProfileController::class, 'profileReview']);
+
+Route::get('/business/review', [ReviewController::class, 'profileReview']);
+Route::get('/business/get-review', [ReviewController::class, 'getReview']);
+Route::get('/business/{id}/get-review-details', [ReviewController::class, 'getReviewDetails']);
+Route::post('/business/update-review/{id}', [ReviewController::class, 'updateReview']);
+
+
+
 Route::get('/business/dashboard',[App\Http\Controllers\Api\BusinessDashboardController::class, 'dashboard']);
 Route::get('/business/get-leads',[EnquiryController::class, 'getLeads']);
 Route::post('/business/save-favorite',[EnquiryController::class, 'saveFavoritleads']);

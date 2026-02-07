@@ -97,7 +97,7 @@ class BusinessController extends Controller
 
 	public function getAssignedZonesPagination(Request $request)
 	{
-
+// dd($request->all())
 		if (!Auth::guard('sanctum')->check()) {
 			return response()->json([
 				'status' => false,
@@ -115,7 +115,7 @@ class BusinessController extends Controller
 				'error' => 'token_missing_or_invalid'
 			], 401);
 		}
-		$perPage = $request->query('per_page', 10);
+		$perPage = $request->query('length', 10);
 		$leads = DB::table('assigned_zones')
 			->join('zones', 'assigned_zones.zone_id', '=', 'zones.id')
 			->join('citylists', 'assigned_zones.city_id', '=', 'citylists.id')
@@ -208,43 +208,41 @@ class BusinessController extends Controller
 
 	public function getCities(Request $request)
 	{
-		// Validate input
-		$request->validate([
-			'city' => 'nullable|string|min:1|max:100',
-		]);
 
-		$city = trim($request->input('city'));
+		$searchcity = trim($request->input('city'));	 
+		$cityData = collect();
+		if ($searchcity !== '') {
 
-		$query = DB::table('citylists')
-			->select('id as city_id', 'city')
-			->orderBy('city', 'asc');
+			$cityData = DB::table('citylists')
+				->where('city', 'LIKE', $searchcity . '%')
+				->select('id as city_id', 'city')
+				->orderBy('city')
+				->limit(20)
+				->get();
+		}
+ 
+		if ($cityData->isEmpty()) {
 
-		// Default cities when search is empty
-		if ($city === null || $city === '') {
-			$query->whereIn('id', [
-				278,
-				596,
-				961,
-				428,
-				29,
-				1100,
-				1003,
-				1002,
-				917,
-				874,
-				758,
-				643
-			]);
-		} else {
-			$query->where('city', 'LIKE', '%' . $city . '%');
+			$cityList = [
+				'Hyderabad','Patna','Gorakhpur','Faridabad','Delhi','Noida',
+				'Ghaziabad','Mumbai','Pune','Meerut','Bangalore','Indore',
+				'Kanpur','Chennai','Kolkata','Coimbatore','Prayagraj'
+			];
+
+			$cityData = DB::table('citylists')
+				->whereIn('city', $cityList)
+				->select(
+					'id as city_id',
+					'city'
+				)
+				->orderBy('city')
+				->get();
 		}
 
-		$locations = $query->limit(20)->get();
-
 		return response()->json([
-			'status' => true,
+			'status'  => true,
 			'message' => 'Successfully',
-			'data' => $locations, // empty array allowed
+			'data'    => $cityData
 		], 200);
 	}
 
@@ -315,9 +313,9 @@ class BusinessController extends Controller
 	 */
 	public function getCityByState(Request $request)
 	{
-		// ✅ Validation
+
 		$validator = Validator::make($request->all(), [
-			'state_id' => 'required|integer|exists:state,id',
+			'state_id' => 'required|integer|exists:state,id',    
 		]);
 
 		if ($validator->fails()) {
@@ -328,27 +326,25 @@ class BusinessController extends Controller
 			], 422);
 		}
 
-		$stateId = $request->input('state_id');
+		$stateId = $request->integer('state_id');
 
-		// ✅ Fetch cities
 		$cities = Citieslists::where('state_id', $stateId)
 			->select('id as city_id', 'city', 'state_id')
-			->get();
-
-		// ✅ Empty check (correct way)
-		if ($cities->isEmpty()) {
-			return response()->json([
-				'status' => false,
-				'message' => 'City not found',
-				'data' => [],
-			], 404);
-		}
+			->get()
+			->map(fn($city) => [
+				'city_id' => $city->city_id,
+				'city' => $city->city,
+				'state_id' => $city->state_id,
+			])
+			->values();
 
 		return response()->json([
 			'status' => true,
-			'message' => 'Successfully',
+			'message' => $cities->isNotEmpty() ? 'Successfully' : 'No cities found for this state',
 			'data' => $cities,
-		], 200);
+		], $cities->isEmpty() ? 200 : 200);
+
+ 
 	}
 
 	/**
@@ -452,7 +448,7 @@ class BusinessController extends Controller
 	public function getStatus(Request $request)
 	{
 
-		$statuslists = Status::where('lead_filter','1')->get();
+		$statuslists = Status::where('lead_filter', '1')->get();
 		if ($statuslists) {
 			foreach ($statuslists as $status) {
 				$data[] = [
@@ -518,32 +514,19 @@ class BusinessController extends Controller
 	{
 		$cid = $request->input('country_id');
 
-		$data = [];
-		$statelist = State::where('country_id', $cid)->get();
+		$states = State::where('country_id', $cid)
+			->pluck('name', 'id')
+			->map(fn($name, $id) => [
+				'state_id' => $id,
+				'state' => $name,
+				'country_id' => $cid,
+			])
+			->values();
 
-		if (!$statelist) {
-			return response()->json([
-				'status' => true,
-				'message' => "State not Found",
-				'data' => '',
-
-			], 200);
-		}
-		if ($statelist) {
-			foreach ($statelist as $state) {
-				$data[] = [
-					'state_id' => $state->id,
-					'state' => $state->name,
-					'coutry_id' => $state->country_id,
-
-				];
-			}
-		}
 		return response()->json([
 			'status' => true,
-			'message' => "Successfully",
-			'data' => $data,
-
+			'message' => $states->isEmpty() ? "State not Found" : "Successfully",
+			'data' => $states,
 		], 200);
 	}
 	/**
@@ -586,21 +569,18 @@ class BusinessController extends Controller
 
 	public function getZones(Request $request)
 	{
-
-		$zonelists = Zone::get();
-		if ($zonelists) {
-			foreach ($zonelists as $zone) {
-				$data[] = [
-					'zone_id' => $zone->id,
-					'zone' => $zone->zone,
-
+		$zonelists = Zone::whereNotNull('zone')
+			->pluck('zone', 'id')
+			->map(function ($zone, $id) {
+				return [
+					'zone_id' => $id,
+					'zone' => $zone
 				];
-			}
-		}
+			})->values();
 		return response()->json([
 			'status' => true,
 			'message' => "Successfully",
-			'data' => $data,
+			'data' => $zonelists,
 
 		], 200);
 	}
@@ -617,8 +597,8 @@ class BusinessController extends Controller
 	 *         name="city_id",
 	 *         in="query",
 	 *         required=true,
-	 *         description="ID of the city",
-	 *         @OA\Schema(type="integer", example=278)
+	 *         description="Search by city id,city and pincode ",
+	 *         @OA\Schema(type="string", example=278)
 	 *     ),
 	 *     @OA\Response(
 	 *         response=200,
@@ -652,176 +632,98 @@ class BusinessController extends Controller
 	 */
 	public function getZoneByCity(Request $request)
 	{
-		$cid = $request->input('city_id');
-		$zid = $request->input('zid');
+
+		$cid = trim($request->input('city_id'));
 		$data = [];
-		$zoneslist = Zone::where('city_id', $cid)->get();
+		$zoneslist = DB::table('zones')
+			->join('citylists', 'citylists.id', '=', 'zones.city_id')
+			->when($cid, function ($query) use ($cid) {
+				$query->where('zones.zone', 'LIKE', "%{$cid}%")
+					->orWhere('citylists.city', 'LIKE', "%{$cid}%")
+					->orWhere('zones.city_id', $cid)
+					->orWhere('zones.pincode', 'LIKE', "%{$cid}%");
+			})
+			->select(
+				'zones.id as zone_id',
+				'zones.zone',
+				'citylists.city as cityName',
+				'zones.city_id',
+				'zones.pincode'
+			)
+			->distinct()
+			->get();
 
-		if (!$zoneslist) {
-			return response()->json([
-				'status' => true,
-				'message' => "Zone not Found",
-				'data' => '',
+		if ($zoneslist->isEmpty()) {
 
-			], 200);
+			$cityList = [
+				'Hyderabad',
+				'Patna',
+				'Gorakhpur',
+				'Faridabad',
+				'Delhi',
+				'Noida',
+				'Ghaziabad',
+				'Mumbai',
+				'Pune',
+				'Meerut',
+				'Bangalore',
+				'Indore',
+				'Kanpur',
+				'Chennai',
+				'Kolkata',
+				'Coimbatore',
+				'Prayagraj'
+			];
+			$zoneslist = DB::table('zones')
+				->join('citylists', 'citylists.id', '=', 'zones.city_id')
+				->whereIn('citylists.city', $cityList)
+				->select(
+					DB::raw('MIN(zones.id) as zone_id'),
+					DB::raw('MIN(zones.zone) as zone'),
+					'citylists.id as city_id',
+					'citylists.city as cityName'
+				)
+				->groupBy('citylists.id', 'citylists.city')
+				->orderBy('citylists.city')
+				->get();
+
 		}
-		if ($zoneslist) {
-			foreach ($zoneslist as $zone) {
-				$data[] = [
-					'zone_id' => $zone->id,
-					'zone' => $zone->zone,
-					'city_id' => $zone->city_id,
 
-				];
+
+		foreach ($zoneslist as $zone) {
+
+			$zoneText = '';
+
+			if (!empty($zone->zone)) {
+				$zoneText .= $zone->zone;
 			}
+
+			if (!empty($zone->cityName)) {
+				$zoneText .= ($zoneText ? ', ' : '') . $zone->cityName;
+			}
+
+			if (!empty($zone->pincode)) {
+				$zoneText .= ($zoneText ? ' - ' : '') . $zone->pincode;
+			}
+
+			$data[] = [
+				'zone_id' => $zone->zone_id,
+				'zone' => $zoneText
+			];
 		}
+
 		$data[] = [
 			'zone_id' => 'Other',
-			'zone' => 'Other',
+			'zone' => 'Other'
 		];
+
 		return response()->json([
 			'status' => true,
-			'message' => "Successfully",
-			'data' => $data,
-
+			'message' => 'Successfully',
+			'data' => $data
 		], 200);
-	}
-
-	/**
-	 * @OA\Get(
-	 *     path="/api/business/area/get-area",
-	 *     tags={"Area"},
-	 *     summary="Get Area list",
-	 *     description="Fetch a list of areas .",
-	 *     security={{"bearerAuth":{}}},   
-	 *     @OA\Response(
-	 *         response=200,
-	 *         description="Area retrieved successfully",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="success", type="boolean", example=true),
-	 *             @OA\Property(property="data", type="array",
-	 *                 @OA\Items(
-	 *                     @OA\Property(property="id", type="integer", example=9),
-	 *                     @OA\Property(property="area", type="string", example="Sector-2")
-	 *                 )
-	 *             )
-	 *         )
-	 *     ),
-	 *     @OA\Response(
-	 *         response=401,
-	 *         description="Unauthenticated",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
-	 *         )
-	 *     ),
-	 *     @OA\Response(
-	 *         response=404,
-	 *         description="No area found",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="success", type="boolean", example=false),
-	 *             @OA\Property(property="message", type="string", example="No cities found for this state.")
-	 *         )
-	 *     )
-	 * )
-	 */
-
-	public function getArea(Request $request)
-	{
-
-		$arealists = Area::get();
-		if ($arealists) {
-			foreach ($arealists as $area) {
-				$data[] = [
-					'area_id' => $area->id,
-					'area' => $area->area,
-
-				];
-			}
-		}
-		return response()->json([
-			'status' => true,
-			'message' => "Successfully",
-			'data' => $data,
-
-		], 200);
-	}
 
 
-	/**
-	 * @OA\Post(
-	 *     path="/api/business/area/get-area-by-zone",
-	 *     tags={"Area"},
-	 *     summary="Get area by zone",
-	 *     description="Fetch a list of area.",
-	 *     security={{"bearerAuth":{}}},
-	 *     @OA\Parameter(
-	 *         name="zone_id",
-	 *         in="query",
-	 *         required=true,
-	 *         description="ID of the zone",
-	 *         @OA\Schema(type="integer", example=12)
-	 *     ),
-	 *     @OA\Response(
-	 *         response=200,
-	 *         description="Area retrieved successfully",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="success", type="boolean", example=true),
-	 *             @OA\Property(property="data", type="array",
-	 *                 @OA\Items(
-	 *                     @OA\Property(property="id", type="integer", example=9),
-	 *                     @OA\Property(property="area", type="string", example="Sector-2")
-	 *                 )
-	 *             )
-	 *         )
-	 *     ),
-	 *     @OA\Response(
-	 *         response=401,
-	 *         description="Unauthenticated",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
-	 *         )
-	 *     ),
-	 *     @OA\Response(
-	 *         response=404,
-	 *         description="No area found",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="success", type="boolean", example=false),
-	 *             @OA\Property(property="message", type="string", example="No cities found for this state.")
-	 *         )
-	 *     )
-	 * )
-	 */
-	public function getAreaByZone(Request $request)
-	{
-		$zid = $request->input('zone_id');
-
-		$data = [];
-		$areaslist = Area::where('zone_id', $zid)->get();
-
-		if (!$areaslist) {
-			return response()->json([
-				'status' => true,
-				'message' => "Area not Found",
-				'data' => '',
-
-			], 200);
-		}
-		if ($areaslist) {
-			foreach ($areaslist as $area) {
-				$data[] = [
-					'area_id' => $area->id,
-					'area' => $area->area,
-					'zone_id' => $area->zone_id,
-
-				];
-			}
-		}
-		return response()->json([
-			'status' => true,
-			'message' => "Successfully",
-			'data' => $data,
-
-		], 200);
 	}
 
 	/**
@@ -863,20 +765,18 @@ class BusinessController extends Controller
 	 */
 	public function getState(Request $request)
 	{
-		$statelists = State::where('country_id', '101')->get();
-		if ($statelists) {
-			foreach ($statelists as $state) {
-				$data[] = [
-					'state_id' => $state->id,
-					'state' => $state->name,
-
+		$statelists = State::where('country_id', '101')
+			->pluck('id', 'name')
+			->map(function ($name, $id) {
+				return [
+					'state_id' => $id,
+					'state' => $name
 				];
-			}
-		}
+			})->values();
 		return response()->json([
 			'status' => true,
 			'message' => "Successfully",
-			'data' => $data,
+			'data' => $statelists,
 
 		], 200);
 	}
@@ -923,16 +823,16 @@ class BusinessController extends Controller
 			], 401);
 		}
 		$business_Details = array(
-		'business_name'=>'Quick Dials Pvt Ltd',
-		'corporate_office'=>'G-13, Sector-3 Noida, U.P, India',
-		'registered_office'=>'203, Oxford Towers, 139, HAL Old Airport Rd, Kodihalli, Bengaluru, Karnataka 560008',
-		'phone_no'=>'+91-75-5943-5943',
-		'email'=>'info@quickdials.com',
-		'website'=>'www.quickdials.com',
-		'GSTIN'=>'',
-		'pan_no'=>'',
-		'CIN_No'=>''
-		 
+			'business_name' => 'Quick Dials Pvt Ltd',
+			'corporate_office' => 'G-13, Sector-3 Noida, U.P, India',
+			'registered_office' => '203, Oxford Towers, 139, HAL Old Airport Rd, Kodihalli, Bengaluru, Karnataka 560008',
+			'phone_no' => '+91-75-5943-5943',
+			'email' => 'info@quickdials.com',
+			'website' => 'www.quickdials.com',
+			'GSTIN' => '',
+			'pan_no' => '',
+			'CIN_No' => ''
+
 		);
 		return response()->json([
 			'status' => true,

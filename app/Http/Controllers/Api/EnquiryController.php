@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Broadcasting\Broadcasters\NullBroadcaster;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -194,7 +195,7 @@ class EnquiryController extends Controller
 		$clientID = $client->id;
 		$lead = DB::table('leads')
 			->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
-			->select('leads.*','assigned_leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'assigned_leads.id as assignId')
+			->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'assigned_leads.id as assignId')
 			->orderBy('assigned_leads.created_at', 'desc')
 			->where('assigned_leads.client_id', $clientID)->where('leads.id', $id)->first();
 		if (!$lead) {
@@ -214,9 +215,7 @@ class EnquiryController extends Controller
 			'primeLead' => $lead->primeLead,
 			'name' => $lead->name,
 			'email' => $lead->email,
-			'city' => $lead->city_name,
-			'city_id' => $lead->city_id,
-			'kw_id' => $lead->kw_id,
+			'city' => $lead->city_name,		 
 			'kw_text' => $lead->kw_text,
 			'status_id' => $lead->status_id,
 			'status' => $lead->status_name,
@@ -1254,8 +1253,8 @@ class EnquiryController extends Controller
 			->first();
 		if (!empty($rating)) {
 			$avgRating = ($rating->comment_count > 0)
-                ? round($rating->total_rating / $rating->comment_count, 1)
-                : 0;
+				? round($rating->total_rating / $rating->comment_count, 1)
+				: 0;
 			$ratingCount = $rating->comment_count;
 		} else {
 			$avgRating = 0;
@@ -1313,29 +1312,56 @@ class EnquiryController extends Controller
 					'for_review' => $for_review,
 
 				);
+				$frmcheckText = '';
+				if (!empty($val->frmcheck) && is_array($val->frmcheck)) {
+					$frmcheckText = implode(', ', $val->frmcheck);
+				}
+				$parts = array_filter([
+					$val->kw_text ? "Interested in " . trim($val->kw_text) : '',
+					$frmcheckText ? "Mode of " . trim($frmcheckText) : '',
+					$val->zone ? "location " . trim($val->zone) : '',
+					$val->plan ? "plan " . trim($val->plan) : '',
+					$val->age ? "age " . trim($val->age) : '',
+					$val->experience ? "with experience " . trim($val->experience) : '',
+				]);
+
+				$main = implode(" • ", $parts);
+
+				$remark = $main;
+
+				if (!empty($val->remark)) {
+					$remark = $remark . " " . trim($val->remark);
+				}
+
+
+				$leads_list[$key] = [
+					'lead_id' => $val->lead_id ?? null,
+					'assignId' => $val->assignId ?? null,
+					'favorite_lead' => $val->favorite_lead ?? 0,
+					'readLead' => $val->readLead ?? 0,
+					'scrapLead' => $val->scrapLead ?? 0,
+					'scrapPay' => $val->scrapPay ?? 0,
+					'scrapValue' => $val->scrapValue ?? 0,
+					'primeLead' => $val->primeLead ?? 0,
+					'name' => trim($val->name ?? '') ?: null,
+					'mobile' => trim($val->mobile ?? '') ?: null,
+					'email' => trim($val->email ?? '') ?: null,
+					'remark' => trim($remark ?? '') ?: null,
+			 
+
+					'cityName' => !empty($val->city_name)
+						? trim($val->city_name . (!empty($val->zone) ? ', ' . $val->zone : ''))
+						: null,
 
 			 
-				$leads_list[$key] = array(
-					'lead_id' => $val->lead_id,
-					'assignId' => $val->assignId,
-					'favorite_lead' => $val->favorite_lead,
-					'readLead' => $val->readLead,
-					'scrapLead' => $val->scrapLead,
-					'scrapPay' => $val->scrapPay,
-					'scrapValue' => $val->scrapValue,
-					'primeLead' => $val->primeLead,
-					'name' => $val->name,
-					'mobile' => $val->mobile,
-					'email' => $val->email,
-					'city_id' => $val->city_id,
-					'cityName' => $val->city_name,
-					'kw_id' => $val->kw_id,
-					'kw_text' => $val->kw_text,
-					'client_id' => $val->client_id,
-					'createdDate' => $created,
-					'coins' => $coins,
-					'user_share' => $user_share,
-				);
+					'kw_text' => trim($val->kw_text ?? '') ?: null,
+
+					'client_id' => $val->client_id ?? null,
+
+					'createdDate' => $created ?? null,
+					'coins' => $coins ?? 0,
+					'user_share' => $user_share ?? 0,
+				];
 			}
 			$data['leadslist'] = $leads_list;
 		}
@@ -1447,8 +1473,8 @@ class EnquiryController extends Controller
 				->first();
 			if (!empty($rating)) {
 				$avgRating = ($rating->comment_count > 0)
-                ? round($rating->total_rating / $rating->comment_count, 1)
-                : 0;
+					? round($rating->total_rating / $rating->comment_count, 1)
+					: 0;
 				$ratingCount = $rating->comment_count;
 			} else {
 				$avgRating = 0;
@@ -1461,16 +1487,16 @@ class EnquiryController extends Controller
 				->leftjoin('citylists', 'leads.city_id', '=', 'citylists.id')
 				->leftjoin('areas', 'leads.area_id', '=', 'areas.id')
 				->leftjoin('zones', 'leads.zone_id', '=', 'zones.id')
-				->select('leads.*','assigned_leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone', 'assigned_leads.id as assignId')
+				->select('leads.*', 'assigned_leads.*', 'assigned_leads.client_id', 'assigned_leads.lead_id', 'assigned_leads.created_at as created', 'areas.area', 'zones.zone', 'assigned_leads.id as assignId')
 				->orderBy('assigned_leads.created_at', 'desc')
 				->where('assigned_leads.client_id', $currentUser->id)
 				->paginate($perPage);
- 
+
 			if (!empty($leads)) {
 				foreach ($leads as $key => $val) {
 
 					$coins = "";
-				 
+
 					if (!empty($val->scrapLead)) {
 						$coins = ['color' => 'green', 'coin' => $val->coins];
 					} else if ($val->coins) {
@@ -1507,30 +1533,55 @@ class EnquiryController extends Controller
 						'for_review' => $for_review,
 
 					);
+
+					$frmcheckText = '';
+					if (!empty($val->frmcheck) && is_array($val->frmcheck)) {
+						$frmcheckText = implode(', ', $val->frmcheck);
+					}
+					$parts = array_filter([
+						$val->kw_text ? "Interested in " . trim($val->kw_text) : '',
+						$frmcheckText ? "Mode of " . trim($frmcheckText) : '',
+						$val->zone ? "location " . trim($val->zone) : '',
+						$val->plan ? "plan " . trim($val->plan) : '',
+						$val->age ? "age " . trim($val->age) : '',
+						$val->experience ? "with experience " . trim($val->experience) : '',
+					]);
+
+					$main = implode(" • ", $parts);
+
+					$remark = $main;
+
+					if (!empty($val->remark)) {
+						$remark = $remark . " " . trim($val->remark);
+					}
+
 					$leads_list[$key] = array(
-						'lead_id' => $val->lead_id,
-						'assignId' => $val->assignId,
-						'favorite_lead' => $val->favorite_lead,
-						'readLead' => $val->readLead,
-						'scrapLead' => $val->scrapLead,
-						'scrapPay' => $val->scrapPay,
-						'scrapValue' => $val->scrapValue,
-						'primeLead' => $val->primeLead,
-						'name' => $val->name,
-						'mobile' => $val->mobile,
-						'email' => $val->email,
-						'city_id' => $val->city_id,
-						'cityName' => $val->city_name,
-						'area_id' => $val->area_id,
-						'area' => $val->area,
-						'zone_id' => $val->zone_id,
-						'zone' => $val->zone,
-						'kw_id' => $val->kw_id,
-						'kw_text' => $val->kw_text,
-						'client_id' => $val->client_id,
-						'createdDate' => $created,
-						'coins' => $coins,
-						'user_share' => $user_share,
+						'lead_id' => $val->lead_id ?? null,
+						'assignId' => $val->assignId ?? null,
+						'favorite_lead' => $val->favorite_lead ?? 0,
+						'readLead' => $val->readLead ?? 0,
+						'scrapLead' => $val->scrapLead ?? 0,
+						'scrapPay' => $val->scrapPay ?? 0,
+						'scrapValue' => $val->scrapValue ?? 0,
+						'primeLead' => $val->primeLead ?? 0,
+
+						'name' => !empty($val->name) ? trim($val->name) : null,
+						'mobile' => !empty($val->mobile) ? trim($val->mobile) : null,
+						'email' => !empty($val->email) ? trim($val->email) : null,
+
+						'remark' => !empty($remark) ? trim($remark) : null,
+
+
+						'cityName' => !empty($val->city_name)
+							? trim($val->city_name . (!empty($val->zone) ? ', ' . $val->zone : ''))
+							: null,
+
+					 
+						'kw_text' => !empty($val->kw_text) ? trim($val->kw_text) : null,
+
+						'createdDate' => $created ?? null,
+						'coins' => $coins ?? 0,
+						'user_share' => $user_share ?? null,
 					);
 				}
 				$data['leadslist'] = $leads_list;
@@ -1656,8 +1707,8 @@ class EnquiryController extends Controller
 			->first();
 		if (!empty($rating)) {
 			$avgRating = ($rating->comment_count > 0)
-                ? round($rating->total_rating / $rating->comment_count, 1)
-                : 0;
+				? round($rating->total_rating / $rating->comment_count, 1)
+				: 0;
 			$ratingCount = $rating->comment_count;
 		} else {
 			$avgRating = 0;
@@ -1718,30 +1769,56 @@ class EnquiryController extends Controller
 					'for_review' => $for_review,
 
 				);
+
+
+				$frmcheckText = '';
+				if (!empty($val->frmcheck) && is_array($val->frmcheck)) {
+					$frmcheckText = implode(', ', $val->frmcheck);
+				}
+				$parts = array_filter([
+					$val->kw_text ? "Interested in " . trim($val->kw_text) : '',
+					$frmcheckText ? "Mode of " . trim($frmcheckText) : '',
+					$val->zone ? "location " . trim($val->zone) : '',
+					$val->plan ? "plan " . trim($val->plan) : '',
+					$val->age ? "age " . trim($val->age) : '',
+					$val->experience ? "with experience " . trim($val->experience) : '',
+				]);
+
+				$main = implode(" • ", $parts);
+
+				$remark = $main;
+
+				if (!empty($val->remark)) {
+					$remark = $remark . " " . trim($val->remark);
+				}
+
 				$leads_list[$key] = array(
-					'lead_id' => $val->lead_id,
-					'assignId' => $val->assignId,
-					'favorite_lead' => $val->favorite_lead,
-					'readLead' => $val->readLead,
-					'scrapLead' => $val->scrapLead,
-					'scrapPay' => $val->scrapPay,
-					'scrapValue' => $val->scrapValue,
-					'primeLead' => $val->primeLead,
-					'name' => $val->name,
-					'mobile' => $val->mobile,
-					'email' => $val->email,
-					'city_id' => $val->city_id,
-					'cityName' => $val->city_name,
-					'area_id' => $val->area_id,
-					'area' => $val->area,
-					'zone_id' => $val->zone_id,
-					'zone' => $val->zone,
-					'kw_id' => $val->kw_id,
-					'kw_text' => $val->kw_text,
-					'client_id' => $val->client_id,
-					'createdDate' => $created,
-					'coins' => $coins,
-					'user_share' => $user_share,
+					'lead_id' => $val->lead_id ?? null,
+					'assignId' => $val->assignId ?? null,
+					'favorite_lead' => $val->favorite_lead ?? 0,
+					'readLead' => $val->readLead ?? 0,
+					'scrapLead' => $val->scrapLead ?? 0,
+					'scrapPay' => $val->scrapPay ?? 0,
+					'scrapValue' => $val->scrapValue ?? 0,
+					'primeLead' => $val->primeLead ?? 0,
+
+					'name' => !empty($val->name) ? trim($val->name) : null,
+					'mobile' => !empty($val->mobile) ? trim($val->mobile) : null,
+					'email' => !empty($val->email) ? trim($val->email) : null,
+
+					'remark' => !empty($remark) ? trim($remark) : null,
+
+
+					'cityName' => !empty($val->city_name)
+						? trim($val->city_name . (!empty($val->zone) ? ', ' . $val->zone : ''))
+						: null,
+
+				 
+					'kw_text' => !empty($val->kw_text) ? trim($val->kw_text) : null,
+
+					'createdDate' => $created ?? null,
+					'coins' => $coins ?? 0,
+					'user_share' => $user_share ?? null,
 				);
 			}
 			$data['leadslist'] = $leads_list;
@@ -1820,7 +1897,7 @@ class EnquiryController extends Controller
 			], 401);
 		}
 
-			$client = Client::select('id', 'address', 'business_name', 'business_slug')->where('id', $currentUser->id)->first();
+		$client = Client::select('id', 'address', 'business_name', 'business_slug')->where('id', $currentUser->id)->first();
 
 		if ($client->address) {
 			$address = urlencode($client->address);
@@ -1857,8 +1934,8 @@ class EnquiryController extends Controller
 			->first();
 		if (!empty($rating)) {
 			$avgRating = ($rating->comment_count > 0)
-                ? round($rating->total_rating / $rating->comment_count, 1)
-                : 0;
+				? round($rating->total_rating / $rating->comment_count, 1)
+				: 0;
 			$ratingCount = $rating->comment_count;
 		} else {
 			$avgRating = 0;
@@ -1896,7 +1973,7 @@ class EnquiryController extends Controller
 				$businessName = !empty($client->business_name) ? $client->business_name : 'our company';
 				$keyword = !empty($val->kw_text) ? $val->kw_text : 'your enquiry';
 				$addressText = !empty($client->address) ? $client->address : '';
-				$mapText = !empty($client->business_map) ? '\n Directions: ' . $client->business_map: '';
+				$mapText = !empty($client->business_map) ? '\n Directions: ' . $client->business_map : '';
 				$profile_url = 'https://www.quickdials.com/business-details/' . $client->business_slug;
 
 				$address_data = "Greetings from {$businessName},\n"
@@ -1922,30 +1999,56 @@ class EnquiryController extends Controller
 					'for_review' => $for_review,
 
 				);
+
+
+				$frmcheckText = '';
+				if (!empty($val->frmcheck) && is_array($val->frmcheck)) {
+					$frmcheckText = implode(', ', $val->frmcheck);
+				}
+				$parts = array_filter([
+					$val->kw_text ? "Interested in " . trim($val->kw_text) : '',
+					$frmcheckText ? "Mode of " . trim($frmcheckText) : '',
+					$val->zone ? "location " . trim($val->zone) : '',
+					$val->plan ? "plan " . trim($val->plan) : '',
+					$val->age ? "age " . trim($val->age) : '',
+					$val->experience ? "with experience " . trim($val->experience) : '',
+				]);
+
+				$main = implode(" • ", $parts);
+
+				$remark = $main;
+
+				if (!empty($val->remark)) {
+					$remark = $remark . " " . trim($val->remark);
+				}
+
 				$leads_list[$key] = array(
-					'lead_id' => $val->lead_id,
-					'assignId' => $val->assignId,
-					'favorite_lead' => $val->favorite_lead,
-					'readLead' => $val->readLead,
-					'scrapLead' => $val->scrapLead,
-					'scrapPay' => $val->scrapPay,
-					'scrapValue' => $val->scrapValue,
-					'primeLead' => $val->primeLead,
-					'name' => $val->name,
-					'mobile' => $val->mobile,
-					'email' => $val->email,
-					'city_id' => $val->city_id,
-					'cityName' => $val->city_name,
-					'area_id' => $val->area_id,
-					'area' => $val->area,
-					'zone_id' => $val->zone_id,
-					'zone' => $val->zone,
-					'kw_id' => $val->kw_id,
-					'kw_text' => $val->kw_text,
-					'client_id' => $val->client_id,
-					'createdDate' => $created,
-					'coins' => $coins,
-					'user_share' => $user_share,
+					'lead_id' => $val->lead_id ?? null,
+					'assignId' => $val->assignId ?? null,
+					'favorite_lead' => $val->favorite_lead ?? 0,
+					'readLead' => $val->readLead ?? 0,
+					'scrapLead' => $val->scrapLead ?? 0,
+					'scrapPay' => $val->scrapPay ?? 0,
+					'scrapValue' => $val->scrapValue ?? 0,
+					'primeLead' => $val->primeLead ?? 0,
+
+					'name' => !empty($val->name) ? trim($val->name) : null,
+					'mobile' => !empty($val->mobile) ? trim($val->mobile) : null,
+					'email' => !empty($val->email) ? trim($val->email) : null,
+
+					'remark' => !empty($remark) ? trim($remark) : null,
+
+
+					'cityName' => !empty($val->city_name)
+						? trim($val->city_name . (!empty($val->zone) ? ', ' . $val->zone : ''))
+						: null,
+
+				 
+					'kw_text' => !empty($val->kw_text) ? trim($val->kw_text) : null,
+					'client_id' => $val->client_id ?? Null,
+					'createdDate' => $created ?? null,
+					'coins' => $coins ?? 0,
+					'user_share' => $user_share ?? null,
 				);
 			}
 			$data['leadslist'] = $leads_list;
@@ -2021,7 +2124,7 @@ class EnquiryController extends Controller
 			], 401);
 		}
 
-			$client = Client::select('id', 'address', 'business_name', 'business_slug')->where('id', $currentUser->id)->first();
+		$client = Client::select('id', 'address', 'business_name', 'business_slug')->where('id', $currentUser->id)->first();
 
 		if ($client->address) {
 			$address = urlencode($client->address);
@@ -2058,8 +2161,8 @@ class EnquiryController extends Controller
 			->first();
 		if (!empty($rating)) {
 			$avgRating = ($rating->comment_count > 0)
-                ? round($rating->total_rating / $rating->comment_count, 1)
-                : 0;
+				? round($rating->total_rating / $rating->comment_count, 1)
+				: 0;
 			$ratingCount = $rating->comment_count;
 		} else {
 			$avgRating = 0;
@@ -2122,30 +2225,54 @@ class EnquiryController extends Controller
 					'for_review' => $for_review,
 
 				);
+				$frmcheckText = '';
+				if (!empty($val->frmcheck) && is_array($val->frmcheck)) {
+					$frmcheckText = implode(', ', $val->frmcheck);
+				}
+				$parts = array_filter([
+					$val->kw_text ? "Interested in " . trim($val->kw_text) : '',
+					$frmcheckText ? "Mode of " . trim($frmcheckText) : '',
+					$val->zone ? "location " . trim($val->zone) : '',
+					$val->plan ? "plan " . trim($val->plan) : '',
+					$val->age ? "age " . trim($val->age) : '',
+					$val->experience ? "with experience " . trim($val->experience) : '',
+				]);
+
+				$main = implode(" • ", $parts);
+
+				$remark = $main;
+
+				if (!empty($val->remark)) {
+					$remark = $remark . " " . trim($val->remark);
+				}
+
 				$leads_list[$key] = array(
-					'lead_id' => $val->lead_id,
-					'assignId' => $val->assignId,
-					'favorite_lead' => $val->favorite_lead,
-					'readLead' => $val->readLead,
-					'scrapLead' => $val->scrapLead,
-					'scrapPay' => $val->scrapPay,
-					'scrapValue' => $val->scrapValue,
-					'primeLead' => $val->primeLead,
-					'name' => $val->name,
-					'mobile' => $val->mobile,
-					'email' => $val->email,
-					'city_id' => $val->city_id,
-					'cityName' => $val->city_name,
-					'area_id' => $val->area_id,
-					'area' => $val->area,
-					'zone_id' => $val->zone_id,
-					'zone' => $val->zone,
-					'kw_id' => $val->kw_id,
-					'kw_text' => $val->kw_text,
-					'client_id' => $val->client_id,
-					'createdDate' => $created,
-					'coins' => $coins,
-					'user_share' => $user_share,
+					'lead_id' => $val->lead_id ?? null,
+					'assignId' => $val->assignId ?? null,
+					'favorite_lead' => $val->favorite_lead ?? 0,
+					'readLead' => $val->readLead ?? 0,
+					'scrapLead' => $val->scrapLead ?? 0,
+					'scrapPay' => $val->scrapPay ?? 0,
+					'scrapValue' => $val->scrapValue ?? 0,
+					'primeLead' => $val->primeLead ?? 0,
+
+					'name' => !empty($val->name) ? trim($val->name) : null,
+					'mobile' => !empty($val->mobile) ? trim($val->mobile) : null,
+					'email' => !empty($val->email) ? trim($val->email) : null,
+
+					'remark' => !empty($remark) ? trim($remark) : null,
+
+
+					'cityName' => !empty($val->city_name)
+						? trim($val->city_name . (!empty($val->zone) ? ', ' . $val->zone : ''))
+						: null,
+
+				 
+					'kw_text' => !empty($val->kw_text) ? trim($val->kw_text) : null,
+					'client_id' => $val->client_id ?? Null,
+					'createdDate' => $created ?? null,
+					'coins' => $coins ?? 0,
+					'user_share' => $user_share ?? null,
 				);
 			}
 			$data['leadslist'] = $leads_list;
@@ -2222,7 +2349,7 @@ class EnquiryController extends Controller
 			], 401);
 		}
 
-			$client = Client::select('id', 'address', 'business_name', 'business_slug')->where('id', $currentUser->id)->first();
+		$client = Client::select('id', 'address', 'business_name', 'business_slug')->where('id', $currentUser->id)->first();
 
 		if ($client->address) {
 			$address = urlencode($client->address);
@@ -2259,8 +2386,8 @@ class EnquiryController extends Controller
 			->first();
 		if (!empty($rating)) {
 			$avgRating = ($rating->comment_count > 0)
-                ? round($rating->total_rating / $rating->comment_count, 1)
-                : 0;
+				? round($rating->total_rating / $rating->comment_count, 1)
+				: 0;
 			$ratingCount = $rating->comment_count;
 		} else {
 			$avgRating = 0;
@@ -2294,34 +2421,55 @@ class EnquiryController extends Controller
 
 		$created = get_time(strtotime($leads->created)) . ' ago';
 		$businessName = !empty($client->business_name) ? $client->business_name : 'our company';
-				$keyword = !empty($leads->kw_text) ? $leads->kw_text : 'your enquiry';
-				$addressText = !empty($client->address) ? $client->address : '';
-				$mapText = !empty($client->business_map) ? '\n Directions: ' . $client->business_map : '';
-				$profile_url = 'https://www.quickdials.com/business-details/' . $client->business_slug;
+		$keyword = !empty($leads->kw_text) ? $leads->kw_text : 'your enquiry';
+		$addressText = !empty($client->address) ? $client->address : '';
+		$mapText = !empty($client->business_map) ? '\n Directions: ' . $client->business_map : '';
+		$profile_url = 'https://www.quickdials.com/business-details/' . $client->business_slug;
 
-				$address_data = "Greetings from {$businessName},\n"
-					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
-					. "For more information"
-					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
-					. "{$mapText}";
+		$address_data = "Greetings from {$businessName},\n"
+			. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+			. "For more information"
+			. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+			. "{$mapText}";
 
-				$for_service = "Greetings from {$businessName},\n"
-					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
-					. "For more information of the services offered by our business please refer "
-					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
-					. ", Or {$profile_url}";
-				$for_review = "Greetings from {$businessName}, Rated {$avgRating} Rating out of {$ratingCount} Votes.\n"
-					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
-					. "For more information about the services offered by our business"
-					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
-					. ". Or visit our profile: {$profile_url}";
+		$for_service = "Greetings from {$businessName},\n"
+			. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+			. "For more information of the services offered by our business please refer "
+			. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+			. ", Or {$profile_url}";
+		$for_review = "Greetings from {$businessName}, Rated {$avgRating} Rating out of {$ratingCount} Votes.\n"
+			. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
+			. "For more information about the services offered by our business"
+			. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
+			. ". Or visit our profile: {$profile_url}";
 
-				$user_share = array(
-					'address_share' => $address_data,
-					'for_service' => $for_service,
-					'for_review' => $for_review,
+		$user_share = array(
+			'address_share' => $address_data,
+			'for_service' => $for_service,
+			'for_review' => $for_review,
 
-				);
+		);
+
+			$frmcheckText = '';
+				if (!empty($leads->frmcheck) && is_array($leads->frmcheck)) {
+					$frmcheckText = implode(', ', $leads->frmcheck);
+				}
+				$parts = array_filter([
+					$leads->kw_text ? "Interested in " . trim($leads->kw_text) : '',
+					$frmcheckText ? "Mode of " . trim($frmcheckText) : '',
+					$leads->zone ? "location " . trim($leads->zone) : '',
+					$leads->plan ? "plan " . trim($leads->plan) : '',
+					$leads->age ? "age " . trim($leads->age) : '',
+					$leads->experience ? "with experience " . trim($leads->experience) : '',
+				]);
+
+				$main = implode(" • ", $parts);
+
+				$remark = $main;
+
+				if (!empty($leads->remark)) {
+					$remark = $remark . " " . trim($leads->remark);
+				}
 		$data['lead'] = [
 
 			'lead_id' => $leads->lead_id,
@@ -2337,11 +2485,15 @@ class EnquiryController extends Controller
 			'kw_text' => $leads->kw_text,
 			'createdDate' => $created,
 			'coins' => $coins,
-			'city_name' => $leads->city_name,
+			'remark' => !empty($remark) ? trim($remark) : null,
+
+
+			'cityName' => !empty($leads->city_name)
+						? trim($leads->city_name . (!empty($leads->zone) ? ', ' . $leads->zone : ''))
+						: null,
+ 
 			'mobile' => $leads->mobile,
-			'status_name' => $leads->status_name,
-			'zone' => $leads->zone,
-			'area' => $leads->area,
+			'status_name' => $leads->status_name,		 
 			'user_share' => $user_share,
 		];
 

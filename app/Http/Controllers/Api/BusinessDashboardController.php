@@ -162,6 +162,27 @@ class BusinessDashboardController extends Controller
 					'for_review' => $for_review,
 
 				);
+
+                $frmcheckText = '';
+					if (!empty($val->frmcheck) && is_array($val->frmcheck)) {
+						$frmcheckText = implode(', ', $val->frmcheck);
+					}
+					$parts = array_filter([
+						$val->kw_text ? "Interested in " . trim($val->kw_text) : '',
+						$frmcheckText ? "Mode of " . trim($frmcheckText) : '',
+						$val->zone ? "location " . trim($val->zone) : '',
+						$val->plan ? "plan " . trim($val->plan) : '',
+						$val->age ? "age " . trim($val->age) : '',
+						$val->experience ? "with experience " . trim($val->experience) : '',
+					]);
+
+					$main = implode(" • ", $parts);
+
+					$remark = $main;
+
+					if (!empty($val->remark)) {
+						$remark = $remark . " " . trim($val->remark);
+					}
                 $leads_list[$key] = array(
                     'lead_id' => $val->lead_id,
                     'assignId' => $val->assignId,
@@ -173,14 +194,11 @@ class BusinessDashboardController extends Controller
                     'primeLead' => $val->primeLead,
                     'name' => $val->name,
                     'mobile' => $val->mobile,
-                    'email' => $val->email,
-                    'city_id' => $val->city_id,
-                    'cityName' => $val->city_name,
-                    'area_id' => $val->area_id,
-                    'area' => $val->area,
-                    'zone_id' => $val->zone_id,
-                    'zone' => $zonename,
-                    'kw_id' => $val->kw_id,
+                    'email' => $val->email,                     
+                    'remark' => !empty($remark) ? trim($remark) : null,
+					'cityName' => !empty($val->city_name)
+							? trim($val->city_name . (!empty($val->zone) ? ', ' . $val->zone : ''))
+							: null,              
                     'kw_text' => $val->kw_text,
                     'client_id' => $val->client_id,
                     'createdDate' => $created,

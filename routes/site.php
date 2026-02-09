@@ -45,5 +45,10 @@ Route::get('/api/site/blog/{slug}', [App\Http\Controllers\Site\SiteController::c
   
  Route::get('/api/site/business-details/{slug}', [App\Http\Controllers\Site\SiteController::class, 'businessDetails']);
  Route::get('/api/site/about-us', [App\Http\Controllers\Site\SiteController::class, 'aboutus']);
+ Route::get('/api/site/contact-us', [App\Http\Controllers\Site\SiteController::class, 'contactus']);
+ Route::get('/api/site/pricing', [App\Http\Controllers\Site\SiteController::class, 'pricing']);
+ Route::get('/api/site/privacy-policy', [App\Http\Controllers\Site\SiteController::class, 'privacyPolicy']);
+ Route::get('/api/site/terms-conditions', [App\Http\Controllers\Site\SiteController::class, 'termsConditions']);
+ Route::get('/api/site/copyright-policy', [App\Http\Controllers\Site\SiteController::class, 'copyrightPolicy']);
  Route::get('/api/site/faq', [App\Http\Controllers\Site\SiteController::class, 'FAQ']);
  Route::get('/api/site/business-owners', [App\Http\Controllers\Site\SiteController::class, 'businessOwners']);

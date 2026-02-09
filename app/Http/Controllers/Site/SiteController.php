@@ -622,11 +622,11 @@ class SiteController extends Controller
 		$data['blogList'] = $blogPageList;
 		if ($data) {
 			$data['status'] = true;
-			$data['code'] = 200;
+
 			$data['message'] = "Successfully";
 		} else {
 			$data['status'] = false;
-			$data['code'] = 200;
+
 			$data['message'] = "failed";
 		}
 
@@ -729,11 +729,11 @@ class SiteController extends Controller
 		];
 		if ($data) {
 			$data['status'] = true;
-			$data['code'] = 200;
+
 			$data['message'] = "Successfully";
 		} else {
 			$data['status'] = false;
-			$data['code'] = 200;
+
 			$data['message'] = "failed";
 		}
 		return response()->json([
@@ -834,11 +834,11 @@ class SiteController extends Controller
 
 		if ($data) {
 			$data['status'] = true;
-			$data['code'] = 200;
+
 			$data['message'] = "Successfully";
 		} else {
 			$data['status'] = false;
-			$data['code'] = 200;
+
 			$data['message'] = "failed";
 		}
 		return response()->json([
@@ -1112,11 +1112,11 @@ class SiteController extends Controller
 
 		if ($data) {
 			$data['status'] = true;
-			$data['code'] = 200;
+
 			$data['message'] = "Successfully";
 		} else {
 			$data['status'] = false;
-			$data['code'] = 200;
+
 			$data['message'] = "failed";
 		}
 		return response()->json([
@@ -1217,11 +1217,11 @@ class SiteController extends Controller
 
 		if ($data) {
 			$data['status'] = true;
-			$data['code'] = 200;
+
 			$data['message'] = "Successfully";
 		} else {
 			$data['status'] = false;
-			$data['code'] = 200;
+
 			$data['message'] = "failed";
 		}
 		return response()->json([
@@ -1309,11 +1309,11 @@ class SiteController extends Controller
 		}
 		if ($data) {
 			$data['status'] = true;
-			$data['code'] = 200;
+
 			$data['message'] = "Successfully";
 		} else {
 			$data['status'] = false;
-			$data['code'] = 200;
+
 			$data['message'] = "failed";
 		}
 
@@ -2364,10 +2364,10 @@ class SiteController extends Controller
 			return [
 				'id' => $zone->zone_id,
 				'city' => $zone->cityName,
-				'cityDetails' => $cityDetails
+				'cityDetails' => ucfirst($cityDetails)
 			];
 
-		})->unique('cityDetails')->values();	 
+		})->unique('cityDetails')->values();
 
 		return response()->json([
 			'status' => true,
@@ -3193,11 +3193,11 @@ class SiteController extends Controller
 
 		if ($data) {
 			$data['status'] = true;
-			$data['code'] = 200;
+
 			$data['message'] = "Successfully";
 		} else {
 			$data['status'] = false;
-			$data['code'] = 200;
+
 			$data['message'] = "failed";
 		}
 		return response()->json([
@@ -3324,11 +3324,11 @@ class SiteController extends Controller
 			];
 		if ($data) {
 			$data['status'] = true;
-			$data['code'] = 200;
+
 			$data['message'] = "Successfully";
 		} else {
 			$data['status'] = false;
-			$data['code'] = 200;
+
 			$data['message'] = "failed";
 		}
 		return response()->json([
@@ -3417,11 +3417,11 @@ class SiteController extends Controller
 		];
 		if ($data) {
 			$data['status'] = true;
-			$data['code'] = 200;
+
 			$data['message'] = "Successfully";
 		} else {
 			$data['status'] = false;
-			$data['code'] = 200;
+
 			$data['message'] = "failed";
 		}
 		return response()->json([
@@ -3430,6 +3430,559 @@ class SiteController extends Controller
 		], 200);
 
 	}
+
+
+	/**
+	 * @OA\Get(
+	 *     path="/api/site/contact-us",
+	 *     tags={"Frontend Contact-us"},
+	 *     summary="contact-us records",
+	 *     description="Display data home page",
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Data retrieved successfully"),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="array",
+	 *                 @OA\Items(type="object")
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function contactus(Request $request)
+	{
+		$url = config('app.url');
+		$data['registrad_office'] = "Registrad Office";
+		$data['quick_dials'] = "Quick Dials Internet Pvt Ltd";
+		$data['registrad_address'] = "203, Oxford Towers, 139, HAL Old Airport Rd, Kodihalli, Bengaluru, Karnataka 560008";
+		$data['phone'] = "+91-75-5943-5943";
+		$data['WhatsApp'] = "+91-75-5943-5943";
+		$data['email'] = "info@quickdials.com";
+		$data['head_branch'] = "203, Oxford Towers, 139, HAL Old Airport Rd, Kodihalli, Bengaluru, Karnataka 560008 Pin Code:- 560002, India";
+		$data['branch'] = "G-13 Sector-3, Noida , india , 201301";
+		if ($data) {
+			$data['status'] = true;
+
+			$data['message'] = "Successfully";
+		} else {
+			$data['status'] = false;
+
+			$data['message'] = "failed";
+		}
+		return response()->json([
+			'success' => true,
+			'data' => $data,
+		], 200);
+
+	}
+
+
+	/**
+	 * @OA\Get(
+	 *     path="/api/site/pricing",
+	 *     tags={"Frontend Pricing"},
+	 *     summary="Pricing records",
+	 *     description="Display data home page",
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Data retrieved successfully"),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="array",
+	 *                 @OA\Items(type="object")
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function pricing(Request $request)
+	{
+		$url = config('app.url');
+		$data['packages'] = [
+			[
+				'amount' => "0",
+				'coins' => "555",
+				'point-1' => "Long time system login access",
+				'point-2' => "Online system",
+				'point-3' => "Full access",
+				'point-4' => "Push Notification",
+				'point-5' => "Roles & Permissions",
+				'point-6' => "Coins(555)Free First Time",
+
+			],
+
+			[
+				'amount' => "1000",
+				'coins' => "1111",
+				'point-1' => "Long time system login access",
+				'point-2' => "Online system",
+				'point-3' => "Full access",
+				'point-4' => "Push Notification",
+				'point-5' => "Roles & Permissions",
+				'point-6' => "Coins(1111)",
+			],
+
+			[
+				'amount' => "2000",
+				'coins' => "2272",
+				'point-1' => "Long time system login access",
+				'point-2' => "Online system",
+				'point-3' => "Full access",
+				'point-4' => "Push Notification",
+				'point-5' => "Roles & Permissions",
+				'point-6' => "Coins(2272)",
+			],
+			[
+				'amount' => "3000",
+				'coins' => "3529",
+				'point-1' => "Unlimited Users Access",
+				'point-2' => "Online system",
+				'point-3' => "Full access",
+				'point-4' => "Push Notification",
+				'point-5' => "Roles & Permissions",
+				'point-6' => "Coins(3529)",
+			],
+			[
+				'amount' => "5000",
+				'coins' => "6099",
+				'point-1' => "Unlimited Users Access",
+				'point-2' => "Online system",
+				'point-3' => "Full access",
+				'point-4' => "Push Notification",
+				'point-5' => "Roles & Permissions",
+				'point-6' => "Coins(6099)",
+			],
+			[
+				'amount' => "10000",
+				'coins' => "12500",
+				'point-1' => "Unlimited Users Access",
+				'point-2' => "Online system",
+				'point-3' => "Full access",
+				'point-4' => "Push Notification",
+				'point-5' => "Roles & Permissions",
+				'point-6' => "Coins(12500)",
+			],
+			[
+				'amount' => "20000",
+				'coins' => "27777",
+				'point-1' => "Unlimited Users Access",
+				'point-2' => "Online system",
+				'point-3' => "Full access",
+				'point-4' => "Push Notification",
+				'point-5' => "Roles & Permissions",
+				'point-6' => "Coins(27777)",
+			],
+			[
+				'amount' => "40000",
+				'coins' => "57777",
+				'point-1' => "Unlimited Users Access",
+				'point-2' => "Online system",
+				'point-3' => "Full access",
+				'point-4' => "Push Notification",
+				'point-5' => "Roles & Permissions",
+				'point-6' => "Coins(57777)",
+			],
+			[
+				'amount' => "50000",
+				'coins' => "76923",
+				'point-1' => "Unlimited Users Access",
+				'point-2' => "Online system",
+				'point-3' => "Full access",
+				'point-4' => "Push Notification",
+				'point-5' => "Roles & Permissions",
+				'point-6' => "Coins(76923)",
+			],
+
+
+
+
+
+		];
+
+
+
+
+		if ($data) {
+			$data['status'] = true;
+
+			$data['message'] = "Successfully";
+		} else {
+			$data['status'] = false;
+
+			$data['message'] = "failed";
+		}
+		return response()->json([
+			'success' => true,
+			'data' => $data,
+		], 200);
+
+	}
+	/**
+	 * @OA\Get(
+	 *     path="/api/site/privacy-policy",
+	 *     tags={"Frontend Privacy Policy"},
+	 *     summary="Privacy policy records",
+	 *     description="Display data home page",
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Data retrieved successfully"),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="array",
+	 *                 @OA\Items(type="object")
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function privacyPolicy(Request $request)
+	{
+		$url = config('app.url');
+
+		$data['Quick Dials Terms of Use'] = "Quick Dials Terms of Use";
+		$data['quick_dials'] = "Quick Dials is an online networking community that connects its members through a variety of services. This document outlines the terms and conditions governing the provision of these services.";
+
+		$data['term_point'] = [
+			"Your registration as a member of Quick Dials or the use of any of the features and services on quickdials.com constitutes acceptance of our terms and conditions. Either as a registered member or as a visitor constitutes automatic acceptance of these terms and conditions.",
+
+			"Quick Dials reserves the right to update the terms, conditions and notices of this agreement without notice to you. It is your responsibility to periodically review the most current version of this Agreement.",
+
+			"By accessing or using the Sites, Content, or Services, you agree to be bound by these Terms of Service.",
+			"If you do not agree with any of the terms and conditions of Quick Dials, do not register and you will not be authorized to use Quick Dials services.",
+			"The views expressed on the website are not those of Quick Dials, and any issues in them belong to the respective contributors.",
+
+			"You are responsible for safeguarding the password that you use to access the Sites, Content and Services. You agree not to disclose your password to any third party. You agree to take sole responsibility for any activities or actions under your password, whether or not you have authorized such activities or actions.",
+			"You may not make any content item originating from Quick Dials available for public access by any means whatsoever without obtaining prior written permission from Quick Dials.",
+
+			"The content on the website is posted by Quick Dials, visitors and its members. Quick Dials will attempt to ensure the integrity and the accuracy of the Site in the Content and or Services but it does not guarantee that the information is accurate or complete or current. Quick Dials cannot be held liable for inaccuracy of any data listed on the website or any damage caused by the use of inaccurate data. It is Quick Dials’s policy to correct any inaccuracy reported within 7 days.",
+			"The opinions and reviews expressed on the site belong to the users and Quick Dials cannot be held liable in any way about the content of the opinions and reviews. The platform allows users to express their views about different schools, teachers and training centres.",
+			"Information about the schools posted on the site is obtained from their official websites, other source on the internet and in some cases by calling the schools.",
+			"Quick Dials should not be thought of as the authority and the final guide in your decision making.",
+			"Quick Dials at its sole discretion may edit, delete or block access to any Content including Member Posted Content, without notice and without liability. We will however make reasonable efforts to inform you of the changes.",
+			"By uploading the logo of your institute, you give Quick Dials the right to use the logo on Quick Dials website as well as on any Quick Dialsmarketing material. If you are a visitor on our website and if you update any personal contact information such as phone number or e-mail address, Quick Dials reserves the right to contact you over Phone calls, SMS or E-mail. If the intention was for tutoring/learning, or seeking information about our product & services, Quick Dials team will guide you accordingly via phone call, SMS or e-mail.",
+			"While using the web site and engaged in any form of communication on any of the forums, you agree not to:",
+			"Post, publish or transmit any messages that is false, misleading, defamatory, harmful, threatening, abusive, harassing, defamatory, invades another's privacy, offensive, promotes racism, hatred or harm against any individual or group or religion or caste, infringes another's rights including any intellectual property rights or copyright or trademark, violates or encourages any conduct that would violate any applicable law or regulation or would give rise to civil liability.",
+			"Upload or post or otherwise make available any Content that infringes any patent, trademark, trade secret, copyright or other proprietary rights of any party. You may, however, post excerpts of copyrighted material so long as they adhere to Fair Use guidelines.",
+			"Collect screen names and email addresses of members for purposes of advertisement, solicitation or spam are prohibited.",
+			"Quick Dials doesn't allow registration for Home Tuition Agencies & Organizations who are engaged in providing products or services similar to that of Quick Dials (or) who is engaged in collection of data from LeQuick Dials website and sharing/utilizing it for the benefit of competitors. If there are any such registrations, Quick Dials reserves the right to terminate those accounts without any prior notice & without processing the refund of subscription associated to those accounts. Quick Dials also reserves the right to initiate any legal proceedings if any 'Home Tuition Agencies or Organizations' contravenes condition as stated above.",
+			"Before availing any of our advertising packages - Sponsored Listing, Branding Package and Banner Ad, kindly understand the benefits the packages offer. The payment made for any of our Branding packages is non-refundable.",
+			"In case you have any doubt or query, please drop an email at help@quickind.com. We’ll get back to you within 3 working days.",
+			"Attempt to probe, scan, or test the vulnerability of website or breach any security or authentication measures.",
+			"Access or search the Sites Content or Services with any engine, software, or tool.",
+			"Send unsolicited email, junk mail, spam, or chain letters, or promotions or advertisements for products or services.",
+			"Reformat or frame any portion of the web pages that are part of the Quick Dials Site without a written agreement.",
+			"Create user accounts by automated means or under false or fraudulent pertness.",
+			"Post text, messages, graphics or materials that are sales offers, advertisements, or promotions for products or services.",
+			"Quick Dials reserves the right at any time and from time to time to modify or discontinue, temporarily or permanently, the Services with or without notice.",
+
+		];
+		$data['venue_only'] = "Venue Only";
+		$data['paragraph1'] = "If you enter into correspondence or engage in commercial transactions with third parties in connection with your use of the Quick DialsService, such activity is solely between you and the applicable third party. Quick Dialsshall have no liability, obligation or responsibility for any such activity. You hereby release Quick Dials from all claims arising from such activity.";
+		$data['Ownership'] = "Except for the Content submitted by members or users, the Quick DialsService and all aspects thereof, including all copyrights, trademarks, and other intellectual property or proprietary rights therein, is owned by Quick Dials or its licensors. You acknowledge that the Quick Dials and any underlying technology or software used in connection with the Quick DialsService contain Quick Dials’S proprietary information. You may not modify, reproduce, distribute, create derivative works of, publicly display or in any way exploit, any of the content, software, and/or materials available on the Quick Dials Site, or Quick DialsServices in whole or in part except as expressly provided in Quick Dials's policies and procedures. Except as expressly and unambiguously provided herein, Quick Dials and its suppliers do not grant you any express or implied rights, and all rights in the Quick Dials Service not expressly granted by Quick Dials to you are retained by Quick Dials.";
+		$data['limitation_of_liability'] = [
+			"Limitation of Liability",
+
+			"the site, content, and services are provided as is, without warranty or condition of any kind, either expressed or implied. in no event shall quick dials be liable for any direct, indirect, incidental, special, punitive, consequential damages whatsoever, including, but not limited to, damages for loss of profits, goodwill, use, data, or other intangible losses resulting from the use or the inability to use our services",
+			"QuickDials makes no warranty that the sites, content, or services will meet your requirements or be available on an uninterrupted, secure, or error-free basis",
+			"QuickDials makes no warranty regarding the quality of any products, services, accuracy, timeliness, truthfulness, completeness or information purchased or obtained through the sites, content or services"
+
+		];
+		$data['applicable'] = [
+			"Applicable law and dispute resolution",
+
+			"If any dispute, controversy or claim arises out of, or in relation to, or in connection with this Agreement or its termination or validity, the parties shall attempt to mutually resolve the same through mediation.",
+			"However, if the parties fail to resolve the above dispute within a period of 30 days, the same shall be referred to arbitration under the Arbitration and Conciliation Act, 1996.",
+			"The arbitration shall be conducted by a sole arbitrator, appointed by Quick DialsThe place of arbitration shall be in noida, India and it shall be conducted in English.",
+			"The award of the arbitrator shall be final, conclusive and binding upon the parties The courts in noida shall have exclusive jurisdiction in relation to any dispute arising between the User and the Service Provider with Quick Dials.",
+			"The User and Service Provider agree that regardless of any statute or law to the contrary, any claim or cause of action arising out of or related to the use of this Platform or these Terms and Conditions must be filed within one (1) year. Any claim or cause of action which may arise or is filed after a period of one year from the date of transaction shall not be entertained and shall be barred."
+		];
+
+
+
+		if ($data) {
+			$data['status'] = true;
+
+			$data['message'] = "Successfully";
+		} else {
+			$data['status'] = false;
+
+			$data['message'] = "failed";
+		}
+		return response()->json([
+			'success' => true,
+			'data' => $data,
+		], 200);
+
+	}
+
+	/**
+	 * @OA\Get(
+	 *     path="/api/site/terms-conditions",
+	 *     tags={"Frontend Terms Conditions"},
+	 *     summary="Terms Conditions records",
+	 *     description="Display data home page",
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Data retrieved successfully"),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="array",
+	 *                 @OA\Items(type="object")
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function termsConditions(Request $request)
+	{
+		$url = config('app.url');
+
+		$data['services_rovided'] = [
+			"Services Provided",
+			"Quick Dials is a local search and lead generation platform that connects users with businesses, service providers, and professionals.",
+			"We provide information such as business listings, contact details, addresses, categories, and promotional offers.",
+			"Leads generated through our platform are not guaranteed conversions. We only facilitate communication between users and service providers."
+
+		];
+		$data['user_eligibility'] = [
+			"User Eligibility",
+			"You must be at least 18 years old to use our services.",
+			"By registering, you confirm that the information you provide is accurate, complete, and up-to-date.",
+			"Any false, misleading, or fraudulent information may lead to suspension or termination of your account."
+
+		];
+		$data['payments_subscriptions'] = [
+			"Payments & Subscriptions",
+			"Some services may require paid subscriptions or listing fees.",
+			"Payment terms, billing cycles, and refund policies will be displayed at the time of purchase.",
+			"Quick Dials reserves the right to modify pricing at any time with prior notice."
+
+		];
+		$data['business_listings_leads'] = [
+			"Business Listings & Leads",
+			"Businesses listed on Quick Dials are responsible for ensuring their information is correct and updated.",
+			"Quick Dials does not verify every listing and is not responsible for inaccuracies in business data.",
+			"Leads provided are based on user inquiries; we do not guarantee quality, authenticity, or conversion of leads."
+
+		];
+		$data['intellectual_property'] = [
+			"Intellectual Property",
+			"All content, logos, designs, software, and trademarks on Quick Dials are our intellectual property.",
+			"You may not copy, reproduce, distribute, or exploit our content without written permission.",
+
+
+		];
+		$data['third_party_links_services'] = [
+			"Third-Party Links & Services",
+			"Quick Dials may display links, ads, or listings from third-party businesses.",
+			"We are not responsible for the quality, safety, legality, or accuracy of third-party products or services.",
+			"Transactions between you and a third party are at your own risk.",
+
+		];
+
+
+
+
+
+		if ($data) {
+			$data['status'] = true;
+
+			$data['message'] = "Successfully";
+		} else {
+			$data['status'] = false;
+
+			$data['message'] = "failed";
+		}
+		return response()->json([
+			'success' => true,
+			'data' => $data,
+		], 200);
+
+	}
+
+	/**
+	 * @OA\Get(
+	 *     path="/api/site/copyright-policy",
+	 *     tags={"Frontend Copyright Policy"},
+	 *     summary="Copyright policy records",
+	 *     description="Display data home page",
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Data retrieved successfully"),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="array",
+	 *                 @OA\Items(type="object")
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function copyrightPolicy(Request $request)
+	{
+		$url = config('app.url');
+
+		$data['intellectual_property'] = [
+			"Intellectual property rights infringement claims",
+			" Quick Dials Internet Pvt. Ltd. ('Quick Dials') respects the Intellectual Property Rights, including but not limited to patent, copyright, design, trademark, service mark, trade names, data and media (images, illustrations, audio clips, and video clips, among others) ('IP') of others, and prohibits users from uploading, posting, distributing or otherwise transmitting any materials on the Platform, or engaging in any activities on the Platform, which violate the copyrights of others.",
+			"Any and all IP that in any manner forms part of and / or belongs to and / or associated with the Platform, shall vest in and exclusively belong to Quick Dials. All other IP on this Platform belongs to their respective owners.",
+			"IP on this Platform is solely for your personal and non-commercial use. Any use of the IP for which you receive any remuneration, whether in money or otherwise would be considered to be a commercial use. Further, use of IP in any manner without the prior consent of the respective owner or Quick Dials is prohibited and the same would be considered to be a violation of the Intellectual Property Rights of Quick Dials or of the respective owner. Such violation can lead to termination of your account on this Platform. Quick Dials further reserve its right to take appropriate legal actions against such violation of its IP rights."
+
+		];
+		$data['takedown_notice'] = [
+			"Takedown notice",
+			"Pursuant to Rule 75(1) of the Copyright Rules, 2013 and other applicable enactments /amendments there to, in-order to report any material / work on the Platform that violates the copyrights of others, you must send Quick Dials a written communication that includes substantially the following:-.",
+			"The description of the work with the adequate information to identify the work.",
+			"Details establishing that the complainant is the owner or exclusive licensee of copyright in the work.",
+			"Details establishing that the copy of the work which is the subject matter of transient or incidental storage is an infringing copy of the work owned by the complainant and that the allegedly infringing act is not covered under section 52 or any other act that is permitted under the Copyright Act 1957.",
+			"Details of the location where transient or incidental storage of the work is taking place.",
+			"Details of the person, if known, who is responsible for uploading the work infringing the copyright the copyright of the complaint.",
+			"Undertaking that the complainant shall file an infringement suit in the competent court against the person responsible for uploading the infringing copy and produce orders of the competent court having jurisdiction, within a period of twenty-one days from the date of receipt of the notice.",
+
+		];
+		$data['copyright_administrator'] = [
+			"Quick Dials's copyright administrator",
+			"The foregoing written communications (i.e., the above-described takedown notice) must be sent to the following agent of Quick Dials:",
+			" Quick Dials Internet Pvt. Ltd.",
+			"203, Oxford Towers, 139, HAL Old Airport Rd, Kodihalli, Bengaluru, Karnataka 560008",
+			"E-mail: help@quickdials.com",
+			"Website: www.quickdials.com.",
+		];
+
+		$data['disclaimers'] = [
+			"Quick Dials suggests that you consult with your Advocate before you file any of the foregoing written communications (i.e., the above-described takedown notices, and the above described counter-notice). Any person who knowingly materially misrepresents that material found on the Platform is infringing, or that material was removed from the Platform by mistake or misidentification, may expose himself / herself to liability.",
+			"Quick Dials understands that not everyone is a copyright expert, and that accidents can happen. However, Quick Dials has zero tolerance for wilful and repeat copyright infringers. Therefore, pursuant to a complaint, if Quick Dials determines in its sole discretion that you have wilfully violated the copyrights of others or that you have repeatedly violated the copyrights of others despite prior warning(s)",
+			"Quick Dials will cancel your account and prohibit you from further accessing and using the Platform. By accessing or using the Platform, you automatically acknowledge and agree that Quick Dials has the right to cancel your account and prohibit you from further accessing and using the Platform, and your continuing access or use of the Platform reaffirms your acknowledgment and agreement in each instance.",
+
+		];
+
+
+
+
+
+		if ($data) {
+			$data['status'] = true;
+
+			$data['message'] = "Successfully";
+		} else {
+			$data['status'] = false;
+
+			$data['message'] = "failed";
+		}
+		return response()->json([
+			'success' => true,
+			'data' => $data,
+		], 200);
+
+	}
+
+
 	/**
 	 * @OA\Get(
 	 *     path="/api/site/business-owners",
@@ -3481,6 +4034,121 @@ class SiteController extends Controller
 				'Store' => '21 +',
 				'Platform' => '11.3 K+',
 			],
+
+		];
+		$data['grow_your_business'] = [
+			[
+				"Grow Your Business" => "Sell to buyers anytime, anywhere",
+				"Zero Cost" => "No commission or transaction fee",
+				"Manage Your Business Better" => "Lead Management System & other features",
+				"Create Account" => "Add your name and phone number to get started",
+				"Add Business" => "Add the name, e-mail of your company, store/business.",
+				"Add Products/Services" => "Minimum 3 products/services needed for your free listing page.",
+
+			]
+
+		];
+		$data['business_Features'] = [
+			[
+				"📍Google Maps Optimization" => "Improve your local visibility by optimizing Google Business Profile with keywords, reviews.",
+				"img" => "https://www.quickdials.com/img/google-maps.png",
+
+
+			],
+			[
+				"🏷️Local Keyword Targeting" => "Rank for city-specific or “near me” search terms to drive local traffic and qualified leads.",
+				"img" => "https://www.quickdials.com/img/local-keyword.png",
+
+
+			],
+			[
+				"📞 Call & Form Tracking" => "Monitor how many calls and form submissions come from local searches and specific landing pages.",
+				"img" => "https://www.quickdials.com/img/call-form.png",
+
+
+			],
+			[
+				"⭐ Review & Reputation Management" => "Encourage and manage customer reviews to boost credibility and local rankings.",
+				"img" => "https://www.quickdials.com/img/review-putation.png",
+
+
+			],
+			[
+				" 🛠️ Lead Capture Landing Pages" => "Create location-specific landing pages designed to convert local visitors into leads.",
+				"img" => "https://www.quickdials.com/img/lead-capture.png",
+
+
+			],
+			[
+				"🧭 Citation Building & Local Listings" => "Submit your business info to trusted local directories to improve consistency and authority.",
+				"img" => "https://www.quickdials.com/img/citation-building.png",
+
+
+			],
+
+
+
+		];
+
+		$clients = Client::get()->count();
+		$keyword = Keyword::get()->count();
+		$data['grow_business'] = [
+			[
+				"Grow business" => "Join thousands of businesses that trust Lead for their workforce management needs.",
+				"Active Client" => $clients,
+				"Employees Tracked" => "25,000",
+				"Customer Satisfaction" => "100%",
+				"Average Lead Increase" => "35%",
+				"Business Kewyord" => $keyword,
+
+
+			],
+			 
+
+		];
+		$data['Quick Dials help'] = ["How Quick Dials help You to Grow your Business",
+		"Quick Dials helps grow your business by boosting local visibility, generating quality leads, and connecting you with customers searching for your services."
+		
+		];
+	 
+		$data['What is Quick Dials'] = ["Quick Dials is a comprehensive search platform designed for students, parents, and professionals seeking reliable information across India's diverse education landscape and industrial sectors. India offers a wide spectrum of opportunities, spanning education, manufacturing, services, and core industries.",
+		"Education: From schools and coaching centers to higher education institutions.",
+		"Manufacturing: Including automotive, pharmaceuticals, textiles, and chemicals.",
+		"Service Industries: Such as IT, finance, tourism, and healthcare.",
+		"Core Sectors: Covering India s Eight Core Industries — electricity, steel, refinery products, crude oil, coal, cement, natural gas, and fertilizers.",
+		
+		];
+	 
+	 
+		$data['Benefits '] = ["Benefits you will get after associating with us:",
+		"If the provided leads are out of your locality or category, we work on the same to replace it as soon as possible.",
+		"We have the policy to refund on those leads that failed to commit.",
+		"We provide end to end support to deliver the best needed.",
+		"The information about leads will be distributed by SMS on your registered number and mailing on your registered email id..",
+		
+		];
+	 
+		$data['Why choose Quick Dials'] = ["Why choose Quick Dials for growing your business?",
+		"There are a few aspects that make us different from others and the aim directed towards helping the users and the client to get the best opportunity because:",
+		"The work module is very different from others.",
+		"We follow the conversion module.",
+		"We provide dual manually verified leads to your business.",
+		"These aspects make us different from others but there are few more things that make us unique and pops up the priority for you to choose us:",
+		"The leads are generated in both ways organic and inorganic",
+		"We have a co-branding relationship with our own channel partners making us more capable and worthy to choose.",
+		"The leads provided by us are all verified twice by our expert counselors, in order to provide you genuine candidates.",
+		
+		];
+	 
+		$data['Contact Us :'] = ["Contact: +91-75-5943-5943, Email: info@quickdials.com, Website: www.quickdials.com.",
+		"Other ways can be; by registering your business as a free listing, don’t worry, our marketing team is always happy to find you.",
+		 
+		
+		];
+	 
+
+
+		$data['faq'] = [
 			[
 				'q1' => ' What is Quick Dials?',
 				'a1' => 'Quick Dials is an extensive search engine for the students, parents, and Professionals, Quick Dials Only Deals In Education Sector and helps students to grab their right opportunity, and helps business owners to grow their business.',
@@ -3514,13 +4182,16 @@ class SiteController extends Controller
 				'a7' => 'For More Info & any Queries, you can Contact Us on +91  95-5943-5943 or reach out to us via e-mail @ info@quickdials.com, or list your business as free listing, our marketing team Will Contact you Soon.',
 			],
 		];
+
+
+
 		if ($data) {
 			$data['status'] = true;
-			$data['code'] = 200;
+
 			$data['message'] = "Successfully";
 		} else {
 			$data['status'] = false;
-			$data['code'] = 200;
+
 			$data['message'] = "failed";
 		}
 		return response()->json([
@@ -3822,11 +4493,11 @@ class SiteController extends Controller
 
 		if ($data) {
 			$data['status'] = true;
-			$data['code'] = 200;
+
 			$data['message'] = "Successfully";
 		} else {
 			$data['status'] = false;
-			$data['code'] = 200;
+
 			$data['message'] = "failed";
 		}
 		return response()->json([
@@ -3912,11 +4583,11 @@ class SiteController extends Controller
 
 		if ($data) {
 			$data['status'] = true;
-			$data['code'] = 200;
+
 			$data['message'] = "Successfully";
 		} else {
 			$data['status'] = false;
-			$data['code'] = 200;
+
 			$data['message'] = "failed";
 		}
 		return response()->json([

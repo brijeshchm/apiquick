@@ -3412,7 +3412,7 @@ class SiteController extends Controller
 			],
 			[
 				'q8' => 'I Need More info?',
-				'a8' => 'For More Info & any Queries, you can Contact Us on +91 70113 10265 or reach out to us via e-mail @ info@quickdials.com, or list your business as free listing, our marketing team Will Contact you Soon.',
+				'a8' => 'For More Info & any Queries, you can Contact Us on +91  95-5943-5943 or reach out to us via e-mail @ info@quickdials.com, or list your business as free listing, our marketing team Will Contact you Soon.',
 			],
 		];
 		if ($data) {
@@ -3482,6 +3482,10 @@ class SiteController extends Controller
 				'Platform' => '11.3 K+',
 			],
 			[
+				'q1' => ' What is Quick Dials?',
+				'a1' => 'Quick Dials is an extensive search engine for the students, parents, and Professionals, Quick Dials Only Deals In Education Sector and helps students to grab their right opportunity, and helps business owners to grow their business.',
+			],
+			[
 				'q2' => 'Why choose Quick Dials for growing your business?',
 				'a2' => 'Our Work Module Is Completely Different, we work on the Conversion module, and we Provide you  Dual Manually Verified Leads to your Business.',
 			],
@@ -3507,7 +3511,7 @@ class SiteController extends Controller
 			],
 			[
 				'q7' => 'I Need More info?',
-				'a7' => 'For More Info & any Queries, you can Contact Us on +91 70113 10265 or reach out to us via e-mail @ info@quickdials.com, or list your business as free listing, our marketing team Will Contact you Soon.',
+				'a7' => 'For More Info & any Queries, you can Contact Us on +91  95-5943-5943 or reach out to us via e-mail @ info@quickdials.com, or list your business as free listing, our marketing team Will Contact you Soon.',
 			],
 		];
 		if ($data) {

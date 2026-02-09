@@ -2362,7 +2362,8 @@ class SiteController extends Controller
 
 			$data[] = [
 				'id' => $zone->city_id,
-				'city' => $zoneText
+				'city' => $zone->cityName,
+				'city_Details' => $zoneText
 			];
 		}
 

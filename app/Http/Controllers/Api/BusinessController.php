@@ -825,7 +825,7 @@ class BusinessController extends Controller
 		$business_Details = array(
 			'business_name' => 'Quick Dials Pvt Ltd',
 			'corporate_office' => 'G-13, Sector-3 Noida, U.P, India',
-			'registered_office' => '203, Oxford Towers, 139, HAL Old Airport Rd, Kodihalli, Bengaluru, Karnataka 560008',
+			'registered_office' => 'UNIT 101 OXFORD TOWERS, 139/88 HAL OLD AIRPORT RD, H.A.L II Stage, Bangalore North, Bangalore- 560008, Karnataka',
 			'phone_no' => '+91-75-5943-5943',
 			'email' => 'info@quickdials.com',
 			'website' => 'www.quickdials.com',

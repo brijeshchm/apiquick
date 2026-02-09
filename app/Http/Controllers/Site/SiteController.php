@@ -3476,11 +3476,12 @@ class SiteController extends Controller
 		$url = config('app.url');
 		$data['registrad_office'] = "Registrad Office";
 		$data['quick_dials'] = "Quick Dials Internet Pvt Ltd";
-		$data['registrad_address'] = "203, Oxford Towers, 139, HAL Old Airport Rd, Kodihalli, Bengaluru, Karnataka 560008";
+		$data['registrad_address'] = "UNIT 101 OXFORD TOWERS, 139/88 HAL OLD AIRPORT RD, H.A.L II Stage, Bangalore North, Bangalore- 560008, Karnataka";
 		$data['phone'] = "+91-75-5943-5943";
 		$data['WhatsApp'] = "+91-75-5943-5943";
 		$data['email'] = "info@quickdials.com";
-		$data['head_branch'] = "203, Oxford Towers, 139, HAL Old Airport Rd, Kodihalli, Bengaluru, Karnataka 560008 Pin Code:- 560002, India";
+		$data['CIN'] = "U63112KA2026PTC215594 ";
+		$data['head_branch'] = "UNIT 101 OXFORD TOWERS, 139/88 HAL OLD AIRPORT RD, H.A.L II Stage, Bangalore North, Bangalore- 560008, Karnataka Pin Code:- 560002, India";
 		$data['branch'] = "G-13 Sector-3, Noida , india , 201301";
 		if ($data) {
 			$data['status'] = true;
@@ -3950,7 +3951,7 @@ class SiteController extends Controller
 			"Quick Dials's copyright administrator",
 			"The foregoing written communications (i.e., the above-described takedown notice) must be sent to the following agent of Quick Dials:",
 			" Quick Dials Internet Pvt. Ltd.",
-			"203, Oxford Towers, 139, HAL Old Airport Rd, Kodihalli, Bengaluru, Karnataka 560008",
+			"UNIT 101 OXFORD TOWERS, 139/88 HAL OLD AIRPORT RD, H.A.L II Stage, Bangalore North, Bangalore- 560008, Karnataka",
 			"E-mail: help@quickdials.com",
 			"Website: www.quickdials.com.",
 		];

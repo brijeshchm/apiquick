@@ -220,7 +220,7 @@ hr{
 			</table>			
 			<address>
 				<b style="font-size: 18px;">Quick Dials Pvt Ltd</b>
-				<p> 203, Oxford Towers, 139, HAL Old Airport Rd, Kodihalli, Bengaluru, Karnataka 560008 </p>
+				<p> UNIT 101 OXFORD TOWERS, 139/88 HAL OLD AIRPORT RD, H.A.L II Stage, Bangalore North, Bangalore- 560008, Karnataka </p>
 				<p>Phone : +91-95-5943-5943</p>
 				<p>Email : info@quickdials.com</p>
 				<p>Website : www.quickdials.com</p>
@@ -378,7 +378,7 @@ hr{
 			 
 		</article>
 		<aside width="90%">
-			<h1><span ><b style="font-weight: 700;">Regd. Office:</b>203, Oxford Towers, 139, HAL Old Airport Rd, Kodihalli, Bengaluru, Karnataka 560008, India.webite:-www.quickdials.com, cin:-G65HGGGAGAG</span></h1>
+			<h1><span ><b style="font-weight: 700;">Regd. Office:</b>UNIT 101 OXFORD TOWERS, 139/88 HAL OLD AIRPORT RD, H.A.L II Stage, Bangalore North, Bangalore- 560008, Karnataka, India.webite:-www.quickdials.com, cin:-G65HGGGAGAG</span></h1>
 			<div class="thank" style="text-align:center">
 				 
 				 

@@ -165,7 +165,7 @@ class ProfileController extends Controller
      *         @OA\JsonContent(
      *             required={"certifications","business_name","business_intro"},     *            
      *             @OA\Property(property="business_name", type="string", example="business name"),
-     *             @OA\Property(property="address", type="string", example=" E-23 sector -3 noida"),
+     *             @OA\Property(property="address", type="string", example=" G-3 sector -3 noida"),
      *             @OA\Property(property="landmark", type="string", example="landmark"),
      *             @OA\Property(property="email", type="string", example="email"),
      *             @OA\Property(property="mobile", type="integer", example="234567986"),

@@ -2362,7 +2362,7 @@ class SiteController extends Controller
 			}
 
 			return [
-				'id' => $zone->city_id,
+				'id' => $zone->zone_id,
 				'city' => $zone->cityName,
 				'cityDetails' => $cityDetails
 			];
@@ -2374,7 +2374,7 @@ class SiteController extends Controller
 			'message' => 'Successfully',
 			'data' => $data
 		], 200);
- 
+
 	}
 
 	/**
@@ -2459,7 +2459,7 @@ class SiteController extends Controller
 
 			$clientData = DB::table('clients')
 				->where('business_name', 'LIKE', "%{$keyword}%")
-				->selectRaw('NULL as id, business_name as keyword')
+				->selectRaw('id as id, business_name as keyword')
 				->distinct()
 				->limit(20)
 				->get();

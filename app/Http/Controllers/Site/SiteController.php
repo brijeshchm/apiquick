@@ -2286,13 +2286,18 @@ class SiteController extends Controller
 	 */
 	public function getCityList(Request $request)
 	{
+
 		$cid = trim($request->input('city'));
-		$data = [];
-		if ($cid) {
-			$zoneslist = DB::table('zones')
+
+		// -------- ZONE + CITY + PINCODE SEARCH --------
+		$zoneResults = collect();
+
+		if (!empty($cid)) {
+
+			$zoneResults = DB::table('zones')
 				->join('citylists', 'citylists.id', '=', 'zones.city_id')
-				->when($cid, function ($query) use ($cid) {
-					$query->where('zones.zone', 'LIKE', "%{$cid}%")
+				->where(function ($q) use ($cid) {
+					$q->where('zones.zone', 'LIKE', "%{$cid}%")
 						->orWhere('citylists.city', 'LIKE', "%{$cid}%")
 						->orWhere('zones.city_id', $cid)
 						->orWhere('zones.pincode', 'LIKE', "%{$cid}%");
@@ -2300,8 +2305,8 @@ class SiteController extends Controller
 				->select(
 					'zones.id as zone_id',
 					'zones.zone',
+					'citylists.id as city_id',
 					'citylists.city as cityName',
-					'zones.city_id',
 					'zones.pincode'
 				)
 				->distinct()
@@ -2309,7 +2314,7 @@ class SiteController extends Controller
 
 		} else {
 
-			$cityList = [
+			$defaultCities = collect([
 				'Hyderabad',
 				'Patna',
 				'Gorakhpur',
@@ -2327,100 +2332,49 @@ class SiteController extends Controller
 				'Kolkata',
 				'Coimbatore',
 				'Prayagraj'
-			];
-			$zoneslist = DB::table('zones')
+			]);
+
+			$zoneResults = DB::table('zones')
 				->join('citylists', 'citylists.id', '=', 'zones.city_id')
-				->whereIn('citylists.city', $cityList)
+				->whereIn('citylists.city', $defaultCities)
 				->select(
 					DB::raw('MIN(zones.id) as zone_id'),
 					DB::raw('MIN(zones.zone) as zone'),
 					'citylists.id as city_id',
-					'citylists.city as cityName'
+					'citylists.city as cityName',
+					DB::raw('NULL as pincode')
 				)
 				->groupBy('citylists.id', 'citylists.city')
 				->orderBy('citylists.city')
 				->get();
-
 		}
 
+		// -------- TRANSFORM USING COLLECTION --------
+		$data = $zoneResults->map(function ($zone) {
 
-		foreach ($zoneslist as $zone) {
-
-			$zoneText = '';
-
-			if (!empty($zone->zone)) {
-				$zoneText .= $zone->zone;
-			}
-
-			if (!empty($zone->cityName)) {
-				$zoneText .= ($zoneText ? ', ' : '') . $zone->cityName;
-			}
+			$cityDetails = collect([
+				$zone->zone ?? null,
+				$zone->cityName ?? null,
+			])->filter()->implode(', ');
 
 			if (!empty($zone->pincode)) {
-				$zoneText .= ($zoneText ? ' - ' : '') . $zone->pincode;
+				$cityDetails .= ' - ' . $zone->pincode;
 			}
 
-			$data[] = [
+			return [
 				'id' => $zone->city_id,
 				'city' => $zone->cityName,
-				'city_Details' => $zoneText
+				'cityDetails' => $cityDetails
 			];
-		}
 
+		})->unique('cityDetails')->values();	 
 
 		return response()->json([
 			'status' => true,
 			'message' => 'Successfully',
 			'data' => $data
 		], 200);
-
-
-		// $city = $request->input('city');
-
-		// // Initialize query
-		// $query = DB::table('citylists');
-
-
-		// // Apply filters
-		// if (is_null($city)) {
-		// 	$query->whereIn('citylists.id', ['278', '596', '961', '428', '29', '1100', '1003', '1002', '917', '874', '758', '643']);
-		// } else {
-		// 	$query->where(function ($q) use ($city) {
-		// 		$q->where('citylists.city', 'LIKE', '%' . $city . '%')
-		// 			->orWhere('citylists.id', 'LIKE', '%' . $city . '%')
-		// 			->orWhere('citylists.state', 'LIKE', '%' . $city . '%');
-		// 	});
-		// }
-
-		// // Get results
-		// $locations = $query->get();
-
-		// // Transform results
-		// $html = [];
-		// foreach ($locations as $index => $data) {
-		// 	$html[$index] =
-		// 		[
-		// 			'city' => $data->city,
-		// 			'id' => $data->id
-
-		// 		];
-
-
-		// }
-
-		// // Handle empty results
-		// if (empty($html)) {
-		// 	return response()->json([
-		// 		'success' => false,
-		// 		'message' => 'No locations found.',
-		// 	], 404);
-		// }
-
-		// // Return JSON response
-		// return response()->json([
-		// 	'success' => true,
-		// 	'data' => array_values($html),
-		// ], 200);
+ 
 	}
 
 	/**
@@ -2475,30 +2429,92 @@ class SiteController extends Controller
 	{
 
 		$keyword = trim($request->input('keyword'));
-		// Initialize query
-		$query = DB::table('keyword');
-		// Apply filters
-		if (empty($keyword)) {
-			$query->whereIn('keyword.id', ['288', '601', '1517', '159', '602', '1624', '166', '536', '1937', '1481', '570', '1665']);
-		} else {
-			$query->where(function ($q) use ($keyword) {
-				$q->where('keyword.keyword', 'LIKE', '%' . $keyword . '%');
 
-			});
+		// Base keyword query
+		$locations = DB::table('keyword')
+			->when(empty($keyword), function ($q) {
+				$q->whereIn('keyword.id', [
+					288,
+					601,
+					1517,
+					159,
+					602,
+					1624,
+					166,
+					536,
+					1937,
+					1481,
+					570,
+					1665
+				]);
+			})
+			->when(!empty($keyword), function ($q) use ($keyword) {
+				$q->where('keyword.keyword', 'LIKE', "%{$keyword}%");
+			})
+			->select('id', 'keyword')
+			->get();
+
+		// Merge client data when keyword exists
+		if (!empty($keyword)) {
+
+			$clientData = DB::table('clients')
+				->where('business_name', 'LIKE', "%{$keyword}%")
+				->selectRaw('NULL as id, business_name as keyword')
+				->distinct()
+				->limit(20)
+				->get();
+
+			$locations = $locations->merge($clientData);
 		}
 
-		// Get results
-		$locations = $query->get();
+		// Transform collection
+		$html = $locations->map(function ($item) {
+			return [
+				'id' => $item->id,
+				'keyword' => $item->keyword,
+			];
+		})->values();
 
-		// Transform results
-		$html = [];
-		foreach ($locations as $index => $data) {
-			$html[$index] =
-				[
-					'keyword' => $data->keyword,
-					'id' => $data->id
-				];
-		}
+
+		// $keyword = trim($request->input('keyword'));
+
+
+		// // Initialize query
+		// $query = DB::table('keyword');
+		// // Apply filters
+		// if (empty($keyword)) {
+		// 	$query->whereIn('keyword.id', ['288', '601', '1517', '159', '602', '1624', '166', '536', '1937', '1481', '570', '1665']);
+		// } else {
+		// 	$query->where(function ($q) use ($keyword) {
+		// 		$q->where('keyword.keyword', 'LIKE', '%' . $keyword . '%');
+
+		// 	});
+		// }
+
+
+		// // Get results
+		// $locations = $query->get();
+
+		// if (!empty($keyword)) {
+
+		// 		$clientData = DB::table('clients')
+		// 			->where('business_name', 'LIKE', "%{$keyword}%")
+		// 			->select('business_name as keyword')
+		// 			->distinct()
+		// 			->limit(20)
+		// 			->get();
+
+		// 	 $locations = $locations->merge($clientData);
+		// 	}
+		// // Transform results
+		// $html = [];
+		// foreach ($locations as $index => $data) {
+		// 	$html[$index] =
+		// 		[
+		// 			'keyword' => $data->keyword,
+		// 			'id' => $data->id
+		// 		];
+		// }
 
 		// Handle empty results
 		if (empty($html)) {
@@ -2511,7 +2527,7 @@ class SiteController extends Controller
 		// Return JSON response
 		return response()->json([
 			'success' => true,
-			'data' => array_values($html),
+			'data' => $html,
 		], 200);
 
 

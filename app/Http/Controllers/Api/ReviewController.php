@@ -285,9 +285,28 @@ class ReviewController extends Controller
             ], 400);
         }
 
+
+            if (!Auth::guard('sanctum')->check()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthenticated: Token is missing or invalid',
+                    'error' => 'token_missing_or_invalid'
+                ], 401);
+            }
+            $user = auth('sanctum')->user();
+
+            if (!$user) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthenticated: Token is missing or invalid',
+                    'error' => 'token_missing_or_invalid'
+                ], 401);
+            }
+
+        
         // ✅ Fetch comment
         $comment = Comment::select('comment_ID', 'comment_author', 'comment_author_email', 'comment_author_phone', 'rating', 'comment_content', 'created_at')
-            ->orderByDesc('comment_ID')->where('comment_ID', $id)->first();
+            ->orderByDesc('comment_ID')->where('comment_client_ID',$user->id)->where('comment_ID', $id)->first();
 
         if (!$comment) {
             return response()->json([
@@ -363,7 +382,7 @@ class ReviewController extends Controller
         $comment = Comment::where('comment_ID', $id)
             ->where('comment_client_ID', $user->id)
             ->first();
-//  dd($comment);
+ 
         if (!$comment) {
             return response()->json(['status' => false, 'message' => 'Review not found'], 404);
         }

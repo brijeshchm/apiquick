@@ -827,6 +827,7 @@ class BusinessController extends Controller
 			'corporate_office' => 'G-13, Sector-3 Noida, U.P, India',
 			'registered_office' => 'UNIT 101 OXFORD TOWERS, 139/88 HAL OLD AIRPORT RD, H.A.L II Stage, Bangalore North, Bangalore- 560008, Karnataka',
 			'phone_no' => '+91-75-5943-5943',
+			'whatsapp' => '917559435943',
 			'email' => 'info@quickdials.com',
 			'website' => 'www.quickdials.com',
 			'GSTIN' => '',

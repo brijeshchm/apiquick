@@ -6752,7 +6752,7 @@
                                     },
                                     "address": {
                                         "type": "string",
-                                        "example": " E-23 sector -3 noida"
+                                        "example": " G-3 sector -3 noida"
                                     },
                                     "landmark": {
                                         "type": "string",

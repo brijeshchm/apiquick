@@ -1305,11 +1305,23 @@ class EnquiryController extends Controller
 					. "For more information about the services offered by our business"
 					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
 					. ". Or visit our profile: {$profile_url}";
+				$share_lead = 
+					'Name: ' . (trim($val->name ?? '') ?: '') . ', ' .
+					'Mobile: ' . (trim($val->mobile ?? '') ?: '') . ', ' .
+					'Email: ' . (trim($val->email ?? '') ?: '') . ', ' .
+					'Service: ' . (trim($val->kw_text ?? '') ?: '') . ', ' .
+					'Location: ' . (
+						!empty($val->city_name)
+							? trim($val->city_name . (!empty($val->zone) ? ', ' . $val->zone : ''))
+							: ''
+					);
+
 
 				$user_share = array(
 					'address_share' => $address_data,
 					'for_service' => $for_service,
 					'for_review' => $for_review,
+					'share_lead' => $share_lead,
 
 				);
 				$frmcheckText = '';
@@ -1527,10 +1539,23 @@ class EnquiryController extends Controller
 						. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
 						. ". Or visit our profile: {$profile_url}";
 
+
+					$share_lead = 
+					'Name: ' . (trim($val->name ?? '') ?: '') . ', ' .
+					'Mobile: ' . (trim($val->mobile ?? '') ?: '') . ', ' .
+					'Email: ' . (trim($val->email ?? '') ?: '') . ', ' .
+					'Service: ' . (trim($val->kw_text ?? '') ?: '') . ', ' .
+					'Location: ' . (
+						!empty($val->city_name)
+							? trim($val->city_name . (!empty($val->zone) ? ', ' . $val->zone : ''))
+							: ''
+					);
+
 					$user_share = array(
 						'address_share' => $address_data,
 						'for_service' => $for_service,
 						'for_review' => $for_review,
+						'share_lead' => $share_lead,
 
 					);
 
@@ -1763,10 +1788,22 @@ class EnquiryController extends Controller
 					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
 					. ". Or visit our profile: {$profile_url}";
 
+
+				$share_lead = 
+					'Name: ' . (trim($val->name ?? '') ?: '') . ', ' .
+					'Mobile: ' . (trim($val->mobile ?? '') ?: '') . ', ' .
+					'Email: ' . (trim($val->email ?? '') ?: '') . ', ' .
+					'Service: ' . (trim($val->kw_text ?? '') ?: '') . ', ' .
+					'Location: ' . (
+						!empty($val->city_name)
+							? trim($val->city_name . (!empty($val->zone) ? ', ' . $val->zone : ''))
+							: ''
+					);
 				$user_share = array(
 					'address_share' => $address_data,
 					'for_service' => $for_service,
 					'for_review' => $for_review,
+					'share_lead' => $share_lead,
 
 				);
 
@@ -1993,10 +2030,22 @@ class EnquiryController extends Controller
 					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
 					. ". Or visit our profile: {$profile_url}";
 
+
+				$share_lead = 
+					'Name: ' . (trim($val->name ?? '') ?: '') . ', ' .
+					'Mobile: ' . (trim($val->mobile ?? '') ?: '') . ', ' .
+					'Email: ' . (trim($val->email ?? '') ?: '') . ', ' .
+					'Service: ' . (trim($val->kw_text ?? '') ?: '') . ', ' .
+					'Location: ' . (
+						!empty($val->city_name)
+							? trim($val->city_name . (!empty($val->zone) ? ', ' . $val->zone : ''))
+							: ''
+					);
 				$user_share = array(
 					'address_share' => $address_data,
 					'for_service' => $for_service,
 					'for_review' => $for_review,
+					'share_lead' => $share_lead,
 
 				);
 
@@ -2219,10 +2268,21 @@ class EnquiryController extends Controller
 					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
 					. ". Or visit our profile: {$profile_url}";
 
+				$share_lead = 
+					'Name: ' . (trim($val->name ?? '') ?: '') . ', ' .
+					'Mobile: ' . (trim($val->mobile ?? '') ?: '') . ', ' .
+					'Email: ' . (trim($val->email ?? '') ?: '') . ', ' .
+					'Service: ' . (trim($val->kw_text ?? '') ?: '') . ', ' .
+					'Location: ' . (
+						!empty($val->city_name)
+							? trim($val->city_name . (!empty($val->zone) ? ', ' . $val->zone : ''))
+							: ''
+					);
 				$user_share = array(
 					'address_share' => $address_data,
 					'for_service' => $for_service,
 					'for_review' => $for_review,
+					'share_lead' => $share_lead,
 
 				);
 				$frmcheckText = '';
@@ -2443,10 +2503,22 @@ class EnquiryController extends Controller
 			. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
 			. ". Or visit our profile: {$profile_url}";
 
+		$share_lead = 
+					'Name: ' . (trim($leads->name ?? '') ?: '') . ', ' .
+					'Mobile: ' . (trim($leads->mobile ?? '') ?: '') . ', ' .
+					'Email: ' . (trim($leads->email ?? '') ?: '') . ', ' .
+					'Service: ' . (trim($leads->kw_text ?? '') ?: '') . ', ' .
+					'Location: ' . (
+						!empty($leads->city_name)
+							? trim($leads->city_name . (!empty($leads->zone) ? ', ' . $leads->zone : ''))
+							: ''
+					);
+
 		$user_share = array(
 			'address_share' => $address_data,
 			'for_service' => $for_service,
 			'for_review' => $for_review,
+			'share_lead' => $share_lead,
 
 		);
 

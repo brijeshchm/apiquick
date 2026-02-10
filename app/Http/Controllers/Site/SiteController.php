@@ -2769,6 +2769,7 @@ class SiteController extends Controller
 				'last_name' => $clientscheck->last_name,
 				'email' => $clientscheck->email,
 				'mobile' => $clientscheck->mobile,
+				'whatsapp' => $clientscheck->mobile,
 				'certified_status' => $clientscheck->certified_status,
 				'trusted_status' => $clientscheck->trusted_status,
 				'gst_status' => $clientscheck->gst_status,

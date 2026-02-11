@@ -277,9 +277,10 @@ class ProfileController extends Controller
             $string = preg_replace('/[^A-Za-z0-9 ]/', ' ', $string);
             $string = preg_replace('/\s+/', ' ', trim($string));
 
-         
-            if (!empty($request->time)) {
-                $client->time = json_encode($request->time);
+                
+            $time = $request->input('time');
+            if (is_array($time) && !empty($time)) {
+            $client->time = json_encode($time);
             }
  
             $client->update([
@@ -302,7 +303,7 @@ class ProfileController extends Controller
                 'zone' => $zone->zone,
 
                 'area' => $request->area,
-                'occupation' => $request->occupation,
+                // 'occupation' => $request->occupation,
                 'pincode' => $request->pincode,
                 'country' => $request->country,
 

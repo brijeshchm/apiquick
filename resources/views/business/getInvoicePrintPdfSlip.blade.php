@@ -233,11 +233,15 @@ hr{
 				</tr>
 				<tr>
 					<th><span >PAN No</span></th>
-					<td><strong >AAECL0574H</strong></td>
+					<td><strong >AABCQ2259D</strong></td>
 				</tr>			 
 				<tr>
 					<th><span >CIN No</span></th>
-					<td><strong >MRTTL01615F</strong></td>
+					<td><strong >U63112KA2026PTC215594</strong></td>
+				</tr>							 
+				<tr>
+					<th><span >TAN</span></th>
+					<td><strong >BLRQ01951F</strong></td>
 				</tr>							 
 				<tr>
 					<th><span >Serial No</span></th>

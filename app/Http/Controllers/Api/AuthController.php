@@ -295,6 +295,66 @@ class AuthController extends Controller
             'data' => $user,
         ]);
     }
+    /**
+     * @OA\Post(
+     *     path="/api/check-fcm-token",
+     *     tags={"Check FCM Token"},
+     *     summary="Check FCM Token",
+     *     description="This endpoint sends an email to the provided address.",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email","subject","message"},
+     *             @OA\Property(property="email", type="string", format="email", example="test@example.com"),
+     *             
+     *                        
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Email sent successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Email sent successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid input"
+     *     )
+     * )
+     */
+    public function checkFcmToken(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',            
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $user = Client::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json(['status' => false, 'message' => 'User account not found',], 403);
+        }
+        if (!$user->fcm_token) {
+            return response()->json(['status' => false, 'message' => 'User FCM token not found',], 403);
+        }
+            
+        // Generate new Sanctum token
+        // $token = $user->createToken('api-token')->plainTextToken;
+        //$token = $user->createToken('browser-extension')->plainTextToken;
+
+        return response()->json([
+            'status' => true,
+            'message' => 'FCM successfully',
+            'fcm_token' => $user->fcm_token,
+             
+          
+        ]);
+    }
 
 
 

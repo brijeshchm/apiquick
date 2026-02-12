@@ -831,8 +831,9 @@ class BusinessController extends Controller
 			'email' => 'info@quickdials.com',
 			'website' => 'www.quickdials.com',
 			'GSTIN' => '',
-			'pan_no' => '',
-			'CIN_No' => ''
+			'pan_no' => 'AABCQ2259D',
+			'TAN' => 'BLRQ01951F',
+			'CIN_No' => 'U63112KA2026PTC215594'
 
 		);
 		return response()->json([

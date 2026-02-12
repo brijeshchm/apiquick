@@ -577,6 +577,15 @@ class BusinessLogoController extends Controller
 						$msmeImage = config('app.website') . $msme_certificate->large->src;				 
 						}
 					}
+
+					$coiImage = "";
+					if (!empty($clientscheck->coi_certificate)) {
+					$coi_certificate = json_decode($clientscheck->coi_certificate);
+	
+					if (!empty($coi_certificate)) {
+						$coiImage = config('app.website') . $coi_certificate->large->src;				 
+						}
+					}
 	
 
 				$data['certificate'] = [
@@ -589,6 +598,8 @@ class BusinessLogoController extends Controller
 					'iso_certificate' => $isoImage ?? '',
 					'msme_no' => $clientscheck->msme_no ?? '',
 					'msme_certificate' => $msmeImage ?? '',			 	
+					'coi_no' => $clientscheck->coi_no ?? '',
+					'coi_certificate' => $coiImage ?? '',			 	
 				];
 		return response()->json([
 			'status'  => true,

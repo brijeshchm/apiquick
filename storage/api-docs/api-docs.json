@@ -464,6 +464,63 @@
                 }
             }
         },
+        "/api/check-fcm-token": {
+            "post": {
+                "tags": [
+                    "Check FCM Token"
+                ],
+                "summary": "Check FCM Token",
+                "description": "This endpoint sends an email to the provided address.",
+                "operationId": "6ea6efaa02626496123fda6ff1a33e23",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "subject",
+                                    "message"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "test@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Email sent successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email sent successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    }
+                }
+            }
+        },
         "/api/logout": {
             "post": {
                 "tags": [
@@ -10001,6 +10058,10 @@
         {
             "name": "Socials Login",
             "description": "Socials Login"
+        },
+        {
+            "name": "Check FCM Token",
+            "description": "Check FCM Token"
         },
         {
             "name": "Auth Logout",

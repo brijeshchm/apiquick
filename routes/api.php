@@ -32,6 +32,7 @@ use App\Http\Controllers\Api\ProfileController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/google-login', [AuthController::class, 'googleLogin']);
+Route::post('/check-fcm-token', [AuthController::class, 'checkFcmToken']);
 
 Route::prefix('auth/google')->group(function () {
     Route::get('redirect', [AuthController::class, 'getRedirectUrl']);

@@ -14,6 +14,8 @@ use Mail;
 use Carbon\Carbon;
 use Laravel\Socialite\Facades\Socialite;
 use Validator;
+use App\Events\LeadPush;
+use App\Models\Lead;
 use Google\Client as GoogleClient;
 /**
  * @OA\SecurityScheme(
@@ -342,6 +344,10 @@ class AuthController extends Controller
         if (!$user->fcm_token) {
             return response()->json(['status' => false, 'message' => 'User FCM token not found',], 403);
         }
+
+        $lead=  Lead::find(559);
+ 
+        event(new LeadPush($lead,$user->id));
             
         // Generate new Sanctum token
         // $token = $user->createToken('api-token')->plainTextToken;

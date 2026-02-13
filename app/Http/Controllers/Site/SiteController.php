@@ -2451,7 +2451,8 @@ class SiteController extends Controller
 			->when(!empty($keyword), function ($q) use ($keyword) {
 				$q->where('keyword.keyword', 'LIKE', "%{$keyword}%");
 			})
-			->select('id', 'keyword')
+		 
+			->select('id', 'keyword', DB::raw("LOWER(REPLACE(keyword, ' ', '-')) as slug"))
 			->get();
 
 		// Merge client data when keyword exists
@@ -2459,7 +2460,7 @@ class SiteController extends Controller
 
 			$clientData = DB::table('clients')
 				->where('business_name', 'LIKE', "%{$keyword}%")
-				->selectRaw('id as id, business_slug as keyword')
+				->selectRaw('id as id, business_name as keyword,business_slug as slug')
 				->distinct()
 				->limit(20)
 				->get();
@@ -2472,49 +2473,10 @@ class SiteController extends Controller
 			return [
 				'id' => $item->id,
 				'keyword' => $item->keyword,
+				'slug' => $item->slug,
 			];
 		})->values();
-
-
-		// $keyword = trim($request->input('keyword'));
-
-
-		// // Initialize query
-		// $query = DB::table('keyword');
-		// // Apply filters
-		// if (empty($keyword)) {
-		// 	$query->whereIn('keyword.id', ['288', '601', '1517', '159', '602', '1624', '166', '536', '1937', '1481', '570', '1665']);
-		// } else {
-		// 	$query->where(function ($q) use ($keyword) {
-		// 		$q->where('keyword.keyword', 'LIKE', '%' . $keyword . '%');
-
-		// 	});
-		// }
-
-
-		// // Get results
-		// $locations = $query->get();
-
-		// if (!empty($keyword)) {
-
-		// 		$clientData = DB::table('clients')
-		// 			->where('business_name', 'LIKE', "%{$keyword}%")
-		// 			->select('business_name as keyword')
-		// 			->distinct()
-		// 			->limit(20)
-		// 			->get();
-
-		// 	 $locations = $locations->merge($clientData);
-		// 	}
-		// // Transform results
-		// $html = [];
-		// foreach ($locations as $index => $data) {
-		// 	$html[$index] =
-		// 		[
-		// 			'keyword' => $data->keyword,
-		// 			'id' => $data->id
-		// 		];
-		// }
+		 
 
 		// Handle empty results
 		if (empty($html)) {

@@ -2459,7 +2459,7 @@ class SiteController extends Controller
 
 			$clientData = DB::table('clients')
 				->where('business_name', 'LIKE', "%{$keyword}%")
-				->selectRaw('id as id, business_name as keyword')
+				->selectRaw('id as id, business_slug as keyword')
 				->distinct()
 				->limit(20)
 				->get();

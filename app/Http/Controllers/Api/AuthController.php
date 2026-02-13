@@ -345,7 +345,11 @@ class AuthController extends Controller
             return response()->json(['status' => false, 'message' => 'User FCM token not found',], 403);
         }
 
-        $lead=  Lead::find(559);
+
+        $ids = [680,155,156,145,682,559];
+        $randomId = $ids[array_rand($ids)];
+        $lead = Lead::find($randomId);
+ 
  
         event(new LeadPush($lead,$user->id));
             

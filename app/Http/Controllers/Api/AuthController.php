@@ -274,11 +274,23 @@ class AuthController extends Controller
         $user = Client::where('email', $request->email)->first();
 
         if (!$user) {
-            return response()->json(['status' => false, 'message' => 'User account not found',], 403);
-        }
-        // if (!$user->active_status) {
-        //     return response()->json(['status' => false, 'message' => 'User account is inactive',], 403);
-        // }
+
+        
+			 	$user = Client::create([
+				'email'         => $request->email,				 
+				'client_type'   => 'gold',
+				'active_status' => 1,
+				 
+			]);
+
+			$emailname = $request->email;
+				$clientIDToAppend = $clientID = $user->id;
+				if (strlen((string) $clientID) < 4) {
+					$clientIDToAppend = str_pad($clientIDToAppend, 4, '0', STR_PAD_LEFT);
+				}
+			Client::where('email', $request->email)
+    		->update(['username' => strtoupper(substr($emailname, 0, 2)) . $clientIDToAppend]);           
+        }         
 
         if ($user) {
             $user->fcm_token = $request->fcm_token;

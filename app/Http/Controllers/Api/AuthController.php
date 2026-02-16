@@ -280,6 +280,7 @@ class AuthController extends Controller
 				'email'         => $request->email,				 
 				'client_type'   => 'gold',
 				'active_status' => 1,      
+			    'password' => random_int(1111, 9999),   
 				 
 			]);
 

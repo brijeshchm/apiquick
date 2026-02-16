@@ -306,6 +306,8 @@ class SiteController extends Controller
 				'landmark' => $client->landmark,
 				'rating' => $client->rating,
 				'avgRating' => $avgRating,
+				'call' => "919559435943",
+				'whatsapp' =>"919559435943",
 				'comment_count' => $client->comment_count,
 			];
 		});

@@ -274,20 +274,23 @@ class AuthController extends Controller
         $user = Client::where('email', $request->email)->first();
 
         if (!$user) {
-            $emailname = $request->email;
-            $clientIDToAppend = $clientID = $user->id;
-            if (strlen((string) $clientID) < 4) {
-                $clientIDToAppend = str_pad($clientIDToAppend, 4, '0', STR_PAD_LEFT);
-            }
 
-            $user = Client::create([
-                'email' => $request->email,
-                'client_type' => 'gold',
-                'active_status' => 1,
-                'username' => strtoupper(substr($emailname, 0, 2)) . $clientIDToAppend
+        
+			 	$user = Client::create([
+				'email'         => $request->email,				 
+				'client_type'   => 'gold',
+				'active_status' => 1,      
+				 
+			]);
 
-            ]);
-        }
+			$emailname = $request->email;
+				$clientIDToAppend = $clientID = $user->id;
+				if (strlen((string) $clientID) < 4) {
+					$clientIDToAppend = str_pad($clientIDToAppend, 4, '0', STR_PAD_LEFT);
+				}
+			Client::where('email', $request->email)
+    		->update(['username' => strtoupper(substr($emailname, 0, 2)) . $clientIDToAppend]);           
+        }         
 
         if ($user) {
             $user->fcm_token = $request->fcm_token;
@@ -338,7 +341,7 @@ class AuthController extends Controller
     public function checkFcmToken(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
+            'email' => 'required|email',            
         ]);
 
         if ($validator->fails()) {
@@ -355,13 +358,13 @@ class AuthController extends Controller
         }
 
 
-        $ids = [680, 155, 156, 145, 682, 559];
+        $ids = [680,155,156,145,682,559];
         $randomId = $ids[array_rand($ids)];
         $lead = Lead::find($randomId);
-
-
-        event(new LeadPush($lead, $user->id));
-
+ 
+ 
+        event(new LeadPush($lead,$user->id));
+            
         // Generate new Sanctum token
         // $token = $user->createToken('api-token')->plainTextToken;
         //$token = $user->createToken('browser-extension')->plainTextToken;
@@ -370,8 +373,8 @@ class AuthController extends Controller
             'status' => true,
             'message' => 'FCM successfully',
             'fcm_token' => $user->fcm_token,
-
-
+             
+          
         ]);
     }
 

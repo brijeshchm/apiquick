@@ -35,7 +35,8 @@ use App\Models\Citieslists;
 use App\Models\AssignedZone;
 use App\Models\KeywordSellCount;
 use App\Models\Client\AssignedKWDS;
-
+use Illuminate\Support\Facades\Cache;
+ 
 class BusinessController extends Controller
 {
 	/**
@@ -529,60 +530,24 @@ class BusinessController extends Controller
 			'data' => $states,
 		], 200);
 	}
-	/**
-	 * @OA\Get(
-	 *     path="/api/business/zones/get-zones",
-	 *     tags={"Zones"},
-	 *     summary="Get zones list",
-	 *     description="Fetch a list of zones .",
-	 *     security={{"bearerAuth":{}}},   
-	 *     @OA\Response(
-	 *         response=200,
-	 *         description="Zones retrieved successfully",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="success", type="boolean", example=true),
-	 *             @OA\Property(property="data", type="array",
-	 *                 @OA\Items(
-	 *                     @OA\Property(property="id", type="integer", example=4),
-	 *                     @OA\Property(property="zones", type="string", example="South Delhi")
-	 *                 )
-	 *             )
-	 *         )
-	 *     ),
-	 *     @OA\Response(
-	 *         response=401,
-	 *         description="Unauthenticated",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
-	 *         )
-	 *     ),
-	 *     @OA\Response(
-	 *         response=404,
-	 *         description="No zones found",
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="success", type="boolean", example=false),
-	 *             @OA\Property(property="message", type="string", example="No cities found for this state.")
-	 *         )
-	 *     )
-	 * )
-	 */
+	 
 
 	public function getZones(Request $request)
 	{
-		$zonelists = Zone::whereNotNull('zone')
-			->pluck('zone', 'id')
-			->map(function ($zone, $id) {
-				return [
-					'zone_id' => $id,
-					'zone' => $zone
-				];
-			})->values();
-		return response()->json([
-			'status' => true,
-			'message' => "Successfully",
-			'data' => $zonelists,
 
-		], 200);
+		$zones = Cache::remember('all_zones', 86400, function () {
+
+		return DB::table('zones')
+		->select('id as zone_id', 'zone', 'pincode')
+		->whereNotNull('zone')
+		->get();
+		});
+
+		return response()->json([
+		'success' => true,
+		'data' => $zones
+		]);
+			 
 	}
 
 

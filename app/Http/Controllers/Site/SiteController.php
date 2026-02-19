@@ -2299,10 +2299,10 @@ class SiteController extends Controller
 			$zoneResults = DB::table('zones')
 				->join('citylists', 'citylists.id', '=', 'zones.city_id')
 				->where(function ($q) use ($cid) {
-					$q->where('zones.zone', 'LIKE', "%{$cid}%")
-						->orWhere('citylists.city', 'LIKE', "%{$cid}%")
+					$q->where('zones.zone', 'LIKE', "{$cid}%")
+						->orWhere('citylists.city', 'LIKE', "{$cid}%")
 						->orWhere('zones.city_id', $cid)
-						->orWhere('zones.pincode', 'LIKE', "%{$cid}%");
+						->orWhere('zones.pincode', 'LIKE', "{$cid}%");
 				})
 				->select(
 					'zones.id as zone_id',

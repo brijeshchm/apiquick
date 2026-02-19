@@ -532,25 +532,6 @@ class BusinessController extends Controller
 	}
 	 
 
-	public function getZones(Request $request)
-	{
-
-		$zones = Cache::remember('all_zones', 86400, function () {
-
-		return DB::table('zones')
-		->select('id as zone_id', 'zone', 'pincode')
-		->whereNotNull('zone')
-		->get();
-		});
-
-		return response()->json([
-		'success' => true,
-		'data' => $zones
-		]);
-			 
-	}
-
-
 	/**
 	 * @OA\Post(
 	 *     path="/api/business/zones/get-zone-by-city",
@@ -561,7 +542,7 @@ class BusinessController extends Controller
 	 *     @OA\Parameter(
 	 *         name="city_id",
 	 *         in="query",
-	 *         required=true,
+	 *         required=false,
 	 *         description="Search by city id,city and pincode ",
 	 *         @OA\Schema(type="string", example=278)
 	 *     ),
@@ -599,14 +580,16 @@ class BusinessController extends Controller
 	{
 
 		$cid = trim($request->input('city_id'));
+		 
 		$data = [];
+		if(!empty($cid)){
 		$zoneslist = DB::table('zones')
 			->join('citylists', 'citylists.id', '=', 'zones.city_id')
 			->when($cid, function ($query) use ($cid) {
-				$query->where('zones.zone', 'LIKE', "%{$cid}%")
-					->orWhere('citylists.city', 'LIKE', "%{$cid}%")
+				$query->where('zones.zone', 'LIKE', "{$cid}%")
+					->orWhere('citylists.city', 'LIKE', "{$cid}%")
 					->orWhere('zones.city_id', $cid)
-					->orWhere('zones.pincode', 'LIKE', "%{$cid}%");
+					->orWhere('zones.pincode', 'LIKE', "{$cid}%");
 			})
 			->select(
 				'zones.id as zone_id',
@@ -615,11 +598,12 @@ class BusinessController extends Controller
 				'zones.city_id',
 				'zones.pincode'
 			)
+			 ->limit(50) 
 			->distinct()
 			->get();
 
-		if ($zoneslist->isEmpty()) {
-
+		}else{
+ 
 			$cityList = [
 				'Hyderabad',
 				'Patna',
@@ -677,10 +661,10 @@ class BusinessController extends Controller
 			];
 		}
 
-		$data[] = [
-			'zone_id' => 'Other',
-			'zone' => 'Other'
-		];
+		// $data[] = [
+		// 	'zone_id' => 'Other',
+		// 	'zone' => 'Other'
+		// ];
 
 		return response()->json([
 			'status' => true,

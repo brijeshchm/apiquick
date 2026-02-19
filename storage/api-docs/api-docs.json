@@ -1459,7 +1459,7 @@
                         "name": "city_id",
                         "in": "query",
                         "description": "Search by city id,city and pincode ",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string",
                             "example": 278

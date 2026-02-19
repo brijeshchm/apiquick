@@ -45,13 +45,21 @@ return [
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DB_URL'),
-           'host' => 'localhost',
+           //'host' => '127.0.0.1',
             // 'host' => '119.18.54.23',
             // 'host' => '66.116.224.169',
+            // 'port' => env('DB_PORT', '3306'),
+          	// 'database' => 'quickdials_quickdials',
+            // 'username' => 'root',
+            // 'password' => '',
+
+            'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
-          	'database' => 'quickdials_quickdials',
-            'username' => 'quickdials_quickdials',
-            'password' => 'quickdials#23EDC',
+            'database' => env('DB_DATABASE', 'forge'),
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
+
+
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => env('DB_CHARSET', 'utf8mb4'),
             'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),

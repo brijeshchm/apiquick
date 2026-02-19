@@ -221,7 +221,7 @@ hr{
 			<address>
 				<b style="font-size: 18px;">Quick Dials Pvt Ltd</b>
 				<p> UNIT 101 OXFORD TOWERS, 139/88 HAL OLD AIRPORT RD, H.A.L II Stage, Bangalore North, Bangalore- 560008, Karnataka </p>
-				<p>Phone : +91-95-5943-5943</p>
+				<p>Phone : +91-75-5943-5943</p>
 				<p>Email : info@quickdials.com</p>
 				<p>Website : www.quickdials.com</p>
 			 

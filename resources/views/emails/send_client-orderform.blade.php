@@ -30,7 +30,7 @@
                                 <td width="45%" style="border:none;padding:0in 7.5pt 0in 0in;height:60.0pt">
 									<p style="margin:0px 0px 0px 0px"><strong>quickdials Media Pvt Ltd</strong></p>
 									<p style="margin:0px 0px 0px 0px">E-24 Sector-3 Noida.</p>
-									<p style="margin:0px 0px 0px 0px">Phone :+91-95-5943-5943</p>
+									<p style="margin:0px 0px 0px 0px">Phone :+91-75-5943-5943</p>
 									<p style="margin:0px 0px 0px 0px">Email : info@quickdials.com</p>
 									<p style="margin:0px 0px 0px 0px;">Website : www.quickdials.com</p>
                                 </td>

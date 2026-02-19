@@ -2427,7 +2427,64 @@ class SiteController extends Controller
 	 *     )
 	 * )
 	 */
-	public function getKeywordList(Request $request)
+public function getKeywordList(Request $request)
+{
+    $keyword = trim($request->input('keyword'));
+
+    // 🔹 Base Keyword Query
+    $locations = DB::table('keyword')
+        ->when(empty($keyword), function ($q) {
+            $q->whereIn('id', [
+                288,601,1517,159,602,1624,
+                166,536,1937,1481,570,1665
+            ]);
+        })
+        ->when(!empty($keyword), function ($q) use ($keyword) {
+            $q->where('keyword', 'LIKE', "%{$keyword}%");
+        })
+        ->select(
+         
+            DB::raw("'keyword' as type"),
+            'keyword',
+            DB::raw("LOWER(REPLACE(keyword, ' ', '-')) as slug")
+        )
+        ->limit(20)
+        ->get();
+
+    // 🔹 Merge client data only when searching
+    if (!empty($keyword)) {
+
+        $clientData = DB::table('clients')
+            ->where('business_name', 'LIKE', "%{$keyword}%")
+            ->select(
+              
+                DB::raw("'company' as type"),
+                DB::raw("business_name as keyword"),
+                DB::raw("business_slug as slug")
+            )
+            ->limit(20)
+            ->get();
+
+        $locations = $locations->merge($clientData);
+    }
+
+    // 🔹 Check Empty Properly
+    if ($locations->isEmpty()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'No keyword found.',
+        ], 404);
+    }
+
+    // 🔹 Return Response
+    return response()->json([
+        'success' => true,
+        'data' => $locations->values(),
+    ], 200);
+}
+
+
+	public function getKeywordList_olld(Request $request)
 	{
 
 		$keyword = trim($request->input('keyword'));
@@ -2454,7 +2511,7 @@ class SiteController extends Controller
 				$q->where('keyword.keyword', 'LIKE', "%{$keyword}%");
 			})
 		 
-			->select('id', 'keyword', DB::raw("LOWER(REPLACE(keyword, ' ', '-')) as slug"))
+			->select('id', DB::raw("'keyword' as type"), 'keyword', DB::raw("LOWER(REPLACE(keyword, ' ', '-')) as slug"))
 			->get();
 
 		// Merge client data when keyword exists
@@ -2462,7 +2519,7 @@ class SiteController extends Controller
 
 			$clientData = DB::table('clients')
 				->where('business_name', 'LIKE', "%{$keyword}%")
-				->selectRaw('id as id, business_name as keyword,business_slug as slug')
+				->selectRaw('id as id',  DB::raw("'company' as type"), 'business_name as keyword,business_slug as slug')
 				->distinct()
 				->limit(20)
 				->get();
@@ -3377,7 +3434,7 @@ class SiteController extends Controller
 			],
 			[
 				'q8' => 'I Need More info?',
-				'a8' => 'For More Info & any Queries, you can Contact Us on +91  95-5943-5943 or reach out to us via e-mail @ info@quickdials.com, or list your business as free listing, our marketing team Will Contact you Soon.',
+				'a8' => 'For More Info & any Queries, you can Contact Us on +91  75-5943-5943 or reach out to us via e-mail @ info@quickdials.com, or list your business as free listing, our marketing team Will Contact you Soon.',
 			],
 		];
 		if ($data) {
@@ -4145,7 +4202,7 @@ class SiteController extends Controller
 			],
 			[
 				'q7' => 'I Need More info?',
-				'a7' => 'For More Info & any Queries, you can Contact Us on +91  95-5943-5943 or reach out to us via e-mail @ info@quickdials.com, or list your business as free listing, our marketing team Will Contact you Soon.',
+				'a7' => 'For More Info & any Queries, you can Contact Us on +91  75-5943-5943 or reach out to us via e-mail @ info@quickdials.com, or list your business as free listing, our marketing team Will Contact you Soon.',
 			],
 		];
 

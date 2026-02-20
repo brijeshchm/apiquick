@@ -171,7 +171,6 @@ class BusinessDashboardController extends Controller
 					'for_service' => $for_service,
 					'for_review' => $for_review,
 					'share_lead' => $share_lead,
-
 				);
 
                 $frmcheckText = '';
@@ -181,9 +180,9 @@ class BusinessDashboardController extends Controller
 					$parts = array_filter([
 						$val->kw_text ? "Interested in " . trim($val->kw_text) : '',
 						$frmcheckText ? "Mode of " . trim($frmcheckText) : '',
-						$val->zone ? "location " . trim($val->zone) : '',
-						$val->plan ? "plan " . trim($val->plan) : '',
-						$val->age ? "age " . trim($val->age) : '',
+						$val->zone ? "Location " . trim($val->zone) : '',
+						$val->plan ? "Plan " . trim($val->plan) : '',
+						$val->age ? "Age " . trim($val->age) : '',
 						$val->experience ? "with experience " . trim($val->experience) : '',
 					]);
 

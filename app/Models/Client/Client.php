@@ -82,6 +82,7 @@ class Client extends Authenticatable
     'dob',
     'gender',
     'marital',
+    'whatsapp',
 
     // Subscription / finance
     'max_kw',

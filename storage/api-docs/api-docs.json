@@ -6223,7 +6223,7 @@
                                     },
                                     "personal_city": {
                                         "type": "integer",
-                                        "example": 10
+                                        "example": 278
                                     },
                                     "personal_state": {
                                         "type": "integer",
@@ -6236,6 +6236,10 @@
                                     "personal_area": {
                                         "type": "string",
                                         "example": "Connaught Place"
+                                    },
+                                    "personal_zone": {
+                                        "type": "string",
+                                        "example": "4"
                                     },
                                     "personal_address": {
                                         "type": "string",
@@ -6742,17 +6746,21 @@
                                         "type": "integer",
                                         "example": "234567986"
                                     },
+                                    "whatsapp": {
+                                        "type": "integer",
+                                        "example": "9898989898"
+                                    },
                                     "state": {
                                         "type": "integer",
                                         "example": 39
                                     },
                                     "city": {
                                         "type": "integer",
-                                        "example": 961
+                                        "example": 994
                                     },
                                     "zone": {
                                         "type": "string",
-                                        "example": "1090"
+                                        "example": "1014"
                                     },
                                     "area": {
                                         "type": "string",

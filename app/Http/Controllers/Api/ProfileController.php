@@ -108,6 +108,7 @@ class ProfileController extends Controller
                 'email' => $user->email,
                 'mobile' => $user->mobile,
                 'sec_mobile' => $user->sec_mobile,
+                'whatsapp' => $user->whatsapp,
                 'address' => $user->address,
                 'landmark' => $user->landmark,
                 'zone' => $user->zone,
@@ -170,9 +171,10 @@ class ProfileController extends Controller
      *             @OA\Property(property="email", type="string", example="email"),
      *             @OA\Property(property="mobile", type="integer", example="234567986"),
      *             @OA\Property(property="sec_mobile", type="integer", example="234567986"),
+     *             @OA\Property(property="whatsapp", type="integer", example="9898989898"),
      *             @OA\Property(property="state", type="integer", example=39),
-     *             @OA\Property(property="city", type="integer", example=961),
-     *             @OA\Property(property="zone", type="string", example="1090"),
+     *             @OA\Property(property="city", type="integer", example=994),
+     *             @OA\Property(property="zone", type="string", example="1014"),
      *             @OA\Property(property="area", type="string", example="sector-3"),
      *             @OA\Property(property="pincode", type="integer", example="201301"),
      *             @OA\Property(property="country", type="string", example="india"),
@@ -244,6 +246,8 @@ class ProfileController extends Controller
                 'email' => 'required|email|unique:clients,email,' . $client->id . ',id',
                 'mobile' => 'required|unique:clients,mobile,' . $client->id . ',id',     
             
+               
+                'whatsapp' => 'nullable|max:16',
                 'address' => 'required|string|max:255',
                 'certifications' => 'nullable|string|max:255',
                 'city' => 'required|integer|exists:citylists,id',
@@ -288,6 +292,7 @@ class ProfileController extends Controller
                 'email' => $request->email,
                 'mobile' => $request->mobile,
                 'sec_mobile' => $request->sec_mobile,
+                'whatsapp' => $request->whatsapp,
 
                 'address' => $request->address,
                 'landmark' => $request->landmark,

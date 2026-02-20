@@ -1331,9 +1331,9 @@ class EnquiryController extends Controller
 				$parts = array_filter([
 					$val->kw_text ? "Interested in " . trim($val->kw_text) : '',
 					$frmcheckText ? "Mode of " . trim($frmcheckText) : '',
-					$val->zone ? "location " . trim($val->zone) : '',
-					$val->plan ? "plan " . trim($val->plan) : '',
-					$val->age ? "age " . trim($val->age) : '',
+					$val->zone ? "Location " . trim($val->zone) : '',
+					$val->plan ? "Plan " . trim($val->plan) : '',
+					$val->age ? "Age " . trim($val->age) : '',
 					$val->experience ? "with experience " . trim($val->experience) : '',
 				]);
 
@@ -1566,9 +1566,9 @@ class EnquiryController extends Controller
 					$parts = array_filter([
 						$val->kw_text ? "Interested in " . trim($val->kw_text) : '',
 						$frmcheckText ? "Mode of " . trim($frmcheckText) : '',
-						$val->zone ? "location " . trim($val->zone) : '',
-						$val->plan ? "plan " . trim($val->plan) : '',
-						$val->age ? "age " . trim($val->age) : '',
+						$val->zone ? "Location " . trim($val->zone) : '',
+						$val->plan ? "Plan " . trim($val->plan) : '',
+						$val->age ? "Age " . trim($val->age) : '',
 						$val->experience ? "with experience " . trim($val->experience) : '',
 					]);
 
@@ -1815,9 +1815,9 @@ class EnquiryController extends Controller
 				$parts = array_filter([
 					$val->kw_text ? "Interested in " . trim($val->kw_text) : '',
 					$frmcheckText ? "Mode of " . trim($frmcheckText) : '',
-					$val->zone ? "location " . trim($val->zone) : '',
-					$val->plan ? "plan " . trim($val->plan) : '',
-					$val->age ? "age " . trim($val->age) : '',
+					$val->zone ? "Location " . trim($val->zone) : '',
+					$val->plan ? "Plan " . trim($val->plan) : '',
+					$val->age ? "Age " . trim($val->age) : '',
 					$val->experience ? "with experience " . trim($val->experience) : '',
 				]);
 
@@ -2057,9 +2057,9 @@ class EnquiryController extends Controller
 				$parts = array_filter([
 					$val->kw_text ? "Interested in " . trim($val->kw_text) : '',
 					$frmcheckText ? "Mode of " . trim($frmcheckText) : '',
-					$val->zone ? "location " . trim($val->zone) : '',
-					$val->plan ? "plan " . trim($val->plan) : '',
-					$val->age ? "age " . trim($val->age) : '',
+					$val->zone ? "Location " . trim($val->zone) : '',
+					$val->plan ? "Plan " . trim($val->plan) : '',
+					$val->age ? "Age " . trim($val->age) : '',
 					$val->experience ? "with experience " . trim($val->experience) : '',
 				]);
 
@@ -2292,9 +2292,9 @@ class EnquiryController extends Controller
 				$parts = array_filter([
 					$val->kw_text ? "Interested in " . trim($val->kw_text) : '',
 					$frmcheckText ? "Mode of " . trim($frmcheckText) : '',
-					$val->zone ? "location " . trim($val->zone) : '',
-					$val->plan ? "plan " . trim($val->plan) : '',
-					$val->age ? "age " . trim($val->age) : '',
+					$val->zone ? "Location " . trim($val->zone) : '',
+					$val->plan ? "Plan " . trim($val->plan) : '',
+					$val->age ? "Age " . trim($val->age) : '',
 					$val->experience ? "with experience " . trim($val->experience) : '',
 				]);
 
@@ -2529,9 +2529,9 @@ class EnquiryController extends Controller
 				$parts = array_filter([
 					$leads->kw_text ? "Interested in " . trim($leads->kw_text) : '',
 					$frmcheckText ? "Mode of " . trim($frmcheckText) : '',
-					$leads->zone ? "location " . trim($leads->zone) : '',
-					$leads->plan ? "plan " . trim($leads->plan) : '',
-					$leads->age ? "age " . trim($leads->age) : '',
+					$leads->zone ? "Location " . trim($leads->zone) : '',
+					$leads->plan ? "Plan " . trim($leads->plan) : '',
+					$leads->age ? "Age " . trim($leads->age) : '',
 					$leads->experience ? "with experience " . trim($leads->experience) : '',
 				]);
 

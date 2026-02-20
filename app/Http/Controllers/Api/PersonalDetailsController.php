@@ -13,6 +13,7 @@ use App\Models\Occupation;
 
 use App\Models\Citieslists;
 use App\Models\State;
+use App\Models\Zone;
 class PersonalDetailsController extends Controller
 {
 	protected $redirectTo = '/business-owners';
@@ -153,8 +154,8 @@ class PersonalDetailsController extends Controller
 					'personal_area' => $client->personal_area,
 					'personal_pincode' => $client->personal_pincode,
 					'personal_zone' => $client->personal_zone,
-					'gender' => $client->gender,
-				 
+					'personal_zone_id' => $client->personal_zone_id,
+					'gender' => $client->gender,			 
 				 
 			];
 
@@ -195,10 +196,11 @@ class PersonalDetailsController extends Controller
 	 *             @OA\Property(property="marital", type="string", example="Single"),
 	 *             @OA\Property(property="personal_phone", type="string", example="9876543210"),
 	 *           
-	 *             @OA\Property(property="personal_city", type="integer", example=10),
+	 *             @OA\Property(property="personal_city", type="integer", example=278),
 	 *             @OA\Property(property="personal_state", type="integer", example=5),
 	 *             @OA\Property(property="country", type="string", example="India"),
 	 *             @OA\Property(property="personal_area", type="string", example="Connaught Place"),
+	 *             @OA\Property(property="personal_zone", type="string", example="4"),
 	 *             @OA\Property(property="personal_address", type="string", example="Sector Delhi"),
 	 *             @OA\Property(property="personal_pincode", type="string", example="110001"),
 	 *              
@@ -277,6 +279,7 @@ class PersonalDetailsController extends Controller
 				'personal_phone' => 'required|max:15',
 				'personal_city' => 'required|integer|exists:citylists,id',
 				'personal_state' => 'required|integer|exists:state,id',
+				'personal_zone' => 'nullable|integer|exists:zones,id',
 				'country' => 'required|string|max:100',
 				'middle_name' => 'nullable|string|max:255',
 				'last_name' => 'nullable|string|max:255',				 
@@ -297,6 +300,7 @@ class PersonalDetailsController extends Controller
 			// ✅ Lookups
 			$city = Citieslists::find($request->personal_city);
 			$state = State::find($request->personal_state);
+			$zone = Zone::find($request->personal_zone);
 
 			// ✅ Update client
 			$client->update([
@@ -312,9 +316,10 @@ class PersonalDetailsController extends Controller
 				'personal_city' => $city?->city,
 				'personal_state_id' => $state?->id,
 				'personal_state' => $state?->name,
+				'personal_zone_id' => $zone?->id,
+				'personal_zone' => $zone?->zone,
 				'country' => $request->country,
-				'personal_area' => $request->personal_area,
-				'personal_zone' => $request->personal_zone,
+				'personal_area' => $request->personal_area,				 
 				'personal_address' => $request->personal_address,
 				'personal_pincode' => $request->personal_pincode,				 
 				'gender' => $request->gender,

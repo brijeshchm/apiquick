@@ -307,7 +307,7 @@ class SiteController extends Controller
 				'rating' => $client->rating,
 				'avgRating' => $avgRating,
 				'call' => "919559435943",
-				'whatsapp' =>"919559435943",
+				'whatsapp' =>"9559435943",
 				'comment_count' => $client->comment_count,
 			];
 		});
@@ -1801,8 +1801,8 @@ class SiteController extends Controller
 				'country' => $client->country,
 				'year_of_estb' => $client->year_of_estb,
 				'landmark' => $client->landmark,
-
-
+				'whatsapp' => '9559435943',
+				'call' => '919559435943',
 				'rating' => $client->rating,
 				'avgRating' => $avgRating,
 				'comment_count' => $client->comment_count,

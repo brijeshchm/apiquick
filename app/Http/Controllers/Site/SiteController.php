@@ -205,8 +205,9 @@ class SiteController extends Controller
         CASE assigned_kwds.sold_on_position
             WHEN 'platinum' THEN 1
             WHEN 'diamond' THEN 2
-            WHEN 'FreeListing' THEN 3
-            ELSE 4
+            WHEN 'gold' THEN 3
+            WHEN 'silver' THEN 4
+            ELSE 5
         END
     ")
 			->get();
@@ -235,8 +236,9 @@ class SiteController extends Controller
             CASE assigned_kwds.sold_on_position
                 WHEN 'platinum' THEN 1
                 WHEN 'diamond' THEN 2
-                WHEN 'FreeListing' THEN 3
-                ELSE 4
+                WHEN 'gold' THEN 3
+                WHEN 'silver' THEN 4
+                ELSE 5
             END
         ")
 				->get();
@@ -1754,8 +1756,9 @@ class SiteController extends Controller
         CASE MAX(assigned_kwds.sold_on_position)
             WHEN 'platinum' THEN 1
             WHEN 'diamond' THEN 2
-            WHEN 'FreeListing' THEN 3
-            ELSE 4
+            WHEN 'gole' THEN 3
+            WHEN 'silver' THEN 4
+            ELSE 5
         END
     ")
 
@@ -2602,8 +2605,9 @@ public function getKeywordList(Request $request)
         CASE assigned_kwds.sold_on_position
             WHEN 'platinum' THEN 1
             WHEN 'diamond' THEN 2
-            WHEN 'FreeListing' THEN 3
-            ELSE 4
+            WHEN 'gold' THEN 3
+            WHEN 'silver' THEN 4
+            ELSE 5
         END
     ")
 			->first();

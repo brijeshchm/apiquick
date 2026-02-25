@@ -69,7 +69,7 @@ class AccountController extends Controller
 		}
 
 		$client = Client::find($user->id);
-	 	$data = [];
+	 	$datas = [];
 
 		$common = [
 			'business_name'          => trim($client->business_name),
@@ -110,7 +110,7 @@ class AccountController extends Controller
 			]);
 
 			$free['encrypt'] = $this->dataEncodeJsonBase64($free);
-			$data['coins_free'] = $free;
+			$datas['coins_free'] = $free;
 		}
 
 		/* ✅ Paid Packages */
@@ -130,8 +130,10 @@ class AccountController extends Controller
 			]);
 
 			$item['encrypt'] = $this->dataEncodeJsonBase64($item);
-			$data[$key] = $item;
+			$datas[$key] = $item;
 		}
+		$data['package'] = $datas;
+
 		$data['client'] = [
 		'client_type'=>ucfirst($client->client_type),
 		'remaining'=>$client->coins_amt

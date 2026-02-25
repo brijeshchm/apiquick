@@ -42,27 +42,27 @@ return [
             'transport' => 'smtp',
             'scheme' => env('MAIL_SCHEME'),
             'url' => env('MAIL_URL'),
-            // 'host' => 'mail.quickdials.com',
-            // // 'port' =>  465,
-            // 'port' =>  587,
-            // 'username' => 'otp@quickdials.com',
-            // 'password' => 'quickdials@#32&',
+            'host' => 'mail.quickdials.com',
+            // 'port' =>  465,
+            'port' =>  587,
+            'username' => 'otp@quickdials.com',
+            'password' => 'quickdials@#32&',
             
-            'host' => env('MAIL_HOST'),         
-            'port' => env('MAIL_PORT'),
-            'username' => env('MAIL_USERNAME'),
-            'password' => env('MAIL_PASSWORD'),
-             'verify_peer' => false,
+            // 'host' => env('MAIL_HOST'),         
+            // 'port' => env('MAIL_PORT'),
+            // 'username' => env('MAIL_USERNAME'),
+            // 'password' => env('MAIL_PASSWORD'),
+            //  'verify_peer' => false,
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
 
-            'stream' => [
-            'ssl' => [
-            'allow_self_signed' => true,
-            'verify_peer' => false,
-            'verify_peer_name' => false,
-            ],
-            ],
+            // 'stream' => [
+            // 'ssl' => [
+            // 'allow_self_signed' => true,
+            // 'verify_peer' => false,
+            // 'verify_peer_name' => false,
+            // ],
+            // ],
         ],
 
         'ses' => [

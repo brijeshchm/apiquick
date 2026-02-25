@@ -43,7 +43,7 @@ return [
             'scheme' => env('MAIL_SCHEME'),
             'url' => env('MAIL_URL'),
             'host' => 'mail.quickdials.com',
-            'port' =>  25,
+            'port' =>  587,
             'username' => 'leads@quickdials.com',
             'password' => 'quickdials@#321',
             'timeout' => null,

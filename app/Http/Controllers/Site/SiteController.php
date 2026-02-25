@@ -175,6 +175,7 @@ class SiteController extends Controller
 			'child_category' => $keywordDetails->child_category,
 			'child_slug' => $keywordDetails->child_slug,
 			'zone' => $zones,
+			'city' => $cityName,
 
 		);
 
@@ -2518,75 +2519,7 @@ public function getKeywordList(Request $request)
 }
 
 
-	public function getKeywordList_olld(Request $request)
-	{
-
-		$keyword = trim($request->input('keyword'));
-
-		// Base keyword query
-		$locations = DB::table('keyword')
-			->when(empty($keyword), function ($q) {
-				$q->whereIn('keyword.id', [
-					288,
-					601,
-					1517,
-					159,
-					602,
-					1624,
-					166,
-					536,
-					1937,
-					1481,
-					570,
-					1665
-				]);
-			})
-			->when(!empty($keyword), function ($q) use ($keyword) {
-				$q->where('keyword.keyword', 'LIKE', "%{$keyword}%");
-			})
-		 
-			->select('id', DB::raw("'keyword' as type"), 'keyword', DB::raw("LOWER(REPLACE(keyword, ' ', '-')) as slug"))
-			->get();
-
-		// Merge client data when keyword exists
-		if (!empty($keyword)) {
-
-			$clientData = DB::table('clients')
-				->where('business_name', 'LIKE', "%{$keyword}%")
-				->selectRaw('id as id',  DB::raw("'company' as type"), 'business_name as keyword,business_slug as slug')
-				->distinct()
-				->limit(20)
-				->get();
-
-			$locations = $locations->merge($clientData);
-		}
-
-		// Transform collection
-		$html = $locations->map(function ($item) {
-			return [
-				'id' => $item->id,
-				'keyword' => $item->keyword,
-				'slug' => $item->slug,
-			];
-		})->values();
-		 
-
-		// Handle empty results
-		if (empty($html)) {
-			return response()->json([
-				'success' => false,
-				'message' => 'No keyword found.',
-			], 404);
-		}
-
-		// Return JSON response
-		return response()->json([
-			'success' => true,
-			'data' => $html,
-		], 200);
-
-
-	}
+  
 
 
 	/**

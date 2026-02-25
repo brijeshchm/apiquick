@@ -202,7 +202,7 @@ class SiteController extends Controller
 			// ->where('clients.active_status', '1')
 			->where('keyword.keyword', 'LIKE', "%{$keywordName}%")
 			->orderByRaw("
-        CASE assigned_kwds.sold_on_position
+        CASE clients.client_type
             WHEN 'platinum' THEN 1
             WHEN 'diamond' THEN 2
             WHEN 'gold' THEN 3
@@ -233,7 +233,7 @@ class SiteController extends Controller
 				)
 				->where('keyword.keyword', 'LIKE', '%' . $keywordName . '%')
 				->orderByRaw("
-            CASE assigned_kwds.sold_on_position
+            CASE clients.client_type
                 WHEN 'platinum' THEN 1
                 WHEN 'diamond' THEN 2
                 WHEN 'gold' THEN 3
@@ -1753,7 +1753,7 @@ class SiteController extends Controller
 			->groupBy('clients.id')
 
 			->orderByRaw("
-        CASE MAX(assigned_kwds.sold_on_position)
+        CASE MAX(clients.client_type)
             WHEN 'platinum' THEN 1
             WHEN 'diamond' THEN 2
             WHEN 'gole' THEN 3
@@ -2602,7 +2602,7 @@ public function getKeywordList(Request $request)
 			)
 			->where('clients.business_slug', $business_slug)
 			->orderByRaw("
-        CASE assigned_kwds.sold_on_position
+        CASE clients.client_type
             WHEN 'platinum' THEN 1
             WHEN 'diamond' THEN 2
             WHEN 'gold' THEN 3

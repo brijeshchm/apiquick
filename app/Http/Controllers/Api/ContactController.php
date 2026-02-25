@@ -205,11 +205,13 @@ class ContactController extends Controller
 		$lead->b_end = '0';
 		$lead->terms = '1';
 
-		if($request->zone){
+		if (is_numeric($request->zone)) {
 			 
 				$zone = Zone::where('id',$request->zone)->first();
+				if($zone){
 				$lead->zone_id = $zone->id;
 				$lead->zone = $zone->zone;
+				}
 			}else{
 				if(!empty($city->id)){
 				$zone = Zone::where('city_id',$city->id)->first();

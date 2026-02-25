@@ -573,6 +573,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/IT-Training.jpg',
 				'alt' => 'computer courses',
 				'title' => 'computer courses',
+				'type' => 'categories',
 
 			],
 			[
@@ -580,6 +581,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Entrance-Exam.jpg',
 				'alt' => 'Entrance exam',
 				'title' => 'Entrance exam',
+				'type' => 'categories',
 
 			],
 			[
@@ -587,13 +589,15 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Packers-Movers.jpg',
 				'alt' => 'Packers & Movers',
 				'title' => 'Packers & Movers',
+				'type' => 'categories',
 
 			],
 			[
 				'url' => '/categories/interior-designer',
 				'img' => config('app.website') . 'popular/Interior-design.jpg',
 				'alt' => 'Interior Design',
-				'title' => 'GInterior Design',
+				'title' => 'Interior Design',
+				'type' => 'categories',
 
 			],
 			[
@@ -601,6 +605,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/real-estate-agent.jpg',
 				'alt' => 'Real Estate Agents',
 				'title' => 'Real Estate Agents',
+				'type' => 'keyword',
 
 			],
 			[
@@ -608,6 +613,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/carpenter.jpg',
 				'alt' => 'Carpenters',
 				'title' => 'Carpenters',
+				'type' => 'keyword',
 
 			]
 

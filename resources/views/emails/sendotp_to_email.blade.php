@@ -38,7 +38,7 @@
                                         <tbody>
                                             <tr>
                                                 <td style="background:#232222;padding:12.5pt 6.0pt 12.5pt 6.0pt">
-                                                    <p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:14.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;;color:white">Thanks for contacting with quickdials !!</span><u></u><u></u></p>
+                                                    <p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:14.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;;color:white">Thanks for contacting with QuickDials !!</span><u></u><u></u></p>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -79,7 +79,7 @@
                                                 <td style="padding:22.5pt 15.0pt 22.5pt 15.0pt">
                                                     <div>
                                                         <p class="MsoNormal" style="line-height:18.75pt"><span style="font-size:10.5pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;;color:#333333">Thanks & Regards,<br>
-      quickdials Team </span><u></u><u></u></p>
+      QuickDials Team </span><u></u><u></u></p>
                                                     </div>
                                                 </td>
                                             </tr>

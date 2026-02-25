@@ -155,6 +155,7 @@ class PersonalDetailsController extends Controller
 					'personal_pincode' => $client->personal_pincode,
 					'personal_zone' => $client->personal_zone,
 					'personal_zone_id' => $client->personal_zone_id,
+					'personal_address' => $client->personal_address,
 					'gender' => $client->gender,			 
 				 
 			];

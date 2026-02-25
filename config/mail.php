@@ -50,8 +50,8 @@ return [
             
             'host' => 'smtp.gmail.com',         
             'port' => 587,
-            'username' => 'quickdials1@gmail.com',
-            'password' => 'xmdpzpagfzgcpybr',
+            'username' => 'leads.quickdials@gmail.com',
+            'password' => 'etitmnpzmfpsxjmt',
             'verify_peer' => false,
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),

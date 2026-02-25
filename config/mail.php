@@ -47,10 +47,12 @@ return [
             // 'port' =>  587,
             // 'username' => 'otp@quickdials.com',
             // 'password' => 'quickdials@#32&',
+            
             'host' => env('MAIL_HOST'),         
             'port' => env('MAIL_PORT'),
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
+             'verify_peer' => false,
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
 

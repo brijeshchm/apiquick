@@ -103,8 +103,8 @@ class AuthController extends Controller
             $message = "{$otp} is QuickDials Verification Code for {$user->email} .";
             $subject = "{$otp} is QuickDials Verification Code";
             Mail::send('emails.sendotp_to_email', ['msg' => $message], function ($m) use ($message, $request, $subject) {
-                $m->from('leads@quickdials.com', 'Login OTP');
-                $m->to($request->input('email'), "")->subject($subject);
+                $m->from('otp@quickdials.com', 'Login OTP');
+                $m->to($request->input('email'), "")->subject($subject);    
             });
 
         }

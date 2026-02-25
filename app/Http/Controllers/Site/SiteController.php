@@ -715,6 +715,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/AC-Service.jpg',
 				'alt' => 'AC Service',
 				'title' => 'AC Service',
+				'type' => 'keyword',
 
 			],
 			[
@@ -722,6 +723,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/car-services.jpg',
 				'alt' => 'Car Services',
 				'title' => 'Car Services',
+				'type' => 'keyword',
 
 			],
 			[
@@ -729,6 +731,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/washing-machines.jpg',
 				'alt' => 'Laundry Services',
 				'title' => 'Laundry Services',
+				'type' => 'keyword',
 
 			],
 			[
@@ -736,6 +739,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Electricity-Services.jpg',
 				'alt' => 'Electrician Services',
 				'title' => 'Electrician Services',
+				'type' => 'keyword',
 
 			],
 			[
@@ -743,6 +747,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Hotel-Services.jpg',
 				'alt' => 'Hotels',
 				'title' => 'Hotels',
+				'type' => 'keyword',
 
 			],
 			[
@@ -750,6 +755,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Fitness-Services.jpg',
 				'alt' => 'Health & Fitness',
 				'title' => 'Health & Fitness',
+				'type' => 'categories',
 
 			]
 
@@ -1991,6 +1997,7 @@ class SiteController extends Controller
 					'img' => $image,
 					'alt' => $alt,
 					'title' => $child->child_name,
+					'type' => 'child',
 				];
 			});
 
@@ -2136,6 +2143,7 @@ class SiteController extends Controller
 					'img' => $image ?: '',
 					'alt' => $alt ?: $keyword->keyword,
 					'title' => $keyword->keyword,
+					'type' => 'keyword',
 				];
 			});
 

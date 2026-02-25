@@ -106,7 +106,7 @@ class AuthController extends Controller
                 $m->from('otp@quickdials.com', 'Login OTP');
                 $m->to($request->input('email'), "")->subject($subject);    
             });
-dd($checkmail);
+ 
 
 
         }

@@ -419,6 +419,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'img/IT-Training.png',
 				'alt' => 'computer courses',
 				'title' => 'computer courses',
+				'type' => 'categories',
 
 			],
 			[
@@ -426,6 +427,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'img/wedding.png',
 				'alt' => 'Wedding Planning',
 				'title' => 'Wedding Planning',
+				'type' => 'child',
 
 			],
 			[
@@ -433,6 +435,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'img/electric-services.png',
 				'alt' => 'Electric Services',
 				'title' => 'Electric Services',
+				'type' => 'categories',
 
 			],
 			[
@@ -440,6 +443,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'img/government-exam.png',
 				'alt' => 'Government exam',
 				'title' => 'Government exam',
+				'type' => 'categories',
 
 			],
 			[
@@ -447,6 +451,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'img/study-abroad.png',
 				'alt' => 'Study Abroad',
 				'title' => 'Study Abroad',
+				'type' => 'categories',
 
 			],
 			[
@@ -454,6 +459,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'img/Spa & Beauty.png',
 				'alt' => 'Spa & Beauty',
 				'title' => 'Spa & Beauty',
+				'type' => 'categories',
 
 			],
 			[
@@ -461,6 +467,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'img/Repairs-Services.png',
 				'alt' => 'Repair Services',
 				'title' => 'Repair Services',
+				'type' => 'categories',
 
 			],
 			[
@@ -468,6 +475,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'img/Packers-movers.png',
 				'alt' => 'Packers & Movers',
 				'title' => 'Packers & Movers',
+				'type' => 'categories',
 
 			],
 			[
@@ -475,6 +483,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'img/Professional.png',
 				'alt' => 'Professional',
 				'title' => 'Professional',
+				'type' => 'categories',
 
 			],
 			[
@@ -482,6 +491,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'img/contractors.png',
 				'alt' => 'Contractors',
 				'title' => 'Contractors',
+				'type' => 'categories',
 
 			],
 			[
@@ -489,6 +499,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'img/Education.png',
 				'alt' => 'Education',
 				'title' => 'Education',
+				'type' => 'categories',
 
 			],
 			[
@@ -496,54 +507,63 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'img/Rent-buy.png',
 				'alt' => 'Rent & Buy',
 				'title' => 'Rent & Buy',
+				'type' => 'categories',
 			],
 			[
 				'url' => '/child/sports-academy',
 				'img' => config('app.website') . 'img/sports.png',
 				'alt' => 'Sport Academy',
 				'title' => 'Sport Academy',
+				'type' => 'child',
 			],
 			[
 				'url' => '/categories/medical',
 				'img' => config('app.website') . 'img/Medical.png',
 				'alt' => 'Medical',
 				'title' => 'Medical',
+				'type' => 'categories',
 			],
 			[
 				'url' => '/categories/loan',
 				'img' => config('app.website') . 'img/Loan.png',
 				'alt' => 'Loan',
 				'title' => 'Loan',
+				'type' => 'categories',
 			],
 			[
 				'url' => '/categories/dancing',
 				'img' => config('app.website') . 'img/Dancing.png',
 				'alt' => 'Dancing',
 				'title' => 'Dancing',
+				'type' => 'categories',
 			],
 			[
 				'url' => '/categories/yoga',
 				'img' => config('app.website') . 'img/Yoga.png',
 				'alt' => 'Yoga',
 				'title' => 'Yoga',
+				'type' => 'categories',
 			],
 			[
 				'url' => '/categories/security-system',
 				'img' => config('app.website') . 'img/CCTV-security.png',
 				'alt' => 'CCTV Security',
 				'title' => 'CCTV Security',
+				'type' => 'categories',
 			],
 			[
 				'url' => '/categories/web-technologies',
 				'img' => config('app.website') . 'images/Web-Designers.png',
 				'alt' => 'Web Designers',
 				'title' => 'Web Designers',
+				'type' => 'categories',
 			],
 			[
 				'url' => '/tours-and-travels',
 				'img' => config('app.website') . 'images/tour-travels.png',
 				'alt' => 'Tours & Travels',
 				'title' => 'Tours & Travels',
+				'type' => 'keyword',
 			],
 
 		];

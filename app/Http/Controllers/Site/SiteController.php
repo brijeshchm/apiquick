@@ -185,22 +185,26 @@ class SiteController extends Controller
 		$clientscheck = DB::table('clients')
 			->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
 			->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
-			->join('citylists', 'assigned_kwds.city_id', '=', 'citylists.id')
+			->join('assigned_zones', 'clients.id', '=', 'assigned_zones.client_id')
+			->join('citylists', 'assigned_zones.city_id', '=', 'citylists.id')
 			->leftJoin(DB::raw('(
         SELECT SUM(rating) AS rating, comment_client_ID, COUNT(comment_ID) AS comment_count
         FROM comments GROUP BY comment_client_ID
     ) c'), 'c.comment_client_ID', '=', 'clients.id')
 			->select(
 				'clients.*',
-				'assigned_kwds.*',
+				'clients.id',
+				// 'assigned_kwds.*',
 				'citylists.city',
-				'assigned_kwds.sold_on_position',
+				'clients.client_type',
 				'c.rating',
 				'c.comment_count'
 			)
 			->where('citylists.city', 'LIKE', "%{$cityName}%")
 			// ->where('clients.active_status', '1')
 			->where('keyword.keyword', 'LIKE', "%{$keywordName}%")
+			// ->groupBy('clients.id')
+			->distinct('clients.id')
 			->orderByRaw("
         CASE clients.client_type
             WHEN 'platinum' THEN 1
@@ -211,27 +215,32 @@ class SiteController extends Controller
         END
     ")
 			->get();
-
+ 
 		if ($clientscheck->count() > 0) {
 			$clientsList = $clientscheck;
 		} else {
 			$clientsList = DB::table('clients')
 				->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
+				->join('assigned_zones', 'clients.id', '=', 'assigned_zones.client_id')
 				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
-				->join('citylists', 'assigned_kwds.city_id', '=', 'citylists.id')
+				
+				->join('citylists', 'assigned_zones.city_id', '=', 'citylists.id')
 				->leftJoin(DB::raw('(
             SELECT SUM(rating) AS rating, comment_client_ID, COUNT(comment_ID) AS comment_count
             FROM comments GROUP BY comment_client_ID
         ) c'), 'c.comment_client_ID', '=', 'clients.id')
 				->select(
 					'clients.*',
-					'assigned_kwds.*',
-					'citylists.city',
-					'assigned_kwds.sold_on_position',
+					'clients.id',
+					// 'assigned_kwds.*',
+					// 'citylists.city',
+					'clients.client_type',
 					'c.rating',
 					'c.comment_count'
 				)
 				->where('keyword.keyword', 'LIKE', '%' . $keywordName . '%')
+				// ->groupBy('clients.id')
+				->distinct('clients.id')
 				->orderByRaw("
             CASE clients.client_type
                 WHEN 'platinum' THEN 1
@@ -243,7 +252,7 @@ class SiteController extends Controller
         ")
 				->get();
 		}
-
+ 	 
 		$data['clientsList'] = $clientsList->map(function ($client) {
 
 			$logoImage = config('app.website') . 'client/images/default_pp_small.jpg';
@@ -341,6 +350,7 @@ class SiteController extends Controller
 				'img' => $img,
 				'alt' => $alt,
 				'title' => $keyword->keyword,
+				'type' => 'keyword',
 			];
 		})->values()->toArray();
 
@@ -1742,8 +1752,8 @@ class SiteController extends Controller
 				'clients.*',
 				'clients.id as client_id',
 				'clients.business_slug',
-
-				DB::raw('MAX(assigned_kwds.sold_on_position) as sold_on_position'),
+				'clients.client_type',
+ 
 				DB::raw('MAX(c.rating) as rating'),
 				DB::raw('MAX(c.comment_count) as comment_count')
 			)
@@ -1756,7 +1766,7 @@ class SiteController extends Controller
         CASE MAX(clients.client_type)
             WHEN 'platinum' THEN 1
             WHEN 'diamond' THEN 2
-            WHEN 'gole' THEN 3
+            WHEN 'gold' THEN 3
             WHEN 'silver' THEN 4
             ELSE 5
         END

@@ -132,7 +132,11 @@ class AccountController extends Controller
 			$item['encrypt'] = $this->dataEncodeJsonBase64($item);
 			$data[$key] = $item;
 		}
-
+		$data['client'] = [
+		'client_type'=>ucfirst($client->client_type),
+		'remaining'=>$client->coins_amt
+			
+		];
 
 		 return response()->json([
 			'status' => true,

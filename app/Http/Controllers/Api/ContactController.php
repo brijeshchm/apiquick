@@ -100,6 +100,24 @@ class ContactController extends Controller
 	 *                 type="string",
 	 *                 nullable=true,
 	 *                 example="web-design"
+	 * 				),
+	 *  			@OA\Property(
+	 *                 property="plan",
+	 *                 type="string",
+	 *                 nullable=true,
+	 *                 example="Immediate"
+	 * 				),
+	 *             @OA\Property(
+	 *                 property="experience",
+	 *                 type="string",
+	 *                 nullable=true,
+	 *                 example="3"
+	 *             ),
+	 *             @OA\Property(
+	 *                 property="age",
+	 *                 type="string",
+	 *                 nullable=true,
+	 *                 example="19"
 	 *             ),
 	 *             @OA\Property(
 	 *                 property="frmcheck",
@@ -199,7 +217,10 @@ class ContactController extends Controller
 		$lead->city_name = $city?->city ?? 'none' ?? 'none';
 		$lead->lead_form = $request->lead_form;
 		$lead->from_page = $request->from_page;
-		$lead->remark = $request->remark;
+		$lead->plan = $request->plan;
+		$lead->experience = $request->experience;
+		$lead->age = $request->age;
+		$lead->remark = htmlspecialchars(strip_tags($request->remark));
 		$lead->status_id = $status->id;
 		$lead->status_name = $status->name;
 		$lead->b_end = '0';
@@ -226,7 +247,8 @@ class ContactController extends Controller
 		LeadFollowUp::create([
 			'lead_id' => $lead->id,
 			'status' => $status->id,
-			'remark' => $request->remark,
+			'expected_date_time' => date('Y-m-d H:i:s'),
+			'remark' => htmlspecialchars(strip_tags($request->remark)),
 		]);
 			
 		 
@@ -307,7 +329,7 @@ class ContactController extends Controller
 
 			$lead->status_id = Status::where('name', 'LIKE', 'New Lead')->first()->id;
 			$lead->status_name = Status::where('name', 'LIKE', 'New Lead')->first()->name;
-			$lead->remark = $request->input('remark');
+			$lead->remark = htmlspecialchars(strip_tags(trim($request->input('remark'))));
 			$lead->created_by = 101;
 
 
@@ -335,7 +357,7 @@ class ContactController extends Controller
 
 					$followUp = new LeadFollowUp;
 					$followUp->status = Status::where('name', 'LIKE', 'New Lead')->first()->id;
-					$followUp->remark = $request->input('remark');
+					$followUp->remark = htmlspecialchars(strip_tags(trim($request->input('remark'))));
 					//	$followUp->expected_date_time = date('Y-m-d H:i:s');
 					$followUp->lead_id = $lead->id;
 					//$followUp->remark_by =Auth::user()->id;
@@ -368,8 +390,8 @@ class ContactController extends Controller
 
 					$followUp = new LeadFollowUp;
 					$followUp->status = Status::where('name', 'LIKE', 'New Lead')->first()->id;
-					$followUp->remark = $request->input('remark');
-					//	$followUp->expected_date_time = date('Y-m-d H:i:s');
+					$followUp->remark = htmlspecialchars(strip_tags(trim($request->input('remark'))));
+					$followUp->expected_date_time = date('Y-m-d H:i:s');
 					$followUp->lead_id = $lead->id;
 					//$followUp->remark_by =Auth::user()->id;
 					$followUp->save();
@@ -519,7 +541,7 @@ class ContactController extends Controller
 
 			$lead->status_id = Status::where('name', 'LIKE', 'New Lead')->first()->id;
 			$lead->status_name = Status::where('name', 'LIKE', 'New Lead')->first()->name;
-			$lead->remark = $request->input('remark');
+			$lead->remark = htmlspecialchars(strip_tags(trim($request->input('remark'))));
 			$lead->created_by = 101;
 
 
@@ -547,8 +569,8 @@ class ContactController extends Controller
 
 					$followUp = new LeadFollowUp;
 					$followUp->status = Status::where('name', 'LIKE', 'New Lead')->first()->id;
-					$followUp->remark = $request->input('remark');
-					//	$followUp->expected_date_time = date('Y-m-d H:i:s');
+					$followUp->remark = htmlspecialchars(strip_tags(trim($request->input('remark'))));
+					$followUp->expected_date_time = date('Y-m-d H:i:s');
 					$followUp->lead_id = $lead->id;
 					//$followUp->remark_by =Auth::user()->id;
 					$followUp->save();
@@ -580,8 +602,8 @@ class ContactController extends Controller
 
 					$followUp = new LeadFollowUp;
 					$followUp->status = Status::where('name', 'LIKE', 'New Lead')->first()->id;
-					$followUp->remark = $request->input('remark');
-					//	$followUp->expected_date_time = date('Y-m-d H:i:s');
+					$followUp->remark = htmlspecialchars(strip_tags(trim($request->input('remark'))));
+					$followUp->expected_date_time = date('Y-m-d H:i:s');
 					$followUp->lead_id = $lead->id;
 					//$followUp->remark_by =Auth::user()->id;
 					$followUp->save();
@@ -659,7 +681,7 @@ class ContactController extends Controller
 		}
 		$lead->status_id = Status::where('name', 'LIKE', 'New Lead')->first()->id;
 		$lead->status_name = Status::where('name', 'LIKE', 'New Lead')->first()->name;
-		$lead->remark = $request->input('remark');
+		$lead->remark = htmlspecialchars(strip_tags(trim($request->input('remark'))));
 		$lead->created_by = '1';
 
 		$today = date('Y-m-d');
@@ -678,8 +700,8 @@ class ContactController extends Controller
 
 				$followUp = new LeadFollowUp;
 				$followUp->status = Status::where('name', 'LIKE', 'New Lead')->first()->id;
-				$followUp->remark = $request->input('remark');
-
+				$followUp->remark = htmlspecialchars(strip_tags(trim($request->input('remark'))));
+				$followUp->expected_date_time = date('Y-m-d H:i:s');
 				$followUp->lead_id = $lead->id;
 
 				$followUp->save();
@@ -692,8 +714,8 @@ class ContactController extends Controller
 
 				$followUp = new LeadFollowUp;
 				$followUp->status = Status::where('name', 'LIKE', 'New Lead')->first()->id;
-				$followUp->remark = $request->input('remark');
-				//	$followUp->expected_date_time = date('Y-m-d H:i:s');
+				$followUp->remark = htmlspecialchars(strip_tags(trim($request->input('remark'))));
+				$followUp->expected_date_time = date('Y-m-d H:i:s');
 				$followUp->lead_id = $lead->id;
 				//$followUp->remark_by =Auth::user()->id;
 				$followUp->save();
@@ -751,14 +773,14 @@ class ContactController extends Controller
 			}
 			$lead->status_id = Status::where('name', 'LIKE', 'New Lead')->first()->id;
 			$lead->status_name = Status::where('name', 'LIKE', 'New Lead')->first()->name;
-			$lead->remark = $request->input('remark');
+			$lead->remark = htmlspecialchars(strip_tags(trim($request->input('remark'))));
 			$lead->created_by = '1';
 
 			if ($lead->save()) {
 				$followUp = new LeadFollowUp;
 				$followUp->status = Status::where('name', 'LIKE', 'New Lead')->first()->id;
-				$followUp->remark = $request->input('remark');
-				//	$followUp->expected_date_time = date('Y-m-d H:i:s');
+				$followUp->remark = htmlspecialchars(strip_tags(trim($request->input('remark'))));
+				$followUp->expected_date_time = date('Y-m-d H:i:s');
 				$followUp->lead_id = $lead->id;
 				//$followUp->remark_by =Auth::user()->id;
 				$followUp->save();

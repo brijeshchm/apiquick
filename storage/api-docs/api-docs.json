@@ -3776,6 +3776,21 @@
                                         "example": "web-design",
                                         "nullable": true
                                     },
+                                    "plan": {
+                                        "type": "string",
+                                        "example": "Immediate",
+                                        "nullable": true
+                                    },
+                                    "experience": {
+                                        "type": "string",
+                                        "example": "3",
+                                        "nullable": true
+                                    },
+                                    "age": {
+                                        "type": "string",
+                                        "example": "19",
+                                        "nullable": true
+                                    },
                                     "frmcheck": {
                                         "type": "string",
                                         "example": "multiple check"

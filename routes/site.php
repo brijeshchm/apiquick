@@ -37,6 +37,7 @@ Route::get('/api/site/blog/{slug}', [App\Http\Controllers\Site\SiteController::c
  Route::get('/api/site/child', [App\Http\Controllers\Site\SiteController::class, 'getChild']);
  Route::get('/api/site/home-slider', [App\Http\Controllers\Site\SiteController::class, 'getHomeSlider']);
  Route::get('/api/site/getCityList', [App\Http\Controllers\Site\SiteController::class, 'getCityList']);
+ Route::get('/api/site/getZoneList', [App\Http\Controllers\Site\SiteController::class, 'getZoneList']);
  Route::get('/api/site/get-keyword-list', [App\Http\Controllers\Site\SiteController::class, 'getKeywordList']);
  Route::get('/api/site/getZoneByCityList', [App\Http\Controllers\Site\SiteController::class, 'getZoneByCityList']);
  Route::get('/api/site/business-services', [App\Http\Controllers\Site\SiteController::class, 'businessServices']);

@@ -468,7 +468,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/categories/spa-beauty',
+				'url' => '/categories/spa',
 				'img' => config('app.website') . 'img/Spa & Beauty.png',
 				'alt' => 'Spa & Beauty',
 				'title' => 'Spa & Beauty',
@@ -484,7 +484,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/categories/packers-movers',
+				'url' => '/child/packers-and-movers',
 				'img' => config('app.website') . 'img/Packers-movers.png',
 				'alt' => 'Packers & Movers',
 				'title' => 'Packers & Movers',
@@ -516,7 +516,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/categories/rent-buy',
+				'url' => '/categories/rent-or-buy',
 				'img' => config('app.website') . 'img/Rent-buy.png',
 				'alt' => 'Rent & Buy',
 				'title' => 'Rent & Buy',

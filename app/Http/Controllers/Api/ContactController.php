@@ -189,15 +189,26 @@ class ContactController extends Controller
 			->whereDate('created_at', '>=', now()->subDays(4))
 			->exists();
 
-		// if ($duplicate) {
-		// 	return response()->json([
-		// 	'status' => true,
-		// 	'message' => 'Enquiry created successfully'
-		// ], 200);
-		// }
+		if ($duplicate) {
+			return response()->json([
+			'status' => true,
+			'message' => 'Enquiry created successfully'
+		], 200);
+		}
+
+		$cityname = ucwords(str_replace("-", " ", $request->city));
+		$today = date('Y-m-d');
+		$checklead = Lead::where('mobile', $mobile)->where('kw_text', $request->input('kw_text'))->where('city_name', $cityname)->whereDate('created_at', '=', date_format(date_create($today), 'Y-m-d'))->get()->count();
+
+		if (!empty($checklead) && $checklead > 0) {
+			return response()->json([
+			'status' => true,
+			'message' => 'Enquiry created successfully'
+		], 200);
+		}
 
 		// ✅ City
-		$cityname = ucwords(str_replace("-", " ", $request->city));
+	 
 		$city = Citieslists::where('city', $cityname)->first();
 
 		// ✅ Keyword
@@ -250,11 +261,8 @@ class ContactController extends Controller
 			'expected_date_time' => date('Y-m-d H:i:s'),
 			'remark' => htmlspecialchars(strip_tags($request->remark)),
 		]);
-			
-		 
-		if (!$duplicate) {
-			// leadassignWithoutZoneCounsellor($lead);
-		}
+					 
+	 
 		return response()->json([
 			'status' => true,
 			'message' => 'Enquiry created successfully'

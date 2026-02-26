@@ -488,7 +488,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'img/Packers-movers.png',
 				'alt' => 'Packers & Movers',
 				'title' => 'Packers & Movers',
-				'type' => 'categories',
+				'type' => 'child',
 
 			],
 			[
@@ -520,7 +520,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'img/Rent-buy.png',
 				'alt' => 'Rent & Buy',
 				'title' => 'Rent & Buy',
-				'type' => 'categories',
+				'type' => 'child',
 			],
 			[
 				'url' => '/child/sports-academy',
@@ -602,7 +602,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Packers-Movers.jpg',
 				'alt' => 'Packers & Movers',
 				'title' => 'Packers & Movers',
-				'type' => 'categories',
+				'type' => 'child',
 
 			],
 			[

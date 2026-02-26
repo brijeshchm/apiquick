@@ -516,7 +516,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/categories/rent-or-buy',
+				'url' => '/child/rent-or-buy',
 				'img' => config('app.website') . 'img/Rent-buy.png',
 				'alt' => 'Rent & Buy',
 				'title' => 'Rent & Buy',
@@ -598,7 +598,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/categories/packers-movers',
+				'url' => '/child/packers-and-movers',
 				'img' => config('app.website') . 'popular/Packers-Movers.jpg',
 				'alt' => 'Packers & Movers',
 				'title' => 'Packers & Movers',

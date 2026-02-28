@@ -98,7 +98,7 @@ class BusinessController extends Controller
 
 	public function getAssignedZonesPagination(Request $request)
 	{
-// dd($request->all())
+ 
 		if (!Auth::guard('sanctum')->check()) {
 			return response()->json([
 				'status' => false,
@@ -217,7 +217,7 @@ class BusinessController extends Controller
 			$cityData = DB::table('citylists')
 				->where('city', 'LIKE', $searchcity . '%')
 				->select('id as city_id', 'city')
-				->orderBy('city')
+				->orderBy('city','asc')
 				->limit(20)
 				->get();
 		}
@@ -236,7 +236,7 @@ class BusinessController extends Controller
 					'id as city_id',
 					'city'
 				)
-				->orderBy('city')
+				->orderBy('city','asc')
 				->get();
 		}
 
@@ -314,7 +314,7 @@ class BusinessController extends Controller
 	 */
 	public function getCityByState(Request $request)
 	{
-
+ 
 		$validator = Validator::make($request->all(), [
 			'state_id' => 'required|integer|exists:state,id',    
 		]);
@@ -331,6 +331,7 @@ class BusinessController extends Controller
 
 		$cities = Citieslists::where('state_id', $stateId)
 			->select('id as city_id', 'city', 'state_id')
+			->orderBy('city','asc')			 
 			->get()
 			->map(fn($city) => [
 				'city_id' => $city->city_id,
@@ -338,7 +339,7 @@ class BusinessController extends Controller
 				'state_id' => $city->state_id,
 			])
 			->values();
-
+ 
 		return response()->json([
 			'status' => true,
 			'message' => $cities->isNotEmpty() ? 'Successfully' : 'No cities found for this state',
@@ -597,9 +598,9 @@ class BusinessController extends Controller
 				'citylists.city as cityName',
 				'zones.city_id',
 				'zones.pincode'
-			)
-			 ->limit(50) 
+			)			 
 			->distinct()
+			->orderBy('zones.zone','asc')
 			->get();
 
 		}else{
@@ -633,7 +634,7 @@ class BusinessController extends Controller
 					'citylists.city as cityName'
 				)
 				->groupBy('citylists.id', 'citylists.city')
-				->orderBy('citylists.city')
+				->orderBy('citylists.city','asc')			 
 				->get();
 
 		}
@@ -660,11 +661,6 @@ class BusinessController extends Controller
 				'zone' => $zoneText
 			];
 		}
-
-		// $data[] = [
-		// 	'zone_id' => 'Other',
-		// 	'zone' => 'Other'
-		// ];
 
 		return response()->json([
 			'status' => true,

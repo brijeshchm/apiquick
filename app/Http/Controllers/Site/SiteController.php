@@ -19,6 +19,7 @@ use App\Models\Citieslists;
 use App\Models\City;
 use App\Models\Blogdetails;
 use App\Models\ChildCategory;
+use App\Models\Lead;
 use Session;
 use App\Models\ParentCategory;
 use App\Models\Client\Comment;
@@ -4094,14 +4095,24 @@ public function getKeywordList(Request $request)
 	public function businessOwners(Request $request)
 	{
 		$url = config('app.url');
+
+
+		$clients = Client::get()->count();
+		$keyword = Keyword::get()->count();
+		$citieslists = Citieslists::get()->count();
+
+		$childCategory = ChildCategory::get()->count();
+		$parentCategory = ParentCategory::get()->count();
+		$lead = Lead::get()->count();
+	  
 		$data['businessOwners'] = [
 			[
-				'Grow Client' => '1453 +',
-				'Suppliers' => '8.1 K+',
-				'Products & Services' => '8.1 K+',
-				'Keyword' => '1878 +',
-				'Store' => '21 +',
-				'Platform' => '11.3 K+',
+				'Grow Client' => $clients.' +',
+				'Suppliers' => $childCategory .' +',
+				'Products & Services' => $citieslists .' K+',
+				'Keyword' => $keyword.' +',
+				'Store' => $parentCategory .' +',
+				'Platform' => $parentCategory .' K+',
 			],
 
 		];
@@ -4159,13 +4170,12 @@ public function getKeywordList(Request $request)
 
 		];
 
-		$clients = Client::get()->count();
-		$keyword = Keyword::get()->count();
+	
 		$data['grow_business'] = [
 			[
 				"Grow business" => "Join thousands of businesses that trust Lead for their workforce management needs.",
 				"Active Client" => $clients,
-				"Employees Tracked" => "25,000",
+				"Employees Tracked" => $lead ." +",
 				"Customer Satisfaction" => "100%",
 				"Average Lead Increase" => "35%",
 				"Business Kewyord" => $keyword,

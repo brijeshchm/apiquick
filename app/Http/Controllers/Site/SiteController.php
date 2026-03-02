@@ -2837,7 +2837,8 @@ public function getKeywordList(Request $request)
 				'last_name' => $clientscheck->last_name,
 				'email' => $clientscheck->email,
 				'mobile' => $clientscheck->mobile,
-				'whatsapp' => $clientscheck->mobile,
+				'call' => '917559435943',
+				'whatsapp' => '917559435943',
 				'certified_status' => $clientscheck->certified_status,
 				'trusted_status' => $clientscheck->trusted_status,
 				'gst_status' => $clientscheck->gst_status,
@@ -4213,7 +4214,7 @@ public function getKeywordList(Request $request)
 		"We follow the conversion module.",
 		"We provide dual manually verified leads to your business.",
 		"These aspects make us different from others but there are few more things that make us unique and pops up the priority for you to choose us:",
-		"The leads are generated in both ways organic and inorganic",
+		// "The leads are generated in both ways organic and inorganic",
 		"We have a co-branding relationship with our own channel partners making us more capable and worthy to choose.",
 		"The leads provided by us are all verified twice by our expert counselors, in order to provide you genuine candidates.",
 		

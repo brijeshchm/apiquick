@@ -56,6 +56,7 @@ Route::post('/site/{client_id}/saveReview', [App\Http\Controllers\Site\SiteContr
 Route::middleware('auth:sanctum')->group(function () {
     
 Route::post('/logout', [AuthController::class, 'logout']);
+Route::post('/delete-account', [AuthController::class, 'deleteAccount']);
 Route::get('/business/profileInfo', [ProfileController::class, 'profileInfo']);
 
 Route::get('/business/review', [ReviewController::class, 'profileReview']);

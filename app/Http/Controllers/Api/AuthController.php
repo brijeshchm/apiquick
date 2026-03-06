@@ -102,11 +102,11 @@ class AuthController extends Controller
             );
             $message = "{$otp} is QuickDials Verification Code for {$user->email} .";
             $subject = "{$otp} is QuickDials Verification Code";
-         $checkmail =   Mail::send('emails.sendotp_to_email', ['msg' => $message], function ($m) use ($message, $request, $subject) {
+            $checkmail = Mail::send('emails.sendotp_to_email', ['msg' => $message], function ($m) use ($message, $request, $subject) {
                 $m->from('otp@quickdials.com', 'Login OTP');
-                $m->to($request->input('email'), "")->subject($subject);    
+                $m->to($request->input('email'), "")->subject($subject);
             });
- 
+
 
 
         }
@@ -187,11 +187,16 @@ class AuthController extends Controller
 
         $master = '202525';
         $user = client::where('email', $request->email)->first();
+         if (!$user) {
+            return response()->json(['status' => false, 'message' => 'User account not found',], 403);
+        }
+        if (!$user->active_status) {
+            return response()->json(['status' => false, 'message' => 'User account is inactive',], 403);
+        }
         $otp = OtpCode::where(function ($q) use ($request, $user) {
             $q->where('user_id', $user->id)
                 ->where('code', $request->otp);
-        })
-            ->first();
+        })->first();
 
 
         if ($otp || $master == $request->otp) {
@@ -277,23 +282,23 @@ class AuthController extends Controller
 
         if (!$user) {
 
-        
-			 	$user = Client::create([
-				'email'         => $request->email,				 
-				'client_type'   => 'gold',
-				'active_status' => 1,      
-			    'password' => random_int(1111, 9999),   
-				 
-			]);
 
-			$emailname = $request->email;
-				$clientIDToAppend = $clientID = $user->id;
-				if (strlen((string) $clientID) < 4) {
-					$clientIDToAppend = str_pad($clientIDToAppend, 4, '0', STR_PAD_LEFT);
-				}
-			Client::where('email', $request->email)
-    		->update(['username' => strtoupper(substr($emailname, 0, 2)) . $clientIDToAppend]);           
-        }         
+            $user = Client::create([
+                'email' => $request->email,
+                'client_type' => 'gold',
+                'active_status' => 1,
+                'password' => random_int(1111, 9999),
+
+            ]);
+
+            $emailname = $request->email;
+            $clientIDToAppend = $clientID = $user->id;
+            if (strlen((string) $clientID) < 4) {
+                $clientIDToAppend = str_pad($clientIDToAppend, 4, '0', STR_PAD_LEFT);
+            }
+            Client::where('email', $request->email)
+                ->update(['username' => strtoupper(substr($emailname, 0, 2)) . $clientIDToAppend]);
+        }
 
         if ($user) {
             $user->fcm_token = $request->fcm_token;
@@ -344,7 +349,7 @@ class AuthController extends Controller
     public function checkFcmToken(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email',            
+            'email' => 'required|email',
         ]);
 
         if ($validator->fails()) {
@@ -361,13 +366,13 @@ class AuthController extends Controller
         }
 
 
-        $ids = [680,155,156,145,682,559];
+        $ids = [680, 155, 156, 145, 682, 559];
         $randomId = $ids[array_rand($ids)];
         $lead = Lead::find($randomId);
- 
- 
-        event(new LeadPush($lead,$user->id));
-            
+
+
+        event(new LeadPush($lead, $user->id));
+
         // Generate new Sanctum token
         // $token = $user->createToken('api-token')->plainTextToken;
         //$token = $user->createToken('browser-extension')->plainTextToken;
@@ -376,8 +381,8 @@ class AuthController extends Controller
             'status' => true,
             'message' => 'FCM successfully',
             'fcm_token' => $user->fcm_token,
-             
-          
+
+
         ]);
     }
 
@@ -419,7 +424,69 @@ class AuthController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Logout successful'
+            'message' => 'Logout successfully'
+        ], 200);
+    }
+
+
+    /**
+     * @OA\Post(
+     *     path="/api/delete-account",
+     *     tags={"Delete Account"},
+     *     summary="Delete Account",
+     *     description="Delete the authenticated user by revoking all access tokens",
+     *     security={{"bearerAuth":{}}},
+     *
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email"},
+     *             @OA\Property(
+     *                 property="email",
+     *                 type="string",
+     *                 format="email",
+     *                 example="user@example.com"
+     *             )
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Delete successful",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Delete successful")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Unauthenticated")
+     *         )
+     *     )
+     * )
+     */
+    public function deleteAccount(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+        Client::where('email', $request->email)->update([
+            'active_status' => 0
+        ]);
+
+        $user = $request->user();
+
+        if ($user) {
+            $user->currentAccessToken()->delete();
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Delete successfully'
         ], 200);
     }
 

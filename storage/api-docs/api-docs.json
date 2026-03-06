@@ -578,6 +578,83 @@
                 ]
             }
         },
+        "/api/delete-account": {
+            "post": {
+                "tags": [
+                    "Delete Account"
+                ],
+                "summary": "Delete Account",
+                "description": "Delete the authenticated user by revoking all access tokens",
+                "operationId": "20dedf1b0cdeca76b312fba807bbb841",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Delete successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Delete successful"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/business/saveBusinessOwners": {
             "post": {
                 "tags": [
@@ -10105,6 +10182,10 @@
         {
             "name": "Auth Logout",
             "description": "Auth Logout"
+        },
+        {
+            "name": "Delete Account",
+            "description": "Delete Account"
         },
         {
             "name": "Frontend Registration Business",

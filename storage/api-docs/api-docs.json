@@ -406,7 +406,7 @@
         "/api/google-login": {
             "post": {
                 "tags": [
-                    "Socials Login"
+                    "Google Login"
                 ],
                 "summary": "Login with Token",
                 "description": "This endpoint sends an email to the provided address.",
@@ -10172,8 +10172,8 @@
             "description": "Verify Otp"
         },
         {
-            "name": "Socials Login",
-            "description": "Socials Login"
+            "name": "Google Login",
+            "description": "Google Login"
         },
         {
             "name": "Check FCM Token",

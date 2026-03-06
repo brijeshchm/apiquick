@@ -187,11 +187,11 @@ class AuthController extends Controller
 
         $master = '202525';
         $user = client::where('email', $request->email)->first();
-         if (!$user) {
+        if (!$user) {
             return response()->json(['status' => false, 'message' => 'User account not found',], 403);
         }
         if (!$user->active_status) {
-            return response()->json(['status' => false, 'message' => 'User account is inactive',], 403);
+            return response()->json(['status' => false, 'message' => 'User account not found',], 403);
         }
         $otp = OtpCode::where(function ($q) use ($request, $user) {
             $q->where('user_id', $user->id)
@@ -200,8 +200,6 @@ class AuthController extends Controller
 
 
         if ($otp || $master == $request->otp) {
-
-
             // OTP is valid → delete it (one-time use)
             if ($otp) {
 
@@ -241,7 +239,7 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/api/google-login",
-     *     tags={"Socials Login"},
+     *     tags={"Google Login"},
      *     summary="Login with Token",
      *     description="This endpoint sends an email to the provided address.",
      *     @OA\RequestBody(
@@ -279,10 +277,7 @@ class AuthController extends Controller
         }
 
         $user = Client::where('email', $request->email)->first();
-
         if (!$user) {
-
-
             $user = Client::create([
                 'email' => $request->email,
                 'client_type' => 'gold',
@@ -299,6 +294,11 @@ class AuthController extends Controller
             Client::where('email', $request->email)
                 ->update(['username' => strtoupper(substr($emailname, 0, 2)) . $clientIDToAppend]);
         }
+
+        if (!$user->active_status) {
+            return response()->json(['status' => false, 'message' => 'User account not found',], 403);
+        }
+
 
         if ($user) {
             $user->fcm_token = $request->fcm_token;
@@ -361,6 +361,10 @@ class AuthController extends Controller
         if (!$user) {
             return response()->json(['status' => false, 'message' => 'User account not found',], 403);
         }
+
+        if (!$user->active_status) {
+            return response()->json(['status' => false, 'message' => 'User account not found',], 403);
+        }
         if (!$user->fcm_token) {
             return response()->json(['status' => false, 'message' => 'User FCM token not found',], 403);
         }
@@ -385,8 +389,6 @@ class AuthController extends Controller
 
         ]);
     }
-
-
 
     /**
      * @OA\Post(
@@ -531,6 +533,7 @@ class AuthController extends Controller
      *     )
      * )
      */
+
     public function saveBusinessOwners(Request $request)
     {
 

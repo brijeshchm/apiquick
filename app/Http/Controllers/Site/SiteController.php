@@ -2776,6 +2776,7 @@ public function getKeywordList(Request $request)
 			$assignedKeywords = DB::table('assigned_kwds')
 				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
 				->where('assigned_kwds.client_id', $clientscheck->business_id)
+				->orderBy('keyword','asc')
 				->distinct()
 				->pluck('keyword.keyword')
 				->toArray();
@@ -3023,9 +3024,10 @@ public function getKeywordList(Request $request)
 			if (!empty($assignedKeywords)) {
 				$findKeywords = Keyword::select('child_category_id')->where('keyword', $assignedKeywords[0])->first();
 
-				$relKeywords = Keyword::select('keyword')->where('child_category_id', $findKeywords->child_category_id)->pluck('keyword.keyword')
-					->toArray();
-
+				$relKeywords = Keyword::select('keyword')->where('child_category_id', $findKeywords->child_category_id)
+				->orderBy('keyword','asc')
+				->pluck('keyword.keyword')
+				->toArray();
 
 				$data['related_searches'] = $relKeywords;
 			}
@@ -3081,10 +3083,6 @@ public function getKeywordList(Request $request)
 			];
 
 			$data['overview_business'] = $overview_business;
-
-
-
-
 			return response()->json([
 				'success' => true,
 				'data' => $data,

@@ -62,22 +62,25 @@ class AuthController extends Controller
             'email' => 'required|email',
             //'password' => 'required',
         ]);
-
+ 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-
+ 
         $user = Client::where('email', $request->email)->first();
-
+ 
         if (!$user) {
             return response()->json(['status' => false, 'message' => 'User account not found',], 403);
         }
+
         if (!$user->active_status) {
-            return response()->json(['status' => false, 'message' => 'User account is inactive',], 403);
+            return response()->json(['status' => false, 'message' => 'Your account has been deactivated',], 403);
         }
-        // if (!$user || !Hash::check($request->password, $user->password)) {
-        //     return response()->json(['status' => false, 'message' => 'Invalid credentials'], 401);
-        // }
+
+        if (!empty($user->deleted_at)) {
+            return response()->json(['status' => false, 'message' => 'Your account has been deactivated',], 403);
+        }
+       
         if ($user) {
             if ($request->fcm_token) {
                 $user->fcm_token = $request->fcm_token;
@@ -106,9 +109,6 @@ class AuthController extends Controller
                 $m->from('otp@quickdials.com', 'Login OTP');
                 $m->to($request->input('email'), "")->subject($subject);
             });
-
-
-
         }
         // Generate new Sanctum token
         $token = $user->createToken('api-token')->plainTextToken;
@@ -190,9 +190,15 @@ class AuthController extends Controller
         if (!$user) {
             return response()->json(['status' => false, 'message' => 'User account not found',], 403);
         }
+
         if (!$user->active_status) {
-            return response()->json(['status' => false, 'message' => 'User account not found',], 403);
+            return response()->json(['status' => false, 'message' => 'Your account has been deactivated',], 403);
         }
+
+        if (!empty($user->deleted_at)) {
+            return response()->json(['status' => false, 'message' => 'Your account has been deactivated',], 403);
+        }
+
         $otp = OtpCode::where(function ($q) use ($request, $user) {
             $q->where('user_id', $user->id)
                 ->where('code', $request->otp);
@@ -281,7 +287,7 @@ class AuthController extends Controller
             $user = Client::create([
                 'email' => $request->email,
                 'client_type' => 'gold',
-                'active_status' => 1,
+                'active_status' => '1',
                 'password' => random_int(1111, 9999),
 
             ]);
@@ -296,9 +302,12 @@ class AuthController extends Controller
         }
 
         if (!$user->active_status) {
-            return response()->json(['status' => false, 'message' => 'User account not found',], 403);
+            return response()->json(['status' => false, 'message' => 'Your account has been deactivated',], 403);
         }
 
+        if (!empty($user->deleted_at)) {
+            return response()->json(['status' => false, 'message' => 'Your account has been deactivated',], 403);
+        }
 
         if ($user) {
             $user->fcm_token = $request->fcm_token;
@@ -363,7 +372,11 @@ class AuthController extends Controller
         }
 
         if (!$user->active_status) {
-            return response()->json(['status' => false, 'message' => 'User account not found',], 403);
+            return response()->json(['status' => false, 'message' => 'Your account has been deactivated',], 403);
+        }
+
+        if (!empty($user->deleted_at)) {
+            return response()->json(['status' => false, 'message' => 'Your account has been deactivated',], 403);
         }
         if (!$user->fcm_token) {
             return response()->json(['status' => false, 'message' => 'User FCM token not found',], 403);
@@ -384,8 +397,6 @@ class AuthController extends Controller
             'status' => true,
             'message' => 'FCM successfully',
             'fcm_token' => $user->fcm_token,
-
-
         ]);
     }
 
@@ -476,7 +487,8 @@ class AuthController extends Controller
             'email' => 'required|email'
         ]);
         Client::where('email', $request->email)->update([
-            'active_status' => 0
+            'active_status' => '0',
+            'deleted_at' => date('Y-m-d'),
         ]);
 
         $user = $request->user();
@@ -535,20 +547,16 @@ class AuthController extends Controller
 
     public function saveBusinessOwners(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'business_name' => 'required|unique:clients,business_name',
             'mobile' => 'required|numeric|digits:10|regex:/^[1-9]+/|unique:clients,mobile,NULL,id',
             'email' => 'required|email|unique:clients,email,NULL,id'
-
         ]);
         if ($validator->fails()) {
             $errorsBag = $validator->getMessageBag()->toArray();
             return response()->json(['status' => true, 'errors' => $errorsBag], 400);
         }
         $client = new Client;
-
-
         $business_slug = NULL;
         $string = $request->input('business_name');
         $string = filter_var($string, FILTER_SANITIZE_STRING);
@@ -574,7 +582,6 @@ class AuthController extends Controller
             }
             $business_slug = implode("-", $business_slug);
         }
-
 
         $client->business_name = $businessName;
         $client->business_slug = $business_slug;

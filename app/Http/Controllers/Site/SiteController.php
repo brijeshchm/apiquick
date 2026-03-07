@@ -1798,7 +1798,7 @@ class SiteController extends Controller
 			)
 
 			->where('keyword.keyword', 'LIKE', "%{$keywordName}%")
-
+			->where('clients.active_status', '1')
 			->groupBy('clients.id')
 
 			->orderByRaw("
@@ -1844,9 +1844,7 @@ class SiteController extends Controller
 
 						$galleryArray[$key] = array(
 							'galley' => $value
-
 						);
-
 					}
 				}
 			}
@@ -2724,6 +2722,7 @@ public function getKeywordList(Request $request)
 				'c.comment_count'
 			)
 			->where('clients.business_slug', $business_slug)
+			->where('clients.active_status', '1')
 			->orderByRaw("
         CASE clients.client_type
             WHEN 'platinum' THEN 1

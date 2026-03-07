@@ -175,6 +175,7 @@ class ReviewController extends Controller
                     DB::raw('COALESCE(c.comment_count, 0) as comment_count')
                 )
                 ->where('clients.id', $user->id)
+                ->where('clients.active_status', '1')
                 ->get()
                 ->map(function ($client) {
                     // ✅ Fetch all comments for this specific client

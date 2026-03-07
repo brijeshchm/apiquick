@@ -328,7 +328,7 @@ class SiteController extends Controller
 
 		$servicesRelated = Keyword::where('child_category_id', $keywordDetails->child_category_id)
 			->where('parent_category_id', $keywordDetails->parent_category_id)
-			->select('keyword', 'icon')
+			->select('keyword', 'icon','slug')
 			->distinct()
 			->get();
 
@@ -347,15 +347,13 @@ class SiteController extends Controller
 			}
 
 			return [
-				'url' => '/' . generate_slug($keyword->keyword),
+				'url' => '/' . $keyword->slug,
 				'img' => $img,
 				'alt' => $alt,
 				'title' => $keyword->keyword,
 				'type' => 'keyword',
 			];
 		})->values()->toArray();
-
-
 
 		$data['servicesRelated'] = $servicesRelatedList;
 
@@ -365,7 +363,7 @@ class SiteController extends Controller
 			foreach ($cities as $ckey => $cvalue) {
 
 				$cityList[$ckey] = array(
-					'url' => '/' . strtolower($cvalue->city) . '/' . generate_slug($keywordDetails->keyword),
+					'url' => '/' . strtolower($cvalue->city) . '/' . $keywordDetails->slug,
 					'title' => $keywordDetails->keyword . ' in ' . $cvalue->city,
 
 				);
@@ -770,7 +768,6 @@ class SiteController extends Controller
 				'alt' => 'Health & Fitness',
 				'title' => 'Health & Fitness',
 				'type' => 'categories',
-
 			]
 
 
@@ -839,6 +836,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Catering-Services.jpg',
 				'alt' => 'Catering Services',
 				'title' => 'Catering Services',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -846,6 +844,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Banquet-Halls.jpg',
 				'alt' => 'Banquet Halls',
 				'title' => 'Banquet Halls',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -853,6 +852,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Stage-Decorators.jpg',
 				'alt' => 'Stage Decorators',
 				'title' => 'Stage Decorators',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -860,6 +860,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/makeup-artists.jpg',
 				'alt' => 'Makeup Artists',
 				'title' => 'Makeup Artists',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -867,6 +868,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Mehendi-Artists.jpg',
 				'alt' => 'Mehendi Artists',
 				'title' => 'Mehendi Artists',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -874,6 +876,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Bridal-Wear.jpg',
 				'alt' => 'Bridal Wear',
 				'title' => 'Bridal Wear',
+				'type'=> 'keyword',
 
 			]
 
@@ -944,6 +947,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Banquet_Hall.jpg',
 				'alt' => 'Banquet Hall',
 				'title' => 'Banquet Hall',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -951,6 +955,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Ghoda_Baggi.jpg',
 				'alt' => 'Ghoda Baggi & Rath',
 				'title' => 'Ghoda Baggi & Rath',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -958,6 +963,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Fire_Works_&_Crackers.jpg',
 				'alt' => 'Fire Works Crackers',
 				'title' => 'Fire Works Crackers',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -965,6 +971,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Photo_and_Videography.jpg',
 				'alt' => 'Photo and Videography',
 				'title' => 'Photo and Videography',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -972,6 +979,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Flower_Decoration.jpg',
 				'alt' => 'Flower Decoration',
 				'title' => 'Flower Decoration',
+				'type'=> 'keyword',
 
 			]
 		];
@@ -982,6 +990,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Banquet-Halls.jpg',
 				'alt' => 'Banquet Halls',
 				'title' => 'Banquet Halls',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -989,6 +998,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/DJ_Sound_System.jpg',
 				'alt' => 'DJ Sound Systems',
 				'title' => 'DJ Sound Systems',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -996,6 +1006,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Wedding_Organisers.jpg',
 				'alt' => 'Party Organiser',
 				'title' => 'Party Organiser',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -1003,6 +1014,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/stage-decoratorss.jpg',
 				'alt' => 'Stage Decoration',
 				'title' => 'Stage Decoration',
+				'type'=> 'keyword',
 
 			],
 
@@ -1018,6 +1030,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Makeup_artist.jpg',
 				'alt' => 'Makeup Artists',
 				'title' => 'Makeup Artists',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -1025,6 +1038,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Mehendi-Artists.jpg',
 				'alt' => 'Mehendi Artists',
 				'title' => 'Mehendi Artists',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -1032,6 +1046,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Bridal-Wear.jpg',
 				'alt' => 'Bridal Wear',
 				'title' => 'Bridal Wear',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -1039,6 +1054,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Jewellery.jpg',
 				'alt' => 'Jewellery',
 				'title' => 'Jewellery',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -1046,6 +1062,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/salon.jpg',
 				'alt' => 'salons',
 				'title' => 'salons',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -1053,6 +1070,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Cosmetic.jpg',
 				'alt' => 'Cosmetics',
 				'title' => 'Cosmetics',
+				'type'=> 'keyword',
 
 			],
 
@@ -1067,6 +1085,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/wedding_suit_for_groom.jpg',
 				'alt' => 'Wedding Suit groom',
 				'title' => 'Wedding Suit groom',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -1074,6 +1093,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Makeup_artist_for_groom.jpg',
 				'alt' => 'Makeup Artist',
 				'title' => 'Makeup Artist',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -1081,6 +1101,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Ghoda_Baggi.jpg',
 				'alt' => 'ghoda baggi',
 				'title' => 'ghoda baggi',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -1088,6 +1109,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Hair_salons_for_groom.jpg',
 				'alt' => 'Hair Salons',
 				'title' => 'Hair Salons',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -1095,6 +1117,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Wedding_Band.jpg',
 				'alt' => 'Wedding Band Baja',
 				'title' => 'Wedding Band Baja',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -1102,6 +1125,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Car_Decoration.jpg',
 				'alt' => 'wedding transport',
 				'title' => 'wedding transport',
+				'type'=> 'keyword',
 
 			],
 
@@ -1115,6 +1139,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/wedding-choreographer.jpg',
 				'alt' => 'Wedding choreographer',
 				'title' => 'Wedding choreographer',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -1122,6 +1147,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/wedding-astrologer.jpg',
 				'alt' => 'Wedding Astrologer',
 				'title' => 'Wedding Astrologer',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -1129,6 +1155,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/wedding-dancer-and-singer.jpg',
 				'alt' => 'Wedding Dancer And Singer',
 				'title' => 'gWedding Dancer And Singer',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -1136,6 +1163,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/Pandits.jpg',
 				'alt' => 'Pandits',
 				'title' => 'Pandits',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -1143,6 +1171,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/honeymoon-packages.jpg',
 				'alt' => 'honeymoon packages',
 				'title' => 'honeymoon packages',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -1150,6 +1179,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/stage-show-organisers.jpg',
 				'alt' => 'Stage Show Organisers',
 				'title' => 'Stage Show Organisers',
+				'type'=> 'keyword',
 
 			],
 
@@ -1222,6 +1252,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/air-force-navy.jpg',
 				'alt' => 'coaching',
 				'title' => 'Air Force & Navy / SSR / MR',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -1229,6 +1260,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/SSC-CGL-JEE.jpg',
 				'alt' => 'SSC CGL JEE',
 				'title' => 'SSC CGL JEE',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -1236,6 +1268,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/NTPC-RRB-Railway.jpg',
 				'alt' => 'NTPC & RRB Railway ',
 				'title' => 'NTPC & RRB Railway ',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -1243,6 +1276,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/CAT-exam.jpg',
 				'alt' => 'CAT/NEET',
 				'title' => 'CAT/NEET',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -1250,6 +1284,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/CTET-Super-TET.jpg',
 				'alt' => 'CTET Super TET',
 				'title' => 'CTET Super TET',
+				'type'=> 'keyword',
 
 			],
 			[
@@ -1257,6 +1292,7 @@ class SiteController extends Controller
 				'img' => config('app.website') . 'popular/UPSC-IAS.jpg',
 				'alt' => 'UPSC & IAS',
 				'title' => 'UPSC & IAS',
+				'type'=> 'keyword',
 
 			]
 
@@ -1347,6 +1383,7 @@ class SiteController extends Controller
 						'img' => $img,
 						'alt' => $study->child_category,
 						'title' => $study->child_category,
+						'type'=> 'child',
 					);
 
 					$data['studyAbroad'] = $studyPageList;
@@ -1706,7 +1743,7 @@ class SiteController extends Controller
 
 		$data['keyword'] = array(
 			'keyword' => $keywordDetails->keyword,
-			'keyword_slug' => generate_slug($keywordDetails->keyword),
+			'keyword_slug' => $keywordDetails->slug,
 			'category_banner' => $category_banner,
 			'alt' => $alt,
 			'meta_title' => $meta_title,
@@ -1860,7 +1897,8 @@ class SiteController extends Controller
 
 		$servicesRelated = Keyword::where('child_category_id', $keywordDetails->child_category_id)
 			->where('parent_category_id', $keywordDetails->parent_category_id)
-			->select('keyword', 'icon')
+			->select('keyword', 'icon','slug')
+			->orderBy('keyword','asc')
 			->distinct()
 			->get();
 
@@ -1879,10 +1917,11 @@ class SiteController extends Controller
 			}
 
 			return [
-				'url' => '/' . generate_slug($keyword->keyword),
+				'url' => '/' . $keyword->slug,
 				'img' => $img,
 				'alt' => $alt,
 				'title' => $keyword->keyword,
+				'type'=>'keyword',
 			];
 		})->values()->toArray();
 
@@ -1896,7 +1935,7 @@ class SiteController extends Controller
 			foreach ($cities as $ckey => $cvalue) {
 
 				$cityList[$ckey] = array(
-					'url' => '/' . strtolower($cvalue->city) . '/' . generate_slug($keywordDetails->keyword),
+					'url' => '/' . strtolower($cvalue->city) . '/' .$keywordDetails->slug,
 					'title' => $keywordDetails->keyword . ' in ' . $cvalue->city,
 
 				);
@@ -1986,6 +2025,7 @@ class SiteController extends Controller
 			)
 			// ->where('parent_category.parent_slug', $slug)
 			->where('parent_category.parent_slug', 'LIKE', '%' . $slug . '%')
+			->orderBy('child_category.child_category','asc')
 			->groupBy(
 				'parent_category.id',
 				'parent_category.parent_slug',
@@ -2129,15 +2169,17 @@ class SiteController extends Controller
 			], 400);
 		}
 
-		$data['childLists'] = DB::table('child_category')
-			->join('keyword', 'keyword.child_category_id', '=', 'child_category.id')
-			->select(
-				'keyword.keyword',
-				DB::raw('MAX(keyword.icon) as icon') // Aggregate icon to avoid GROUP BY issue
-			)
-			->where('child_category.child_slug', $slug)
-			->groupBy('keyword.keyword')
-			->get()
+			$data['childLists'] = DB::table('child_category')
+				->join('keyword', 'keyword.child_category_id', '=', 'child_category.id')
+				->select(
+					'keyword.keyword',
+					'keyword.icon as icon',
+					'keyword.slug'
+				)
+				->where('child_category.child_slug', $slug)
+				->orderBy('keyword.keyword','asc')
+				->groupBy('keyword.keyword','keyword.icon','keyword.slug')
+				->get()
 			->map(function ($keyword) {
 				$image = "";
 				$alt = "";
@@ -2154,7 +2196,7 @@ class SiteController extends Controller
 				}
 
 				return [
-					'url' => '/' . generate_slug($keyword->keyword),
+					'url' => '/' . $keyword->slug,
 					'img' => $image ?: '',
 					'alt' => $alt ?: $keyword->keyword,
 					'title' => $keyword->keyword,
@@ -2360,6 +2402,7 @@ class SiteController extends Controller
 					'citylists.city as cityName',
 					'zones.pincode'
 				)
+				->orderBy('zones.zone','asc')
 				->distinct()
 				->get();
 
@@ -2396,6 +2439,7 @@ class SiteController extends Controller
 					DB::raw('NULL as pincode')
 				)
 				->groupBy('citylists.id', 'citylists.city')
+				->orderBy('zone','asc')
 				->orderBy('citylists.city')
 				->get();
 		}
@@ -2483,7 +2527,7 @@ class SiteController extends Controller
 
 		$city = trim($request->input('city'));
 	 
-		 	$zones = DB::table('citylists')->join('zones', 'zones.city_id', '=', 'citylists.id')->where('citylists.city',$city)->select('zones.id', 'zones.zone')->distinct()->get();
+		 	$zones = DB::table('citylists')->join('zones', 'zones.city_id', '=', 'citylists.id')->where('citylists.city',$city)->select('zones.id', 'zones.zone')->orderBy('zones.zone','asc')->distinct()->get();
  
 		return response()->json([
 			'status' => true,
@@ -2562,7 +2606,8 @@ public function getKeywordList(Request $request)
             'keyword',
             DB::raw("LOWER(REPLACE(keyword, ' ', '-')) as slug")
         )
-        ->limit(20)
+		->orderBy('keyword','asc')
+        ->limit(50)
         ->get();
 
     // 🔹 Merge client data only when searching
@@ -2576,7 +2621,8 @@ public function getKeywordList(Request $request)
                 DB::raw("business_name as keyword"),
                 DB::raw("business_slug as slug")
             )
-            ->limit(20)
+			->orderBy('keyword','asc')
+            ->limit(50)
             ->get();
 
         $locations = $locations->merge($clientData);
@@ -3116,11 +3162,13 @@ public function getKeywordList(Request $request)
 				'img' => config('app.website') . 'popular/CAT-exam.jpg',
 				'alt' => 'CAT/NEET',
 				'title' => 'CAT/NEET',
+				'type' => 'keyword',
 
 			],
 			[
 				'url' => '/ctet-coaching',
 				'title' => 'Premium Plans',
+				'type' => 'keyword',
 
 			],
 			[
@@ -3160,100 +3208,121 @@ public function getKeywordList(Request $request)
 			[
 				'url' => '/categories/professional-courses',
 				'title' => 'Coaching & Tuitions',
+				'type' => 'categories',
 
 			],
 			[
 				'url' => '/child/wedding-planning',
 				'title' => 'Wedding Planning',
+				'type' => 'child',
 
 			],
 			[
 				'url' => '/category/health-wellness',
 				'title' => 'Healthcare',
+				'type' => 'categories',
 
 			],
 			[
 				'url' => '/category/real-estate-agent',
 				'title' => 'Real Estate',
+				'type' => 'categories',
 
 			],
 			[
 				'url' => '/categories/electric-services',
 				'title' => 'Electric Services',
+				'type' => 'categories',
 
 			],
 			[
 				'url' => '/categories/security-system',
 				'title' => 'Security System',
+				'type' => 'categories',
 
 			],
 			[
 				'url' => '/categories/medical',
 				'title' => 'Medical',
+				'type' => 'categories',
 			],
 			[
 				'url' => '/categories/packers-movers',
 				'title' => 'Packers Movers',
+				'type' => 'categories',
 			],
 			[
 				'url' => '/restaurants',
 				'title' => 'Restaurants',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/hotels',
 				'title' => 'Hotels',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/interior-designer',
 				'title' => 'interior Design',
+				'type' => 'keyword',
 			]
 		];
 		$data['businessServicesLink'] = [
 			[
 				'url' => '/patient-care-service',
 				'title' => 'Patient Care Service',
+				'type' => 'keyword',
 
 			],
 			[
 				'url' => '/home-appliance-repair-training',
 				'title' => 'Home Appliances Repair',
+				'type' => 'keyword',
 
 			],
 			[
 				'url' => '/wedding-organisers',
 				'title' => 'Wedding Organisers',
+				'type' => 'keyword',
 
 			],
 			[
 				'url' => '/ac-service',
 				'title' => 'AC Services',
+				'type' => 'keyword',
 
 			],
 			[
 				'url' => '/security-guards-services',
 				'title' => 'Security Guards',
+				'type' => 'keyword',
 
 			],
 			[
 				'url' => '/cleaning-services',
 				'title' => 'Cleaning Services',
+				'type' => 'keyword',
 
 			],
 			[
 				'url' => '/categories/repairs-services',
 				'title' => 'Repairs Services',
+				'type' => 'categories',
 			],
 			[
 				'url' => '/categories/spa-beauty',
 				'title' => 'SPA Beauty',
+				'type' => 'categories',
 			],
 			[
 				'url' => '/child/loan',
 				'title' => 'Loan',
+				'type' => 'child',
 			],
 			[
 				'url' => '/income-tax-consultants',
 				'title' => 'Tax Consultants',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/interviews',
@@ -4328,142 +4397,174 @@ public function getKeywordList(Request $request)
 			[
 				'url' => '/coaching-tuitions',
 				'title' => 'Coaching & Tuitions',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/business-services',
 				'title' => 'Business Services',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/home-construction',
 				'title' => 'Home Construction & Renovation',
+				'type' => 'keyword',
 
 			],
 			[
 				'url' => '/categories/personal-finance-services',
 				'title' => 'Personal Finance Services',
+				'type' => 'categories',
 
 			],
 			[
 				'url' => '/categories/tours-travel-services',
 				'title' => 'Tours & Travels',
+				'type' => 'categories',
 
 			],
 			[
-				'url' => '/home-construction/property-dealer',
+				'url' => '/categories/property-dealer',
 				'title' => 'Property Dealer',
+				'type' => 'categories',
 
 			],
 			[
 				'url' => '/rentals',
 				'title' => 'Rental Property',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/pg-hostels',
 				'title' => 'PG & Hostel',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/categories/computer-courses',
 				'title' => 'Computer Courses & Training',
+				'type' => 'categories',
 			],
 			[
 				'url' => '/study-abroad',
 				'title' => 'Study Abroad',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/home-services',
 				'title' => 'Home Services',
+				'type' => 'keyword',
 			],
 
 			[
 				'url' => '/wedding-organizers',
 				'title' => 'Parties, Special Occasions & Wedding',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/categories/electric-services',
 				'title' => 'Electric Services',
+				'type' => 'categories',
 			],
 			[
 				'url' => '/categories/entrance-exams-coaching',
 				'title' => 'Government Exam',
+				'type' => 'categories',
 			],
 			[
 				'url' => '/web-designers',
 				'title' => 'Web Designers',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/medical',
 				'title' => 'Medical',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/carpenters',
 				'title' => 'Carpenters',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/child/yoga-classes',
 				'title' => 'Yoga',
+				'type' => 'child',
 			],
 			[
 				'url' => '/tax-consultants',
 				'title' => 'CA & TAX Consultants',
+				'type' => 'keyword',
 			],
 		];
 		$data['businessService'] = [
 			[
 				'url' => '/patient-care-services',
 				'title' => 'Patient Care Service',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/home-appliances-repair-services',
 				'title' => 'Home Appliances Repair & Services',
+				'type' => 'keyword',
 			],
 			[
-				'url' => '/packers-movers',
+				'url' => '/packers-and-movers',
 				'title' => 'Packers and Movers',
+				'type' => 'keyword',
 
 			],
 			[
 				'url' => '/ac-repair-services',
 				'title' => 'AC Services',
+				'type' => 'keyword',
 
 			],
 			[
 				'url' => '/cleaning-services',
 				'title' => 'Cleaning Services',
+				'type' => 'keyword',
 
 			],
 			[
 				'url' => '/security-guards-services',
 				'title' => 'Security Guards',
+				'type' => 'keyword',
 
 			],
 			[
 				'url' => '/architects',
 				'title' => 'Architects',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/building-consultants-contractors',
 				'title' => 'Builders & Contractors',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/interior-designers-decorators',
 				'title' => 'Interior Designers & Decorators',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/housekeeping-services',
 				'title' => 'Housekeeping Services',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/painting-contractors',
 				'title' => 'Painting Contractors',
+				'type' => 'keyword',
 			],
 
 			[
 				'url' => '/modular-kitchen-dealers',
 				'title' => 'Modular Kitchen Dealers',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/waterproofing-contractors',
 				'title' => 'Waterproofing Contractors',
+				'type' => 'keyword',
 			]
 
 		];
@@ -4471,88 +4572,107 @@ public function getKeywordList(Request $request)
 			[
 				'url' => '/schools-colleges',
 				'title' => 'Schools & Colleges',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/categories/entrance-exams-coaching',
 				'title' => 'Entrance Exam Coaching',
+				'type' => 'categories',
 			],
 			[
 				'url' => '/competitive-exam-coaching',
 				'title' => 'Competitive Exam Coaching',
+				'type' => 'keyword',
 
 			],
 			[
 				'url' => '/distance-education',
 				'title' => 'Distance Education',
+				'type' => 'keyword',
 
 			],
 			[
 				'url' => '/language-training',
 				'title' => 'Language Training',
+				'type' => 'keyword',
 
 			],
 			[
 				'url' => '/overseas-education-consultants',
 				'title' => 'Overseas Education',
+				'type' => 'keyword',
 
 			],
 			[
 				'url' => '/college-tuition',
 				'title' => 'College & University Tuitions',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/bank-insurance-exam-coaching',
 				'title' => 'Bank & Insurance Exam Coaching',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/placement-consultants',
 				'title' => 'Placement Consultants',
+				'type' => 'keyword',
 			]
 		];
 		$data['personalService'] = [
 			[
 				'url' => '/loan',
 				'title' => 'Loans',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/visa-consultants',
 				'title' => 'Visa Consultants',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/beauty-parlour-services',
 				'title' => 'Beauty Parlour Services',
+				'type' => 'keyword',
 
 			],
 			[
 				'url' => '/event-organisers',
 				'title' => 'Event Organisers',
+				'type' => 'keyword',
 
 			],
 			[
 				'url' => '/catering-services',
 				'title' => 'Catering Services',
+				'type' => 'keyword',
 
 			],
 			[
 				'url' => '/photographers-videographers',
 				'title' => 'Photographers & Videographers',
+				'type' => 'keyword',
 
 			],
 			[
 				'url' => '/astrologers',
 				'title' => 'Astrologers',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/vehicle-rental',
 				'title' => 'Vehicle Rentals',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/massage-centres',
 				'title' => 'Massage Centres',
+				'type' => 'keyword',
 			],
 			[
 				'url' => '/advocates-lawyers',
 				'title' => 'Advocates & Lawyers',
+				'type' => 'keyword',
 			],
 		];
 
@@ -4775,8 +4895,5 @@ public function getKeywordList(Request $request)
 			'message' => 'Review successfully submitted.'
 		], 200);
 	}
-
-
-
 
 }

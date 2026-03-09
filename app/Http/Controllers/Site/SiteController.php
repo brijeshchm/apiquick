@@ -492,11 +492,11 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/categories/professional',
+				'url' => '/child/professional',
 				'img' => config('app.website') . 'img/Professional.png',
 				'alt' => 'Professional',
 				'title' => 'Professional',
-				'type' => 'categories',
+				'type' => 'child',
 
 			],
 			[

@@ -2022,8 +2022,8 @@ class SiteController extends Controller
 				'child_category.child_category as child_name',
 				'child_category.pc_icon as 	pc_icon'
 			)
-			// ->where('parent_category.parent_slug', $slug)
-			->where('parent_category.parent_slug', 'LIKE', '%' . $slug . '%')
+			->where('parent_category.parent_slug', $slug)
+			// ->where('parent_category.parent_slug', 'LIKE', '%' . $slug . '%')
 			->orderBy('child_category.child_category', 'asc')
 			->groupBy(
 				'parent_category.id',

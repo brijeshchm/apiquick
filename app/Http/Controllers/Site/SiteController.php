@@ -149,6 +149,9 @@ class SiteController extends Controller
 
 		$zones = DB::table('citylists')->join('zones', 'zones.city_id', '=', 'citylists.id')->where('citylists.city', 'LIKE', $city)->select('zones.id', 'zones.zone')->orderBy('zones.zone','asc')->distinct()->get();
 		 
+		 if(!$zones->count()){
+				$zones =[ ['id'=>'5','zone'=>'bangalore']];
+		 }
 
 		// dd($zones);
 		$data['keyword'] = array(

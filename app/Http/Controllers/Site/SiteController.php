@@ -95,7 +95,7 @@ class SiteController extends Controller
 		$city = $request->input('city');
 		$cityName = ucwords(str_replace('-', ' ', $city));
 		$keywordName = ucwords(str_replace('-', ' ', $search_kw));
-
+ 
 		$keywordDetails = DB::table('keyword')
 			->join('parent_category', 'keyword.parent_category_id', '=', 'parent_category.id')
 			->join('child_category', 'keyword.child_category_id', '=', 'child_category.id')
@@ -147,12 +147,13 @@ class SiteController extends Controller
 			$bottom_description = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->bottom_description);
 		}
 
-		$zones = DB::table('citylists')->join('zones', 'zones.city_id', '=', 'citylists.id')->where('citylists.city', 'LIKE', $city)->select('zones.id', 'zones.zone')->distinct()->get();
+		$zones = DB::table('citylists')->join('zones', 'zones.city_id', '=', 'citylists.id')->where('citylists.city', 'LIKE', $city)->select('zones.id', 'zones.zone')->orderBy('zones.zone','asc')->distinct()->get();
 		if(!empty($zones)){
-			$zones = DB::table('citylists')->join('zones', 'zones.city_id', '=', 'citylists.id')->select('zones.id', 'zones.zone')->distinct()->get();
+			$zones = DB::table('citylists')->join('zones', 'zones.city_id', '=', 'citylists.id')->select('zones.id', 'zones.zone')->orderBy('zones.zone','asc')->distinct()->get();
 			$cityName = "";
 		}
 
+		// dd($zones);
 		$data['keyword'] = array(
 			'keyword' => $keywordDetails->keyword,
 			'keyword_slug' => generate_slug($keywordDetails->keyword),
@@ -224,6 +225,7 @@ class SiteController extends Controller
 		if ($clientscheck->count() > 0) {
 			$clientsList = $clientscheck;
 		} else {
+		 
 			$clientsList = DB::table('clients')
 				->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
 				->join('assigned_zones', 'clients.id', '=', 'assigned_zones.client_id')
@@ -256,8 +258,12 @@ class SiteController extends Controller
             END
         ")
 				->get();
+	 
+
 		}
 
+
+	
 		$data['clientsList'] = $clientsList->map(function ($client) {
 
 			$logoImage = config('app.website') . 'client/images/default_pp_small.png';
@@ -324,7 +330,7 @@ class SiteController extends Controller
 				'rating' => $client->rating,
 				'avgRating' => $avgRating,
 				'call' => "917559435943",
-				'whatsapp' => "7559435943",
+				'whatsapp' => "917559435943",
 				'comment_count' => $client->comment_count,
 			];
 		});

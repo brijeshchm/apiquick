@@ -148,6 +148,10 @@ class SiteController extends Controller
 		}
 
 		$zones = DB::table('citylists')->join('zones', 'zones.city_id', '=', 'citylists.id')->where('citylists.city', 'LIKE', $city)->select('zones.id', 'zones.zone')->distinct()->get();
+		if(!empty($zones)){
+			$zones = DB::table('citylists')->join('zones', 'zones.city_id', '=', 'citylists.id')->select('zones.id', 'zones.zone')->distinct()->get();
+			$cityName = "";
+		}
 
 		$data['keyword'] = array(
 			'keyword' => $keywordDetails->keyword,

@@ -95,11 +95,11 @@ class SiteController extends Controller
 		$city = $request->input('city');
 		$cityName = ucwords(str_replace('-', ' ', $city));
 		$keywordName = ucwords(str_replace('-', ' ', $search_kw));
- 
+
 		$keywordDetails = DB::table('keyword')
 			->join('parent_category', 'keyword.parent_category_id', '=', 'parent_category.id')
 			->join('child_category', 'keyword.child_category_id', '=', 'child_category.id')
-			->where('keyword', 'LIKE', '%' . ucwords(str_replace('-', ' ', $search_kw)) . '%')
+			->where('keyword', 'LIKE', '' . ucwords(str_replace('-', ' ', $search_kw)) . '')
 			->select('keyword.*', 'parent_category.*', 'child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5', 'keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount')
 			->first();
 		if (!$keywordDetails) {
@@ -150,7 +150,7 @@ class SiteController extends Controller
 		$zones = DB::table('citylists')->join('zones', 'zones.city_id', '=', 'citylists.id')->where('citylists.city', 'LIKE', $city)->select('zones.id', 'zones.zone')->orderBy('zones.zone','asc')->distinct()->get();
 		if(!empty($zones)){
 			$zones = DB::table('citylists')->join('zones', 'zones.city_id', '=', 'citylists.id')->select('zones.id', 'zones.zone')->orderBy('zones.zone','asc')->distinct()->get();
-			$cityName = "";
+			 
 		}
 
 		// dd($zones);
@@ -206,9 +206,9 @@ class SiteController extends Controller
 				'c.rating',
 				'c.comment_count'
 			)
-			->where('citylists.city', 'LIKE', "%{$cityName}%")
+			->where('citylists.city', 'LIKE', "{$cityName}")
 			// ->where('clients.active_status', '1')
-			->where('keyword.keyword', 'LIKE', "%{$keywordName}%")
+			->where('keyword.keyword', 'LIKE', "{$keywordName}")
 			// ->groupBy('clients.id')
 			->distinct('clients.id')
 			->orderByRaw("
@@ -245,7 +245,7 @@ class SiteController extends Controller
 					'c.rating',
 					'c.comment_count'
 				)
-				->where('keyword.keyword', 'LIKE', '%' . $keywordName . '%')
+				->where('keyword.keyword', 'LIKE', '' . $keywordName . '')
 				// ->groupBy('clients.id')
 				->distinct('clients.id')
 				->orderByRaw("

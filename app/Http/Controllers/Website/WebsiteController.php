@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Site;
+namespace App\Http\Controllers\Website;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -24,13 +24,13 @@ use Session;
 use App\Models\ParentCategory;
 use App\Models\Client\Comment;
 use App\Models\HomeSlider;
-class SiteController extends Controller
+class WebsiteController extends Controller
 {
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/city/keyword",
-	 *     tags={"App Frontend"},
+	 *     path="/api/website/city/keyword",
+	 *     tags={"Website"},
 	 *     summary="Frontend Search city and keyword",
 	 *     description="Search records dynamically based on a keyword or filters",
 	 *      
@@ -392,8 +392,8 @@ class SiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/homePage",
-	 *     tags={"App Frontend"},
+	 *     path="/api/website/homePage",
+	 *     tags={"Website"},
 	 *     summary="Frontend Home Page",
 	 *     description="Display data home page",
 	 *     @OA\Response(
@@ -688,8 +688,8 @@ class SiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/repairsServices",
-	 *     tags={"App Frontend"},
+	 *     path="/api/website/repairsServices",
+	 *     tags={"Website"},
 	 *     summary="Frontend Home Page Repairs Services",
 	 *     description="Display data home page",
 	 *     @OA\Response(
@@ -797,8 +797,8 @@ class SiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/weddingPlanning",
-	 *     tags={"App Frontend"},
+	 *     path="/api/website/weddingPlanning",
+	 *     tags={"Website"},
 	 *     summary="Frontend Home Page Wedding Planning",
 	 *     description="Display data home page",
 	 *     @OA\Response(
@@ -905,11 +905,10 @@ class SiteController extends Controller
 		], 200);
 
 	}
-
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/wedding-page",
-	 *     tags={"App Frontend"},
+	 *     path="/api/website/wedding-page",
+	 *     tags={"Website"},
 	 *     summary="Frontend Home Page Wedding page",
 	 *     description="Display data page",
 	 *     @OA\Response(
@@ -1214,8 +1213,8 @@ class SiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/entranceExams",
-	 *     tags={"App Frontend"},
+	 *     path="/api/website/entranceExams",
+	 *     tags={"Website"},
 	 *     summary="Frontend Home Page Entrance Exams",
 	 *     description="Display data home page",
 	 *     @OA\Response(
@@ -1325,9 +1324,9 @@ class SiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/studyAbroad",
-	 *     tags={"App Frontend"},
-	 *     summary="Frontend Home Page Study Abroad",
+	 *     path="/api/website/studyAbroad",
+	 *     tags={"Website"},
+	 *     summary="Website Home Page Study Abroad",
 	 *     description="Display data home page",
 	 *     @OA\Response(
 	 *         response=200,
@@ -1419,9 +1418,9 @@ class SiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/getBlog",
-	 *     tags={"App Frontend"},
-	 *     summary="Frontend Home Page Blog",
+	 *     path="/api/website/getBlog",
+	 *     tags={"Website"},
+	 *     summary="Website Home Page Blog",
 	 *     description="Display data home page",
 	 *     @OA\Response(
 	 *         response=200,
@@ -1500,8 +1499,8 @@ class SiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/blog/{slug}",
-	 *     tags={"App Frontend"},
+	 *     path="/api/website/blog/{slug}",
+	 *     tags={"Website"},
 	 *     summary="Frontend blog details",
 	 *     description="Search records dynamically based on a business slug",
 	 *      
@@ -1640,8 +1639,8 @@ class SiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/getKeyword",
-	 *     tags={"App Frontend"},
+	 *     path="/api/website/getKeyword",
+	 *     tags={"Website"},
 	 *     summary="Frontend get Keyword",
 	 *     description="Search records dynamically based on a keyword or filters",
 	 *            
@@ -1962,9 +1961,9 @@ class SiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/categories",
-	 *     tags={"App Frontend"},
-	 *     summary="Frontend get categories",
+	 *     path="/api/website/categories",
+	 *     tags={"Website"},
+	 *     summary="Website get categories",
 	 *     description="Search records dynamically based on a keyword or filters",
 	 *            
 	 *     @OA\Parameter(
@@ -2111,9 +2110,9 @@ class SiteController extends Controller
 	}
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/child",
-	 *     tags={"App Frontend"},
-	 *     summary="Frontend get child",
+	 *     path="/api/website/child",
+	 *     tags={"Website"},
+	 *     summary="Website get child",
 	 *     description="Search records dynamically based on a child",
 	 *            
 	 *     @OA\Parameter(
@@ -2258,12 +2257,10 @@ class SiteController extends Controller
 	}
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/home-slider",
-	 *     tags={"App Frontend"},
-	 *     summary="Frontend Home slider",
-	 *     description="Home slider records dynamically based on a child",       
-	 *     
-	 *        
+	 *     path="/api/website/home-slider",
+	 *     tags={"Website"},
+	 *     summary="Website Home slider",
+	 *     description="Home slider records dynamically based on a child",        
 	 *     @OA\Response(
 	 *         response=200,
 	 *         description="Search results retrieved successfully",
@@ -2337,9 +2334,9 @@ class SiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/getCityList",
-	 *     tags={"App Frontend"},
-	 *     summary="Frontend Search Zone records by City ",
+	 *     path="/api/website/getCityList",
+	 *     tags={"Website"},
+	 *     summary="Website get City List and Search Zone records by City ",
 	 *     description="Search records dynamically based on a city",
 	 *            
 	 *     @OA\Parameter(
@@ -2482,9 +2479,9 @@ class SiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/getZoneList",
-	 *     tags={"App Frontend"},
-	 *     summary="Frontend Search Zone records by City ",
+	 *     path="/api/website/getZoneList",
+	 *     tags={"Website"},
+	 *     summary="Website Search Zone records by City ",
 	 *     description="Search records dynamically based on a zone",
 	 *            
 	 *     @OA\Parameter(
@@ -2545,9 +2542,9 @@ class SiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/get-keyword-list",
-	 *     tags={"App Frontend"},
-	 *     summary="Frontend Search Keyword records",
+	 *     path="/api/website/get-keyword-list",
+	 *     tags={"Website"},
+	 *     summary="Website get Keyword List and Search Keyword records",
 	 *     description="Search records dynamically based on a Keyword",
 	 *            
 	 *     @OA\Parameter(
@@ -2661,9 +2658,9 @@ class SiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/business-details/{slug}",
-	 *     tags={"App Frontend"},
-	 *     summary="Frontend Search business details",
+	 *     path="/api/website/business-details/{slug}",
+	 *     tags={"Website"},
+	 *     summary="Website Search business details",
 	 *     description="Search records dynamically based on a business slug",
 	 *      
 	 *      @OA\Parameter(
@@ -3102,9 +3099,9 @@ class SiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/footer-links",
-	 *     tags={"App Frontend"},
-	 *     summary="Frontend Footer links",
+	 *     path="/api/website/footer-links",
+	 *     tags={"Website"},
+	 *     summary="Website Footer links",
 	 *     description="Display data home page",
 	 *     @OA\Response(
 	 *         response=200,
@@ -3348,9 +3345,9 @@ class SiteController extends Controller
 	}
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/about-us",
-	 *     tags={"App Frontend"},
-	 *     summary="Frontend about-us",
+	 *     path="/api/website/about-us",
+	 *     tags={"Website"},
+	 *     summary="Website about-us records",
 	 *     description="Display data home page",
 	 *     @OA\Response(
 	 *         response=200,
@@ -3481,9 +3478,9 @@ class SiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/faq",
-	 *     tags={"App Frontend"},
-	 *     summary="Frontend FAQ's",
+	 *     path="/api/website/faq",
+	 *     tags={"Website"},
+	 *     summary="Website FAQ's",
 	 *     description="Display data home page",
 	 *     @OA\Response(
 	 *         response=200,
@@ -3574,9 +3571,9 @@ class SiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/contact-us",
-	 *     tags={"App Frontend"},
-	 *     summary="Frontend Contact-us",
+	 *     path="/api/website/contact-us",
+	 *     tags={"Website"},
+	 *     summary="Website Contact-us",
 	 *     description="Display data home page",
 	 *     @OA\Response(
 	 *         response=200,
@@ -3642,9 +3639,9 @@ class SiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/pricing",
-	 *     tags={"App Frontend"},
-	 *     summary="Frontend Pricing records",
+	 *     path="/api/website/pricing",
+	 *     tags={"Website"},
+	 *     summary="Website Pricing",
 	 *     description="Display data home page",
 	 *     @OA\Response(
 	 *         response=200,
@@ -3803,9 +3800,9 @@ class SiteController extends Controller
 	}
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/privacy-policy",
-	 *     tags={"App Frontend"},
-	 *     summary="Frontend Privacy policy records",
+	 *     path="/api/website/privacy-policy",
+	 *     tags={"Website"},
+	 *     summary="Website Privacy Policy",
 	 *     description="Display data home page",
 	 *     @OA\Response(
 	 *         response=200,
@@ -3922,9 +3919,9 @@ class SiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/terms-conditions",
-	 *     tags={"App Frontend"},
-	 *     summary="Frontend Terms Conditions records",
+	 *     path="/api/website/terms-conditions",
+	 *     tags={"Website"},
+	 *     summary="Website Terms Conditions",
 	 *     description="Display data home page",
 	 *     @OA\Response(
 	 *         response=200,
@@ -4028,9 +4025,9 @@ class SiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/copyright-policy",
-	 *     tags={"App Frontend"},
-	 *     summary="Frontend Copyright Policy records",
+	 *     path="/api/website/copyright-policy",
+	 *     tags={"Website"},
+	 *     summary="Website Copyright Policy",
 	 *     description="Display data home page",
 	 *     @OA\Response(
 	 *         response=200,
@@ -4126,9 +4123,9 @@ class SiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/business-owners",
-	 *     tags={"App Frontend"},
-	 *     summary="Frontend business signup",
+	 *     path="/api/website/business-owners",
+	 *     tags={"Website"},
+	 *     summary="Website business signup",
 	 *     description="Display data home page",
 	 *     @OA\Response(
 	 *         response=200,
@@ -4359,9 +4356,9 @@ class SiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/common-linked",
-	 *     tags={"App Frontend"},
-	 *     summary="Frontend Common Linked records",
+	 *     path="/api/website/common-linked",
+	 *     tags={"Website"},
+	 *     summary="Website Common Linked",
 	 *     description="Display data home page",
 	 *     @OA\Response(
 	 *         response=200,
@@ -4715,9 +4712,9 @@ class SiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/site/business-services",
-	 *     tags={"App Frontend"},
-	 *     summary="Frontend Business Services records",
+	 *     path="/api/website/business-services",
+	 *     tags={"Website"},
+	 *     summary="Website business services",
 	 *     description="Display data home page",
 	 *     @OA\Response(
 	 *         response=200,
@@ -4807,9 +4804,9 @@ class SiteController extends Controller
 
 	/**
 	 * @OA\Post(
-	 *     path="/api/site/{client_id}/saveReview",
-	 *     tags={"App Frontend"},
-	 *     summary="Frontend Submit a business review",
+	 *     path="/api/website/{client_id}/saveReview",
+	 *     tags={"Website"},
+	 *     summary="Submit a business review",
 	 *     description="Allows a user to submit a review. One review per email per client per 30 days.",
 	 *     
 	 *

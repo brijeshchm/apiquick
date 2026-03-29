@@ -7517,9 +7517,9 @@
         "/api/site/city/keyword": {
             "get": {
                 "tags": [
-                    "Frontend Search city and keyword"
+                    "App Frontend"
                 ],
-                "summary": "Search records",
+                "summary": "Frontend Search city and keyword",
                 "description": "Search records dynamically based on a keyword or filters",
                 "operationId": "6a673218b95f18e2926f3eed4fa79786",
                 "parameters": [
@@ -7632,9 +7632,9 @@
         "/api/site/homePage": {
             "get": {
                 "tags": [
-                    "Frontend Home Page"
+                    "App Frontend"
                 ],
-                "summary": "Search records",
+                "summary": "Frontend Home Page",
                 "description": "Display data home page",
                 "operationId": "beb5ca49ed81c5cf3ccd25a3ba65b022",
                 "responses": {
@@ -7706,9 +7706,9 @@
         "/api/site/repairsServices": {
             "get": {
                 "tags": [
-                    "Frontend Home Page Repairs Services"
+                    "App Frontend"
                 ],
-                "summary": "Repairs Services records",
+                "summary": "Frontend Home Page Repairs Services",
                 "description": "Display data home page",
                 "operationId": "38047bc53b58136b7a5bcc08938b0988",
                 "responses": {
@@ -7780,9 +7780,9 @@
         "/api/site/weddingPlanning": {
             "get": {
                 "tags": [
-                    "Frontend Home Page Wedding Planning"
+                    "App Frontend"
                 ],
-                "summary": "Wedding Planning records",
+                "summary": "Frontend Home Page Wedding Planning",
                 "description": "Display data home page",
                 "operationId": "8392bae88b073dcd6d8b95eedd15583f",
                 "responses": {
@@ -7854,9 +7854,9 @@
         "/api/site/wedding-page": {
             "get": {
                 "tags": [
-                    "Frontend Home Page Wedding page"
+                    "App Frontend"
                 ],
-                "summary": "Wedding Page records",
+                "summary": "Frontend Home Page Wedding page",
                 "description": "Display data page",
                 "operationId": "a9d6fd884617d6afd46eeb3c531eedca",
                 "responses": {
@@ -7928,9 +7928,9 @@
         "/api/site/entranceExams": {
             "get": {
                 "tags": [
-                    "Frontend Home Page Entrance Exams"
+                    "App Frontend"
                 ],
-                "summary": "Entrance Exams records",
+                "summary": "Frontend Home Page Entrance Exams",
                 "description": "Display data home page",
                 "operationId": "d51f97292e5d71c8f27d8f66592d5275",
                 "responses": {
@@ -8002,9 +8002,9 @@
         "/api/site/studyAbroad": {
             "get": {
                 "tags": [
-                    "Frontend Home Page Study Abroad"
+                    "App Frontend"
                 ],
-                "summary": "Study Abroad records",
+                "summary": "Frontend Home Page Study Abroad",
                 "description": "Display data home page",
                 "operationId": "cdfb1b2d72f56149e1eda810fcb1fbde",
                 "responses": {
@@ -8076,9 +8076,9 @@
         "/api/site/getBlog": {
             "get": {
                 "tags": [
-                    "Frontend Home Page Blog"
+                    "App Frontend"
                 ],
-                "summary": "Blog records",
+                "summary": "Frontend Home Page Blog",
                 "description": "Display data home page",
                 "operationId": "0b58af3b8d66bccac556605d3332011a",
                 "responses": {
@@ -8150,9 +8150,9 @@
         "/api/site/blog/{slug}": {
             "get": {
                 "tags": [
-                    "Frontend blog details"
+                    "App Frontend"
                 ],
-                "summary": "Search records",
+                "summary": "Frontend blog details",
                 "description": "Search records dynamically based on a business slug",
                 "operationId": "22706b0ce20ae5efa3a0635b4c21de55",
                 "parameters": [
@@ -8255,9 +8255,9 @@
         "/api/site/getKeyword": {
             "get": {
                 "tags": [
-                    "Frontend get Keyword"
+                    "App Frontend"
                 ],
-                "summary": "Search records",
+                "summary": "Frontend get Keyword",
                 "description": "Search records dynamically based on a keyword or filters",
                 "operationId": "65fdf06bd4f667e817935850e106ad9a",
                 "parameters": [
@@ -8356,9 +8356,9 @@
         "/api/site/categories": {
             "get": {
                 "tags": [
-                    "Frontend get categories"
+                    "App Frontend"
                 ],
-                "summary": "Search records",
+                "summary": "Frontend get categories",
                 "description": "Search records dynamically based on a keyword or filters",
                 "operationId": "94372374186f6df72fca2f2dcac971be",
                 "parameters": [
@@ -8457,9 +8457,9 @@
         "/api/site/child": {
             "get": {
                 "tags": [
-                    "Frontend get child"
+                    "App Frontend"
                 ],
-                "summary": "Search records",
+                "summary": "Frontend get child",
                 "description": "Search records dynamically based on a child",
                 "operationId": "ec43614d5126e9bdb8c47348fbb305ab",
                 "parameters": [
@@ -8558,9 +8558,9 @@
         "/api/site/home-slider": {
             "get": {
                 "tags": [
-                    "Frontend Home slider"
+                    "App Frontend"
                 ],
-                "summary": "Home slider records",
+                "summary": "Frontend Home slider",
                 "description": "Home slider records dynamically based on a child",
                 "operationId": "472ea4fde1a26540f86108c88d386ae0",
                 "responses": {
@@ -8647,9 +8647,9 @@
         "/api/site/getCityList": {
             "get": {
                 "tags": [
-                    "Frontend get City List"
+                    "App Frontend"
                 ],
-                "summary": "Search Zone records by City ",
+                "summary": "Frontend Search Zone records by City ",
                 "description": "Search records dynamically based on a city",
                 "operationId": "7235818f30f4aa79bce005f631cdce59",
                 "parameters": [
@@ -8748,9 +8748,9 @@
         "/api/site/getZoneList": {
             "get": {
                 "tags": [
-                    "Frontend get Zone List"
+                    "App Frontend"
                 ],
-                "summary": "Search Zone records by City ",
+                "summary": "Frontend Search Zone records by City ",
                 "description": "Search records dynamically based on a zone",
                 "operationId": "7d8919fb02d8ff9a897f8270592fc46c",
                 "parameters": [
@@ -8849,9 +8849,9 @@
         "/api/site/get-keyword-list": {
             "get": {
                 "tags": [
-                    "Frontend get Keyword List"
+                    "App Frontend"
                 ],
-                "summary": "Search Keyword records",
+                "summary": "Frontend Search Keyword records",
                 "description": "Search records dynamically based on a Keyword",
                 "operationId": "325438a0ab5aec2fca45824427a904a5",
                 "parameters": [
@@ -8950,9 +8950,9 @@
         "/api/site/business-details/{slug}": {
             "get": {
                 "tags": [
-                    "Frontend Search business details"
+                    "App Frontend"
                 ],
-                "summary": "Search records",
+                "summary": "Frontend Search business details",
                 "description": "Search records dynamically based on a business slug",
                 "operationId": "5f038f0d5a2419179827aad8d5abb2be",
                 "parameters": [
@@ -9055,9 +9055,9 @@
         "/api/site/footer-links": {
             "get": {
                 "tags": [
-                    "Frontend Footer links"
+                    "App Frontend"
                 ],
-                "summary": "Footer Links records",
+                "summary": "Frontend Footer links",
                 "description": "Display data home page",
                 "operationId": "334ed325a48231e9b339c363dcd8da00",
                 "responses": {
@@ -9129,9 +9129,9 @@
         "/api/site/about-us": {
             "get": {
                 "tags": [
-                    "Frontend about-us"
+                    "App Frontend"
                 ],
-                "summary": "about-us records",
+                "summary": "Frontend about-us",
                 "description": "Display data home page",
                 "operationId": "c4d07af4bea13405862a85cec110f0b7",
                 "responses": {
@@ -9203,9 +9203,9 @@
         "/api/site/faq": {
             "get": {
                 "tags": [
-                    "Frontend FAQ's"
+                    "App Frontend"
                 ],
-                "summary": "FAQ's records",
+                "summary": "Frontend FAQ's",
                 "description": "Display data home page",
                 "operationId": "a9567b9ab7ee7957d26b9726a1dfb722",
                 "responses": {
@@ -9277,9 +9277,9 @@
         "/api/site/contact-us": {
             "get": {
                 "tags": [
-                    "Frontend Contact-us"
+                    "App Frontend"
                 ],
-                "summary": "contact-us records",
+                "summary": "Frontend Contact-us",
                 "description": "Display data home page",
                 "operationId": "e070c52974aa56f76260b00d62572ffc",
                 "responses": {
@@ -9351,9 +9351,9 @@
         "/api/site/pricing": {
             "get": {
                 "tags": [
-                    "Frontend Pricing"
+                    "App Frontend"
                 ],
-                "summary": "Pricing records",
+                "summary": "Frontend Pricing records",
                 "description": "Display data home page",
                 "operationId": "d2df162364f45b82edf61b58663efe6c",
                 "responses": {
@@ -9425,9 +9425,9 @@
         "/api/site/privacy-policy": {
             "get": {
                 "tags": [
-                    "Frontend Privacy Policy"
+                    "App Frontend"
                 ],
-                "summary": "Privacy policy records",
+                "summary": "Frontend Privacy policy records",
                 "description": "Display data home page",
                 "operationId": "001503ce88655470a5f02697ae8fec2a",
                 "responses": {
@@ -9499,9 +9499,9 @@
         "/api/site/terms-conditions": {
             "get": {
                 "tags": [
-                    "Frontend Terms Conditions"
+                    "App Frontend"
                 ],
-                "summary": "Terms Conditions records",
+                "summary": "Frontend Terms Conditions records",
                 "description": "Display data home page",
                 "operationId": "2b334aa93a32748793619330d6d12443",
                 "responses": {
@@ -9573,9 +9573,9 @@
         "/api/site/copyright-policy": {
             "get": {
                 "tags": [
-                    "Frontend Copyright Policy"
+                    "App Frontend"
                 ],
-                "summary": "Copyright policy records",
+                "summary": "Frontend Copyright Policy records",
                 "description": "Display data home page",
                 "operationId": "90a1b927f6d294d0d83ba331fee3e131",
                 "responses": {
@@ -9647,9 +9647,9 @@
         "/api/site/business-owners": {
             "get": {
                 "tags": [
-                    "Frontend business signup"
+                    "App Frontend"
                 ],
-                "summary": "Business sign up",
+                "summary": "Frontend business signup",
                 "description": "Display data home page",
                 "operationId": "a5e037d667ad53b7a56a149f75eacc3f",
                 "responses": {
@@ -9721,9 +9721,9 @@
         "/api/site/common-linked": {
             "get": {
                 "tags": [
-                    "Frontend Common Linked"
+                    "App Frontend"
                 ],
-                "summary": "Common Linked records",
+                "summary": "Frontend Common Linked records",
                 "description": "Display data home page",
                 "operationId": "7971b5bc9656191ba0da59f7d3691977",
                 "responses": {
@@ -9795,9 +9795,9 @@
         "/api/site/business-services": {
             "get": {
                 "tags": [
-                    "Frontend business services"
+                    "App Frontend"
                 ],
-                "summary": "Business Services records",
+                "summary": "Frontend Business Services records",
                 "description": "Display data home page",
                 "operationId": "f1c18429fb4e70414bcd5f79b43be094",
                 "responses": {
@@ -9869,11 +9869,2453 @@
         "/api/site/{client_id}/saveReview": {
             "post": {
                 "tags": [
-                    "Frontend Reviews"
+                    "App Frontend"
+                ],
+                "summary": "Frontend Submit a business review",
+                "description": "Allows a user to submit a review. One review per email per client per 30 days.",
+                "operationId": "fb5936cf60e1984fbb5471f6cbc7e508",
+                "parameters": [
+                    {
+                        "name": "client_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 101
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "comment_author",
+                                    "comment_author_phone",
+                                    "comment_author_email",
+                                    "comment_content",
+                                    "s_rating"
+                                ],
+                                "properties": {
+                                    "comment_author": {
+                                        "type": "string",
+                                        "example": "Rahul Sharma"
+                                    },
+                                    "comment_author_phone": {
+                                        "type": "string",
+                                        "example": "9876543210"
+                                    },
+                                    "comment_author_email": {
+                                        "type": "string",
+                                        "example": "rahul@gmail.com"
+                                    },
+                                    "comment_content": {
+                                        "type": "string",
+                                        "example": "Very good service"
+                                    },
+                                    "s_rating": {
+                                        "type": "integer",
+                                        "maximum": 5,
+                                        "minimum": 1,
+                                        "example": 5
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Review submitted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Review successfully submitted."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "429": {
+                        "description": "Review limit exceeded"
+                    }
+                }
+            }
+        },
+        "/api/website/city/keyword": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Frontend Search city and keyword",
+                "description": "Search records dynamically based on a keyword or filters",
+                "operationId": "d35ac5d33bd29c78b7af83719eb6e868",
+                "parameters": [
+                    {
+                        "name": "city",
+                        "in": "query",
+                        "description": "Filter by city",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "noida"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Search keyword",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "php training"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "ABC Coaching Center"
+                                                    },
+                                                    "city": {
+                                                        "type": "string",
+                                                        "example": "Noida"
+                                                    },
+                                                    "category": {
+                                                        "type": "string",
+                                                        "example": "Education"
+                                                    },
+                                                    "rating": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 4.5
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/homePage": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Frontend Home Page",
+                "description": "Display data home page",
+                "operationId": "3778b951219a2dfb5c4b3b992bc003ae",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/repairsServices": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Frontend Home Page Repairs Services",
+                "description": "Display data home page",
+                "operationId": "28c6af8b78066f161c19eaf0fd1e26f0",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/weddingPlanning": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Frontend Home Page Wedding Planning",
+                "description": "Display data home page",
+                "operationId": "2bf5cdff2f2a7f895cf0096bb6518887",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/wedding-page": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Frontend Home Page Wedding page",
+                "description": "Display data page",
+                "operationId": "d0fac21e8fa129f27e3ee96cd4806f11",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/entranceExams": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Frontend Home Page Entrance Exams",
+                "description": "Display data home page",
+                "operationId": "f74de04741a181e460dd9c3d5d03e6c4",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/studyAbroad": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Website Home Page Study Abroad",
+                "description": "Display data home page",
+                "operationId": "58fceb45daefc53ecb4f25ec3ed18034",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/getBlog": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Website Home Page Blog",
+                "description": "Display data home page",
+                "operationId": "f1a9429b9eb3a5bb2fb1624650e00b4c",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/blog/{slug}": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Frontend blog details",
+                "description": "Search records dynamically based on a business slug",
+                "operationId": "6132f19873cabcd7c07be9c01e19414d",
+                "parameters": [
+                    {
+                        "name": "blog_slug",
+                        "in": "query",
+                        "description": "Filter by blog_slug",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "microsoft-power-bi-data-visualization-course--master-interactive-dashboards"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "ABC Coaching Center"
+                                                    },
+                                                    "city": {
+                                                        "type": "string",
+                                                        "example": "Noida"
+                                                    },
+                                                    "category": {
+                                                        "type": "string",
+                                                        "example": "Education"
+                                                    },
+                                                    "rating": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 4.5
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/getKeyword": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Frontend get Keyword",
+                "description": "Search records dynamically based on a keyword or filters",
+                "operationId": "ca0849037b1d48901dde022ae1639026",
+                "parameters": [
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Search keyword",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "php training"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "ABC Coaching Center"
+                                                    },
+                                                    "category": {
+                                                        "type": "string",
+                                                        "example": "Education"
+                                                    },
+                                                    "rating": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 4.5
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/categories": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Website get categories",
+                "description": "Search records dynamically based on a keyword or filters",
+                "operationId": "b668267e76a5f695b625c4d82fe32329",
+                "parameters": [
+                    {
+                        "name": "category-slug",
+                        "in": "query",
+                        "description": "Search category-slug",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "computer-courses"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "ABC Coaching Center"
+                                                    },
+                                                    "category": {
+                                                        "type": "string",
+                                                        "example": "Education"
+                                                    },
+                                                    "rating": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 4.5
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/child": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Website get child",
+                "description": "Search records dynamically based on a child",
+                "operationId": "76924b9ed5a24a1e8cbb7ac764f85800",
+                "parameters": [
+                    {
+                        "name": "child-slug",
+                        "in": "query",
+                        "description": "Search child-slug",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "cloud-computing"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "ABC Coaching Center"
+                                                    },
+                                                    "category": {
+                                                        "type": "string",
+                                                        "example": "Education"
+                                                    },
+                                                    "rating": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 4.5
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/home-slider": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Website Home slider",
+                "description": "Home slider records dynamically based on a child",
+                "operationId": "05536dbadd72b348dff70b9e2456a2ee",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "ABC Coaching Center"
+                                                    },
+                                                    "category": {
+                                                        "type": "string",
+                                                        "example": "Education"
+                                                    },
+                                                    "rating": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 4.5
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/getCityList": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Website get City List and Search Zone records by City ",
+                "description": "Search records dynamically based on a city",
+                "operationId": "bf67eca8ba29436739b2a18998f5b844",
+                "parameters": [
+                    {
+                        "name": "city",
+                        "in": "query",
+                        "description": "Search city, area, pincode",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "noida"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "ABC Coaching Center"
+                                                    },
+                                                    "category": {
+                                                        "type": "string",
+                                                        "example": "Education"
+                                                    },
+                                                    "rating": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 4.5
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/getZoneList": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Website Search Zone records by City ",
+                "description": "Search records dynamically based on a zone",
+                "operationId": "0e20ed5a6d9296049c1bf92c0266412e",
+                "parameters": [
+                    {
+                        "name": "city",
+                        "in": "query",
+                        "description": "Search zone, area, pincode",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "noida"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "ABC Coaching Center"
+                                                    },
+                                                    "category": {
+                                                        "type": "string",
+                                                        "example": "Education"
+                                                    },
+                                                    "rating": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 4.5
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/get-keyword-list": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Website get Keyword List and Search Keyword records",
+                "description": "Search records dynamically based on a Keyword",
+                "operationId": "2efb0c9c83c02575bf975544c038791e",
+                "parameters": [
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Search keyword",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "java"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "ABC Coaching Center"
+                                                    },
+                                                    "category": {
+                                                        "type": "string",
+                                                        "example": "Education"
+                                                    },
+                                                    "rating": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 4.5
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/business-details/{slug}": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Website Search business details",
+                "description": "Search records dynamically based on a business slug",
+                "operationId": "7985f17e51deeb4fae5f1f90de2d24ff",
+                "parameters": [
+                    {
+                        "name": "business_slug",
+                        "in": "query",
+                        "description": "Filter by business_slug",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "test-demo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "ABC Coaching Center"
+                                                    },
+                                                    "city": {
+                                                        "type": "string",
+                                                        "example": "Noida"
+                                                    },
+                                                    "category": {
+                                                        "type": "string",
+                                                        "example": "Education"
+                                                    },
+                                                    "rating": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 4.5
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/footer-links": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Website Footer links",
+                "description": "Display data home page",
+                "operationId": "6df81f89e8fd40e25b7d40453992e0ab",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/about-us": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Website about-us records",
+                "description": "Display data home page",
+                "operationId": "3cc9488aec46a97acabd828b6dab392f",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/faq": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Website FAQ's",
+                "description": "Display data home page",
+                "operationId": "faa5ae090b32856fa30359571848b5a8",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/contact-us": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Website Contact-us",
+                "description": "Display data home page",
+                "operationId": "6f8ff67877c9d23750be60546b5b41cb",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/pricing": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Website Pricing",
+                "description": "Display data home page",
+                "operationId": "676c48903ef5b40f7b0953d8e7543b5a",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/privacy-policy": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Website Privacy Policy",
+                "description": "Display data home page",
+                "operationId": "e4fe0a7f1c4ea484fb5485abefa7e2ac",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/terms-conditions": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Website Terms Conditions",
+                "description": "Display data home page",
+                "operationId": "27bfae905835c3423752854348a16d3a",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/copyright-policy": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Website Copyright Policy",
+                "description": "Display data home page",
+                "operationId": "b683e8bfda72b58c2969d47a9550a2aa",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/business-owners": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Website business signup",
+                "description": "Display data home page",
+                "operationId": "7aba0db33881f3dd56e0a003d1adf9c2",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/common-linked": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Website Common Linked",
+                "description": "Display data home page",
+                "operationId": "6d604d0673b747765b29b98a323ea265",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/business-services": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Website business services",
+                "description": "Display data home page",
+                "operationId": "c4c073f6f22a275d85e0b8b6d1d8849e",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/{client_id}/saveReview": {
+            "post": {
+                "tags": [
+                    "Website"
                 ],
                 "summary": "Submit a business review",
                 "description": "Allows a user to submit a review. One review per email per client per 30 days.",
-                "operationId": "fb5936cf60e1984fbb5471f6cbc7e508",
+                "operationId": "f00b54a47c63ed2caf30f924d627a609",
                 "parameters": [
                     {
                         "name": "client_id",
@@ -10108,120 +12550,12 @@
             "description": "Review"
         },
         {
-            "name": "Frontend Search city and keyword",
-            "description": "Frontend Search city and keyword"
+            "name": "App Frontend",
+            "description": "App Frontend"
         },
         {
-            "name": "Frontend Home Page",
-            "description": "Frontend Home Page"
-        },
-        {
-            "name": "Frontend Home Page Repairs Services",
-            "description": "Frontend Home Page Repairs Services"
-        },
-        {
-            "name": "Frontend Home Page Wedding Planning",
-            "description": "Frontend Home Page Wedding Planning"
-        },
-        {
-            "name": "Frontend Home Page Wedding page",
-            "description": "Frontend Home Page Wedding page"
-        },
-        {
-            "name": "Frontend Home Page Entrance Exams",
-            "description": "Frontend Home Page Entrance Exams"
-        },
-        {
-            "name": "Frontend Home Page Study Abroad",
-            "description": "Frontend Home Page Study Abroad"
-        },
-        {
-            "name": "Frontend Home Page Blog",
-            "description": "Frontend Home Page Blog"
-        },
-        {
-            "name": "Frontend blog details",
-            "description": "Frontend blog details"
-        },
-        {
-            "name": "Frontend get Keyword",
-            "description": "Frontend get Keyword"
-        },
-        {
-            "name": "Frontend get categories",
-            "description": "Frontend get categories"
-        },
-        {
-            "name": "Frontend get child",
-            "description": "Frontend get child"
-        },
-        {
-            "name": "Frontend Home slider",
-            "description": "Frontend Home slider"
-        },
-        {
-            "name": "Frontend get City List",
-            "description": "Frontend get City List"
-        },
-        {
-            "name": "Frontend get Zone List",
-            "description": "Frontend get Zone List"
-        },
-        {
-            "name": "Frontend get Keyword List",
-            "description": "Frontend get Keyword List"
-        },
-        {
-            "name": "Frontend Search business details",
-            "description": "Frontend Search business details"
-        },
-        {
-            "name": "Frontend Footer links",
-            "description": "Frontend Footer links"
-        },
-        {
-            "name": "Frontend about-us",
-            "description": "Frontend about-us"
-        },
-        {
-            "name": "Frontend FAQ's",
-            "description": "Frontend FAQ's"
-        },
-        {
-            "name": "Frontend Contact-us",
-            "description": "Frontend Contact-us"
-        },
-        {
-            "name": "Frontend Pricing",
-            "description": "Frontend Pricing"
-        },
-        {
-            "name": "Frontend Privacy Policy",
-            "description": "Frontend Privacy Policy"
-        },
-        {
-            "name": "Frontend Terms Conditions",
-            "description": "Frontend Terms Conditions"
-        },
-        {
-            "name": "Frontend Copyright Policy",
-            "description": "Frontend Copyright Policy"
-        },
-        {
-            "name": "Frontend business signup",
-            "description": "Frontend business signup"
-        },
-        {
-            "name": "Frontend Common Linked",
-            "description": "Frontend Common Linked"
-        },
-        {
-            "name": "Frontend business services",
-            "description": "Frontend business services"
-        },
-        {
-            "name": "Frontend Reviews",
-            "description": "Frontend Reviews"
+            "name": "Website",
+            "description": "Website"
         }
     ],
     "security": {

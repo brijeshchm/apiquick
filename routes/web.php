@@ -14,6 +14,7 @@ Route::get('/redis-test', function () {
 
 
 require __DIR__.'/site.php'; 
+require __DIR__.'/website.php'; 
 
 Route::get('/test', function () {
     return response()->json(['message' => 'API is working!']);

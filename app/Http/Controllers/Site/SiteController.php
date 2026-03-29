@@ -2321,7 +2321,9 @@ class SiteController extends Controller
 				return [
 					'img' => $image ?: '',
 					'alt' => $alt ?: $slider->title,
-					'title' => "",
+					'url' => '/' . $slider->slug,					 
+					'title' => $slider->title,
+					'type' => 'keyword',
 				];
 			});
 

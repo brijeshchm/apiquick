@@ -10589,14 +10589,14 @@
                 }
             }
         },
-        "/api/website/blog/{slug}": {
+        "/api/website/blog": {
             "get": {
                 "tags": [
                     "Website"
                 ],
                 "summary": "Frontend blog details",
                 "description": "Search records dynamically based on a business slug",
-                "operationId": "6132f19873cabcd7c07be9c01e19414d",
+                "operationId": "bfa119f5ff9299a7e8517b6cf43e10c8",
                 "parameters": [
                     {
                         "name": "blog_slug",

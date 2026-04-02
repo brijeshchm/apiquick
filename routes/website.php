@@ -29,7 +29,7 @@ Route::get('/api/website/entranceExams', [WebsiteController::class, 'entranceExa
 Route::get('/api/website/studyAbroad', [WebsiteController::class, 'studyAbroad']);
 Route::get('/api/website/getKeyword', [WebsiteController::class, 'getKeyword']);
 Route::get('/api/website/getBlog', [WebsiteController::class, 'getBlog']);
-Route::get('/api/website/blog/{slug}', [WebsiteController::class, 'getBlogDetails']);
+Route::get('/api/website/blog', [WebsiteController::class, 'getBlogDetails']);
 
  
 

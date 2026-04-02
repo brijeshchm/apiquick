@@ -1499,7 +1499,7 @@ class WebsiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/website/blog/{slug}",
+	 *     path="/api/website/blog",
 	 *     tags={"Website"},
 	 *     summary="Frontend blog details",
 	 *     description="Search records dynamically based on a business slug",
@@ -1545,7 +1545,7 @@ class WebsiteController extends Controller
 	 *     )
 	 * )
 	 */
-	public function getBlogDetails(Request $request, $slug)
+	public function getBlogDetails(Request $request)
 	{
 		$url = config('app.url');
 		$request->validate([

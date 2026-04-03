@@ -178,6 +178,7 @@ class WebsiteController extends Controller
 			'child_slug' => $keywordDetails->child_slug,
 			'zone' => $zones,
 			'city' => $cityName,
+			 
 
 		);
 
@@ -195,9 +196,11 @@ class WebsiteController extends Controller
     ) c'), 'c.comment_client_ID', '=', 'clients.id')
 			->select(
 				'clients.*',
-				'clients.id',
-				// 'assigned_kwds.*',
+				'clients.id as business_id',
+				 'assigned_kwds.*',
 				'citylists.city',
+				'keyword.keyword as keywords',
+        		'keyword.slug as slugs',
 				'clients.client_type',
 				'c.rating',
 				'c.comment_count'
@@ -218,6 +221,7 @@ class WebsiteController extends Controller
     ")
 			->get();
 
+ 
 		if ($clientscheck->count() > 0) {
 			$clientsList = $clientscheck;
 		} else {
@@ -234,9 +238,11 @@ class WebsiteController extends Controller
         ) c'), 'c.comment_client_ID', '=', 'clients.id')
 				->select(
 					'clients.*',
-					'clients.id',
-					// 'assigned_kwds.*',
-					// 'citylists.city',
+					'clients.id as business_id',
+						 'assigned_kwds.*',
+				'citylists.city',
+					 'keyword.keyword as keyword',
+					 'keyword.slug as slug',
 					'clients.client_type',
 					'c.rating',
 					'c.comment_count'
@@ -295,8 +301,18 @@ class WebsiteController extends Controller
 				$avgRating = ($client->rating / (5 * $client->comment_count)) * 5;
 				$avgRating = number_format($avgRating, 1, '.', '');
 			}
+
+
+			$assignedKeywords = DB::table('assigned_kwds')
+				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+				->where('assigned_kwds.client_id', $client->business_id)
+				->orderBy('keyword', 'asc')
+				->distinct()
+				->limit(10)
+				->pluck('keyword.keyword','keyword.slug')
+				->toArray();
 			return [
-				'business_id' => $client->id,
+				'business_id' => $client->business_id,
 				'business_name' => $client->business_name,
 				'business_slug' => $client->business_slug,
 				'logo' => $logoImage ?? '',
@@ -328,6 +344,7 @@ class WebsiteController extends Controller
 				'call' => "917559435943",
 				'whatsapp' => "917559435943",
 				'comment_count' => $client->comment_count,
+				'tags' => $assignedKeywords,
 			];
 		});
 
@@ -2743,7 +2760,7 @@ class WebsiteController extends Controller
         END
     ")
 			->first();
-
+// dd($clientscheck);
 		if (!empty($clientscheck)) {
 
 			$logoImage = 'client/images/default_pp_small.png';

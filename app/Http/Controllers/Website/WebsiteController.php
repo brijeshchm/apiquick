@@ -655,6 +655,41 @@ class WebsiteController extends Controller
 
 
 		];
+		$data['trending'] = [
+			[
+				'url' => '/ac-repair-service',				 
+				'title' => 'AC Repair Service',
+				'type' => 'keyword',
+
+			],
+			[
+				'url' => '/banquet-hall',				 
+				'title' => 'Wedding Planning',
+				'type' => 'keyword',
+
+			],
+			[
+				'url' => 'clinical-research',				 
+				'title' => 'Clinical',
+				'type' => 'keyword',
+
+			],
+			[
+				'url' => '/home-loan',						 
+				'title' => 'Home Loan',
+				'type' => 'keyword',
+
+			],
+			 
+			[
+				'url' => '/carpenters',				 
+				'title' => 'Carpenters',
+				'type' => 'keyword',
+
+			]
+
+
+		];
 
 
 

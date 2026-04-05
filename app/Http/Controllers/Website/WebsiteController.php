@@ -1741,16 +1741,20 @@ class WebsiteController extends Controller
 
 	public function getKeyword(Request $request)
 	{
-		$search_kw = $request->input('keyword');
+		  
+		$search_kw = strtolower(str_replace(' ', '-', trim($request->input('keyword'))));
+ 
+	 
 		$city = '';
+		 
 		$keywordDetails = DB::table('keyword')
 			->join('parent_category', 'keyword.parent_category_id', '=', 'parent_category.id')
 			->join('child_category', 'keyword.child_category_id', '=', 'child_category.id')
-			->where('keyword', 'LIKE', '%' . ucwords(str_replace('-', ' ', $search_kw)) . '%')
+			->where('slug', $search_kw)
 			->select('keyword.*', 'parent_category.*', 'child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5', 'keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount')
 			->first();
 
-
+ 
 
 		$category_banner = config('app.website') . 'client/images/computer-courses-training.jpg';
 
@@ -1810,16 +1814,16 @@ class WebsiteController extends Controller
 			'meta_description' => $meta_description,
 			'top_description' => $top_description,
 			'bottom_description' => $bottom_description,
-			'faqq1' => $keywordDetails->faqq1,
-			'faqa1' => $keywordDetails->faqa1,
-			'faqq2' => $keywordDetails->faqq2,
-			'faqa2' => $keywordDetails->faqa2,
-			'faqq3' => $keywordDetails->faqq3,
-			'faqa3' => $keywordDetails->faqa3,
-			'faqq4' => $keywordDetails->faqq4,
-			'faqa4' => $keywordDetails->faqa4,
-			'faqq5' => $keywordDetails->faqq5,
-			'faqa5' => $keywordDetails->faqa5,
+			'faqq1' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqq1),
+			'faqa1' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqa1),
+			'faqq2' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqq2),
+			'faqa2' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqa2),
+			'faqq3' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqq3),
+			'faqa3' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqa3),
+			'faqq4' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqq4),
+			'faqa4' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqa4),
+			'faqq5' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqq5),
+			'faqa5' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqa5),
 			'ratingvalue' => $keywordDetails->ratingvalue,
 			'ratingcount' => $keywordDetails->ratingcount,
 			'parent_category' => $keywordDetails->parent_category,
@@ -1831,7 +1835,7 @@ class WebsiteController extends Controller
 
 		$keywordName = ucwords(str_replace('-', ' ', $search_kw));
 
-
+ 
 		$clientsList = DB::table('clients')
 			->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
 			->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
@@ -2006,9 +2010,6 @@ class WebsiteController extends Controller
 			'success' => true,
 			'data' => $data,
 		], 200);
-
-
-
 	}
 
 	/**

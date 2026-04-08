@@ -939,7 +939,7 @@ class WebsiteController extends Controller
 				'business_slug' => $client->business_slug,
 				'logo' => $logoImage ?? '',
 				'altLogo' => $altLogo ?? '',
-			//	'gallery' => $galleryArray ?? '',
+				'gallery' => $galleryArray ?? '',
 				'certifications' => $client->certifications,
 				'sirName' => $client->sirName,
 				'first_name' => $client->first_name,

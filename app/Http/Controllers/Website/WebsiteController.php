@@ -874,7 +874,10 @@ class WebsiteController extends Controller
 
 		//	->wherein('keyword.keyword', ['hotels','car-service'])
 			->where('clients.active_status', '1')
-			->where('clients.logo', '<>','')
+			->where('logo', '!=', '')            
+			->whereNotNull('logo')               
+			->where('pictures', '!=', '')       
+			->whereNotNull('pictures')
 			->groupBy('clients.id')
 			->orderByRaw("
 			CASE MAX(clients.client_type)

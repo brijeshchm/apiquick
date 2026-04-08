@@ -340,7 +340,7 @@ class WebsiteController extends Controller
 				'topSearch' => $client->topSearch,
 				'featured' => $client->featured,
 				'description' => $client->description,
-				'mapUrl' => "https://maps.google.com/?q=".generate_slug($client->address).'-'.$client->country,		 
+				'mapUrl' => "https://maps.google.com/?q=".generate_slug($client->address),		 
 				'openUntil' => $client->openUntil,			 
 				'address' => $client->address,
 				'pincode' => $client->pincode,
@@ -464,6 +464,8 @@ class WebsiteController extends Controller
 				'alt' => 'computer courses',
 				'title' => 'computer courses',
 				'type' => 'categories',
+				'rating' => '4',
+				'count' => '434',
 
 			],
 			[
@@ -472,6 +474,8 @@ class WebsiteController extends Controller
 				'alt' => 'Wedding Planning',
 				'title' => 'Wedding Planning',
 				'type' => 'child',
+				'rating' => '4',
+				'count' => '234',
 
 			],
 			[
@@ -480,6 +484,8 @@ class WebsiteController extends Controller
 				'alt' => 'Electric Services',
 				'title' => 'Electric Services',
 				'type' => 'categories',
+				'rating' => '3.5',
+				'count' => '377',
 
 			],
 			[
@@ -488,6 +494,8 @@ class WebsiteController extends Controller
 				'alt' => 'Government exam',
 				'title' => 'Government exam',
 				'type' => 'categories',
+				'rating' => '3.5',
+				'count' => '229',
 
 			],
 			[
@@ -496,6 +504,8 @@ class WebsiteController extends Controller
 				'alt' => 'Study Abroad',
 				'title' => 'Study Abroad',
 				'type' => 'categories',
+				'rating' => '5',
+				'count' => '399',
 
 			],
 			[
@@ -504,6 +514,8 @@ class WebsiteController extends Controller
 				'alt' => 'Spa & Beauty',
 				'title' => 'Spa & Beauty',
 				'type' => 'categories',
+				'rating' => '5',
+				'count' => '325',
 
 			],
 			[
@@ -512,6 +524,8 @@ class WebsiteController extends Controller
 				'alt' => 'Repair Services',
 				'title' => 'Repair Services',
 				'type' => 'child',
+				'rating' => '5',
+				'count' => '389',
 
 			],
 			[
@@ -520,6 +534,8 @@ class WebsiteController extends Controller
 				'alt' => 'Packers & Movers',
 				'title' => 'Packers & Movers',
 				'type' => 'child',
+				'rating' => '3.5',
+				'count' => '199',
 
 			],
 			[
@@ -528,6 +544,8 @@ class WebsiteController extends Controller
 				'alt' => 'Professional',
 				'title' => 'Professional',
 				'type' => 'categories',
+				'rating' => '3.5',
+				'count' => '149',
 
 			],
 			[
@@ -536,6 +554,8 @@ class WebsiteController extends Controller
 				'alt' => 'Contractors',
 				'title' => 'Contractors',
 				'type' => 'child',
+				'rating' => '3.5',
+				'count' => '167',
 
 			],
 			[
@@ -544,6 +564,8 @@ class WebsiteController extends Controller
 				'alt' => 'Education',
 				'title' => 'Education',
 				'type' => 'categories',
+				'rating' => '3.5',
+				'count' => '197',
 
 			],
 			[
@@ -552,6 +574,8 @@ class WebsiteController extends Controller
 				'alt' => 'Rent & Buy',
 				'title' => 'Rent & Buy',
 				'type' => 'child',
+				'rating' => '3.5',
+				'count' => '329',
 			],
 			[
 				'url' => '/child/sports-academy',
@@ -559,6 +583,8 @@ class WebsiteController extends Controller
 				'alt' => 'Sport Academy',
 				'title' => 'Sport Academy',
 				'type' => 'child',
+				'rating' => '3.5',
+				'count' => '539',
 			],
 			[
 				'url' => '/child/medical',
@@ -566,6 +592,8 @@ class WebsiteController extends Controller
 				'alt' => 'Medical',
 				'title' => 'Medical',
 				'type' => 'child',
+				'rating' => '3.5',
+				'count' => '269',
 			],
 			[
 				'url' => '/child/loan-service',
@@ -573,6 +601,8 @@ class WebsiteController extends Controller
 				'alt' => 'Loan',
 				'title' => 'Loan',
 				'type' => 'child',
+				'rating' => '3.5',
+				'count' => '69',
 			],
 			[
 				'url' => '/categories/dancing',
@@ -580,6 +610,8 @@ class WebsiteController extends Controller
 				'alt' => 'Dancing',
 				'title' => 'Dancing',
 				'type' => 'categories',
+				'rating' => '3.5',
+				'count' => '79',
 			],
 			[
 				'url' => '/child/yoga-classes',
@@ -587,6 +619,8 @@ class WebsiteController extends Controller
 				'alt' => 'Yoga',
 				'title' => 'Yoga',
 				'type' => 'child',
+				'rating' => '3.5',
+				'count' => '89',
 			],
 			[
 				'url' => '/child/security-system',
@@ -594,6 +628,8 @@ class WebsiteController extends Controller
 				'alt' => 'CCTV Security',
 				'title' => 'CCTV Security',
 				'type' => 'child',
+				'rating' => '3.5',
+				'count' => '109',
 			],
 			[
 				'url' => '/child/web-technologies',
@@ -601,6 +637,8 @@ class WebsiteController extends Controller
 				'alt' => 'Web Designers',
 				'title' => 'Web Designers',
 				'type' => 'categories',
+				'rating' => '3.5',
+				'count' => '106',
 			],
 			[
 				'url' => '/tours-and-travels',
@@ -608,9 +646,162 @@ class WebsiteController extends Controller
 				'alt' => 'Tours & Travels',
 				'title' => 'Tours & Travels',
 				'type' => 'keyword',
+				'rating' => '3.5',
+				'count' => '49',
 			],
 
 		];
+		
+		
+		$clientsList = DB::table('clients')
+			->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
+			->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+
+			->leftJoin(DB::raw('(
+        SELECT 
+            comment_client_ID,
+            SUM(rating) AS rating,
+            COUNT(comment_ID) AS comment_count
+        FROM comments
+        GROUP BY comment_client_ID
+    ) c'), 'c.comment_client_ID', '=', 'clients.id')
+
+			->select(
+				'clients.*',
+				'clients.id as client_id',
+				'clients.business_slug',
+				'clients.client_type',
+
+				DB::raw('MAX(c.rating) as rating'),
+				DB::raw('MAX(c.comment_count) as comment_count')
+			)
+
+		//	->wherein('keyword.keyword', ['hotels','car-service'])
+			->where('clients.active_status', '1')
+			->where('clients.logo', '<>','')
+			->groupBy('clients.id')
+			->orderByRaw("
+			CASE MAX(clients.client_type)
+				WHEN 'platinum' THEN 1
+				WHEN 'diamond' THEN 2
+				WHEN 'gold' THEN 3
+				WHEN 'silver' THEN 4
+				ELSE 5
+			END
+		")->limit(8)
+
+			->get();
+
+
+		$data['featuredBusinesses'] = $clientsList->map(function ($client) {
+
+			$logoImage = 'client/images/default_pp_small.png';
+			$altLogo = "Business Logo";
+			if (!empty($client->logo)) {
+				$cicons = unserialize($client->logo);
+
+				if (!empty($cicons)) {
+					$logoImage = config('app.website') . $cicons['large']['src'];
+					$altLogo = $cicons['large']['alt'];
+				}
+			}
+
+			$assignedKwds = DB::table('assigned_kwds')
+				->join('keyword', 'keyword.id', '=', 'assigned_kwds.kw_id')
+				->join('child_category', 'child_category.id', '=', 'assigned_kwds.child_cat_id')
+				->select('keyword.keyword', 'child_category.child_category as child_category_name')
+				->where('assigned_kwds.client_id', '=', $client->client_id)
+				->limit(5)
+				->get();
+				
+		 
+
+
+			$galleryArray = array();
+			if (!empty($client->pictures)) {
+				$galleryList = unserialize($client->pictures);
+				if (!empty($galleryList)) {
+					foreach ($galleryList as $key => $value) {
+
+						$galleryArray[$key] = array(
+							'galley' => $value
+						);
+					}
+				}
+			}
+			$certified_img = config('app.website') . 'img/q_verified.gif';
+			$trusted_img = config('app.website') . 'img/q_trust.gif';
+			$gst_img = config('app.website') . 'img/q_gst.gif';
+			$avgRating = "0";
+			if ($client->rating) {
+				$avgRating = ($client->rating / (5 * $client->comment_count)) * 5;
+				$avgRating = number_format($avgRating, 1, '.', '');
+			}
+			return [
+				'business_id' => $client->client_id,
+				'business_name' => $client->business_name,
+				'business_slug' => $client->business_slug,
+				'logo' => $logoImage ?? '',
+				'altLogo' => $altLogo ?? '',
+			//	'gallery' => $galleryArray ?? '',
+				'certifications' => $client->certifications,
+				'sirName' => $client->sirName,
+				'first_name' => $client->first_name,
+				'middle_name' => $client->middle_name,
+				'last_name' => $client->last_name,
+				'certified_status' => $client->certified_status,
+				'trusted_status' => $client->trusted_status,
+				'gst_status' => $client->gst_status,
+				'certified_img' => $certified_img,
+				'trusted_img' => $trusted_img,
+				'gst_img' => $gst_img,
+				'website' => $client->website,
+				'verified' => $client->verified,
+				'trending' => $client->trending,
+				'topSearch' => $client->topSearch,
+				'featured' => $client->featured,
+				'description' => $client->description,
+				'city' => $client->city,
+				'state' => $client->state,
+				'area' => $client->area,
+				'zone' => $client->zone,
+				'address' => $client->address,
+				'pincode' => $client->pincode,
+				'country' => $client->country,
+				'year_of_estb' => $client->year_of_estb,
+				'landmark' => $client->landmark,
+				'mapUrl' => "https://maps.google.com/?q=".generate_slug($client->address),
+				'whatsapp' => '7559435943',
+				'call' => '917559435943',
+				'rating' => $client->rating,
+				'openUntil' => $client->openUntil,
+				'avgRating' => $avgRating,
+				'comment_count' => $client->comment_count,
+				'keywords' => $assignedKwds ?? null,
+			];
+		});
+		
+		 $clients = Client::get()->count();
+		$keyword = Keyword::get()->count();
+		$citieslists = Citieslists::get()->count();
+
+		$childCategory = ChildCategory::get()->count();
+		$parentCategory = ParentCategory::get()->count();
+		$lead = Lead::get()->count();
+
+		$data['businessOwners'] = [
+			[
+				'Grow Client' => $clients . ' +',
+				'Suppliers' => $childCategory . ' +',
+				'Products & Services' => $citieslists . ' K+',
+				'Keyword' => $keyword . ' +',
+				'Store' => $parentCategory . ' +',
+				'Platform' => $parentCategory . ' K+',
+			],
+
+		];
+		
+		 
 		$data['popularSearches'] = [
 			[
 				'url' => '/categories/computer-courses',
@@ -618,6 +809,8 @@ class WebsiteController extends Controller
 				'alt' => 'computer courses',
 				'title' => 'computer courses',
 				'type' => 'categories',
+				'rating' => '3.5',
+				'count' => '139',
 
 			],
 			[
@@ -626,6 +819,8 @@ class WebsiteController extends Controller
 				'alt' => 'Entrance exam',
 				'title' => 'Entrance exam',
 				'type' => 'categories',
+				'rating' => '3.5',
+				'count' => '99',
 
 			],
 			[
@@ -634,6 +829,8 @@ class WebsiteController extends Controller
 				'alt' => 'Packers & Movers',
 				'title' => 'Packers & Movers',
 				'type' => 'child',
+				'rating' => '3.5',
+				'count' => '132',
 
 			],
 			[
@@ -642,6 +839,8 @@ class WebsiteController extends Controller
 				'alt' => 'Interior Design',
 				'title' => 'Interior Design',
 				'type' => 'categories',
+				'rating' => '3.5',
+				'count' => '192',
 
 			],
 			[
@@ -650,6 +849,8 @@ class WebsiteController extends Controller
 				'alt' => 'Real Estate Agents',
 				'title' => 'Real Estate Agents',
 				'type' => 'keyword',
+				'rating' => '3.5',
+				'count' => '239',
 
 			],
 			[
@@ -658,6 +859,8 @@ class WebsiteController extends Controller
 				'alt' => 'Carpenters',
 				'title' => 'Carpenters',
 				'type' => 'keyword',
+				'rating' => '3.5',
+				'count' => '123',
 
 			],
 			[
@@ -666,6 +869,8 @@ class WebsiteController extends Controller
 				'alt' => 'Wedding Planning',
 				'title' => 'Wedding Planning',
 				'type' => 'keyword',
+				'rating' => '3.5',
+				'count' => '119',
 
 			],[
 				'url' => '/carpenters',
@@ -673,6 +878,8 @@ class WebsiteController extends Controller
 				'alt' => 'Carpenters',
 				'title' => 'Carpenters',
 				'type' => 'keyword',
+				'rating' => '3.5',
+				'count' => '16',
 
 			],
 
@@ -683,24 +890,32 @@ class WebsiteController extends Controller
 				'url' => '/ac-repair-service',				 
 				'title' => 'AC Repair Service',
 				'type' => 'keyword',
+				'rating' => '3.5',
+				'count' => '199',
 
 			],
 			[
 				'url' => '/banquet-hall',				 
 				'title' => 'Wedding Planning',
 				'type' => 'keyword',
+				'rating' => '3.5',
+				'count' => '778',
 
 			],
 			[
 				'url' => 'clinical-research',				 
 				'title' => 'Clinical',
 				'type' => 'keyword',
+				'rating' => '4',
+				'count' => '374',
 
 			],
 			[
 				'url' => '/home-loan',						 
 				'title' => 'Home Loan',
 				'type' => 'keyword',
+				'rating' => '4.75',
+				'count' => '475',
 
 			],
 			 
@@ -708,6 +923,8 @@ class WebsiteController extends Controller
 				'url' => '/carpenters',				 
 				'title' => 'Carpenters',
 				'type' => 'keyword',
+				'rating' => '4.75',
+				'count' => '463',
 
 			]
 
@@ -810,6 +1027,8 @@ class WebsiteController extends Controller
 				'alt' => 'AC Service',
 				'title' => 'AC Service',
 				'type' => 'keyword',
+				'rating' => '4.8',
+				'count' => '397',
 
 			],
 			[
@@ -818,6 +1037,8 @@ class WebsiteController extends Controller
 				'alt' => 'Car Services',
 				'title' => 'Car Services',
 				'type' => 'keyword',
+				'rating' => '4.5',
+				'count' => '359',
 
 			],
 			[
@@ -826,6 +1047,8 @@ class WebsiteController extends Controller
 				'alt' => 'Laundry Services',
 				'title' => 'Laundry Services',
 				'type' => 'keyword',
+				'rating' => '3.5',
+				'count' => '199',
 
 			],
 			[
@@ -834,6 +1057,8 @@ class WebsiteController extends Controller
 				'alt' => 'Electrician Services',
 				'title' => 'Electrician Services',
 				'type' => 'keyword',
+				'rating' => '4.8',
+				'count' => '475',
 
 			],
 			[
@@ -842,6 +1067,8 @@ class WebsiteController extends Controller
 				'alt' => 'Hotels',
 				'title' => 'Hotels',
 				'type' => 'keyword',
+				'rating' => '4.8',
+				'count' => '475',
 
 			],
 			[
@@ -850,7 +1077,56 @@ class WebsiteController extends Controller
 				'alt' => 'Health & Fitness',
 				'title' => 'Health & Fitness',
 				'type' => 'keyword',
-			]
+				'rating' => '4',
+				'count' => '374',
+			],
+			
+			[
+				'url' => '/electrician',
+				'img' => config('app.website') . 'popular/Electricity-Services.jpg',
+				'alt' => 'Electrician',
+				'title' => 'Electrician',
+				'type' => 'keyword',
+				'rating' => '4.8',
+				'count' => '375',
+			],
+			[
+				'url' => '/plumber',
+				'img' => config('app.website') . 'popular/Plumber.jpg',
+				'alt' => 'Plumber',
+				'title' => 'Plumber',
+				'type' => 'keyword',
+				'rating' => '4.8',
+				'count' => '90',
+			],
+			
+			[
+				'url' => '/carpenters',
+				'img' => config('app.website') . 'popular/Carpenters.jpg',
+				'alt' => 'Carpenters',
+				'title' => 'Carpenters',
+				'type' => 'keyword',
+				'rating' => '4.8',
+				'count' => '463',
+			],
+			[
+				'url' => '/washing-machine-repairs',
+				'img' => config('app.website') . 'popular/Carpenters.jpg',
+				'alt' => 'Carpenters',
+				'title' => 'Carpenters',
+				'type' => 'keyword',
+				'rating' => '4.8',
+				'count' => '463',
+			],[
+				'url' => '/cctv-installation-training',
+				'img' => config('app.website') . 'popular/Carpenters.jpg',
+				'alt' => 'Carpenters',
+				'title' => 'Carpenters',
+				'type' => 'keyword',
+				'rating' => '4.8',
+				'count' => '463',
+			],
+			
 
 
 		];
@@ -1976,7 +2252,7 @@ class WebsiteController extends Controller
 				'country' => $client->country,
 				'year_of_estb' => $client->year_of_estb,
 				'landmark' => $client->landmark,
-				'mapUrl' => "https://maps.google.com/?q=".generate_slug($client->address).'-'.$client->country,
+				'mapUrl' => "https://maps.google.com/?q=".generate_slug($client->address),
 				'whatsapp' => '7559435943',
 				'call' => '917559435943',
 				'rating' => $client->rating,

@@ -652,7 +652,203 @@ class WebsiteController extends Controller
 
 		];
 		
-		
+		$data['bannerKeyword'] = [
+			
+			[
+				'url' => '/child/repair-services',
+				'img' => config('app.website') . 'img/Repairs-Services.png',
+				'alt' => 'Repair Services',
+				'title' => 'Repair Services',
+				'type' => 'child',
+				'rating' => '5',
+				'count' => '389',
+
+			],
+			[
+				'url' => '/child/rent-or-buy',
+				'img' => config('app.website') . 'img/Rent-buy.png',
+				'alt' => 'Rent & Buy',
+				'title' => 'Rent & Buy',
+				'type' => 'child',
+				'rating' => '3.5',
+				'count' => '329',
+			],
+			[
+				'url' => '/child/packers-and-movers',
+				'img' => config('app.website') . 'img/Packers-movers.png',
+				'alt' => 'Packers & Movers',
+				'title' => 'Packers & Movers',
+				'type' => 'child',
+				'rating' => '3.5',
+				'count' => '199',
+
+			],
+			[
+				'url' => '/tours-and-travels',
+				'img' => config('app.website') . 'images/tour-travels.png',
+				'alt' => 'Tours & Travels',
+				'title' => 'Tours & Travels',
+				'type' => 'keyword',
+				'rating' => '3.5',
+				'count' => '49',
+			],
+			[
+				'url' => '/categories/professional-courses',
+				'img' => config('app.website') . 'img/IT-Training.png',
+				'alt' => 'computer courses',
+				'title' => 'computer courses',
+				'type' => 'categories',
+				'rating' => '4',
+				'count' => '434',
+
+			],
+			[
+				'url' => '/doctor',
+				'img' => config('app.website') . 'img/doctor.webp',
+				'alt' => 'Doctor',
+				'title' => 'Doctor',
+				'type' => 'keyword',
+				'rating' => '4',
+				'count' => '234',
+
+			],
+			[
+				'url' => '/categories/electric-services',
+				'img' => config('app.website') . 'img/electric-services.png',
+				'alt' => 'Electric Services',
+				'title' => 'Electric Services',
+				'type' => 'categories',
+				'rating' => '3.5',
+				'count' => '377',
+
+			],
+			[
+				'url' => '/categories/entrance-exams-coaching',
+				'img' => config('app.website') . 'img/government-exam.png',
+				'alt' => 'Government exam',
+				'title' => 'Government exam',
+				'type' => 'categories',
+				'rating' => '3.5',
+				'count' => '229',
+
+			],
+			[
+				'url' => '/categories/study-abroad',
+				'img' => config('app.website') . 'img/study-abroad.png',
+				'alt' => 'Study Abroad',
+				'title' => 'Study Abroad',
+				'type' => 'categories',
+				'rating' => '5',
+				'count' => '399',
+
+			],
+			[
+				'url' => '/categories/spa',
+				'img' => config('app.website') . 'img/Spa & Beauty.png',
+				'alt' => 'Spa & Beauty',
+				'title' => 'Spa & Beauty',
+				'type' => 'categories',
+				'rating' => '5',
+				'count' => '325',
+
+			],
+			[
+				'url' => '/categories/professional',
+				'img' => config('app.website') . 'img/Professional.png',
+				'alt' => 'Professional',
+				'title' => 'Professional',
+				'type' => 'categories',
+				'rating' => '3.5',
+				'count' => '149',
+
+			],
+			[
+				'url' => '/child/contractors',
+				'img' => config('app.website') . 'img/contractors.png',
+				'alt' => 'Contractors',
+				'title' => 'Contractors',
+				'type' => 'child',
+				'rating' => '3.5',
+				'count' => '167',
+
+			],
+			[
+				'url' => '/categories/collages-and-Institutions',
+				'img' => config('app.website') . 'img/Education.png',
+				'alt' => 'Education',
+				'title' => 'Education',
+				'type' => 'categories',
+				'rating' => '3.5',
+				'count' => '197',
+
+			],
+			
+			[
+				'url' => '/child/sports-academy',
+				'img' => config('app.website') . 'img/sports.png',
+				'alt' => 'Sport Academy',
+				'title' => 'Sport Academy',
+				'type' => 'child',
+				'rating' => '3.5',
+				'count' => '539',
+			],
+			[
+				'url' => '/child/medical',
+				'img' => config('app.website') . 'img/Medical.png',
+				'alt' => 'Medical',
+				'title' => 'Medical',
+				'type' => 'child',
+				'rating' => '3.5',
+				'count' => '269',
+			],
+			[
+				'url' => '/child/loan-service',
+				'img' => config('app.website') . 'img/Loan.png',
+				'alt' => 'Loan',
+				'title' => 'Loan',
+				'type' => 'child',
+				'rating' => '3.5',
+				'count' => '69',
+			],
+			[
+				'url' => '/categories/dancing',
+				'img' => config('app.website') . 'img/Dancing.png',
+				'alt' => 'Dancing',
+				'title' => 'Dancing',
+				'type' => 'categories',
+				'rating' => '3.5',
+				'count' => '79',
+			],
+			[
+				'url' => '/child/yoga-classes',
+				'img' => config('app.website') . 'img/Yoga.png',
+				'alt' => 'Yoga',
+				'title' => 'Yoga',
+				'type' => 'child',
+				'rating' => '3.5',
+				'count' => '89',
+			],
+			[
+				'url' => '/child/security-system',
+				'img' => config('app.website') . 'img/CCTV-security.png',
+				'alt' => 'CCTV Security',
+				'title' => 'CCTV Security',
+				'type' => 'child',
+				'rating' => '3.5',
+				'count' => '109',
+			],
+			[
+				'url' => '/child/web-technologies',
+				'img' => config('app.website') . 'images/Web-Designers.png',
+				'alt' => 'Web Designers',
+				'title' => 'Web Designers',
+				'type' => 'categories',
+				'rating' => '3.5',
+				'count' => '106',
+			],
+			
+
+		];
 		$clientsList = DB::table('clients')
 			->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
 			->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')

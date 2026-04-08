@@ -787,7 +787,7 @@ class WebsiteController extends Controller
 
 		$childCategory = ChildCategory::get()->count();
 		$parentCategory = ParentCategory::get()->count();
-		$lead = Lead::get()->count();
+		 
 
 		$data['businessOwners'] = [
 			[

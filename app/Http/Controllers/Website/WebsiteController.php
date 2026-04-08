@@ -917,9 +917,10 @@ class WebsiteController extends Controller
 			if (!empty($client->pictures)) {
 				$galleryList = unserialize($client->pictures);
 				if (!empty($galleryList)) {
+					$i =0;
 					foreach ($galleryList as $key => $value) {
-
-						$galleryArray[$key] = array(
+						$i++;
+						$galleryArray[$i] = array(
 							'galley' => $value
 						);
 					}

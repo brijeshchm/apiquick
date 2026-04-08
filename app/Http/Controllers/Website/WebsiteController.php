@@ -919,10 +919,12 @@ class WebsiteController extends Controller
 				if (!empty($galleryList)) {
 					$i =0;
 					foreach ($galleryList as $key => $value) {
-						$i++;
+						
 						$galleryArray[$i] = array(
 							'galley' => $value
 						);
+						$i++;
+						
 					}
 				}
 			}

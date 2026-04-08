@@ -704,7 +704,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => '/doctor',
-				'img' => config('app.website') . 'img/doctor.webp',
+				'img' => config('app.website') . 'img/Doctor.webp',
 				'alt' => 'Doctor',
 				'title' => 'Doctor',
 				'type' => 'keyword',

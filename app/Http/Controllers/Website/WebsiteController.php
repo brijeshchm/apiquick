@@ -334,6 +334,14 @@ class WebsiteController extends Controller
 				'state' => $client->state,
 				'area' => $client->area,
 				'zone' => $client->zone,
+				'website' => $client->website,
+				'verified' => $client->verified,
+				'trending' => $client->trending,
+				'topSearch' => $client->topSearch,
+				'featured' => $client->featured,
+				'description' => $client->description,
+				'mapUrl' => "https://maps.google.com/?q=".generate_slug($client->address).'-'.$client->country,		 
+				'openUntil' => $client->openUntil,			 
 				'address' => $client->address,
 				'pincode' => $client->pincode,
 				'country' => $client->country,
@@ -651,7 +659,22 @@ class WebsiteController extends Controller
 				'title' => 'Carpenters',
 				'type' => 'keyword',
 
-			]
+			],
+			[
+				'url' => '/wedding-pannel',
+				'img' => config('app.website') . 'popular/carpenter.jpg',
+				'alt' => 'Wedding Planning',
+				'title' => 'Wedding Planning',
+				'type' => 'keyword',
+
+			],[
+				'url' => '/carpenters',
+				'img' => config('app.website') . 'popular/carpenter.jpg',
+				'alt' => 'Carpenters',
+				'title' => 'Carpenters',
+				'type' => 'keyword',
+
+			],
 
 
 		];
@@ -1896,6 +1919,8 @@ class WebsiteController extends Controller
 				->where('assigned_kwds.client_id', '=', $client->client_id)
 				->limit(5)
 				->get();
+				
+		 
 
 
 			$galleryArray = array();
@@ -1937,6 +1962,11 @@ class WebsiteController extends Controller
 				'trusted_img' => $trusted_img,
 				'gst_img' => $gst_img,
 				'website' => $client->website,
+				'verified' => $client->verified,
+				'trending' => $client->trending,
+				'topSearch' => $client->topSearch,
+				'featured' => $client->featured,
+				'description' => $client->description,
 				'city' => $client->city,
 				'state' => $client->state,
 				'area' => $client->area,
@@ -1946,9 +1976,11 @@ class WebsiteController extends Controller
 				'country' => $client->country,
 				'year_of_estb' => $client->year_of_estb,
 				'landmark' => $client->landmark,
+				'mapUrl' => "https://maps.google.com/?q=".generate_slug($client->address).'-'.$client->country,
 				'whatsapp' => '7559435943',
 				'call' => '917559435943',
 				'rating' => $client->rating,
+				'openUntil' => $client->openUntil,
 				'avgRating' => $avgRating,
 				'comment_count' => $client->comment_count,
 				'keywords' => $assignedKwds ?? null,

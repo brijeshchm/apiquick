@@ -657,7 +657,7 @@ class SiteController extends Controller
 
 
 				$blogPageList[$key] = array(
-					'url' => '/blog/' . $blog->slug,
+					'url' => 'blog/' . $blog->slug,
 					'img' => $image,
 					'alt' => $alt,
 					'title' => $blog->name,
@@ -1478,7 +1478,7 @@ class SiteController extends Controller
 
 			$blogPageList[$key] = [
 				'name' => $blog->name,
-				'url' => '/blog/' . $blog->slug,
+				'url' => 'blog/' . $blog->slug,
 				'img' => $image,
 				'alt' => $alt,
 				'title' => $blog->name,
@@ -1572,7 +1572,7 @@ class SiteController extends Controller
 
 				$blogPageList[$key] = [
 					'name' => $blog->name,
-					'url' => '/blog/' . $blog->slug,
+					'url' => 'blog/' . $blog->slug,
 					'img' => $image,
 					'alt' => $alt,
 					'title' => $blog->name,
@@ -1613,7 +1613,7 @@ class SiteController extends Controller
 
 			$blogPageDetails = [
 				'name' => $blogdetails->name,
-				'url' => '/blog/' . $blogdetails->slug,
+				'url' => 'blog/' . $blogdetails->slug,
 				'blogImage' => $blogimage,
 				'blogalt' => $blogalt,
 				'imageBanner' => $imageBanner,

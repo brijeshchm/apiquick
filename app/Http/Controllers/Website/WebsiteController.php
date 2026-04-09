@@ -877,6 +877,7 @@ class WebsiteController extends Controller
 			->where('logo', '!=', '')            
 			->whereNotNull('logo')               
 			->where('pictures', '!=', '')       
+			->where('business_slug', '!=', '')       
 			->whereNotNull('pictures')
 			->groupBy('clients.id')
 			->orderByRaw("
@@ -1151,7 +1152,7 @@ class WebsiteController extends Controller
 
 
 				$blogPageList[$key] = array(
-					'url' => '/blog/' . $blog->slug,
+					'url' => 'blog/' . $blog->slug,
 					'img' => $image,
 					'alt' => $alt,
 					'title' => $blog->name,

@@ -2035,6 +2035,8 @@ class WebsiteController extends Controller
 				'img' => $image,
 				'alt' => $alt,
 				'title' => $blog->name,
+				'created_at' => date('d-m-Y',strtotime($blog->created_at)),
+				'updated_at' => date('d-m-Y',strtotime($blog->updated_at)),
 				'description' => ucfirst(substr(strip_tags($blog->description), 0, 220)) . '...',
 
 			];
@@ -2129,6 +2131,8 @@ class WebsiteController extends Controller
 					'img' => $image,
 					'alt' => $alt,
 					'title' => $blog->name,
+					'created_at' => date('d-m-Y',strtotime($blog->created_at)),
+					'updated_at' => date('d-m-Y',strtotime($blog->updated_at)),
 					'description' => ucfirst(substr(strip_tags($blog->description), 0, 220)) . '...',
 
 				];
@@ -2136,7 +2140,13 @@ class WebsiteController extends Controller
 		}
 
 		$data['blogList'] = $blogPageList;
-		$blogdetails = Blogdetails::where('slug', $slug)->first();
+		 
+		
+		$blogdetails = Blogdetails::where('blogdetails.status', '1')
+            ->where('blogdetails.slug', $slug)
+            ->leftJoin('authors', 'blogdetails.author', '=', 'authors.id')
+            ->select('blogdetails.*', 'authors.name as author_name','authors.image as author_image','authors.comment','authors.linkedin_url') 
+            ->first();
 		$blogPageDetails = array();
 
 		if (!empty($blogdetails)) {
@@ -2171,6 +2181,9 @@ class WebsiteController extends Controller
 				'blogalt' => $blogalt,
 				'imageBanner' => $imageBanner,
 				'blogBannerAalt' => $blogaltB,
+				'author_name' => ucfirst($blogdetails->author_name),
+				'created_at' => date('d-m-Y',strtotime($blog->created_at)),
+				'updated_at' => date('d-m-Y',strtotime($blog->updated_at)),
 				'title' => $blogdetails->name,
 				'description' => ucfirst($blogdetails->description),
 				'meta_title' => ucfirst($blogdetails->meta_title),

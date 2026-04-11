@@ -156,8 +156,14 @@ class WebsiteController extends Controller
 
 		$firstZone = $zones->get(1);
 		$area = $city;
+
 		if ($firstZone) {
-			$area = $city . ', ' . $firstZone->zone . ' ' . $firstZone->pincode;
+			$zone = $firstZone->zone ?? '';
+			$pincode = $firstZone->pincode ?? '';
+			$area = $city . ', ' . $zone;
+			if (!empty($pincode)) {
+				$area .= ' ' . $pincode;
+			}
 		}
 		 
 		 
@@ -192,8 +198,7 @@ class WebsiteController extends Controller
 			'child_slug' => $keywordDetails->child_slug,
 			'zone' => $zones,
 			'city' => $cityName,
-			'area' => $area,
-			 
+			'area' => $area,		 
 
 		);
 

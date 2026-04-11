@@ -153,6 +153,14 @@ class WebsiteController extends Controller
 
 		$zones = DB::table('citylists')->join('zones', 'zones.city_id', '=', 'citylists.id')->where('citylists.city', 'LIKE', $city)->select('zones.id', 'zones.zone')->orderBy('zones.zone','asc')->distinct()->get();
 		 
+
+		$firstZone = $zones->get(1);
+		$area = $city;
+		if ($firstZone) {
+			$area = $city . ', ' . $firstZone->zone . ' ' . $firstZone->pincode;
+		}
+		 
+		 
 		 
 		$data['keyword'] = array(
 			'keyword' => $keywordDetails->keyword,
@@ -184,6 +192,7 @@ class WebsiteController extends Controller
 			'child_slug' => $keywordDetails->child_slug,
 			'zone' => $zones,
 			'city' => $cityName,
+			'area' => $area,
 			 
 
 		);

@@ -174,6 +174,8 @@ class WebsiteController extends Controller
 			'faqa4' => $keywordDetails->faqa4,
 			'faqq5' => $keywordDetails->faqq5,
 			'faqa5' => $keywordDetails->faqa5,
+			'faqq6' => $keywordDetails->faqq6,
+			'faqa6' => $keywordDetails->faqa6,
 			'ratingvalue' => $keywordDetails->ratingvalue,
 			'ratingcount' => $keywordDetails->ratingcount,
 			'parent_category' => $keywordDetails->parent_category,

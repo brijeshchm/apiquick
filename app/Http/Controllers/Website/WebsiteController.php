@@ -362,6 +362,7 @@ class WebsiteController extends Controller
 				'whatsapp' => "917559435943",
 				'comment_count' => $client->comment_count,
 				'tags' => $assignedKeywords,
+				'description' => $client->business_name . " is a trusted provider of " . $assignedKeywords . " in " . $cityName . ". We offer high-quality, reliable, and affordable solutions tailored to your needs. Contact us today for the best " . $assignedKeywords . " services in " . $cityName . ".",
 			];
 		});
 

@@ -95,10 +95,10 @@ class WebsiteController extends Controller
 		$city = $request->input('city');
 		$cityName = ucwords(str_replace('-', ' ', $city));
 		//$keywordName = ucwords(str_replace('-', ' ', $search_kw));
-		
+
 		$city = strtolower(str_replace(' ', '-', trim($request->input('city'))));
 		$search_kw = strtolower(str_replace(' ', '-', trim($request->input('keyword'))));
- 
+
 
 		$keywordDetails = DB::table('keyword')
 			->join('parent_category', 'keyword.parent_category_id', '=', 'parent_category.id')
@@ -117,42 +117,8 @@ class WebsiteController extends Controller
 
 		$alt = "";
 
-		if (!empty($keywordDetails->category_banner)) {
-			$cicons = unserialize($keywordDetails->category_banner);
 
-			if (!empty($cicons)) {
-				$category_banner = config('app.website') . $cicons['category_banner']['src'];
-				$alt = $cicons['category_banner']['name'];
-			}
-		}
-
-		if (!empty($keywordDetails->meta_title)) {
-			$meta_title = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->meta_title);
-		}
-		if (!empty($keywordDetails->meta_keywords)) {
-			$meta_keywords = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->meta_keywords);
-
-
-		}
-
-
-		if (!empty($keywordDetails->meta_description)) {
-			$meta_description = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->meta_description);
-
-
-		}
-
-		$top_description = "";
-		if (!empty($keywordDetails->top_description)) {
-			$top_description = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->top_description);
-		}
-		$bottom_description = "";
-		if (!empty($keywordDetails->bottom_description)) {
-			$bottom_description = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->bottom_description);
-		}
-
-		$zones = DB::table('citylists')->join('zones', 'zones.city_id', '=', 'citylists.id')->where('citylists.city', 'LIKE', $city)->select('zones.id', 'zones.zone')->orderBy('zones.zone','asc')->distinct()->get();
-		 
+		$zones = DB::table('citylists')->join('zones', 'zones.city_id', '=', 'citylists.id')->where('citylists.city', 'LIKE', $city)->select('zones.id', 'zones.zone')->orderBy('zones.zone', 'asc')->distinct()->get();
 
 		$firstZone = $zones->get(1);
 		$area = $city;
@@ -165,9 +131,43 @@ class WebsiteController extends Controller
 				$area .= ' ' . $pincode;
 			}
 		}
-		 
-		 
-		 
+
+
+		if (!empty($keywordDetails->category_banner)) {
+			$cicons = unserialize($keywordDetails->category_banner);
+
+			if (!empty($cicons)) {
+				$category_banner = config('app.website') . $cicons['category_banner']['src'];
+				$alt = $cicons['category_banner']['name'];
+			}
+		}
+
+		if (!empty($keywordDetails->meta_title)) {
+			$meta_title = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->meta_title);
+		}
+		if (!empty($keywordDetails->meta_keywords)) {
+			$meta_keywords = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->meta_keywords);
+
+
+		}
+
+
+		if (!empty($keywordDetails->meta_description)) {
+			$meta_description = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->meta_description);
+
+
+		}
+
+		$top_description = "";
+		if (!empty($keywordDetails->top_description)) {
+			$top_description = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->top_description);
+		}
+		$bottom_description = "";
+		if (!empty($keywordDetails->bottom_description)) {
+			$bottom_description = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->bottom_description);
+		}
+
+
 		$data['keyword'] = array(
 			'keyword' => $keywordDetails->keyword,
 			'keyword_slug' => generate_slug($keywordDetails->keyword),
@@ -198,13 +198,13 @@ class WebsiteController extends Controller
 			'child_slug' => $keywordDetails->child_slug,
 			'zone' => $zones,
 			'city' => $cityName,
-			'area' => $area,		 
+			'area' => $area,
 
 		);
 
 
- 
- 
+
+
 		$clientscheck = DB::table('clients')
 			->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
 			->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
@@ -217,15 +217,15 @@ class WebsiteController extends Controller
 			->select(
 				'clients.*',
 				'clients.id as business_id',
-				 'assigned_kwds.*',
+				'assigned_kwds.*',
 				'citylists.city',
 				'keyword.keyword as keywords',
-        		'keyword.slug as slugs',
+				'keyword.slug as slugs',
 				'clients.client_type',
 				'c.rating',
 				'c.comment_count'
 			)
-			->where('citylists.city',$city)
+			->where('citylists.city', $city)
 			// ->where('clients.active_status', '1')
 			->where('keyword.slug', $search_kw)
 			// ->groupBy('clients.id')
@@ -241,15 +241,15 @@ class WebsiteController extends Controller
     ")
 			->get();
 
- 
+
 		if ($clientscheck->count() > 0) {
 			$clientsList = $clientscheck;
 		} else {
-		 
-		 
-		 
-			
-	 
+
+
+
+
+
 			$clientsList = DB::table('clients')
 				->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
 				->join('assigned_zones', 'clients.id', '=', 'assigned_zones.client_id')
@@ -263,17 +263,17 @@ class WebsiteController extends Controller
 				->select(
 					'clients.*',
 					'clients.id as business_id',
-						 'assigned_kwds.*',
+					'assigned_kwds.*',
 					'citylists.city',
-					 'keyword.keyword as keywords',
-					 'keyword.slug as slugs',
+					'keyword.keyword as keywords',
+					'keyword.slug as slugs',
 					'clients.client_type',
 					'c.rating',
 					'c.comment_count'
 				)
 				->where('keyword.slug', $search_kw)
-				 ->groupBy('clients.id')
-				 
+				->groupBy('clients.id')
+
 				->orderByRaw("
             CASE clients.client_type
                 WHEN 'platinum' THEN 1
@@ -284,11 +284,11 @@ class WebsiteController extends Controller
             END
         ")
 				->get();
- 
+
 		}
 
 
-	
+
 		$data['clientsList'] = $clientsList->map(function ($client) {
 
 			$logoImage = config('app.website') . 'client/images/default_pp_small.png';
@@ -332,7 +332,7 @@ class WebsiteController extends Controller
 				->orderBy('keyword', 'asc')
 				->distinct()
 				->limit(10)
-				->pluck('keyword.keyword','keyword.slug')
+				->pluck('keyword.keyword', 'keyword.slug')
 				->toArray();
 			return [
 				'business_id' => $client->business_id,
@@ -363,8 +363,8 @@ class WebsiteController extends Controller
 				'topSearch' => $client->topSearch,
 				'featured' => $client->featured,
 				'description' => $client->description,
-				'mapUrl' => "https://maps.google.com/?q=".generate_slug($client->address),		 
-				'openUntil' => $client->openUntil,			 
+				'mapUrl' => "https://maps.google.com/?q=" . generate_slug($client->address),
+				'openUntil' => $client->openUntil,
 				'address' => $client->address,
 				'pincode' => $client->pincode,
 				'country' => $client->country,
@@ -376,7 +376,7 @@ class WebsiteController extends Controller
 				'whatsapp' => "917559435943",
 				'comment_count' => $client->comment_count,
 				'tags' => $assignedKeywords,
-				 
+
 			];
 		});
 
@@ -675,9 +675,9 @@ class WebsiteController extends Controller
 			],
 
 		];
-		
+
 		$data['bannerKeyword'] = [
-			
+
 			[
 				'url' => 'child/repair-services',
 				'img' => config('app.website') . 'img/Repairs-Services.png',
@@ -806,7 +806,7 @@ class WebsiteController extends Controller
 				'count' => '197',
 
 			],
-			
+
 			[
 				'url' => 'child/sports-academy',
 				'img' => config('app.website') . 'img/sports.png',
@@ -870,7 +870,7 @@ class WebsiteController extends Controller
 				'rating' => '3.5',
 				'count' => '106',
 			],
-			
+
 
 		];
 		$clientsList = DB::table('clients')
@@ -896,12 +896,12 @@ class WebsiteController extends Controller
 				DB::raw('MAX(c.comment_count) as comment_count')
 			)
 
-		//	->wherein('keyword.keyword', ['hotels','car-service'])
+			//	->wherein('keyword.keyword', ['hotels','car-service'])
 			->where('clients.active_status', '1')
-			->where('logo', '!=', '')            
-			->whereNotNull('logo')               
-			->where('pictures', '!=', '')       
-			->where('business_slug', '!=', '')       
+			->where('logo', '!=', '')
+			->whereNotNull('logo')
+			->where('pictures', '!=', '')
+			->where('business_slug', '!=', '')
 			->whereNotNull('pictures')
 			->groupBy('clients.id')
 			->orderByRaw("
@@ -937,22 +937,22 @@ class WebsiteController extends Controller
 				->where('assigned_kwds.client_id', '=', $client->client_id)
 				->limit(5)
 				->get();
-				
-		 
+
+
 
 
 			$galleryArray = array();
 			if (!empty($client->pictures)) {
 				$galleryList = unserialize($client->pictures);
 				if (!empty($galleryList)) {
-					$i =0;
+					$i = 0;
 					foreach ($galleryList as $key => $value) {
-						
+
 						$galleryArray[$i] = array(
 							'galley' => $value
 						);
 						$i++;
-						
+
 					}
 				}
 			}
@@ -997,7 +997,7 @@ class WebsiteController extends Controller
 				'country' => $client->country,
 				'year_of_estb' => $client->year_of_estb,
 				'landmark' => $client->landmark,
-				'mapUrl' => "https://maps.google.com/?q=".generate_slug($client->address),
+				'mapUrl' => "https://maps.google.com/?q=" . generate_slug($client->address),
 				'whatsapp' => '7559435943',
 				'call' => '917559435943',
 				'rating' => $client->rating,
@@ -1007,14 +1007,14 @@ class WebsiteController extends Controller
 				'keywords' => $assignedKwds ?? null,
 			];
 		});
-		
-		 $clients = Client::get()->count();
+
+		$clients = Client::get()->count();
 		$keyword = Keyword::get()->count();
 		$citieslists = Citieslists::get()->count();
 
 		$childCategory = ChildCategory::get()->count();
 		$parentCategory = ParentCategory::get()->count();
-		 
+
 
 		$data['businessOwners'] = [
 			[
@@ -1027,8 +1027,8 @@ class WebsiteController extends Controller
 			],
 
 		];
-		
-		 
+
+
 		$data['popularSearches'] = [
 			[
 				'url' => 'categories/computer-courses',
@@ -1099,7 +1099,8 @@ class WebsiteController extends Controller
 				'rating' => '3.5',
 				'count' => '119',
 
-			],[
+			],
+			[
 				'url' => 'carpenters',
 				'img' => config('app.website') . 'popular/carpenter.jpg',
 				'alt' => 'Carpenters',
@@ -1114,7 +1115,7 @@ class WebsiteController extends Controller
 		];
 		$data['trending'] = [
 			[
-				'url' => 'ac-repair-service',				 
+				'url' => 'ac-repair-service',
 				'title' => 'AC Repair Service',
 				'type' => 'keyword',
 				'rating' => '3.5',
@@ -1122,7 +1123,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'banquet-hall',				 
+				'url' => 'banquet-hall',
 				'title' => 'Wedding Planning',
 				'type' => 'keyword',
 				'rating' => '3.5',
@@ -1130,7 +1131,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'clinical-research',				 
+				'url' => 'clinical-research',
 				'title' => 'Clinical',
 				'type' => 'keyword',
 				'rating' => '4',
@@ -1138,16 +1139,16 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'home-loan',						 
+				'url' => 'home-loan',
 				'title' => 'Home Loan',
 				'type' => 'keyword',
 				'rating' => '4.75',
 				'count' => '475',
 
 			],
-			 
+
 			[
-				'url' => 'carpenters',				 
+				'url' => 'carpenters',
 				'title' => 'Carpenters',
 				'type' => 'keyword',
 				'rating' => '4.75',
@@ -1307,7 +1308,7 @@ class WebsiteController extends Controller
 				'rating' => '4',
 				'count' => '374',
 			],
-			
+
 			[
 				'url' => 'electrician',
 				'img' => config('app.website') . 'popular/Electricity-Services.jpg',
@@ -1326,7 +1327,7 @@ class WebsiteController extends Controller
 				'rating' => '4.8',
 				'count' => '90',
 			],
-			
+
 			[
 				'url' => 'carpenters',
 				'img' => config('app.website') . 'popular/Carpenters.jpg',
@@ -1344,7 +1345,8 @@ class WebsiteController extends Controller
 				'type' => 'keyword',
 				'rating' => '4.8',
 				'count' => '463',
-			],[
+			],
+			[
 				'url' => 'cctv-installation-training',
 				'img' => config('app.website') . 'popular/Carpenters.jpg',
 				'alt' => 'Carpenters',
@@ -1353,7 +1355,7 @@ class WebsiteController extends Controller
 				'rating' => '4.8',
 				'count' => '463',
 			],
-			
+
 
 
 		];
@@ -2060,8 +2062,8 @@ class WebsiteController extends Controller
 				'img' => $image,
 				'alt' => $alt,
 				'title' => $blog->name,
-				'created_at' => date('d-m-Y',strtotime($blog->created_at)),
-				'updated_at' => date('d-m-Y',strtotime($blog->updated_at)),
+				'created_at' => date('d-m-Y', strtotime($blog->created_at)),
+				'updated_at' => date('d-m-Y', strtotime($blog->updated_at)),
 				'description' => ucfirst(substr(strip_tags($blog->description), 0, 220)) . '...',
 
 			];
@@ -2157,21 +2159,21 @@ class WebsiteController extends Controller
 					'img' => $image,
 					'alt' => $alt,
 					'title' => $blog->name,
-					'created_at' => date('d-m-Y',strtotime($blog->created_at)),
-					'updated_at' => date('d-m-Y',strtotime($blog->updated_at)),
+					'created_at' => date('d-m-Y', strtotime($blog->created_at)),
+					'updated_at' => date('d-m-Y', strtotime($blog->updated_at)),
 					'description' => ucfirst(substr(strip_tags($blog->description), 0, 220)) . '...',
 
 				];
 			}
 		}
 
-		$data['blogList'] = $blogPageList; 
-		
+		$data['blogList'] = $blogPageList;
+
 		$blogdetails = Blogdetails::where('blogdetails.status', '1')
-            ->where('blogdetails.slug', $slug)
-            ->leftJoin('authors', 'blogdetails.author', '=', 'authors.id')
-            ->select('blogdetails.*', 'authors.name as author_name','authors.image as author_image','authors.comment','authors.linkedin_url') 
-            ->first();
+			->where('blogdetails.slug', $slug)
+			->leftJoin('authors', 'blogdetails.author', '=', 'authors.id')
+			->select('blogdetails.*', 'authors.name as author_name', 'authors.image as author_image', 'authors.comment', 'authors.linkedin_url')
+			->first();
 		$blogPageDetails = array();
 
 		if (!empty($blogdetails)) {
@@ -2208,8 +2210,8 @@ class WebsiteController extends Controller
 				'imageBanner' => $imageBanner,
 				'blogBannerAalt' => $blogaltB,
 				'author_name' => ucfirst($blogdetails->author_name),
-				'created_at' => date('d-m-Y',strtotime($blog->created_at)),
-				'updated_at' => date('d-m-Y',strtotime($blog->updated_at)),
+				'created_at' => date('d-m-Y', strtotime($blog->created_at)),
+				'updated_at' => date('d-m-Y', strtotime($blog->updated_at)),
 				'title' => $blogdetails->name,
 				'description' => ucfirst($blogdetails->description),
 				'meta_title' => ucfirst($blogdetails->meta_title),
@@ -2282,12 +2284,12 @@ class WebsiteController extends Controller
 
 	public function getKeyword(Request $request)
 	{
-		  
+
 		$search_kw = strtolower(str_replace(' ', '-', trim($request->input('keyword'))));
- 
-	 
+
+
 		$city = '';
-		 
+
 		$keywordDetails = DB::table('keyword')
 			->join('parent_category', 'keyword.parent_category_id', '=', 'parent_category.id')
 			->join('child_category', 'keyword.child_category_id', '=', 'child_category.id')
@@ -2295,7 +2297,7 @@ class WebsiteController extends Controller
 			->select('keyword.*', 'parent_category.*', 'child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5', 'keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount')
 			->first();
 
- 
+
 
 		$category_banner = config('app.website') . 'client/images/computer-courses-training.jpg';
 
@@ -2376,7 +2378,7 @@ class WebsiteController extends Controller
 
 		$keywordName = ucwords(str_replace('-', ' ', $search_kw));
 
- 
+
 		$clientsList = DB::table('clients')
 			->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
 			->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
@@ -2419,7 +2421,7 @@ class WebsiteController extends Controller
 
 		$data['clientsList'] = $clientsList->map(function ($client) {
 
-			$logoImage = config('app.website') .'client/images/default_pp_small.png';
+			$logoImage = config('app.website') . 'client/images/default_pp_small.png';
 			$altLogo = "Business Logo";
 			if (!empty($client->logo)) {
 				$cicons = unserialize($client->logo);
@@ -2437,8 +2439,8 @@ class WebsiteController extends Controller
 				->where('assigned_kwds.client_id', '=', $client->client_id)
 				->limit(5)
 				->get();
-				
-		 
+
+
 
 
 			$galleryArray = array();
@@ -2494,7 +2496,7 @@ class WebsiteController extends Controller
 				'country' => $client->country,
 				'year_of_estb' => $client->year_of_estb,
 				'landmark' => $client->landmark,
-				'mapUrl' => "https://maps.google.com/?q=".generate_slug($client->address),
+				'mapUrl' => "https://maps.google.com/?q=" . generate_slug($client->address),
 				'whatsapp' => '7559435943',
 				'call' => '917559435943',
 				'rating' => $client->rating,
@@ -2564,9 +2566,153 @@ class WebsiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/website/categories",
+	 *     path="/api/website/getCategories",
 	 *     tags={"Website"},
 	 *     summary="Website get categories",
+	 *     description="Search records dynamically based on a keyword or filters",
+	 *            
+	 *    
+	 *        
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=101),
+	 *                     @OA\Property(property="name", type="string", example="ABC Coaching Center"),
+	 *                     
+	 *                     @OA\Property(property="category", type="string", example="Education"),
+	 *                     @OA\Property(property="rating", type="number", format="float", example=4.5)
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+
+
+	 public function getCategories(Request $request)
+{
+     
+
+	$categories = DB::table('parent_category')
+    ->join('child_category', 'parent_category.id', '=', 'child_category.parent_category_id')
+    ->select(
+        'parent_category.id as parent_id',
+        'parent_category.parent_slug',
+        'parent_category.parent_category as parent_name',
+        DB::raw('COUNT(child_category.id) as child_count')
+    )
+    ->where('parent_category.parent_category', '!=', '')
+    ->groupBy(
+        'parent_category.id',
+        'parent_category.parent_slug',
+        'parent_category.parent_category'
+    )
+    ->havingRaw('COUNT(child_category.id) > 2')
+    ->orderBy('parent_category.parent_category', 'asc')
+    ->get()
+    ->map(function ($parent) {
+        return [
+            'url'   => "categories/" . $parent->parent_slug,
+            'slug'  => $parent->parent_slug,
+            'name'  => $parent->parent_name,
+            'count' => $parent->child_count,
+            'type'  => 'categories',
+        ];
+    });
+
+	 
+    // 2. Child Categories (Keywords) - Fixed Join
+    $keywords = DB::table('parent_category')
+        ->join('child_category', 'parent_category.id', '=', 'child_category.parent_category_id')  // ← Fixed: Use parent_id, not id
+        ->select(
+            'parent_category.parent_category as parent_name',
+            'parent_category.parent_slug as parent_slug',
+            'child_category.child_category as child_name',
+            'child_category.child_slug',
+            'child_category.pc_icon',    
+            'child_category.ratingcount',    
+            'child_category.ratingvalue',    
+            'child_category.meta_description',    
+        )
+        ->where('child_category.child_category', '!=', '')
+        ->orderBy('parent_category.parent_category', 'asc')
+        ->orderBy('child_category.child_category', 'asc')
+        ->get()
+        ->map(function ($item) {   // renamed $child → $item for clarity
+
+            $image = "";
+            $alt   = "";
+
+            // Handle serialized icon
+            if (!empty($item->pc_icon)) {
+                $icon = @unserialize($item->pc_icon);
+
+                if (is_array($icon) && isset($icon['icon'])) {
+                    $image = config('app.website') . ($icon['icon']['src'] ?? '');
+                    $alt   = $icon['icon']['alt'] ?? '';
+                }
+            }
+
+            return [
+                'url'       => "child/" . $item->child_slug,                        
+                'category'  => $item->parent_name,
+                'rating'  	=> $item->ratingvalue,
+                'ratingcount'  	=> $item->ratingcount,
+                'description'  	=> $item->meta_description,
+                'slug'  	=> $item->parent_slug,
+                'img'       => $image,
+                'alt'       => $alt,               
+                'type'      => 'child',
+            ];
+        });
+
+    // 3. Final Response Data
+    $data = [
+        'categoryList' => $categories,
+        'keywords'     => $keywords,
+        'meta' => [
+            'category_banner'   => config('app.website') . 'client/images/computer-courses-training.jpg',
+            'alt'               => '',
+            'meta_title'        => "Quickdials - Categories & Sub Categories",
+            'meta_keywords'     => 'quickdials categories, child categories',
+            'meta_description'  => 'Browse all categories and sub-categories on Quickdials',
+            'top_description'   => '',
+            'bottom_description'=> '',
+            'ratingvalue'       => '',
+            'ratingcount'       => '',
+        ]
+    ];
+
+    return response()->json([
+        'success' => true,
+        'data'    => $data,
+    ], 200);
+}
+
+	/**
+	 * @OA\Get(
+	 *     path="/api/website/searchCategories",
+	 *     tags={"Website"},
+	 *     summary="Website get search categories",
 	 *     description="Search records dynamically based on a keyword or filters",
 	 *            
 	 *     @OA\Parameter(
@@ -2612,7 +2758,7 @@ class WebsiteController extends Controller
 	 */
 
 
-	public function getCategories(Request $request)
+	public function searchCategories(Request $request)
 	{
 
 		$request->validate([
@@ -2656,7 +2802,7 @@ class WebsiteController extends Controller
 					}
 				}
 				return [
-					'url' => "child/".$child->child_slug,
+					'url' => "child/" . $child->child_slug,
 					'img' => $image,
 					'alt' => $alt,
 					'title' => $child->child_name,
@@ -2711,11 +2857,173 @@ class WebsiteController extends Controller
 
 
 	}
+
+
 	/**
 	 * @OA\Get(
-	 *     path="/api/website/child",
+	 *     path="/api/website/getChild",
 	 *     tags={"Website"},
-	 *     summary="Website get child",
+	 *     summary="Website get child ",
+	 *     description="Search records dynamically based on a child",   
+	 *        
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=101),
+	 *                     @OA\Property(property="name", type="string", example="ABC Coaching Center"),
+	 *                     
+	 *                     @OA\Property(property="category", type="string", example="Education"),
+	 *                     @OA\Property(property="rating", type="number", format="float", example=4.5)
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+
+
+	public function getChild(Request $request)
+	{
+		 
+		// ✅ Parent + Child Categories
+		 $childs = DB::table('child_category')
+     
+    ->leftJoin('keyword', 'child_category.id', '=', 'keyword.child_category_id') // Assuming keyword links to child
+    ->select(
+        'child_category.id as child_id',
+        'child_category.child_slug',
+        'child_category.child_category as child_name',
+        'child_category.pc_icon',
+                            // Needed for URL
+        DB::raw('COUNT(keyword.id) as child_count')       // Count keywords under this child
+    )
+    ->where('child_category.child_category', '!=', '')
+    ->groupBy(
+        'child_category.id',
+        'child_category.child_slug',
+        'child_category.child_category',
+        'child_category.pc_icon',
+         
+    )
+	 ->havingRaw('COUNT(keyword.id) > 2')
+    ->orderBy('child_category.child_category', 'asc')
+    ->get()
+    ->map(function ($child) {
+
+        $image = "";
+        $alt = "";
+
+        // Safe icon unserialize
+        if (!empty($child->pc_icon)) {
+            $cicons = @unserialize($child->pc_icon);
+
+            if (is_array($cicons) && isset($cicons['pc_icon'])) {
+                $image = config('app.website') . ($cicons['pc_icon']['src'] ?? '');
+                $alt   = $cicons['pc_icon']['alt'] ?? '';
+            }
+        }
+
+        return [
+            'url'   => "child/" . $child->child_slug,      // Better to use child_slug directly
+            'slug'  => $child->child_slug,
+            'name'  => $child->child_name,
+            'count' => (int) $child->child_count ?? 0,     // Safe count
+            'type'  => 'child',
+            'img'   => $image,
+            'alt'   => $alt,
+             
+        ];
+    });
+
+		// ✅ Keywords (with child category)
+	$keywords = DB::table('keyword')
+    ->join('child_category', 'keyword.child_category_id', '=', 'child_category.id')
+    ->select(
+        'keyword.keyword',
+        'keyword.slug as keyword_slug',
+        'keyword.icon as keyword_icon',
+        'child_category.child_category as child_name',
+        'child_category.child_slug',
+        'keyword.ratingvalue',
+        'keyword.ratingcount',
+    )
+    ->orderBy('keyword.keyword', 'asc')
+    ->get()
+    ->map(function ($item) {
+
+        $image = "";
+        $alt = "";
+
+        // ✅ Icon handle (same as pc_icon logic)
+        if (!empty($item->keyword_icon)) {
+            $icon = @unserialize($item->keyword_icon);
+
+            if (is_array($icon) && isset($icon['icon'])) {
+                $image = config('app.website') . ($icon['icon']['src'] ?? '');
+                $alt = $icon['icon']['alt'] ?? '';
+            }
+        }
+
+        return [
+            'url'   => $item->keyword_slug,
+            'slug'   => $item->keyword_slug,
+            'title' => $item->keyword,
+            'img'   => $image,
+            'alt'   => $alt,
+            'rating'   => $item->ratingvalue,
+            'ratingcount'   => $item->ratingcount,            
+            'type'  => 'keyword',
+        ];
+    });
+
+		// ✅ Banner + Meta
+		$data = [
+			'childsList' => $childs,
+			'keywords' => $keywords,
+			'meta' => [
+				'category_banner' => config('app.website') . 'client/images/computer-courses-training.jpg',
+				'alt' => '',
+				'meta_title' => "Quickdials child category",
+				'meta_keywords' => 'Quickdials child category',
+				'meta_description' => 'Quickdials child category',
+				'top_description' => 'Quickdials child category',
+				'bottom_description' => 'Quickdials child category',
+				'ratingvalue' => '',
+				'ratingcount' => '',
+			]
+		];
+
+		return response()->json([
+			'success' => true,
+			'data' => $data,
+		], 200);
+
+	}
+
+	/**
+	 * @OA\Get(
+	 *     path="/api/website/searchChild",
+	 *     tags={"Website"},
+	 *     summary="Website get search child",
 	 *     description="Search records dynamically based on a child",
 	 *            
 	 *     @OA\Parameter(
@@ -2761,7 +3069,7 @@ class WebsiteController extends Controller
 	 */
 
 
-	public function getChild(Request $request)
+	public function searchChild(Request $request)
 	{
 
 		$request->validate([
@@ -3346,10 +3654,10 @@ class WebsiteController extends Controller
         END
     ")
 			->first();
-// dd($clientscheck);
+		// dd($clientscheck);
 		if (!empty($clientscheck)) {
 
-			$logoImage = config('app.website').'client/images/default_pp_small.png';
+			$logoImage = config('app.website') . 'client/images/default_pp_small.png';
 			$altLogo = "Business Logo";
 			if (!empty($clientscheck->logo)) {
 				$cicons = unserialize($clientscheck->logo);

@@ -21,7 +21,7 @@ use App\Http\Controllers\Website\WebsiteController;
 
 Route::get('/api/website/city/keyword', [WebsiteController::class, 'getSearch']);
 Route::get('/api/website/homePage', [WebsiteController::class, 'homePage']);
-Route::get('/api/website/popularSearches', [WebsiteController::class, 'popularSearches']);
+//Route::get('/api/website/popularSearches', [WebsiteController::class, 'popularSearches']);
 Route::get('/api/website/repairsServices', [WebsiteController::class, 'repairsServices']);
 Route::get('/api/website/weddingPlanning', [WebsiteController::class, 'weddingPlanning']);
 Route::get('/api/website/wedding-page', [WebsiteController::class, 'weddingPage']);
@@ -33,8 +33,10 @@ Route::get('/api/website/blog', [WebsiteController::class, 'getBlogDetails']);
 
  
 
- Route::get('/api/website/categories', [WebsiteController::class, 'getCategories']);
- Route::get('/api/website/child', [WebsiteController::class, 'getChild']);
+ Route::get('/api/website/getCategories', [WebsiteController::class, 'getCategories']);
+ Route::get('/api/website/searchCategories', [WebsiteController::class, 'searchCategories']);
+ Route::get('/api/website/child', [WebsiteController::class, 'searchChild']);
+ Route::get('/api/website/getChild', [WebsiteController::class, 'getChild']);
  Route::get('/api/website/home-slider', [WebsiteController::class, 'getHomeSlider']);
  Route::get('/api/website/getCityList', [WebsiteController::class, 'getCityList']);
  Route::get('/api/website/getZoneList', [WebsiteController::class, 'getZoneList']);

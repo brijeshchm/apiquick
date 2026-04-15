@@ -2658,7 +2658,7 @@ class WebsiteController extends Controller
         ->orderBy('parent_category.parent_category', 'asc')
         ->orderBy('child_category.child_category', 'asc')
         ->get()
-        ->map(function ($item) {   // renamed $child → $item for clarity
+        ->map(function ($item) {   // rena	med $child → $item for clarity
 
             $image = "";
             $alt   = "";
@@ -2780,16 +2780,9 @@ class WebsiteController extends Controller
 				'child_category.pc_icon as 	pc_icon'
 			)
 			->where('parent_category.parent_slug', $slug)
-			// ->where('parent_category.parent_slug', 'LIKE', '%' . $slug . '%')
+			 
 			->orderBy('child_category.child_category', 'asc')
-			->groupBy(
-				'parent_category.id',
-				'parent_category.parent_slug',
-				'parent_category.parent_category',
-				'child_category.id',
-				'child_category.child_slug',
-				'child_category.child_category'
-			)
+			 
 			->get()
 			->map(function ($child) {
 				$image = "";
@@ -2804,6 +2797,7 @@ class WebsiteController extends Controller
 					}
 				}
 				return [
+					'id' => $child->parent_id,
 					'url' => "child/" . $child->child_slug,
 					'img' => $image,
 					'alt' => $alt,
@@ -3100,13 +3094,15 @@ class WebsiteController extends Controller
 		$data['childLists'] = DB::table('child_category')
 			->join('keyword', 'keyword.child_category_id', '=', 'child_category.id')
 			->select(
+				'keyword.id as keyword_id',
 				'keyword.keyword',
 				'keyword.icon as icon',
-				'keyword.slug'
+				'keyword.slug',
+				'child_category.child_category',
 			)
 			->where('child_category.child_slug', $slug)
 			->orderBy('keyword.keyword', 'asc')
-			->groupBy('keyword.keyword', 'keyword.icon', 'keyword.slug')
+			->groupBy('child_category.child_category')
 			->get()
 			->map(function ($keyword) {
 				$image = "";
@@ -3124,7 +3120,9 @@ class WebsiteController extends Controller
 				}
 
 				return [
+					'id' => $keyword->keyword_id,
 					'url' => $keyword->slug,
+					'category' => $keyword->child_category,
 					'img' => $image ?: '',
 					'alt' => $alt ?: $keyword->keyword,
 					'title' => $keyword->keyword,

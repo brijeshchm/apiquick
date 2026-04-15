@@ -37,6 +37,7 @@ Route::get('/api/website/blog', [WebsiteController::class, 'getBlogDetails']);
  Route::get('/api/website/searchCategories', [WebsiteController::class, 'searchCategories']);
  Route::get('/api/website/child', [WebsiteController::class, 'searchChild']);
  Route::get('/api/website/getChild', [WebsiteController::class, 'getChild']);
+ Route::get('/api/website/searchChild ', [WebsiteController::class, 'searchChild']);
  Route::get('/api/website/home-slider', [WebsiteController::class, 'getHomeSlider']);
  Route::get('/api/website/getCityList', [WebsiteController::class, 'getCityList']);
  Route::get('/api/website/getZoneList', [WebsiteController::class, 'getZoneList']);

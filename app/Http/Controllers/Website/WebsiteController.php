@@ -104,7 +104,7 @@ class WebsiteController extends Controller
 			->join('parent_category', 'keyword.parent_category_id', '=', 'parent_category.id')
 			->join('child_category', 'keyword.child_category_id', '=', 'child_category.id')
 			->where('keyword.slug', $search_kw)
-			->select('keyword.*', 'parent_category.*', 'child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5', 'keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount')
+			->select('keyword.*', 'parent_category.*', 'child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5','keyword.faqq6', 'keyword.faqa6', 'keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount','keyword.courseabout','keyword.heading','keyword.paragraph1','keyword.paragraph2','keyword.paragraph3','keyword.paragraph4','keyword.paragraph5','keyword.paragraph6','keyword.slug')
 			->first();
 		if (!$keywordDetails) {
 			return response()->json([
@@ -154,8 +154,39 @@ class WebsiteController extends Controller
 
 		if (!empty($keywordDetails->meta_description)) {
 			$meta_description = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->meta_description);
+		}
 
-
+		$courseabout ="";
+		$heading ="";
+		$paragraph1 ="";
+		$paragraph2="";
+		$paragraph3 ="";
+		$paragraph4 ="";
+		$paragraph5 ="";
+		$paragraph6 ="";
+		if (!empty($keywordDetails->courseabout)) {
+			$courseabout = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->courseabout);
+		}
+		if (!empty($keywordDetails->heading)) {
+			$heading = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->heading);
+		}
+		if (!empty($keywordDetails->paragraph1)) {
+			$paragraph1 = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->paragraph1);
+		}
+		if (!empty($keywordDetails->paragraph2)) {
+			$paragraph2 = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->paragraph2);
+		}
+		if (!empty($keywordDetails->paragraph3)) {
+			$paragraph3 = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->paragraph3);
+		}
+		if (!empty($keywordDetails->paragraph4)) {
+			$paragraph4 = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->paragraph4);
+		}
+		if (!empty($keywordDetails->paragraph5)) {
+			$paragraph5 = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->paragraph5);
+		}
+		if (!empty($keywordDetails->paragraph6)) {
+			$paragraph6 = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->paragraph6);
 		}
 
 		$top_description = "";
@@ -199,6 +230,14 @@ class WebsiteController extends Controller
 			'zone' => $zones,
 			'city' => $cityName,
 			'area' => $area,
+			'courseabout' => $courseabout,
+			'heading' => $heading,
+			'paragraph1' => $paragraph1,
+			'paragraph2' => $paragraph2,
+			'paragraph3' => $paragraph3,
+			'paragraph4' => $paragraph4,
+			'paragraph5' => $paragraph5,
+			'paragraph6' => $paragraph6,
 
 		);
 

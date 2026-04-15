@@ -2617,8 +2617,11 @@ class WebsiteController extends Controller
     ->select(
         'parent_category.id as parent_id',
         'parent_category.parent_slug',
+        'parent_category.ratingvalue',
+        'parent_category.ratingcount',
         'parent_category.parent_category as parent_name',
-        DB::raw('COUNT(child_category.id) as child_count')
+        DB::raw('COUNT(child_category.id) as child_count'),
+
     )
     ->where('parent_category.parent_category', '!=', '')
     ->groupBy(
@@ -2636,6 +2639,8 @@ class WebsiteController extends Controller
             'name'  => $parent->parent_name,
             'count' => $parent->child_count,
             'type'  => 'categories',
+			'rating' => $parent->ratingvalue,
+			'ratingcount' => $parent->ratingcount,
         ];
     });
 
@@ -2773,6 +2778,8 @@ class WebsiteController extends Controller
 			->select(
 				'parent_category.id as parent_id',
 				'parent_category.parent_slug',
+				'parent_category.ratingvalue',
+				'parent_category.ratingcount',
 				'parent_category.parent_category as parent_name',
 				'child_category.id as child_id',
 				'child_category.child_slug',
@@ -2803,6 +2810,8 @@ class WebsiteController extends Controller
 					'alt' => $alt,
 					'title' => $child->child_name,
 					'type' => 'child',
+					'rating' => $child->ratingvalue,
+					'ratingcount' => $child->ratingcount,
 				];
 			});
 

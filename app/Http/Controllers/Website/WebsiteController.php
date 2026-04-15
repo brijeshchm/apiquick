@@ -2946,6 +2946,7 @@ class WebsiteController extends Controller
         }
 
         return [
+            'id'   => $child->child_id,      // Better to use child_slug directly
             'url'   => "child/" . $child->child_slug,      // Better to use child_slug directly
             'slug'  => $child->child_slug,
             'name'  => $child->child_name,
@@ -2961,6 +2962,7 @@ class WebsiteController extends Controller
 	$keywords = DB::table('keyword')
     ->join('child_category', 'keyword.child_category_id', '=', 'child_category.id')
     ->select(
+        'keyword.id as keyword_id',
         'keyword.keyword',
         'keyword.slug as keyword_slug',
         'keyword.icon as keyword_icon',
@@ -2968,6 +2970,7 @@ class WebsiteController extends Controller
         'child_category.child_slug',
         'keyword.ratingvalue',
         'keyword.ratingcount',
+        'keyword.meta_description as description',
     )
 	->where('keyword.status','1')
     ->orderBy('keyword.keyword', 'asc')
@@ -2988,10 +2991,12 @@ class WebsiteController extends Controller
         }
 
         return [
+            'id'   => $item->keyword_id,
             'url'   => $item->keyword_slug,
             'slug'   => $item->keyword_slug,
             'title' => $item->keyword,
             'name' => $item->child_name,
+            'description' => $item->description,
             'child_slug' => $item->child_slug,
             'img'   => $image,
             'alt'   => $alt,

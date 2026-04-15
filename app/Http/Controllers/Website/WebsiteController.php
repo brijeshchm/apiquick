@@ -106,6 +106,8 @@ class WebsiteController extends Controller
 			->where('keyword.slug', $search_kw)
 			->select('keyword.*', 'parent_category.*', 'child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5','keyword.faqq6', 'keyword.faqa6', 'keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount','keyword.courseabout','keyword.heading','keyword.paragraph1','keyword.paragraph2','keyword.paragraph3','keyword.paragraph4','keyword.paragraph5','keyword.paragraph6','keyword.slug')
 			->first();
+
+			 
 		if (!$keywordDetails) {
 			return response()->json([
 				'status' => false,
@@ -209,6 +211,14 @@ class WebsiteController extends Controller
 			'meta_description' => $meta_description,
 			'top_description' => $top_description,
 			'bottom_description' => $bottom_description,
+			'courseabout' => $courseabout,
+			'heading' => $heading,
+			'paragraph1' => $paragraph1,
+			'paragraph2' => $paragraph2,
+			'paragraph3' => $paragraph3,
+			'paragraph4' => $paragraph4,
+			'paragraph5' => $paragraph5,
+			'paragraph6' => $paragraph6,
 			'faqq1' => $keywordDetails->faqq1,
 			'faqa1' => $keywordDetails->faqa1,
 			'faqq2' => $keywordDetails->faqq2,
@@ -230,18 +240,11 @@ class WebsiteController extends Controller
 			'zone' => $zones,
 			'city' => $cityName,
 			'area' => $area,
-			'courseabout' => $courseabout,
-			'heading' => $heading,
-			'paragraph1' => $paragraph1,
-			'paragraph2' => $paragraph2,
-			'paragraph3' => $paragraph3,
-			'paragraph4' => $paragraph4,
-			'paragraph5' => $paragraph5,
-			'paragraph6' => $paragraph6,
+		
 
 		);
 
-
+ 
 
 
 		$clientscheck = DB::table('clients')

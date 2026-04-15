@@ -2987,6 +2987,7 @@ class WebsiteController extends Controller
             'url'   => $item->keyword_slug,
             'slug'   => $item->keyword_slug,
             'title' => $item->keyword,
+            'name' => $item->child_name,
             'img'   => $image,
             'alt'   => $alt,
             'rating'   => $item->ratingvalue,

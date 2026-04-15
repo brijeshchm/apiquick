@@ -2654,7 +2654,7 @@ class WebsiteController extends Controller
             'child_category.meta_description',    
         )
         ->where('child_category.child_category', '!=', '')
-		 ->havingRaw('COUNT(child_category.id) > 2')	 
+	 
         ->orderBy('parent_category.parent_category', 'asc')
         ->orderBy('child_category.child_category', 'asc')
         ->get()

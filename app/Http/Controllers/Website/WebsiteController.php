@@ -2677,6 +2677,7 @@ class WebsiteController extends Controller
             return [
                 'url'       => "child/" . $item->child_slug,                        
                 'category'  => $item->parent_name,
+                'name'  	=> $item->child_name,
                 'rating'  	=> $item->ratingvalue,
                 'ratingcount'  	=> $item->ratingcount,
                 'description'  	=> $item->meta_description,

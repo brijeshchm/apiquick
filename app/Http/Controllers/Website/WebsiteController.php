@@ -2627,6 +2627,7 @@ class WebsiteController extends Controller
         'parent_category.parent_category'
     )
     ->havingRaw('COUNT(child_category.id) > 2')
+	 ->where('parent_category.status','1')
     ->orderBy('parent_category.parent_category', 'asc')
     ->get()
     ->map(function ($parent) {
@@ -2654,6 +2655,7 @@ class WebsiteController extends Controller
             'child_category.meta_description',    
         )
         ->where('child_category.child_category', '!=', '')
+		 ->where('child_category.status','1')
         ->orderBy('parent_category.parent_category', 'asc')
         ->orderBy('child_category.child_category', 'asc')
         ->get()
@@ -2925,6 +2927,7 @@ class WebsiteController extends Controller
          
     )
 	 ->havingRaw('COUNT(keyword.id) > 2')
+	 ->where('child_category.status','1')
     ->orderBy('child_category.child_category', 'asc')
     ->get()
     ->map(function ($child) {
@@ -2966,6 +2969,7 @@ class WebsiteController extends Controller
         'keyword.ratingvalue',
         'keyword.ratingcount',
     )
+	->where('keyword.status','1')
     ->orderBy('keyword.keyword', 'asc')
     ->get()
     ->map(function ($item) {
@@ -2988,6 +2992,7 @@ class WebsiteController extends Controller
             'slug'   => $item->keyword_slug,
             'title' => $item->keyword,
             'name' => $item->child_name,
+            'child_slug' => $item->child_slug,
             'img'   => $image,
             'alt'   => $alt,
             'rating'   => $item->ratingvalue,

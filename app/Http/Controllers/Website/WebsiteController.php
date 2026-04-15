@@ -2642,7 +2642,7 @@ class WebsiteController extends Controller
 
 	 
     // 2. Child Categories (Keywords) - Fixed Join
-    $keywords = DB::table('parent_category')
+    $childs = DB::table('parent_category')
         ->join('child_category', 'parent_category.id', '=', 'child_category.parent_category_id')  // ← Fixed: Use parent_id, not id
         ->select(
             'parent_category.parent_category as parent_name',
@@ -2690,7 +2690,7 @@ class WebsiteController extends Controller
     // 3. Final Response Data
     $data = [
         'categoryList' => $categories,
-        'keywords'     => $keywords,
+        'childs'     => $childs,
         'meta' => [
             'category_banner'   => config('app.website') . 'client/images/computer-courses-training.jpg',
             'alt'               => '',

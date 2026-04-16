@@ -34,6 +34,10 @@ Route::get('/api/website/blog', [WebsiteController::class, 'getBlogDetails']);
  
 
  Route::get('/api/website/getCategories', [WebsiteController::class, 'getCategories']);
+ Route::get('/api/website/categoryTabsFooter', [WebsiteController::class, 'categoryTabsFooter']);
+ Route::get('/api/website/cityTabsFooter', [WebsiteController::class, 'cityTabsFooter']);
+
+
  Route::get('/api/website/searchCategories', [WebsiteController::class, 'searchCategories']);
  Route::get('/api/website/child', [WebsiteController::class, 'searchChild']);
  Route::get('/api/website/getChild', [WebsiteController::class, 'getChild']);

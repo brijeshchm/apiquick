@@ -11175,6 +11175,184 @@
                 }
             }
         },
+        "/api/website/categoryTabsFooter": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Website get categories Footer tab",
+                "description": "Search records dynamically based on a keyword or filters",
+                "operationId": "8b4437f1b73057174f9384620701db68",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "ABC Coaching Center"
+                                                    },
+                                                    "category": {
+                                                        "type": "string",
+                                                        "example": "Education"
+                                                    },
+                                                    "rating": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 4.5
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/website/cityTabsFooter": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Website get city Footer tab",
+                "description": "Search records dynamically based on a city or filters",
+                "operationId": "1017a6b019c2c45461198053614bf7aa",
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "ABC Coaching Center"
+                                                    },
+                                                    "category": {
+                                                        "type": "string",
+                                                        "example": "Education"
+                                                    },
+                                                    "rating": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 4.5
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/website/home-slider": {
             "get": {
                 "tags": [

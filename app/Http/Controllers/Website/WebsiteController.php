@@ -3272,43 +3272,41 @@ class WebsiteController extends Controller
 
 	public function categoryTabsFooter(Request $request)
 	{
-		$data['categories'] = DB::table('parent_category')
-            ->join('child_category', 'parent_category.id', '=', 'child_category.parent_category_id')
-            ->select(
-                'parent_category.id as parent_id',
-                'parent_category.parent_slug as slug',
-                'parent_category.parent_category as parent_category',                
-                DB::raw('COUNT(parent_category.id) as child_count')
-            )
-            ->where('parent_category.parent_category', '!=', '')
-
-
-            ->groupBy(
-                'parent_category.id',
-                'parent_category.parent_slug',                 
-            )
-            ->havingRaw('COUNT(parent_category.id) > 2')         
-			->orderByRaw("
-				FIELD(parent_categories.parent_category, 
-					'Computer Courses', 
-					'Electric Services', 
-					'Home Services', 
-					'Services', 
-					'Professional', 
-					'Spa', 
-					'Wedding',
-					'Coaching and Tuitions',
-					'Collages and Institutions',
-					'Entrance Exams Coaching',
-					'Home Construction',
-					'Hotels',
-					'Professional Courses',
-					'Schools and Colleges',
-					'Study Abroad',
-
-				) ASC
-			")
-            ->get();
+		 $data['categories'] = DB::table('parent_category')
+    ->join('keyword', 'parent_category.id', '=', 'keyword.parent_category_id')
+    ->select(
+        'parent_category.id as parent_id',
+        'parent_category.parent_slug as slug',
+        'parent_category.parent_category as parent_category',
+        DB::raw('COUNT(keyword.id) as child_count'),   
+    )
+    ->where('parent_category.parent_category', '!=', '')
+    ->groupBy(
+        'parent_category.id',           // ✅ added
+        'parent_category.parent_slug',
+        'parent_category.parent_category',  // ✅ added
+    )
+    ->havingRaw('COUNT(keyword.id) > 2')
+    ->orderByRaw("
+        FIELD(parent_category.parent_category, 
+            'Computer Courses', 
+            'Electric Services', 
+            'Home Services', 
+            'Services', 
+            'Professional', 
+            'Spa', 
+            'Wedding',
+            'Coaching and Tuitions',
+            'Collages and Institutions',
+            'Entrance Exams Coaching',
+            'Home Construction',
+            'Hotels',
+            'Professional Courses',
+            'Schools and Colleges',
+            'Study Abroad'
+        ) ASC
+    ")
+    ->get();
 
         // Keywords
         $data['keywords'] = DB::table('keyword')

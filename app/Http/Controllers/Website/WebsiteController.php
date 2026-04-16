@@ -2651,7 +2651,7 @@ class WebsiteController extends Controller
 
 
 	 public function getCategories(Request $request)
-{
+	{
      
 
 	$categories = DB::table('parent_category')

@@ -3278,15 +3278,36 @@ class WebsiteController extends Controller
                 'parent_category.id as parent_id',
                 'parent_category.parent_slug as slug',
                 'parent_category.parent_category as parent_category',                
-                DB::raw('COUNT(child_category.id) as child_count')
+                DB::raw('COUNT(parent_category.id) as child_count')
             )
             ->where('parent_category.parent_category', '!=', '')
+
+
             ->groupBy(
                 'parent_category.id',
                 'parent_category.parent_slug',                 
             )
-            ->havingRaw('COUNT(child_category.id) > 2')
-            ->orderBy('parent_category.parent_category', 'asc')
+            ->havingRaw('COUNT(parent_category.id) > 2')         
+			->orderByRaw("
+				FIELD(parent_categories.parent_category, 
+					'Computer Courses', 
+					'Electric Services', 
+					'Home Services', 
+					'Services', 
+					'Professional', 
+					'Spa', 
+					'Wedding',
+					'Coaching and Tuitions',
+					'Collages and Institutions',
+					'Entrance Exams Coaching',
+					'Home Construction',
+					'Hotels',
+					'Professional Courses',
+					'Schools and Colleges',
+					'Study Abroad',
+
+				) ASC
+			")
             ->get();
 
         // Keywords

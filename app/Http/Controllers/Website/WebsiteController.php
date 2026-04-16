@@ -3350,10 +3350,7 @@ class WebsiteController extends Controller
             ->select('slug', 'keyword')
             ->where('seo_type', '1')
             ->get();
- 
-         
-
-		return response()->json([
+ 		return response()->json([
 			'success' => true,
 			'data' => $data,
 			], 200);

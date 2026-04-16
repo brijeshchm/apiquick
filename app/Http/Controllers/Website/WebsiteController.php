@@ -3153,7 +3153,7 @@ class WebsiteController extends Controller
 			)
 			->where('child_category.child_slug', $slug)
 			->orderBy('keyword.keyword', 'asc')
-			->groupBy('child_category.child_category')
+			// ->groupBy('child_category.child_category')
 			->get()
 			->map(function ($keyword) {
 				$image = "";

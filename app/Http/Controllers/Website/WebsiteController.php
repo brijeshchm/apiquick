@@ -3280,7 +3280,23 @@ class WebsiteController extends Controller
         'parent_category.parent_category as parent_category',
         DB::raw('COUNT(keyword.id) as child_count'),   
     )
-    ->where('parent_category.parent_category', '!=', '')
+    ->whereIn('parent_category.parent_category', [
+        'Computer Courses',
+        'Electric Services',
+        'Home Services',
+        'Services',
+        'Professional',
+        'Spa',
+        'Wedding',
+        'Coaching and Tuitions',
+        'Collages and Institutions',
+        'Entrance Exams Coaching',
+        'Home Construction',
+        'Hotels',
+        'Professional Courses',
+        'Schools and Colleges',
+        'Study Abroad'
+    ])
     ->groupBy(
         'parent_category.id',           // ✅ added
         'parent_category.parent_slug',

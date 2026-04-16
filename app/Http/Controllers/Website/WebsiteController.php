@@ -3227,6 +3227,139 @@ class WebsiteController extends Controller
 		], 200);
 
 	}
+	
+	
+	/**
+	 * @OA\Get(
+	 *     path="/api/website/categoryTabsFooter",
+	 *     tags={"Website"},
+	 *     summary="Website get categories Footer tab",
+	 *     description="Search records dynamically based on a keyword or filters",
+	 *      @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=101),
+	 *                     @OA\Property(property="name", type="string", example="ABC Coaching Center"),
+	 *                     
+	 *                     @OA\Property(property="category", type="string", example="Education"),
+	 *                     @OA\Property(property="rating", type="number", format="float", example=4.5)
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+
+
+	public function categoryTabsFooter(Request $request)
+	{
+		$categories = DB::table('parent_category')
+            ->join('child_category', 'parent_category.id', '=', 'child_category.parent_category_id')
+            ->select(
+                'parent_category.id as parent_id',
+                'parent_category.parent_slug as slug',
+                'parent_category.parent_category as parent_category',                
+                DB::raw('COUNT(child_category.id) as child_count')
+            )
+            ->where('parent_category.parent_category', '!=', '')
+            ->groupBy(
+                'parent_category.id',
+                'parent_category.parent_slug',                 
+            )
+            ->havingRaw('COUNT(child_category.id) > 2')
+            ->orderBy('parent_category.parent_category', 'asc')
+            ->get();
+
+        // Keywords
+        $keywords = DB::table('keyword')
+            ->select('slug', 'keyword', 'parent_category_id')
+            ->where('seo_type', '1')
+            ->get();
+ 
+        return response()->json([
+            'categories' => $categories,
+            'keywords'   => $keywords
+        ],200);
+ 
+	}
+
+
+	/**
+	 * @OA\Get(
+	 *     path="/api/website/cityTabsFooter",
+	 *     tags={"Website"},
+	 *     summary="Website get city Footer tab",
+	 *     description="Search records dynamically based on a city or filters",
+	 *      @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=101),
+	 *                     @OA\Property(property="name", type="string", example="ABC Coaching Center"),
+	 *                     
+	 *                     @OA\Property(property="category", type="string", example="Education"),
+	 *                     @OA\Property(property="rating", type="number", format="float", example=4.5)
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	 public function cityTabsFooter(Request $request)
+	{
+		 $city = City::select('id','city')->where('popular','1')->get();
+
+        // Keywords
+        $keywords = DB::table('keyword')
+            ->select('slug', 'keyword')
+            ->where('seo_type', '1')
+            ->get();
+ 
+        return response()->json([
+            'city' => $city,
+            'keywords'   => $keywords
+        ],200);
+ 
+	}
+
+	
 	/**
 	 * @OA\Get(
 	 *     path="/api/website/home-slider",

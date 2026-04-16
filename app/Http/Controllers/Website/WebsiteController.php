@@ -3272,7 +3272,7 @@ class WebsiteController extends Controller
 
 	public function categoryTabsFooter(Request $request)
 	{
-		$categories = DB::table('parent_category')
+		$data['categories'] = DB::table('parent_category')
             ->join('child_category', 'parent_category.id', '=', 'child_category.parent_category_id')
             ->select(
                 'parent_category.id as parent_id',
@@ -3290,15 +3290,14 @@ class WebsiteController extends Controller
             ->get();
 
         // Keywords
-        $keywords = DB::table('keyword')
+        $data['keywords'] = DB::table('keyword')
             ->select('slug', 'keyword', 'parent_category_id')
             ->where('seo_type', '1')
             ->get();
- 
-        return response()->json([
-            'categories' => $categories,
-            'keywords'   => $keywords
-        ],200);
+ 		return response()->json([
+			'success' => true,
+			'data' => $data,
+			], 200);
  
 	}
 
@@ -3344,19 +3343,22 @@ class WebsiteController extends Controller
 	 */
 	 public function cityTabsFooter(Request $request)
 	{
-		 $city = City::select('id','city')->where('popular','1')->get();
+		 $data['city'] = City::select('id','city')->where('popular','1')->get();
 
         // Keywords
-        $keywords = DB::table('keyword')
+        $data['keywords'] = DB::table('keyword')
             ->select('slug', 'keyword')
             ->where('seo_type', '1')
             ->get();
  
-        return response()->json([
-            'city' => $city,
-            'keywords'   => $keywords
-        ],200);
- 
+         
+
+		return response()->json([
+			'success' => true,
+			'data' => $data,
+			], 200);
+
+
 	}
 
 	

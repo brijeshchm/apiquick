@@ -3797,7 +3797,7 @@ class WebsiteController extends Controller
 
 	/**
 	 * @OA\Get(
-	 *     path="/api/website/business-details/{slug}",
+	 *     path="/api/website/business-details",
 	 *     tags={"Website"},
 	 *     summary="Website Search business details",
 	 *     description="Search records dynamically based on a business slug",
@@ -3845,7 +3845,7 @@ class WebsiteController extends Controller
 	 */
 
 
-	public function businessDetails(Request $request, $slug)
+	public function businessDetails(Request $request)
 	{
 
 		$request->validate([

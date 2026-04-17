@@ -11745,14 +11745,14 @@
                 }
             }
         },
-        "/api/website/business-details/{slug}": {
+        "/api/website/business-details": {
             "get": {
                 "tags": [
                     "Website"
                 ],
                 "summary": "Website Search business details",
                 "description": "Search records dynamically based on a business slug",
-                "operationId": "7985f17e51deeb4fae5f1f90de2d24ff",
+                "operationId": "3d5749e80f11ff019a108f25a50a4a69",
                 "parameters": [
                     {
                         "name": "business_slug",

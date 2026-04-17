@@ -51,7 +51,7 @@ Route::get('/api/website/blog', [WebsiteController::class, 'getBlogDetails']);
  Route::get('/api/website/footer-links', [WebsiteController::class, 'footerLinks']);
  Route::get('/api/website/common-linked', [WebsiteController::class, 'commonLinked']);
   
- Route::get('/api/website/business-details/{slug}', [WebsiteController::class, 'businessDetails']);
+ Route::get('/api/website/business-details', [WebsiteController::class, 'businessDetails']);
  Route::get('/api/website/about-us', [WebsiteController::class, 'aboutus']);
  Route::get('/api/website/contact-us', [WebsiteController::class, 'contactus']);
  Route::get('/api/website/pricing', [WebsiteController::class, 'pricing']);

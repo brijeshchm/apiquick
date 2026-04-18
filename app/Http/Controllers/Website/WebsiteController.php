@@ -3847,7 +3847,7 @@ class WebsiteController extends Controller
 
 	public function businessDetails(Request $request)
 	{
-
+ 
 		$request->validate([
 			'business_slug' => 'required|exists:clients,business_slug',
 		]);
@@ -3858,7 +3858,7 @@ class WebsiteController extends Controller
 			->leftJoin('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
 			->leftJoin('citylists', 'assigned_kwds.city_id', '=', 'citylists.id')
 			->leftJoin(DB::raw('(
-        SELECT SUM(rating) AS rating, comment_client_ID, COUNT(comment_ID) AS comment_count
+        SELECT ROUND(AVG(rating), 1) AS average_rating, comment_client_ID, COUNT(comment_ID) AS comment_count
         FROM comments GROUP BY comment_client_ID
     ) c'), 'c.comment_client_ID', '=', 'clients.id')
 			->select(
@@ -3867,7 +3867,7 @@ class WebsiteController extends Controller
 				'assigned_kwds.*',
 				'citylists.city',
 				'assigned_kwds.sold_on_position',
-				'c.rating',
+				'c.average_rating',
 				'c.comment_count'
 			)
 			->where('clients.business_slug', $business_slug)
@@ -3977,10 +3977,8 @@ class WebsiteController extends Controller
 
 			$avgRating = 0;
 			if ($count != 0)
-				$avgRating = round(($sum / ($count * 5)) * 5, 1);
-			$data['sum'] = $sum;
-			$data['avgRating'] = $avgRating;
-			$data['count'] = $count;
+				$avgRating = $clientscheck->average_rating;
+		 
 			$addressText = !empty($clientscheck->address) ? $clientscheck->address : '';
 			$mapText = !empty($clientscheck->business_map) ? '\n Directions: ' . $clientscheck->business_map : '';
 			$profile_url = 'https://www.quickdials.com/business-details/' . $clientscheck->business_slug;
@@ -4021,7 +4019,6 @@ class WebsiteController extends Controller
 				'business_intro' => $clientscheck->business_intro,
 				'assign_keyword' => $assignedKeywords,
 				'service_city' => $assignedCity,
-
 				'certifications' => $clientscheck->certifications,
 				'sirName' => $clientscheck->sirName,
 				'first_name' => $clientscheck->first_name,
@@ -4049,7 +4046,8 @@ class WebsiteController extends Controller
 				'year_of_estb' => $clientscheck->year_of_estb,
 				'time' => $time,
 				'landmark' => $clientscheck->landmark,
-				'rating' => $clientscheck->rating,
+				'rating' => $clientscheck->average_rating,
+				'ratingCount' => $clientscheck->comment_count,				 
 				'social' => $social,
 				'user_share' => $user_share,
 			];

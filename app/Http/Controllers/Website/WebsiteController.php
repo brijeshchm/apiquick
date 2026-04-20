@@ -399,7 +399,7 @@ class WebsiteController extends Controller
 				'state' => $client->state,
 				'area' => $client->area,
 				'zone' => $client->zone,
-				'website' => $client->website,
+			 
 				'verified' => $client->verified,
 				'trending' => $client->trending,
 				'topSearch' => $client->topSearch,
@@ -445,7 +445,7 @@ class WebsiteController extends Controller
 			}
 
 			return [
-				'url' => '/' . $keyword->slug,
+				'url' =>$keyword->slug,
 				'img' => $img,
 				'alt' => $alt,
 				'title' => $keyword->keyword,
@@ -2384,6 +2384,43 @@ class WebsiteController extends Controller
 		if (!empty($keywordDetails->bottom_description)) {
 			$bottom_description = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->bottom_description);
 		}
+		$courseabout ="";
+		$heading ="";
+		$paragraph1 ="";
+		$paragraph2="";
+		$paragraph3 ="";
+		$paragraph4 ="";
+		$paragraph5 ="";
+		$paragraph6 ="";
+		if (!empty($keywordDetails->courseabout)) {
+			$courseabout = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->courseabout);
+		}
+		if (!empty($keywordDetails->heading)) {
+			$heading = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->heading);
+		}
+		if (!empty($keywordDetails->paragraph1)) {
+			$paragraph1 = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->paragraph1);
+		}
+		if (!empty($keywordDetails->paragraph2)) {
+			$paragraph2 = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->paragraph2);
+		}
+		if (!empty($keywordDetails->paragraph3)) {
+			$paragraph3 = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->paragraph3);
+		}
+		if (!empty($keywordDetails->paragraph4)) {
+			$paragraph4 = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->paragraph4);
+		}
+		if (!empty($keywordDetails->paragraph5)) {
+			$paragraph5 = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->paragraph5);
+		}
+		if (!empty($keywordDetails->paragraph6)) {
+			$paragraph6 = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->paragraph6);
+		}
+
+	 
+	 
+
+
 
 
 		$data['keyword'] = array(
@@ -2406,6 +2443,19 @@ class WebsiteController extends Controller
 			'faqa4' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqa4),
 			'faqq5' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqq5),
 			'faqa5' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqa5),
+			
+			'faqq6' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqq6),
+			'faqa6' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqa6),
+			
+			'courseabout' => $courseabout,
+			'heading' => $heading,
+			'paragraph1' => $paragraph1,
+			'paragraph2' => $paragraph2,
+			'paragraph3' => $paragraph3,
+			'paragraph4' => $paragraph4,
+			'paragraph5' => $paragraph5,
+			'paragraph6' => $paragraph6,
+ 		
 			'ratingvalue' => $keywordDetails->ratingvalue,
 			'ratingcount' => $keywordDetails->ratingcount,
 			'parent_category' => $keywordDetails->parent_category,

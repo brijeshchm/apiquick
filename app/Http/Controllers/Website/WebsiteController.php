@@ -3868,7 +3868,7 @@ class WebsiteController extends Controller
 				'c.comment_count'
 			)
 			->where('clients.business_slug', $business_slug)
-			->where('clients.active_status', '1')
+			// ->where('clients.active_status', '1')
 			->orderByRaw("
         CASE clients.client_type
             WHEN 'platinum' THEN 1
@@ -3879,7 +3879,7 @@ class WebsiteController extends Controller
         END
     ")
 			->first();
-		// dd($clientscheck);
+		//  dd($clientscheck);
 		if (!empty($clientscheck)) {
 
 			$logoImage = config('app.website') . 'client/images/default_pp_small.png';

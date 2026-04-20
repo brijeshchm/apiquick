@@ -4251,7 +4251,7 @@ class WebsiteController extends Controller
 			if (!empty($assignedKeywords)) {
 				$findKeywords = Keyword::select('child_category_id')->where('keyword', $assignedKeywords[0])->first();
 
-				$relKeywords = Keyword::select('keyword')->where('child_category_id', $findKeywords->child_category_id)
+				$relKeywords = Keyword::select('keyword','slug')->where('child_category_id', $findKeywords->child_category_id)
 					->orderBy('keyword', 'asc')
 					->pluck('keyword.keyword','keyword.slug')
 					->toArray();

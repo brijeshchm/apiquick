@@ -4175,9 +4175,9 @@ class WebsiteController extends Controller
 
 				$awardimg8 = null;
 			if (!empty($clientscheck->award_img8)) {
-				$award_img7 = json_decode($clientscheck->award_img8);
+				$award_img8 = json_decode($clientscheck->award_img8);
 
-				if (!empty($award_img7)) {
+				if (!empty($award_img8)) {
 					$awardimg8 = config('app.website') . $award_img8->large->src;
 				}
 			}

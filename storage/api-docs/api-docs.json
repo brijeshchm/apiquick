@@ -10707,7 +10707,7 @@
                         "name": "keyword",
                         "in": "query",
                         "description": "Search keyword",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string",
                             "example": "php training"

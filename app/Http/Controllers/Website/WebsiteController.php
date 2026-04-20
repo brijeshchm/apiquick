@@ -2284,7 +2284,7 @@ class WebsiteController extends Controller
 	 *     @OA\Parameter(
 	 *         name="keyword",
 	 *         in="query",
-	 *         required=true,
+	 *         required=false,
 	 *         description="Search keyword",
 	 *         @OA\Schema(type="string", example="php training")
 	 *     ),
@@ -2338,9 +2338,6 @@ class WebsiteController extends Controller
 			->where('slug', $search_kw)
 			->select('keyword.*', 'parent_category.*', 'child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5', 'keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount')
 			->first();
-
-
-
 		$category_banner = config('app.website') . 'client/images/computer-courses-training.jpg';
 
 		$alt = "";
@@ -4051,7 +4048,7 @@ class WebsiteController extends Controller
 				'social' => $social,
 				'user_share' => $user_share,
 			];
-			$isoImage = "";
+			$isoImage = null;
 			if (!empty($clientscheck->iso_certificate)) {
 				$iso_certificate = json_decode($clientscheck->iso_certificate);
 
@@ -4059,7 +4056,7 @@ class WebsiteController extends Controller
 					$isoImage = config('app.website') . $iso_certificate->large->src;
 				}
 			}
-			$gstImage = "";
+			$gstImage = null;
 			if (!empty($clientscheck->gst_certificate)) {
 				$gst_certificate = json_decode($clientscheck->gst_certificate);
 
@@ -4067,7 +4064,8 @@ class WebsiteController extends Controller
 					$gstImage = config('app.website') . $gst_certificate->large->src;
 				}
 			}
-			$cinImage = "";
+			
+			$cinImage = null;
 			if (!empty($clientscheck->cin_certificate)) {
 				$cin_certificate = json_decode($clientscheck->cin_certificate);
 
@@ -4075,8 +4073,32 @@ class WebsiteController extends Controller
 					$cinImage = config('app.website') . $cin_certificate->large->src;
 				}
 			}
+			$panImage = null;
+			if (!empty($clientscheck->pan_certificate)) {
+				$pan_certificate = json_decode($clientscheck->pan_certificate);
 
-			$msmeImage = "";
+				if (!empty($pan_certificate)) {
+					$panImage = config('app.website') . $pan_certificate->large->src;
+				}
+			}
+			$coiImage = null;
+			if (!empty($clientscheck->coi_certificate)) {
+				$coi_certificate = json_decode($clientscheck->coi_certificate);
+
+				if (!empty($coi_certificate)) {
+					$coiImage = config('app.website') . $coi_certificate->large->src;
+				}
+			}
+			$dpiitImage = null;
+			if (!empty($clientscheck->dpiit_certificate)) {
+				$dpiit_certificate = json_decode($clientscheck->dpiit_certificate);
+
+				if (!empty($dpiit_certificate)) {
+					$dpiitImage = config('app.website') . $dpiit_certificate->large->src;
+				}
+			}
+
+			$msmeImage = null;
 			if (!empty($clientscheck->msme_certificate)) {
 				$msme_certificate = json_decode($clientscheck->msme_certificate);
 
@@ -4085,7 +4107,7 @@ class WebsiteController extends Controller
 				}
 			}
 
-			$awardimg1 = "";
+			$awardimg1 = null;
 			if (!empty($clientscheck->award_img1)) {
 				$award_img1 = json_decode($clientscheck->award_img1);
 
@@ -4094,7 +4116,7 @@ class WebsiteController extends Controller
 				}
 			}
 
-			$awardimg2 = "";
+			$awardimg2 = null;
 			if (!empty($clientscheck->award_img2)) {
 				$award_img2 = json_decode($clientscheck->award_img2);
 
@@ -4104,7 +4126,7 @@ class WebsiteController extends Controller
 			}
 
 
-			$awardimg3 = "";
+			$awardimg3 = null;
 			if (!empty($clientscheck->award_img3)) {
 				$award_img3 = json_decode($clientscheck->award_img3);
 
@@ -4114,7 +4136,7 @@ class WebsiteController extends Controller
 			}
 
 
-			$awardimg4 = "";
+			$awardimg4 = null;
 			if (!empty($clientscheck->award_img4)) {
 				$award_img4 = json_decode($clientscheck->award_img4);
 
@@ -4124,7 +4146,7 @@ class WebsiteController extends Controller
 			}
 
 
-			$awardimg5 = "";
+			$awardimg5 = null;
 			if (!empty($clientscheck->award_img5)) {
 				$award_img5 = json_decode($clientscheck->award_img5);
 
@@ -4133,17 +4155,81 @@ class WebsiteController extends Controller
 				}
 			}
 
+			$awardimg6 = null;
+			if (!empty($clientscheck->award_img6)) {
+				$award_img6 = json_decode($clientscheck->award_img6);
+
+				if (!empty($award_img6)) {
+					$awardimg6 = config('app.website') . $award_img6->large->src;
+				}
+			}
+			$awardimg7 = null;
+			if (!empty($clientscheck->award_img7)) {
+				$award_img7 = json_decode($clientscheck->award_img7);
+
+				if (!empty($award_img7)) {
+					$awardimg7 = config('app.website') . $award_img7->large->src;
+				}
+			}
+
+
+				$awardimg8 = null;
+			if (!empty($clientscheck->award_img8)) {
+				$award_img7 = json_decode($clientscheck->award_img8);
+
+				if (!empty($award_img7)) {
+					$awardimg8 = config('app.website') . $award_img8->large->src;
+				}
+			}
+
+
+
+
+
+
+				$awardimg9 = null;
+			if (!empty($clientscheck->award_img9)) {
+				$award_img9 = json_decode($clientscheck->award_img9);
+
+				if (!empty($award_img9)) {
+					$awardimg9 = config('app.website') . $award_img9->large->src;
+				}
+			}
+
+
+
+
+
+
+				$awardimg10 = null;
+				if (!empty($clientscheck->award_img10)) {
+				$award_img10 = json_decode($clientscheck->award_img10);
+
+				if (!empty($award_img10)) {
+				$awardimg10 = config('app.website') . $award_img10->large->src;
+				}
+				}
+
+
+
+			
+
 
 			$data['certificate'] = [
-				'gst_no' => $clientscheck->gst_no ?? '',
+				'gst_no' => $clientscheck->gst_no ?? null,
 				'gst_certificate' => $gstImage,
 				'pan_no' => $clientscheck->pan_no,
-				'cin_no' => $clientscheck->cin_no ?? '',
+				'pan_certificate' => $panImage,
+				'cin_no' => $clientscheck->cin_no ?? null,
 				'cin_certificate' => $cinImage,
-				'iso_no' => $clientscheck->iso_no ?? '',
-				'iso_certificate' => $isoImage ?? '',
-				'msme_no' => $clientscheck->msme_no ?? '',
-				'msme_certificate' => $msmeImage ?? '',
+				'iso_no' => $clientscheck->iso_no ?? null,
+				'iso_certificate' => $isoImage ?? null,
+				'msme_no' => $clientscheck->msme_no ?? null,
+				'msme_certificate' => $msmeImage ?? null,
+				'coi_no' => $clientscheck->coi_no ?? null,
+				'coi_certificate' => $coiImage ?? null,
+				'dpiit_no' => $clientscheck->dpiit_no ?? null,
+				'dpiit_certificate' => $dpiitImage ?? null,
 				'award_name1' => $clientscheck->award_name1,
 				'award_img1' => $awardimg1,
 				'award_name2' => $clientscheck->award_name2,
@@ -4154,6 +4240,20 @@ class WebsiteController extends Controller
 				'award_img4' => $awardimg4,
 				'award_name5' => $clientscheck->award_name5,
 				'award_img5' => $awardimg5,
+				'award_name6' => $clientscheck->award_name6,
+				'award_img6' => $awardimg6,
+
+				'award_name7' => $clientscheck->award_name7,
+				'award_img7' => $awardimg7,
+
+				'award_name8' => $clientscheck->award_name8,
+				'award_img8' => $awardimg8,
+
+				'award_name9' => $clientscheck->award_name9,
+				'award_img9' => $awardimg9,
+
+				'award_name10' => $clientscheck->award_name10,
+				'award_img10' => $awardimg10,
 			];
 
 

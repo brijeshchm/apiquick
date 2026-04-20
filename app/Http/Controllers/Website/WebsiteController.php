@@ -4048,7 +4048,7 @@ class WebsiteController extends Controller
 				'social' => $social,
 				'user_share' => $user_share,
 			];
-			$isoImage = "images/gov-trade.svg";
+			$isoImage = "/images/gov-trade.svg";
 			if (!empty($clientscheck->iso_certificate)) {
 				$iso_certificate = json_decode($clientscheck->iso_certificate);
 
@@ -4056,7 +4056,7 @@ class WebsiteController extends Controller
 					$isoImage = config('app.website') . $iso_certificate->large->src;
 				}
 			}
-			$gstImage = "images/gov-gst.svg";
+			$gstImage = "/images/gov-gst.svg";
 			if (!empty($clientscheck->gst_certificate)) {
 				$gst_certificate = json_decode($clientscheck->gst_certificate);
 
@@ -4065,7 +4065,7 @@ class WebsiteController extends Controller
 				}
 			}
 			
-			$cinImage = "images/gov-trade.svg";
+			$cinImage = "/images/gov-trade.svg";
 			if (!empty($clientscheck->cin_certificate)) {
 				$cin_certificate = json_decode($clientscheck->cin_certificate);
 
@@ -4073,7 +4073,7 @@ class WebsiteController extends Controller
 					$cinImage = config('app.website') . $cin_certificate->large->src;
 				}
 			}
-			$panImage = "images/gov-gst.svg";
+			$panImage = "/images/gov-gst.svg";
 			if (!empty($clientscheck->pan_certificate)) {
 				$pan_certificate = json_decode($clientscheck->pan_certificate);
 
@@ -4081,7 +4081,7 @@ class WebsiteController extends Controller
 					$panImage = config('app.website') . $pan_certificate->large->src;
 				}
 			}
-			$coiImage = "images/gov-gst.svg";
+			$coiImage = "/images/gov-gst.svg";
 			if (!empty($clientscheck->coi_certificate)) {
 				$coi_certificate = json_decode($clientscheck->coi_certificate);
 
@@ -4098,7 +4098,7 @@ class WebsiteController extends Controller
 				}
 			}
 
-			$msmeImage = "images/gov-fire.svg";
+			$msmeImage = "/images/gov-fire.svg";
 			if (!empty($clientscheck->msme_certificate)) {
 				$msme_certificate = json_decode($clientscheck->msme_certificate);
 
@@ -4107,7 +4107,7 @@ class WebsiteController extends Controller
 				}
 			}
 
-			$awardimg1 = "images/cert-allergen.svg";
+			$awardimg1 = "/images/cert-allergen.svg";
 			if (!empty($clientscheck->award_img1)) {
 				$award_img1 = json_decode($clientscheck->award_img1);
 
@@ -4116,7 +4116,7 @@ class WebsiteController extends Controller
 				}
 			}
 
-			$awardimg2 = "images/awar-demo.svg";
+			$awardimg2 = "/images/awar-demo.svg";
 			if (!empty($clientscheck->award_img2)) {
 				$award_img2 = json_decode($clientscheck->award_img2);
 
@@ -4126,7 +4126,7 @@ class WebsiteController extends Controller
 			}
 
 
-			$awardimg3 = "images/awar-demo.svg";
+			$awardimg3 = "/images/awar-demo.svg";
 			if (!empty($clientscheck->award_img3)) {
 				$award_img3 = json_decode($clientscheck->award_img3);
 
@@ -4136,7 +4136,7 @@ class WebsiteController extends Controller
 			}
 
 
-			$awardimg4 = "images/awar-demo.svg";
+			$awardimg4 = "/images/awar-demo.svg";
 			if (!empty($clientscheck->award_img4)) {
 				$award_img4 = json_decode($clientscheck->award_img4);
 
@@ -4146,7 +4146,7 @@ class WebsiteController extends Controller
 			}
 
 
-			$awardimg5 = "images/awar-demo.svg";
+			$awardimg5 = "/images/awar-demo.svg";
 			if (!empty($clientscheck->award_img5)) {
 				$award_img5 = json_decode($clientscheck->award_img5);
 
@@ -4155,7 +4155,7 @@ class WebsiteController extends Controller
 				}
 			}
 
-			$awardimg6 = "images/awar-demo.svg";
+			$awardimg6 = "/images/awar-demo.svg";
 			if (!empty($clientscheck->award_img6)) {
 				$award_img6 = json_decode($clientscheck->award_img6);
 
@@ -4163,7 +4163,7 @@ class WebsiteController extends Controller
 					$awardimg6 = config('app.website') . $award_img6->large->src;
 				}
 			}
-			$awardimg7 = "images/awar-demo.svg";
+			$awardimg7 = "/images/awar-demo.svg";
 			if (!empty($clientscheck->award_img7)) {
 				$award_img7 = json_decode($clientscheck->award_img7);
 
@@ -4173,7 +4173,7 @@ class WebsiteController extends Controller
 			}
 
 
-				$awardimg8 = "images/awar-demo.svg";
+				$awardimg8 = "/images/awar-demo.svg";
 			if (!empty($clientscheck->award_img8)) {
 				$award_img8 = json_decode($clientscheck->award_img8);
 
@@ -4182,12 +4182,7 @@ class WebsiteController extends Controller
 				}
 			}
 
-
-
-
-
-
-				$awardimg9 = "images/awar-demo.svg";
+				$awardimg9 = "/images/awar-demo.svg";
 			if (!empty($clientscheck->award_img9)) {
 				$award_img9 = json_decode($clientscheck->award_img9);
 
@@ -4197,11 +4192,7 @@ class WebsiteController extends Controller
 			}
 
 
-
-
-
-
-				$awardimg10 = "images/awar-demo.svg";
+				$awardimg10 = "/images/awar-demo.svg";
 				if (!empty($clientscheck->award_img10)) {
 				$award_img10 = json_decode($clientscheck->award_img10);
 

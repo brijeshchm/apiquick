@@ -409,6 +409,13 @@ class WebsiteController extends Controller
 				'state' => $client->state,
 				'area' => $client->area,
 				'zone' => $client->zone,
+				'gst_no' => $client->gst_no,
+				'dpiit_no' => $client->dpiit_no,
+				'pan_no' => $client->pan_no,
+				'cin_no' => $client->cin_no,
+				'iso_no' => $client->iso_no,
+				'msme_no' => $client->msme_no,
+				'coi_no' => $client->coi_no,
 			 
 				'verified' => $client->verified,
 				'trending' => $client->trending,
@@ -546,7 +553,7 @@ class WebsiteController extends Controller
 
 		return $business;
 		});
-$data['reviewList'] = $reviewList;
+		$data['reviewList'] = $reviewList;
  
 		$data['findOtherLocation'] = $cityList;
 	
@@ -2603,14 +2610,16 @@ $data['reviewList'] = $reviewList;
 
 		 
 
+				 
 				$assignedKeywords = DB::table('assigned_kwds')
 				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
-				->where('assigned_kwds.client_id', $client->client_id)
+				->where('assigned_kwds.client_id', $client->business_id)
 				->orderBy('keyword', 'asc')
 				->distinct()
 				->limit(10)
 				->pluck('keyword.keyword', 'keyword.slug')
 				->toArray();
+
 
 				$assignedCategory = DB::table('assigned_kwds')
 				->join('child_category', 'assigned_kwds.child_cat_id', '=', 'child_category.id')
@@ -2657,6 +2666,13 @@ $data['reviewList'] = $reviewList;
 				'certified_status' => $client->certified_status,
 				'trusted_status' => $client->trusted_status,
 				'gst_status' => $client->gst_status,
+				'gst_no' => $client->gst_no,
+				'dpiit_no' => $client->dpiit_no,
+				'pan_no' => $client->pan_no,
+				'cin_no' => $client->cin_no,
+				'iso_no' => $client->iso_no,
+				'msme_no' => $client->msme_no,
+				'coi_no' => $client->coi_no,
 				'certified_img' => $certified_img,
 				'trusted_img' => $trusted_img,
 				'gst_img' => $gst_img,
@@ -2803,7 +2819,7 @@ $data['reviewList'] = $reviewList;
 
 		return $business;
 		});
-$data['reviewList'] = $reviewList;
+	$data['reviewList'] = $reviewList;
 
 
 		return response()->json([

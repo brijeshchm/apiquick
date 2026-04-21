@@ -376,6 +376,16 @@ class WebsiteController extends Controller
 				->limit(10)
 				->pluck('keyword.keyword', 'keyword.slug')
 				->toArray();
+
+			$assignedCategory = DB::table('assigned_kwds')
+				->join('child_category', 'assigned_kwds.child_cat_id', '=', 'child_category.id')
+				->where('assigned_kwds.client_id', $client->client_id)
+				->orderBy('child_category', 'asc')
+				->distinct()
+				->limit(10)
+				->pluck('child_category.child_category', 'child_category.child_slug')
+				->toArray();
+				
 			return [
 				'business_id' => $client->business_id,
 				'business_name' => $client->business_name,
@@ -418,6 +428,7 @@ class WebsiteController extends Controller
 				'whatsapp' => "917559435943",
 				'comment_count' => $client->comment_count,
 				'tags' => $assignedKeywords,
+				'category' => $assignedCategory ?? null,
 
 			];
 		});
@@ -469,7 +480,76 @@ class WebsiteController extends Controller
 			}
 		}
 
+
+
+		$defaultLogo = config('app.website') . 'client/images/default_pp_small.png';
+
+		$reviewList = DB::table('clients')
+		->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
+		->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+		->leftJoin(DB::raw('(
+		SELECT 
+		comment_client_ID,
+		SUM(rating) AS total_rating,
+		COUNT(comment_ID) AS comment_count,
+		MAX(comment_author) AS comment_author,
+		MAX(comment_content) AS comment_content
+		FROM comments
+		GROUP BY comment_client_ID
+		) c'), 'c.comment_client_ID', '=', 'clients.id')
+		->select(
+		'clients.id as business_id',
+		'clients.business_slug as business_slug',
+		'clients.business_name',
+		'clients.logo',
+		'clients.client_type',
+		DB::raw('COALESCE(c.total_rating, 0) as rating'),
+		DB::raw('COALESCE(c.comment_count, 0) as comment_count'),
+		'c.comment_author',
+		'c.comment_content',
+		)
+		->where('keyword.slug', $search_kw)
+		->whereNotNull('c.comment_content')
+		->groupBy(
+		'clients.id',         
+		)
+		->orderByRaw("
+		CASE clients.client_type
+		WHEN 'platinum' THEN 1
+		WHEN 'diamond'  THEN 2
+		WHEN 'gold'     THEN 3
+		WHEN 'silver'   THEN 4
+		ELSE 5
+		END
+		")
+		->get()
+		->map(function ($business) use ($defaultLogo) {
+
+		// ✅ Safe logo handling with map
+		$cicons = @unserialize($business->logo);
+
+		if ($cicons !== false && isset($cicons['large']['src'], $cicons['large']['name'])) {
+		$business->logo_image = config('app.website') . $cicons['large']['src'];
+		$business->alt_logo   = $cicons['large']['name'];
+		} else {
+		$business->logo_image = $defaultLogo;
+		$business->alt_logo   = 'Business Logo';
+		}
+
+		// ✅ Average rating
+		$business->avg_rating = $business->comment_count > 0
+		? round($business->rating / $business->comment_count, 1)
+		: 0;
+
+		// ✅ Remove raw logo field (no longer needed)
+		unset($business->logo);
+
+		return $business;
+		});
+$data['reviewList'] = $reviewList;
+ 
 		$data['findOtherLocation'] = $cityList;
+	
 
 		return response()->json([
 			'success' => true,
@@ -2532,6 +2612,15 @@ class WebsiteController extends Controller
 				->pluck('keyword.keyword', 'keyword.slug')
 				->toArray();
 
+				$assignedCategory = DB::table('assigned_kwds')
+				->join('child_category', 'assigned_kwds.child_cat_id', '=', 'child_category.id')
+				->where('assigned_kwds.client_id', $client->client_id)
+				->orderBy('child_category', 'asc')
+				->distinct()
+				->limit(10)
+				->pluck('child_category.child_category', 'child_category.child_slug')
+				->toArray();
+ 
 
 			$galleryArray = array();
 			if (!empty($client->pictures)) {
@@ -2595,6 +2684,7 @@ class WebsiteController extends Controller
 				'comment_count' => $client->comment_count,
 				 
 				'tags' => $assignedKeywords ?? null,
+				'category' => $assignedCategory ?? null,
 			];
 		});
 
@@ -2648,6 +2738,73 @@ class WebsiteController extends Controller
 		}
 
 		$data['findOtherLocation'] = $cityList;
+
+		$defaultLogo = config('app.website') . 'client/images/default_pp_small.png';
+
+		$reviewList = DB::table('clients')
+		->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
+		->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+		->leftJoin(DB::raw('(
+		SELECT 
+		comment_client_ID,
+		SUM(rating) AS total_rating,
+		COUNT(comment_ID) AS comment_count,
+		MAX(comment_author) AS comment_author,
+		MAX(comment_content) AS comment_content
+		FROM comments
+		GROUP BY comment_client_ID
+		) c'), 'c.comment_client_ID', '=', 'clients.id')
+		->select(
+		'clients.id as business_id',
+		'clients.business_slug as business_slug',
+		'clients.business_name',
+		'clients.logo',
+		'clients.client_type',
+		DB::raw('COALESCE(c.total_rating, 0) as rating'),
+		DB::raw('COALESCE(c.comment_count, 0) as comment_count'),
+		'c.comment_author',
+		'c.comment_content',
+		)
+		->where('keyword.slug', $search_kw)
+		->whereNotNull('c.comment_content')
+		->groupBy(
+		'clients.id',         
+		)
+		->orderByRaw("
+		CASE clients.client_type
+		WHEN 'platinum' THEN 1
+		WHEN 'diamond'  THEN 2
+		WHEN 'gold'     THEN 3
+		WHEN 'silver'   THEN 4
+		ELSE 5
+		END
+		")
+		->get()
+		->map(function ($business) use ($defaultLogo) {
+
+		// ✅ Safe logo handling with map
+		$cicons = @unserialize($business->logo);
+
+		if ($cicons !== false && isset($cicons['large']['src'], $cicons['large']['name'])) {
+		$business->logo_image = config('app.website') . $cicons['large']['src'];
+		$business->alt_logo   = $cicons['large']['name'];
+		} else {
+		$business->logo_image = $defaultLogo;
+		$business->alt_logo   = 'Business Logo';
+		}
+
+		// ✅ Average rating
+		$business->avg_rating = $business->comment_count > 0
+		? round($business->rating / $business->comment_count, 1)
+		: 0;
+
+		// ✅ Remove raw logo field (no longer needed)
+		unset($business->logo);
+
+		return $business;
+		});
+$data['reviewList'] = $reviewList;
+
 
 		return response()->json([
 			'success' => true,

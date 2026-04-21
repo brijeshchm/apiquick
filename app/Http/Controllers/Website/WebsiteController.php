@@ -2613,7 +2613,7 @@ class WebsiteController extends Controller
 				 
 				$assignedKeywords = DB::table('assigned_kwds')
 				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
-				->where('assigned_kwds.client_id', $client->business_id)
+				->where('assigned_kwds.client_id', $client->client_id)
 				->orderBy('keyword', 'asc')
 				->distinct()
 				->limit(10)

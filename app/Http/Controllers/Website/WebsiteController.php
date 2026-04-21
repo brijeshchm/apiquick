@@ -2521,15 +2521,16 @@ class WebsiteController extends Controller
 				}
 			}
 
-			$assignedKwds = DB::table('assigned_kwds')
-				->join('keyword', 'keyword.id', '=', 'assigned_kwds.kw_id')
-				->join('child_category', 'child_category.id', '=', 'assigned_kwds.child_cat_id')
-				->select('keyword.keyword', 'child_category.child_category as child_category_name')
-				->where('assigned_kwds.client_id', '=', $client->client_id)
-				->limit(5)
-				->get();
+		 
 
-
+				$assignedKeywords = DB::table('assigned_kwds')
+				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+				->where('assigned_kwds.client_id', $client->client_id)
+				->orderBy('keyword', 'asc')
+				->distinct()
+				->limit(10)
+				->pluck('keyword.keyword', 'keyword.slug')
+				->toArray();
 
 
 			$galleryArray = array();
@@ -2592,7 +2593,8 @@ class WebsiteController extends Controller
 				'openUntil' => $client->openUntil,
 				'avgRating' => $avgRating,
 				'comment_count' => $client->comment_count,
-				'keywords' => $assignedKwds ?? null,
+				 
+				'tags' => $assignedKeywords ?? null,
 			];
 		});
 

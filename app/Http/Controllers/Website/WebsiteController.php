@@ -229,7 +229,7 @@ class WebsiteController extends Controller
 			'keyword' => $keywordDetails->keyword,
 			'keyword_slug' => generate_slug($keywordDetails->keyword),
 			'category_banner' => $category_banner,
-			'chil_icon' => $child_icon,
+			'child_icon' => $child_icon,
 			'child_alt' => $child_alt,
 			'key_icon' => $key_icon,
 			'key_alt' => $child_alt,

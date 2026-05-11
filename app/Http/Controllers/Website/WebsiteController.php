@@ -91,7 +91,7 @@ class WebsiteController extends Controller
 			'city' => 'required',
 		]);
 
-		$search_kw = $request->input('keyword');
+		// $search_kw = $request->input('keyword');
 		$city = $request->input('city');
 		$cityName = ucwords(str_replace('-', ' ', $city));
 		//$keywordName = ucwords(str_replace('-', ' ', $search_kw));
@@ -199,7 +199,9 @@ class WebsiteController extends Controller
 		if (!empty($keywordDetails->bottom_description)) {
 			$bottom_description = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->bottom_description);
 		}
+		 
 
+		 
 
 		$data['keyword'] = array(
 			'keyword' => $keywordDetails->keyword,
@@ -513,12 +515,12 @@ class WebsiteController extends Controller
 		DB::raw('COALESCE(c.total_rating, 0) as rating'),
 		DB::raw('COALESCE(c.comment_count, 0) as comment_count'),
 		'c.comment_author',
-		'c.comment_content',
+		'c.comment_content'
 		)
 		->where('keyword.slug', $search_kw)
 		->whereNotNull('c.comment_content')
 		->groupBy(
-		'clients.id',         
+		'clients.id'        
 		)
 		->orderByRaw("
 		CASE clients.client_type
@@ -556,10 +558,25 @@ class WebsiteController extends Controller
 		$data['reviewList'] = $reviewList;
  
 		$data['findOtherLocation'] = $cityList;
+
+
+
+		 $relatedCategory = DB::table('keyword')
+    ->join('parent_category', 'keyword.parent_category_id', '=', 'parent_category.id')
+    ->join('child_category', 'child_category.parent_category_id', '=', 'parent_category.id')
+    ->where('keyword.slug', $search_kw)
+    ->orderBy('child_category.child_category', 'asc')
+    ->distinct()
+    ->pluck('child_category.child_category', 'child_category.child_slug')
+    ->toArray();
+
+
+		$data['relatedCategory'] = $relatedCategory;
 	
 
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 		], 200);
 
@@ -612,7 +629,7 @@ class WebsiteController extends Controller
 		$url = config('app.url');
 		$data['homePage'] = [
 			[
-				'url' => 'categories/professional-courses',
+				'url' => 'professional-courses',
 				'img' => config('app.website') . 'img/IT-Training.png',
 				'alt' => 'computer courses',
 				'title' => 'computer courses',
@@ -622,7 +639,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'child/wedding-planning',
+				'url' => 'wedding-planning',
 				'img' => config('app.website') . 'img/wedding.png',
 				'alt' => 'Wedding Planning',
 				'title' => 'Wedding Planning',
@@ -632,17 +649,17 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'categories/electric-services',
+				'url' => 'electric-services',
 				'img' => config('app.website') . 'img/electric-services.png',
 				'alt' => 'Electric Services',
 				'title' => 'Electric Services',
-				'type' => 'categories',
+				'type' => 'child',
 				'rating' => '3.5',
 				'count' => '377',
 
 			],
 			[
-				'url' => 'categories/entrance-exams-coaching',
+				'url' => 'entrance-exams-coaching',
 				'img' => config('app.website') . 'img/government-exam.png',
 				'alt' => 'Government exam',
 				'title' => 'Government exam',
@@ -652,7 +669,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'categories/study-abroad',
+				'url' => 'study-abroad',
 				'img' => config('app.website') . 'img/study-abroad.png',
 				'alt' => 'Study Abroad',
 				'title' => 'Study Abroad',
@@ -662,7 +679,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'categories/spa',
+				'url' => 'spa',
 				'img' => config('app.website') . 'img/Spa & Beauty.png',
 				'alt' => 'Spa & Beauty',
 				'title' => 'Spa & Beauty',
@@ -672,7 +689,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'child/repair-services',
+				'url' => 'repair-services',
 				'img' => config('app.website') . 'img/Repairs-Services.png',
 				'alt' => 'Repair Services',
 				'title' => 'Repair Services',
@@ -682,7 +699,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'child/packers-and-movers',
+				'url' => 'packers-and-movers',
 				'img' => config('app.website') . 'img/Packers-movers.png',
 				'alt' => 'Packers & Movers',
 				'title' => 'Packers & Movers',
@@ -692,7 +709,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'categories/professional',
+				'url' => 'professional',
 				'img' => config('app.website') . 'img/Professional.png',
 				'alt' => 'Professional',
 				'title' => 'Professional',
@@ -702,7 +719,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'child/contractors',
+				'url' => 'contractors',
 				'img' => config('app.website') . 'img/contractors.png',
 				'alt' => 'Contractors',
 				'title' => 'Contractors',
@@ -712,7 +729,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'categories/collages-and-Institutions',
+				'url' => 'collages-and-Institutions',
 				'img' => config('app.website') . 'img/Education.png',
 				'alt' => 'Education',
 				'title' => 'Education',
@@ -722,7 +739,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'child/rent-or-buy',
+				'url' => 'rent-or-buy',
 				'img' => config('app.website') . 'img/Rent-buy.png',
 				'alt' => 'Rent & Buy',
 				'title' => 'Rent & Buy',
@@ -731,7 +748,7 @@ class WebsiteController extends Controller
 				'count' => '329',
 			],
 			[
-				'url' => 'child/sports-academy',
+				'url' => 'sports-academy',
 				'img' => config('app.website') . 'img/sports.png',
 				'alt' => 'Sport Academy',
 				'title' => 'Sport Academy',
@@ -740,7 +757,7 @@ class WebsiteController extends Controller
 				'count' => '539',
 			],
 			[
-				'url' => 'child/medical',
+				'url' => 'medical',
 				'img' => config('app.website') . 'img/Medical.png',
 				'alt' => 'Medical',
 				'title' => 'Medical',
@@ -749,7 +766,7 @@ class WebsiteController extends Controller
 				'count' => '269',
 			],
 			[
-				'url' => 'child/loan-service',
+				'url' => 'loan-service',
 				'img' => config('app.website') . 'img/Loan.png',
 				'alt' => 'Loan',
 				'title' => 'Loan',
@@ -758,7 +775,7 @@ class WebsiteController extends Controller
 				'count' => '69',
 			],
 			[
-				'url' => 'categories/dancing',
+				'url' => 'dancing',
 				'img' => config('app.website') . 'img/Dancing.png',
 				'alt' => 'Dancing',
 				'title' => 'Dancing',
@@ -767,7 +784,7 @@ class WebsiteController extends Controller
 				'count' => '79',
 			],
 			[
-				'url' => 'child/yoga-classes',
+				'url' => 'yoga-classes',
 				'img' => config('app.website') . 'img/Yoga.png',
 				'alt' => 'Yoga',
 				'title' => 'Yoga',
@@ -776,7 +793,7 @@ class WebsiteController extends Controller
 				'count' => '89',
 			],
 			[
-				'url' => 'child/security-system',
+				'url' => 'security-system',
 				'img' => config('app.website') . 'img/CCTV-security.png',
 				'alt' => 'CCTV Security',
 				'title' => 'CCTV Security',
@@ -785,11 +802,11 @@ class WebsiteController extends Controller
 				'count' => '109',
 			],
 			[
-				'url' => 'child/web-technologies',
+				'url' => 'web-technologies',
 				'img' => config('app.website') . 'images/Web-Designers.png',
 				'alt' => 'Web Designers',
 				'title' => 'Web Designers',
-				'type' => 'categories',
+				'type' => 'child',
 				'rating' => '3.5',
 				'count' => '106',
 			],
@@ -808,7 +825,7 @@ class WebsiteController extends Controller
 		$data['bannerKeyword'] = [
 
 			[
-				'url' => 'child/repair-services',
+				'url' => 'repair-services',
 				'img' => config('app.website') . 'img/Repairs-Services.png',
 				'alt' => 'Repair Services',
 				'title' => 'Repair Services',
@@ -818,7 +835,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'child/rent-or-buy',
+				'url' => 'rent-or-buy',
 				'img' => config('app.website') . 'img/Rent-buy.png',
 				'alt' => 'Rent & Buy',
 				'title' => 'Rent & Buy',
@@ -827,7 +844,7 @@ class WebsiteController extends Controller
 				'count' => '329',
 			],
 			[
-				'url' => 'child/packers-and-movers',
+				'url' => 'packers-and-movers',
 				'img' => config('app.website') . 'img/Packers-movers.png',
 				'alt' => 'Packers & Movers',
 				'title' => 'Packers & Movers',
@@ -846,7 +863,7 @@ class WebsiteController extends Controller
 				'count' => '49',
 			],
 			[
-				'url' => 'categories/professional-courses',
+				'url' => 'professional-courses',
 				'img' => config('app.website') . 'img/IT-Training.png',
 				'alt' => 'computer courses',
 				'title' => 'computer courses',
@@ -866,17 +883,17 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'categories/electric-services',
+				'url' => 'electric-services',
 				'img' => config('app.website') . 'img/electric-services.png',
 				'alt' => 'Electric Services',
 				'title' => 'Electric Services',
-				'type' => 'categories',
+				'type' => 'child',
 				'rating' => '3.5',
 				'count' => '377',
 
 			],
 			[
-				'url' => 'categories/entrance-exams-coaching',
+				'url' => 'entrance-exams-coaching',
 				'img' => config('app.website') . 'img/government-exam.png',
 				'alt' => 'Government exam',
 				'title' => 'Government exam',
@@ -886,7 +903,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'categories/study-abroad',
+				'url' => 'study-abroad',
 				'img' => config('app.website') . 'img/study-abroad.png',
 				'alt' => 'Study Abroad',
 				'title' => 'Study Abroad',
@@ -896,7 +913,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'categories/spa',
+				'url' => 'spa',
 				'img' => config('app.website') . 'img/Spa & Beauty.png',
 				'alt' => 'Spa & Beauty',
 				'title' => 'Spa & Beauty',
@@ -906,7 +923,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'categories/professional',
+				'url' => 'professional',
 				'img' => config('app.website') . 'img/Professional.png',
 				'alt' => 'Professional',
 				'title' => 'Professional',
@@ -916,7 +933,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'child/contractors',
+				'url' => 'contractors',
 				'img' => config('app.website') . 'img/contractors.png',
 				'alt' => 'Contractors',
 				'title' => 'Contractors',
@@ -926,7 +943,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'categories/collages-and-Institutions',
+				'url' => 'collages-and-Institutions',
 				'img' => config('app.website') . 'img/Education.png',
 				'alt' => 'Education',
 				'title' => 'Education',
@@ -937,7 +954,7 @@ class WebsiteController extends Controller
 			],
 
 			[
-				'url' => 'child/sports-academy',
+				'url' => 'sports-academy',
 				'img' => config('app.website') . 'img/sports.png',
 				'alt' => 'Sport Academy',
 				'title' => 'Sport Academy',
@@ -946,7 +963,7 @@ class WebsiteController extends Controller
 				'count' => '539',
 			],
 			[
-				'url' => 'child/medical',
+				'url' => 'medical',
 				'img' => config('app.website') . 'img/Medical.png',
 				'alt' => 'Medical',
 				'title' => 'Medical',
@@ -955,7 +972,7 @@ class WebsiteController extends Controller
 				'count' => '269',
 			],
 			[
-				'url' => 'child/loan-service',
+				'url' => 'loan-service',
 				'img' => config('app.website') . 'img/Loan.png',
 				'alt' => 'Loan',
 				'title' => 'Loan',
@@ -964,7 +981,7 @@ class WebsiteController extends Controller
 				'count' => '69',
 			],
 			[
-				'url' => 'categories/dancing',
+				'url' => 'dancing',
 				'img' => config('app.website') . 'img/Dancing.png',
 				'alt' => 'Dancing',
 				'title' => 'Dancing',
@@ -973,7 +990,7 @@ class WebsiteController extends Controller
 				'count' => '79',
 			],
 			[
-				'url' => 'child/yoga-classes',
+				'url' => 'yoga-classes',
 				'img' => config('app.website') . 'img/Yoga.png',
 				'alt' => 'Yoga',
 				'title' => 'Yoga',
@@ -982,7 +999,7 @@ class WebsiteController extends Controller
 				'count' => '89',
 			],
 			[
-				'url' => 'child/security-system',
+				'url' => 'security-system',
 				'img' => config('app.website') . 'img/CCTV-security.png',
 				'alt' => 'CCTV Security',
 				'title' => 'CCTV Security',
@@ -991,11 +1008,11 @@ class WebsiteController extends Controller
 				'count' => '109',
 			],
 			[
-				'url' => 'child/web-technologies',
+				'url' => 'web-technologies',
 				'img' => config('app.website') . 'images/Web-Designers.png',
 				'alt' => 'Web Designers',
 				'title' => 'Web Designers',
-				'type' => 'categories',
+				'type' => 'child',
 				'rating' => '3.5',
 				'count' => '106',
 			],
@@ -1146,21 +1163,22 @@ class WebsiteController extends Controller
 
 
 		$data['businessOwners'] = [
-			[
-				'Grow Client' => $clients . ' +',
+			
+			
+				'GrowClient' => $clients . ' +',
 				'Suppliers' => $childCategory . ' +',
-				'Products & Services' => $citieslists . ' K+',
+				'ProductsServices' => $citieslists . ' K+',
 				'Keyword' => $keyword . ' +',
 				'Store' => $parentCategory . ' +',
 				'Platform' => $parentCategory . ' K+',
-			],
+			
 
 		];
 
 
 		$data['popularSearches'] = [
 			[
-				'url' => 'categories/computer-courses',
+				'url' => 'computer-courses',
 				'img' => config('app.website') . 'popular/IT-Training.jpg',
 				'alt' => 'computer courses',
 				'title' => 'computer courses',
@@ -1170,7 +1188,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'categories/entrance-exams-coaching',
+				'url' => 'entrance-exams-coaching',
 				'img' => config('app.website') . 'popular/Entrance-Exam.jpg',
 				'alt' => 'Entrance exam',
 				'title' => 'Entrance exam',
@@ -1180,7 +1198,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'child/packers-and-movers',
+				'url' => 'packers-and-movers',
 				'img' => config('app.website') . 'popular/Packers-Movers.jpg',
 				'alt' => 'Packers & Movers',
 				'title' => 'Packers & Movers',
@@ -1190,7 +1208,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'categories/interior-designer',
+				'url' => 'interior-designer',
 				'img' => config('app.website') . 'popular/Interior-design.jpg',
 				'alt' => 'Interior Design',
 				'title' => 'Interior Design',
@@ -1306,7 +1324,7 @@ class WebsiteController extends Controller
 
 
 				$blogPageList[$key] = array(
-					'url' => 'blog/' . $blog->slug,
+					'url' =>  $blog->slug,
 					'img' => $image,
 					'alt' => $alt,
 					'title' => $blog->name,
@@ -1329,6 +1347,7 @@ class WebsiteController extends Controller
 
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 		], 200);
 
@@ -1499,6 +1518,7 @@ class WebsiteController extends Controller
 		}
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 		], 200);
 
@@ -1610,6 +1630,7 @@ class WebsiteController extends Controller
 		}
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 		], 200);
 
@@ -1915,6 +1936,7 @@ class WebsiteController extends Controller
 		}
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 		], 200);
 
@@ -1964,7 +1986,7 @@ class WebsiteController extends Controller
 		$url = config('app.url');
 		$data['entranceExams'] = [
 			[
-				'url' => 'categories/entrance-exams-coaching',
+				'url' => 'entrance-exams-coaching',
 				'img' => config('app.website') . 'popular/air-force-navy.jpg',
 				'alt' => 'coaching',
 				'title' => 'Air Force & Navy / SSR / MR',
@@ -2004,7 +2026,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'categories/entrance-exams-coaching',
+				'url' => 'entrance-exams-coaching',
 				'img' => config('app.website') . 'popular/UPSC-IAS.jpg',
 				'alt' => 'UPSC & IAS',
 				'title' => 'UPSC & IAS',
@@ -2026,6 +2048,7 @@ class WebsiteController extends Controller
 		}
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 		], 200);
 
@@ -2095,7 +2118,7 @@ class WebsiteController extends Controller
 
 
 					$studyPageList[$key] = array(
-						'url' => 'child/' . $study->child_slug,
+						'url' => '' . $study->child_slug,
 						'img' => $img,
 						'alt' => $study->child_category,
 						'title' => $study->child_category,
@@ -2120,6 +2143,7 @@ class WebsiteController extends Controller
 
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 		], 200);
 
@@ -2170,7 +2194,7 @@ class WebsiteController extends Controller
 
 		$blogdetails = Blogdetails::where('status', '1')
 			->orderBy('id', 'DESC')
-			->paginate(10);
+			->paginate(100);
 
 		foreach ($blogdetails as $key => $blog) {
 			$image = "";
@@ -2187,12 +2211,14 @@ class WebsiteController extends Controller
 			$blogPageList[$key] = [
 				'id' => $blog->id,
 				'name' => $blog->name,
-				'url' => 'blog/' . $blog->slug,
+				'url' => $blog->slug,
 				'img' => $image,
 				'alt' => $alt,
-				'title' => $blog->name,
-				'created_at' => date('d-m-Y', strtotime($blog->created_at)),
-				'updated_at' => date('d-m-Y', strtotime($blog->updated_at)),
+				'title' => $blog->title,
+				'ratingcount' => $blog->ratingcount,
+				'ratingvalue' => $blog->ratingvalue,
+				'created_at' => date('d, M Y',strtotime($blog->created_at)),
+				'updated_at' => get_time(strtotime($blog->updated_at)),
 				'description' => ucfirst(substr(strip_tags($blog->description), 0, 220)) . '...',
 
 			];
@@ -2200,6 +2226,7 @@ class WebsiteController extends Controller
 
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'current_page' => $blogdetails->currentPage(),
 			'last_page' => $blogdetails->lastPage(),
 			'per_page' => $blogdetails->perPage(),
@@ -2266,7 +2293,7 @@ class WebsiteController extends Controller
 
 		$slug = $request->input('blog_slug');
 
-		$blogLists = Blogdetails::where('status', '1')->limit(8)->orderBy('id', 'DESC')->get();
+		$blogLists = Blogdetails::where('status', '1')->limit(30)->orderBy('id', 'DESC')->get();
 
 		if (!empty($blogLists)) {
 			foreach ($blogLists as $key => $blog) {
@@ -2283,13 +2310,14 @@ class WebsiteController extends Controller
 
 				$blogPageList[$key] = [
 					'name' => $blog->name,
-					'url' => 'blog/' . $blog->slug,
+					'url' => $blog->slug,
 					'id' => $blog->id,
 					'img' => $image,
 					'alt' => $alt,
-					'title' => $blog->name,
-					'created_at' => date('d-m-Y', strtotime($blog->created_at)),
-					'updated_at' => date('d-m-Y', strtotime($blog->updated_at)),
+					'title' => $blog->title,
+					'created_at' => date('d, M Y', strtotime($blog->created_at)),
+					 
+					'updated_at' => get_time(strtotime($blog->updated_at)),
 					'description' => ucfirst(substr(strip_tags($blog->description), 0, 220)) . '...',
 
 				];
@@ -2333,21 +2361,42 @@ class WebsiteController extends Controller
 			$blogPageDetails = [
 				'id' => $blogdetails->id,
 				'name' => $blogdetails->name,
-				'url' => 'blog/' . $blogdetails->slug,
+				'url' => $blogdetails->slug,
 				'blogImage' => $blogimage,
 				'blogalt' => $blogalt,
 				'imageBanner' => $imageBanner,
 				'blogBannerAalt' => $blogaltB,
 				'author_name' => ucfirst($blogdetails->author_name),
-				'created_at' => date('d-m-Y', strtotime($blog->created_at)),
-				'updated_at' => date('d-m-Y', strtotime($blog->updated_at)),
-				'title' => $blogdetails->name,
+				'created_at' => date('d, M Y', strtotime($blog->created_at)),
+				 
+				'updated_at' => get_time(strtotime($blog->updated_at)),
+				'title' => $blogdetails->title,
 				'description' => ucfirst($blogdetails->description),
 				'meta_title' => ucfirst($blogdetails->meta_title),
 				'meta_keywords' => ucfirst($blogdetails->meta_keywords),
 				'meta_description' => ucfirst($blogdetails->meta_description),
 				'top_content' => ucfirst($blogdetails->top_content),
 				'bottom_content' => ucfirst($blogdetails->bottom_content),
+				'heading' => ucfirst($blogdetails->heading),
+				'about_blog' => $blogdetails->about_blog,
+				'paragraph1' => $blogdetails->paragraph1,
+				'paragraph2' => $blogdetails->paragraph2,
+				'paragraph3' => $blogdetails->paragraph3,
+				'paragraph4' => $blogdetails->paragraph4,
+				'paragraph5' => $blogdetails->paragraph5,
+				'paragraph6' => $blogdetails->paragraph6,
+				'ratingcount' => $blogdetails->ratingcount,
+				'ratingvalue' => $blogdetails->ratingvalue,
+				'faqq1' => $blogdetails->faqq1,
+				'faqa1' => $blogdetails->faqa1,
+				'faqq2' => $blogdetails->faqq2,
+				'faqa2' => $blogdetails->faqa2,
+				'faqq3' => $blogdetails->faqq3,
+				'faqa3' => $blogdetails->faqa3,
+				'faqq4' => $blogdetails->faqq4,
+				'faqa4' => $blogdetails->faqa4,
+				'faqq5' => $blogdetails->faqq5,
+				'faqa5' => $blogdetails->faqa5,
 
 			];
 		}
@@ -2355,6 +2404,7 @@ class WebsiteController extends Controller
 
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 		], 200);
 	}
@@ -2425,6 +2475,15 @@ class WebsiteController extends Controller
 			->where('slug', $search_kw)
 			->select('keyword.*', 'parent_category.*', 'child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5', 'keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount','keyword.courseabout','keyword.heading','keyword.paragraph1','keyword.paragraph2','keyword.paragraph3','keyword.paragraph4','keyword.paragraph5','keyword.paragraph6','keyword.slug')
 			->first();
+			
+			if(!$keywordDetails){
+						return response()->json([
+						'success' => false,
+						'status' => false,
+						'data' =>'',
+					], 410);
+
+			}
 		$category_banner = config('app.website') . 'client/images/computer-courses-training.jpg';
 
 		$alt = "";
@@ -2779,12 +2838,12 @@ class WebsiteController extends Controller
 		DB::raw('COALESCE(c.total_rating, 0) as rating'),
 		DB::raw('COALESCE(c.comment_count, 0) as comment_count'),
 		'c.comment_author',
-		'c.comment_content',
+		'c.comment_content'
 		)
 		->where('keyword.slug', $search_kw)
 		->whereNotNull('c.comment_content')
 		->groupBy(
-		'clients.id',         
+		'clients.id'       
 		)
 		->orderByRaw("
 		CASE clients.client_type
@@ -2798,7 +2857,7 @@ class WebsiteController extends Controller
 		->get()
 		->map(function ($business) use ($defaultLogo) {
 
-		// ✅ Safe logo handling with map
+	 
 		$cicons = @unserialize($business->logo);
 
 		if ($cicons !== false && isset($cicons['large']['src'], $cicons['large']['name'])) {
@@ -2809,21 +2868,32 @@ class WebsiteController extends Controller
 		$business->alt_logo   = 'Business Logo';
 		}
 
-		// ✅ Average rating
+		
 		$business->avg_rating = $business->comment_count > 0
 		? round($business->rating / $business->comment_count, 1)
 		: 0;
 
-		// ✅ Remove raw logo field (no longer needed)
+	
 		unset($business->logo);
 
 		return $business;
 		});
-	$data['reviewList'] = $reviewList;
+			$data['reviewList'] = $reviewList;
+		 $relatedCategory = DB::table('keyword')
+    ->join('parent_category', 'keyword.parent_category_id', '=', 'parent_category.id')
+    ->join('child_category', 'child_category.parent_category_id', '=', 'parent_category.id')
+    ->where('keyword.slug', $search_kw)
+    ->orderBy('child_category.child_category', 'asc')
+    ->distinct()
+    ->pluck('child_category.child_category', 'child_category.child_slug')
+    ->toArray();
 
+
+		$data['relatedCategory'] = $relatedCategory;
 
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 		], 200);
 	}
@@ -2898,7 +2968,7 @@ class WebsiteController extends Controller
     ->get()
     ->map(function ($parent) {
         return [
-            'url'   => "categories/" . $parent->parent_slug,
+            'url'   => "" . $parent->parent_slug,
             'slug'  => $parent->parent_slug,
             'name'  => $parent->parent_name,
             'count' => $parent->child_count,
@@ -2943,7 +3013,7 @@ class WebsiteController extends Controller
             }
 
             return [
-                'url'       => "child/" . $item->child_slug,                        
+                'url'       => "" . $item->child_slug,                        
                 'category'  => $item->parent_name,
                 'name'  	=> $item->child_name,
                 'rating'  	=> $item->ratingvalue,
@@ -2975,6 +3045,7 @@ class WebsiteController extends Controller
 
     return response()->json([
         'success' => true,
+        'status' => true,
         'data'    => $data,
     ], 200);
 }
@@ -3069,7 +3140,7 @@ class WebsiteController extends Controller
 				}
 				return [
 					'id' => $child->parent_id,
-					'url' => "child/" . $child->child_slug,
+					'url' =>$child->child_slug,
 					'img' => $image,
 					'alt' => $alt,
 					'title' => $child->child_name,
@@ -3121,6 +3192,7 @@ class WebsiteController extends Controller
 
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 		], 200);
 
@@ -3214,7 +3286,7 @@ class WebsiteController extends Controller
 
         return [
             'id'   => $child->child_id,      // Better to use child_slug directly
-            'url'   => "child/" . $child->child_slug,      // Better to use child_slug directly
+            'url'   => $child->child_slug,      // Better to use child_slug directly
             'slug'  => $child->child_slug,
             'name'  => $child->child_name,
             'count' => (int) $child->child_count ?? 0,     // Safe count
@@ -3293,6 +3365,7 @@ class WebsiteController extends Controller
 
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 		], 200);
 
@@ -3360,6 +3433,7 @@ class WebsiteController extends Controller
 		if (empty($slug) || !is_string($slug)) {
 			return response()->json([
 				'success' => false,
+				'status' => true,
 				'message' => 'Invalid or missing child-slug parameter.',
 			], 400);
 		}
@@ -3445,6 +3519,7 @@ class WebsiteController extends Controller
 
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 		], 200);
 
@@ -3553,6 +3628,7 @@ class WebsiteController extends Controller
             ->get();
  		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 			], 200);
  
@@ -3609,6 +3685,7 @@ class WebsiteController extends Controller
             ->get();
  		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 			], 200);
 
@@ -3688,6 +3765,7 @@ class WebsiteController extends Controller
 
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 		], 200);
 
@@ -3837,6 +3915,82 @@ class WebsiteController extends Controller
 	}
 
 
+/**
+	 * @OA\Get(
+	 *     path="/api/website/checkCity",
+	 *     tags={"Website"},
+	 *     summary="Website check City by City ",
+	 *     description="Search records dynamically based on a city",
+	 *            
+	 *     @OA\Parameter(
+	 *         name="city",
+	 *         in="query",
+	 *         required=false,
+	 *         description="Search city",
+	 *         @OA\Schema(type="string", example="noida")
+	 *     ),
+	 *        
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=101),
+	 *                     @OA\Property(property="name", type="string", example="ABC Coaching Center"),
+	 *                     
+	 *                     @OA\Property(property="category", type="string", example="Education"),
+	 *                     @OA\Property(property="rating", type="number", format="float", example=4.5)
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function checkCity(Request $request)
+	{
+		$cid = trim($request->input('city'));
+		$results ="";
+		if (!empty($cid)) {
+
+			$results = DB::table('citylists')				 
+				->where('city_slug', $cid)				 
+				->orderBy('city', 'asc')				 
+				->first();
+		}
+		
+		if($results){
+		return response()->json([
+			'status' => true,
+			'message' => 'Successfully',
+			'data' => $results
+		], 200);
+		}else{
+		    
+		    return response()->json([
+			'status' => false,
+			'message' => false,
+			'data' => null
+		], 404);
+		}
+
+	}
 
 	/**
 	 * @OA\Get(
@@ -4006,6 +4160,7 @@ class WebsiteController extends Controller
 		if ($locations->isEmpty()) {
 			return response()->json([
 				'success' => false,
+				'status' => false,
 				'message' => 'No keyword found.',
 			], 404);
 		}
@@ -4013,6 +4168,7 @@ class WebsiteController extends Controller
 		// 🔹 Return Response
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $locations->values(),
 		], 200);
 	}
@@ -4230,6 +4386,9 @@ class WebsiteController extends Controller
 			);
 			$data['clientsList'] = [
 				'business_id' => $clientscheck->business_id,
+				'meta_title' => $clientscheck->meta_title,
+				'meta_description' => $clientscheck->meta_description,
+				'meta_keyword' => $clientscheck->meta_keyword,
 				'business_name' => $clientscheck->business_name,
 				'business_slug' => $clientscheck->business_slug,
 				'business_url' => config('app.website') . 'business-details/' . $clientscheck->business_slug,
@@ -4537,12 +4696,14 @@ class WebsiteController extends Controller
 			$data['overview_business'] = $overview_business;
 			return response()->json([
 				'success' => true,
+				'status' => true,
 				'data' => $data,
 			], 200);
 
 		} else {
 			return response()->json([
 				'success' => false,
+				'status' => false,
 				'data' => [],
 			], 200);
 
@@ -4657,13 +4818,13 @@ class WebsiteController extends Controller
 
 		$data['popularCategories'] = [
 			[
-				'url' => 'categories/professional-courses',
+				'url' => 'professional-courses',
 				'title' => 'Coaching & Tuitions',
 				'type' => 'categories',
 
 			],
 			[
-				'url' => '/child/wedding-planning',
+				'url' => '/wedding-planning',
 				'title' => 'Wedding Planning',
 				'type' => 'child',
 
@@ -4681,24 +4842,24 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'categories/electric-services',
+				'url' => 'electric-services',
 				'title' => 'Electric Services',
-				'type' => 'categories',
+				'type' => 'child',
 
 			],
 			[
-				'url' => 'categories/security-system',
+				'url' => 'security-system',
 				'title' => 'Security System',
 				'type' => 'categories',
 
 			],
 			[
-				'url' => 'categories/medical',
+				'url' => 'medical',
 				'title' => 'Medical',
 				'type' => 'categories',
 			],
 			[
-				'url' => 'categories/packers-movers',
+				'url' => 'packers-movers',
 				'title' => 'Packers Movers',
 				'type' => 'categories',
 			],
@@ -4756,17 +4917,17 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'categories/repairs-services',
+				'url' => 'repairs-services',
 				'title' => 'Repairs Services',
 				'type' => 'categories',
 			],
 			[
-				'url' => 'categories/spa-beauty',
+				'url' => 'spa-beauty',
 				'title' => 'SPA Beauty',
 				'type' => 'categories',
 			],
 			[
-				'url' => 'child/loan',
+				'url' => 'loan',
 				'title' => 'Loan',
 				'type' => 'child',
 			],
@@ -4792,6 +4953,7 @@ class WebsiteController extends Controller
 		}
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 		], 200);
 
@@ -4923,6 +5085,7 @@ class WebsiteController extends Controller
 		}
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 		], 200);
 
@@ -5016,6 +5179,7 @@ class WebsiteController extends Controller
 		}
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 		], 200);
 
@@ -5084,6 +5248,7 @@ class WebsiteController extends Controller
 		}
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 		], 200);
 
@@ -5247,6 +5412,7 @@ class WebsiteController extends Controller
 		}
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 		], 200);
 
@@ -5365,6 +5531,7 @@ class WebsiteController extends Controller
 		}
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 		], 200);
 
@@ -5471,6 +5638,7 @@ class WebsiteController extends Controller
 		}
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 		], 200);
 
@@ -5568,6 +5736,7 @@ class WebsiteController extends Controller
 		}
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 		], 200);
 
@@ -5627,18 +5796,164 @@ class WebsiteController extends Controller
 		$lead = Lead::get()->count();
 
 		$data['businessOwners'] = [
-			[
-				'Grow Client' => $clients . ' +',
+			
+			 	'GrowClient' => $clients . ' +',
 				'Suppliers' => $childCategory . ' +',
-				'Products & Services' => $citieslists . ' K+',
+				'ProductsServices' => $citieslists . ' K+',
 				'Keyword' => $keyword . ' +',
 				'Store' => $parentCategory . ' +',
 				'Platform' => $parentCategory . ' K+',
-			],
 
 		];
+		
+		
+		$data['about-us'] = [
+
+				'paragraph' => 'Quick Dials is a fast-growing service search and lead platform in India. It helps people find the right service providers in one place. The platform works on a simple match-making idea. Users search for a service, and Quick Dials connects them with the right providers. The website QuickDialsTM makes it easy to search, compare, and contact service providers without confusion.',
+				'paragraph1' =>'Quick Dials works like a search engine for everyday services and professional needs. People use it to find trusted and verified service providers across many fields. The information on the platform is clear, updated, and easy to understand.',
+
+				];
+				
+				$defaultLogo = config('app.website') . 'client/images/default_pp_small.png';
+				
+		$success_story = DB::table('clients')
+		->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
+		->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+		->leftJoin(DB::raw('(
+		SELECT 
+		comment_client_ID,
+		SUM(rating) AS total_rating,
+		COUNT(comment_ID) AS comment_count,
+		MAX(comment_author) AS comment_author,
+		MAX(comment_content) AS comment_content
+		FROM comments
+		GROUP BY comment_client_ID
+		) c'), 'c.comment_client_ID', '=', 'clients.id')
+		->select(
+		'clients.id as business_id',
+		'clients.business_slug as business_slug',
+		'clients.business_name',
+		'clients.logo',
+		'clients.client_type',
+		DB::raw('COALESCE(c.total_rating, 0) as rating'),
+		DB::raw('COALESCE(c.comment_count, 0) as comment_count'),
+		'c.comment_author',
+		'c.comment_content'
+		)
+	 
+		->whereNotNull('c.comment_content')
+		->groupBy(
+		'clients.id'     
+		)
+		->orderByRaw("
+		CASE clients.client_type
+		WHEN 'platinum' THEN 1
+		WHEN 'diamond'  THEN 2
+		WHEN 'gold'     THEN 3
+		WHEN 'silver'   THEN 4
+		ELSE 5
+		END
+		")
+		->get()
+		->map(function ($business) use ($defaultLogo) {
+
+	 
+		$cicons = @unserialize($business->logo);
+
+		if ($cicons !== false && isset($cicons['large']['src'], $cicons['large']['name'])) {
+		$business->logo_image = config('app.website') . $cicons['large']['src'];
+		$business->alt_logo   = $cicons['large']['name'];
+		} else {
+		$business->logo_image = $defaultLogo;
+		$business->alt_logo   = 'Business Logo';
+		}
+
+	 
+		$business->avg_rating = $business->comment_count > 0
+		? round($business->rating / $business->comment_count, 1)
+		: 0;
+
+	 
+		unset($business->logo);
+
+		return $business;
+		});
+		$data['success_story'] = $success_story;
+
+			
+		
+
+
+				
+		$reviewList = DB::table('clients')
+		->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
+		->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+		->leftJoin(DB::raw('(
+		SELECT 
+		comment_client_ID,
+		SUM(rating) AS total_rating,
+		COUNT(comment_ID) AS comment_count,
+		MAX(comment_author) AS comment_author,
+		MAX(comment_content) AS comment_content
+		FROM comments
+		GROUP BY comment_client_ID
+		) c'), 'c.comment_client_ID', '=', 'clients.id')
+		->select(
+		'clients.id as business_id',
+		'clients.business_slug as business_slug',
+		'clients.business_name',
+		'clients.logo',
+		'clients.client_type',
+		DB::raw('COALESCE(c.total_rating, 0) as rating'),
+		DB::raw('COALESCE(c.comment_count, 0) as comment_count'),
+		'c.comment_author',
+		'c.comment_content'
+		)
+	 
+		->whereNotNull('c.comment_content')
+		->groupBy(
+		'clients.id'       
+		)
+		->orderByRaw("
+		CASE clients.client_type
+		WHEN 'platinum' THEN 1
+		WHEN 'diamond'  THEN 2
+		WHEN 'gold'     THEN 3
+		WHEN 'silver'   THEN 4
+		ELSE 5
+		END
+		")
+		->limit(10)
+		->get() 
+		->map(function ($business) use ($defaultLogo) {
+
+	 
+		$cicons = @unserialize($business->logo);
+
+		if ($cicons !== false && isset($cicons['large']['src'], $cicons['large']['name'])) {
+		$business->logo_image = config('app.website') . $cicons['large']['src'];
+		$business->alt_logo   = $cicons['large']['name'];
+		} else {
+		$business->logo_image = $defaultLogo;
+		$business->alt_logo   = 'Business Logo';
+		}
+
+	 
+		$business->avg_rating = $business->comment_count > 0
+		? round($business->rating / $business->comment_count, 1)
+		: 0;
+
+		 
+		unset($business->logo);
+
+		return $business;
+		});
+		$data['reviewList'] = $reviewList; 
+				
+				
+				
 		$data['grow_your_business'] = [
-			[
+			
 				"Grow Your Business" => "Sell to buyers anytime, anywhere",
 				"Zero Cost" => "No commission or transaction fee",
 				"Manage Your Business Better" => "Lead Management System & other features",
@@ -5646,9 +5961,11 @@ class WebsiteController extends Controller
 				"Add Business" => "Add the name, e-mail of your company, store/business.",
 				"Add Products/Services" => "Minimum 3 products/services needed for your free listing page.",
 
-			]
+			
 
 		];
+		
+		
 		$data['business_Features'] = [
 			[
 				"📍Google Maps Optimization" => "Improve your local visibility by optimizing Google Business Profile with keywords, reviews.",
@@ -5693,7 +6010,7 @@ class WebsiteController extends Controller
 
 
 		$data['grow_business'] = [
-			[
+			
 				"Grow business" => "Join thousands of businesses that trust Lead for their workforce management needs.",
 				"Active Client" => $clients,
 				"Employees Tracked" => $lead . " +",
@@ -5702,7 +6019,7 @@ class WebsiteController extends Controller
 				"Business Kewyord" => $keyword,
 
 
-			],
+			
 
 
 		];
@@ -5754,38 +6071,32 @@ class WebsiteController extends Controller
 
 
 		$data['faq'] = [
-			[
+			 
 				'q1' => ' What is Quick Dials?',
 				'a1' => 'Quick Dials is an extensive search engine for the students, parents, and Professionals, Quick Dials Only Deals In Education Sector and helps students to grab their right opportunity, and helps business owners to grow their business.',
-			],
-			[
+		 
+		 
 				'q2' => 'Why choose Quick Dials for growing your business?',
 				'a2' => 'Our Work Module Is Completely Different, we work on the Conversion module, and we Provide you  Dual Manually Verified Leads to your Business.',
-			],
-			[
+		 
 				'q3' => 'What Happen If my leads commitment did not get fulfilled?',
 				'a3' => 'In case we are unable to fulfill our committed no of leads, we will refund your remaining amount.',
-			],
-			[
+			 
 				'q4' => 'What happens if I received a lead from out of my city/category?',
 				'a4' => 'If you get a lead which is either out from your Locality or Category Then we will replace it as soon as possible.',
-			],
-			[
+			 
 				'q5' => 'How Diffrent your leads quality from others?',
 				'a5' => 'our leads are dual manually verified by our expert counselors, so no need to worry about it.',
-			],
-			[
+		 
 				'q6' => 'How do you generate leads?',
 				'a6' => 'we generate leads organically as well as inorganic leads, and we have Our own channels partners.',
-			],
-			[
+			 
 				'q7' => 'How will I get Leads?',
 				'a7' => 'You will receive Leads on your Registered contact no through sms, and also on Your registered Email Id.',
-			],
-			[
+			 
 				'q7' => 'I Need More info?',
 				'a7' => 'For More Info & any Queries, you can Contact Us on +91  75-5943-5943 or reach out to us via e-mail @ info@quickdials.com, or list your business as free listing, our marketing team Will Contact you Soon.',
-			],
+			 
 		];
 
 
@@ -5801,6 +6112,7 @@ class WebsiteController extends Controller
 		}
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 		], 200);
 
@@ -5867,19 +6179,19 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'categories/personal-finance-services',
+				'url' => 'personal-finance-services',
 				'title' => 'Personal Finance Services',
 				'type' => 'categories',
 
 			],
 			[
-				'url' => 'categories/tours-travel-services',
+				'url' => 'tours-travel-services',
 				'title' => 'Tours & Travels',
 				'type' => 'categories',
 
 			],
 			[
-				'url' => 'categories/property-dealer',
+				'url' => 'property-dealer',
 				'title' => 'Property Dealer',
 				'type' => 'categories',
 
@@ -5895,7 +6207,7 @@ class WebsiteController extends Controller
 				'type' => 'keyword',
 			],
 			[
-				'url' => 'categories/computer-courses',
+				'url' => 'computer-courses',
 				'title' => 'Computer Courses & Training',
 				'type' => 'categories',
 			],
@@ -5916,12 +6228,12 @@ class WebsiteController extends Controller
 				'type' => 'keyword',
 			],
 			[
-				'url' => 'categories/electric-services',
+				'url' => 'electric-services',
 				'title' => 'Electric Services',
-				'type' => 'categories',
+				'type' => 'child',
 			],
 			[
-				'url' => 'categories/entrance-exams-coaching',
+				'url' => 'entrance-exams-coaching',
 				'title' => 'Government Exam',
 				'type' => 'categories',
 			],
@@ -5941,7 +6253,7 @@ class WebsiteController extends Controller
 				'type' => 'keyword',
 			],
 			[
-				'url' => 'child/yoga-classes',
+				'url' => 'yoga-classes',
 				'title' => 'Yoga',
 				'type' => 'child',
 			],
@@ -6031,7 +6343,7 @@ class WebsiteController extends Controller
 				'type' => 'keyword',
 			],
 			[
-				'url' => 'categories/entrance-exams-coaching',
+				'url' => 'entrance-exams-coaching',
 				'title' => 'Entrance Exam Coaching',
 				'type' => 'categories',
 			],
@@ -6158,6 +6470,7 @@ class WebsiteController extends Controller
 		}
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 		], 200);
 
@@ -6248,6 +6561,7 @@ class WebsiteController extends Controller
 		}
 		return response()->json([
 			'success' => true,
+			'status' => true,
 			'data' => $data,
 		], 200);
 
@@ -6329,6 +6643,7 @@ class WebsiteController extends Controller
 		if ($lastReviewDate && now()->diffInDays($lastReviewDate) <= 30) {
 			return response()->json([
 				'status' => false,
+			 
 				'message' => 'Thanks for your feedback! You are already submitted a review for this business'
 			], 429);
 		}
@@ -6348,6 +6663,7 @@ class WebsiteController extends Controller
 
 		return response()->json([
 			'status' => true,
+			
 			'message' => 'Review successfully submitted.'
 		], 200);
 	}

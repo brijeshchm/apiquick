@@ -143,6 +143,28 @@ class WebsiteController extends Controller
 				$alt = $cicons['category_banner']['name'];
 			}
 		}
+		$child_icon =config('app.website') . 'client/images/it_training.jpg';
+		$key_icon =config('app.website') . 'client/images/it_training.jpg';
+		$child_alt =$keywordDetails->keyword;
+		
+		if (!empty($keywordDetails->pc_icon)) {
+			$childcons = unserialize($keywordDetails->pc_icon);
+
+			if (!empty($childcons)) {
+				$child_icon = config('app.website') . $childcons['pc_icon']['src'];
+				$child_alt = $child_icon['pc_icon']['name'];
+			}
+		}
+		
+		if (!empty($keywordDetails->icon)) {
+			$keycons = unserialize($keywordDetails->icon);
+
+			if (!empty($keycons)) {
+				$key_icon = config('app.website') . $keycons['icon']['src'];
+				$key_alt = $key_icon['icon']['name'];
+			}
+		}
+
 
 		if (!empty($keywordDetails->meta_title)) {
 			$meta_title = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->meta_title);
@@ -207,6 +229,10 @@ class WebsiteController extends Controller
 			'keyword' => $keywordDetails->keyword,
 			'keyword_slug' => generate_slug($keywordDetails->keyword),
 			'category_banner' => $category_banner,
+			'chil_icon' => $child_icon,
+			'child_alt' => $child_alt,
+			'key_icon' => $key_icon,
+			'key_alt' => $child_alt,
 			'alt' => $alt,
 			'meta_title' => $meta_title,
 			'meta_keywords' => $meta_keywords,

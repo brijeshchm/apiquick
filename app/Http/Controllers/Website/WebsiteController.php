@@ -167,17 +167,17 @@ class WebsiteController extends Controller
 
 
 		if (!empty($keywordDetails->meta_title)) {
-			$meta_title = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->meta_title);
+			$meta_title = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->meta_title);
 		}
 		if (!empty($keywordDetails->meta_keywords)) {
-			$meta_keywords = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->meta_keywords);
+			$meta_keywords = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->meta_keywords);
 
 
 		}
 
 
 		if (!empty($keywordDetails->meta_description)) {
-			$meta_description = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->meta_description);
+			$meta_description = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->meta_description);
 		}
 
 		$courseabout ="";

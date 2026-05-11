@@ -296,7 +296,7 @@ class WebsiteController extends Controller
 				'c.comment_count'
 			)
 			->where('citylists.city', $city)
-			// ->where('clients.active_status', '1')
+			 ->where('clients.active_status', '1')
 			->where('keyword.slug', $search_kw)
 			// ->groupBy('clients.id')
 			->distinct('clients.id')
@@ -4299,7 +4299,7 @@ class WebsiteController extends Controller
 				'c.comment_count'
 			)
 			->where('clients.business_slug', $business_slug)
-			// ->where('clients.active_status', '1')
+			 ->where('clients.active_status', '1')
 			->orderByRaw("
         CASE clients.client_type
             WHEN 'platinum' THEN 1

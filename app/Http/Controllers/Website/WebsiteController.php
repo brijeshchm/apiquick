@@ -152,7 +152,7 @@ class WebsiteController extends Controller
 
 			if (!empty($childcons)) {
 				$child_icon = config('app.website') . $childcons['pc_icon']['src'];
-				$child_alt = $child_icon['pc_icon']['name'];
+				$child_alt = $childcons['pc_icon']['name'];
 			}
 		}
 		
@@ -161,7 +161,7 @@ class WebsiteController extends Controller
 
 			if (!empty($keycons)) {
 				$key_icon = config('app.website') . $keycons['icon']['src'];
-				$key_alt = $key_icon['icon']['name'];
+				$key_alt = $keycons['icon']['name'];
 			}
 		}
 

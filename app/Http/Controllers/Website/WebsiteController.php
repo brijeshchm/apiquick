@@ -657,8 +657,8 @@ class WebsiteController extends Controller
 			[
 				'url' => 'professional-courses',
 				'img' => config('app.website') . 'img/IT-Training.png',
-				'alt' => 'computer courses',
-				'title' => 'computer courses',
+				'alt' => 'Professional Courses',
+				'title' => 'Professional Courses',
 				'type' => 'categories',
 				'rating' => '4',
 				'count' => '434',

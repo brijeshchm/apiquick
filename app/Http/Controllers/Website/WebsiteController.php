@@ -149,7 +149,7 @@ class WebsiteController extends Controller
 		
 		if (!empty($keywordDetails->pc_icon)) {
 			$childcons = unserialize($keywordDetails->pc_icon);
-
+ 
 			if (!empty($childcons)) {
 				$child_icon = config('app.website') . $childcons['pc_icon']['src'];
 				$child_alt = $childcons['pc_icon']['name'];
@@ -1474,7 +1474,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'clinical-research',
+				'url' => 'health-wellness',
 				'img' => config('app.website') . 'popular/Fitness-Services.jpg',
 				'alt' => 'Health & Fitness',
 				'title' => 'Health & Fitness',
@@ -1514,8 +1514,8 @@ class WebsiteController extends Controller
 			[
 				'url' => 'washing-machine-repairs',
 				'img' => config('app.website') . 'popular/Carpenters.jpg',
-				'alt' => 'Carpenters',
-				'title' => 'Carpenters',
+				'alt' => 'Washing machine repairs',
+				'title' => 'Washing machine repairs',
 				'type' => 'keyword',
 				'rating' => '4.8',
 				'count' => '463',
@@ -1523,8 +1523,8 @@ class WebsiteController extends Controller
 			[
 				'url' => 'cctv-installation-training',
 				'img' => config('app.website') . 'popular/Carpenters.jpg',
-				'alt' => 'Carpenters',
-				'title' => 'Carpenters',
+				'alt' => 'CCTV Installation',
+				'title' => 'CCTV installation',
 				'type' => 'keyword',
 				'rating' => '4.8',
 				'count' => '463',

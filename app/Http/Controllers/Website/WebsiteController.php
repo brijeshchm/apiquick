@@ -497,7 +497,7 @@ class WebsiteController extends Controller
         'c.avg_rating',
         'c.comment_count'
     )
-    ->where('citylists.city', $city)
+    //->where('citylists.city', $city)
     ->where('clients.active_status', '1')
     ->where('keyword.slug', $search_kw)
     //->where('c.comment_count', '>', 0)   // 👈 ADD THIS

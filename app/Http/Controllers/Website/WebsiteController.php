@@ -469,6 +469,162 @@ class WebsiteController extends Controller
 		});
 
 
+
+
+
+		$clientsAgents = DB::table('clients')
+    ->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
+    ->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+    ->join('assigned_zones', 'clients.id', '=', 'assigned_zones.client_id')
+    ->join('citylists', 'assigned_zones.city_id', '=', 'citylists.id')
+    ->leftJoin(DB::raw('(
+        SELECT SUM(rating) AS rating,
+               AVG(rating) AS avg_rating,
+               comment_client_ID,
+               COUNT(comment_ID) AS comment_count
+        FROM comments
+        GROUP BY comment_client_ID
+    ) c'), 'c.comment_client_ID', '=', 'clients.id')
+    ->select(
+        'clients.*',
+        'clients.id as business_id',
+        'assigned_kwds.*',
+        'citylists.city',
+        'keyword.keyword as keywords',
+        'keyword.slug as slugs',
+        'clients.client_type',
+        'c.rating',
+        'c.avg_rating',
+        'c.comment_count'
+    )
+    ->where('citylists.city', $city)
+    ->where('clients.active_status', '1')
+    ->where('keyword.slug', $search_kw)
+    //->where('c.comment_count', '>', 0)   // 👈 ADD THIS
+    ->distinct('clients.id')
+    ->orderByRaw("
+        CASE clients.client_type
+            WHEN 'platinum' THEN 1
+            WHEN 'diamond'  THEN 2
+            WHEN 'gold'     THEN 3
+            WHEN 'silver'   THEN 4
+            ELSE 5
+        END
+    ")
+    ->limit(5)
+    ->get();
+ 
+
+		$data['agents'] = $clientsAgents->map(function ($client) {
+
+			$logoImage = config('app.website') . 'client/images/default_pp_small.png';
+			$altLogo = "Business Logo";
+			if (!empty($client->logo)) {
+				$cicons = unserialize($client->logo);
+				if (!empty($cicons)) {
+					$logoImage = config('app.website') . $cicons['large']['src'];
+					$altLogo = $cicons['large']['name'];
+				}
+			}
+
+
+			$galleryArray = array();
+			if (!empty($client->pictures)) {
+				$galleryList = unserialize($client->pictures);
+				if (!empty($galleryList)) {
+					foreach ($galleryList as $key => $value) {
+
+						$galleryArray[$key] = array(
+							'galley' => $value
+
+						);
+
+					}
+				}
+			}
+			$certified_img = config('app.website') . 'img/q_verified.gif';
+			$trusted_img = config('app.website') . 'img/q_trust.gif';
+			$gst_img = config('app.website') . 'img/q_gst.gif';
+			$avgRating = "0";
+			if ($client->rating) {
+				$avgRating = ($client->rating / (5 * $client->comment_count)) * 5;
+				$avgRating = number_format($avgRating, 1, '.', '');
+			}
+
+
+			$assignedKeywords = DB::table('assigned_kwds')
+				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+				->where('assigned_kwds.client_id', $client->business_id)
+				->orderBy('keyword', 'asc')
+				->distinct()
+				->limit(10)
+				->pluck('keyword.keyword', 'keyword.slug')
+				->toArray();
+
+			$assignedCategory = DB::table('assigned_kwds')
+				->join('child_category', 'assigned_kwds.child_cat_id', '=', 'child_category.id')
+				->where('assigned_kwds.client_id', $client->client_id)
+				->orderBy('child_category', 'asc')
+				->distinct()
+				->limit(10)
+				->pluck('child_category.child_category', 'child_category.child_slug')
+				->toArray();
+				
+			return [
+				'business_id' => $client->business_id,
+				'business_name' => $client->business_name,
+				'business_slug' => $client->business_slug,
+				'logo' => $logoImage ?? '',
+				'altLogo' => $altLogo ?? '',
+				'gallery' => $galleryArray ?? '',
+				'certifications' => $client->certifications,
+				'sirName' => $client->sirName,
+				'first_name' => $client->first_name,
+				'middle_name' => $client->middle_name,
+				'last_name' => $client->last_name,
+				'certified_status' => $client->certified_status,
+				'trusted_status' => $client->trusted_status,
+				'gst_status' => $client->gst_status,
+				'certified_img' => $certified_img,
+				'trusted_img' => $trusted_img,
+				'gst_img' => $gst_img,
+				'website' => $client->website,
+				'city' => $client->city,
+				'state' => $client->state,
+				'area' => $client->area,
+				'zone' => $client->zone,
+				'gst_no' => $client->gst_no,
+				'dpiit_no' => $client->dpiit_no,
+				'pan_no' => $client->pan_no,
+				'cin_no' => $client->cin_no,
+				'iso_no' => $client->iso_no,
+				'msme_no' => $client->msme_no,
+				'coi_no' => $client->coi_no,
+			 
+				'verified' => $client->verified,
+				'trending' => $client->trending,
+				'topSearch' => $client->topSearch,
+				'featured' => $client->featured,
+				'description' => $client->description,
+				'mapUrl' => "https://maps.google.com/?q=" . generate_slug($client->address),
+				'openUntil' => $client->openUntil,
+				'address' => $client->address,
+				'pincode' => $client->pincode,
+				'country' => $client->country,
+				'year_of_estb' => $client->year_of_estb,
+				'landmark' => $client->landmark,
+				'rating' => $client->rating,
+				'avgRating' => $avgRating,
+				'call' => "917559435943",
+				'whatsapp' => "917559435943",
+				'comment_count' => $client->comment_count,
+				'tags' => $assignedKeywords,
+				'category' => $assignedCategory ?? null,
+
+			];
+		});
+
+
 		$servicesRelated = Keyword::where('child_category_id', $keywordDetails->child_category_id)
 			->where('parent_category_id', $keywordDetails->parent_category_id)
 			->select('keyword', 'icon', 'slug')
@@ -2705,6 +2861,159 @@ class WebsiteController extends Controller
 
 
 		$data['clientsList'] = $clientsList->map(function ($client) {
+
+			$logoImage = config('app.website') . 'client/images/default_pp_small.png';
+			$altLogo = "Business Logo";
+			if (!empty($client->logo)) {
+				$cicons = unserialize($client->logo);
+
+				if (!empty($cicons)) {
+					$logoImage = config('app.website') . $cicons['large']['src'];
+					$altLogo = $cicons['large']['alt'];
+				}
+			}
+
+		 
+
+				 
+				$assignedKeywords = DB::table('assigned_kwds')
+				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+				->where('assigned_kwds.client_id', $client->client_id)
+				->orderBy('keyword', 'asc')
+				->distinct()
+				->limit(10)
+				->pluck('keyword.keyword', 'keyword.slug')
+				->toArray();
+
+
+				$assignedCategory = DB::table('assigned_kwds')
+				->join('child_category', 'assigned_kwds.child_cat_id', '=', 'child_category.id')
+				->where('assigned_kwds.client_id', $client->client_id)
+				->orderBy('child_category', 'asc')
+				->distinct()
+				->limit(10)
+				->pluck('child_category.child_category', 'child_category.child_slug')
+				->toArray();
+ 
+
+			$galleryArray = array();
+			if (!empty($client->pictures)) {
+				$galleryList = unserialize($client->pictures);
+				if (!empty($galleryList)) {
+					foreach ($galleryList as $key => $value) {
+
+						$galleryArray[$key] = array(
+							'galley' => $value
+						);
+					}
+				}
+			}
+			$certified_img = config('app.website') . 'img/q_verified.gif';
+			$trusted_img = config('app.website') . 'img/q_trust.gif';
+			$gst_img = config('app.website') . 'img/q_gst.gif';
+			$avgRating = "0";
+			if ($client->rating) {
+				$avgRating = ($client->rating / (5 * $client->comment_count)) * 5;
+				$avgRating = number_format($avgRating, 1, '.', '');
+			}
+			return [
+				'business_id' => $client->client_id,
+				'business_name' => $client->business_name,
+				'business_slug' => $client->business_slug,
+				'logo' => $logoImage ?? '',
+				'altLogo' => $altLogo ?? '',
+				'gallery' => $galleryArray ?? '',
+				'certifications' => $client->certifications,
+				'sirName' => $client->sirName,
+				'first_name' => $client->first_name,
+				'middle_name' => $client->middle_name,
+				'last_name' => $client->last_name,
+				'certified_status' => $client->certified_status,
+				'trusted_status' => $client->trusted_status,
+				'gst_status' => $client->gst_status,
+				'gst_no' => $client->gst_no,
+				'dpiit_no' => $client->dpiit_no,
+				'pan_no' => $client->pan_no,
+				'cin_no' => $client->cin_no,
+				'iso_no' => $client->iso_no,
+				'msme_no' => $client->msme_no,
+				'coi_no' => $client->coi_no,
+				'certified_img' => $certified_img,
+				'trusted_img' => $trusted_img,
+				'gst_img' => $gst_img,
+				'website' => $client->website,
+				'verified' => $client->verified,
+				'trending' => $client->trending,
+				'topSearch' => $client->topSearch,
+				'featured' => $client->featured,
+				'description' => $client->description,
+				'city' => $client->city,
+				'state' => $client->state,
+				'area' => $client->area,
+				'zone' => $client->zone,
+				'address' => $client->address,
+				'pincode' => $client->pincode,
+				'country' => $client->country,
+				'year_of_estb' => $client->year_of_estb,
+				'landmark' => $client->landmark,
+				'mapUrl' => "https://maps.google.com/?q=" . generate_slug($client->address),
+				'whatsapp' => '7559435943',
+				'call' => '917559435943',
+				'rating' => $client->rating,
+				'openUntil' => $client->openUntil,
+				'avgRating' => $avgRating,
+				'comment_count' => $client->comment_count,
+				 
+				'tags' => $assignedKeywords ?? null,
+				'category' => $assignedCategory ?? null,
+			];
+		});
+
+
+	$clientsAgents = DB::table('clients')
+    ->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
+    ->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+    ->join('assigned_zones', 'clients.id', '=', 'assigned_zones.client_id')
+    ->join('citylists', 'assigned_zones.city_id', '=', 'citylists.id')
+    ->leftJoin(DB::raw('(
+        SELECT SUM(rating) AS rating,
+               AVG(rating) AS avg_rating,
+               comment_client_ID,
+               COUNT(comment_ID) AS comment_count
+        FROM comments
+        GROUP BY comment_client_ID
+    ) c'), 'c.comment_client_ID', '=', 'clients.id')
+    ->select(
+        'clients.*',
+        'clients.id as business_id',
+        'assigned_kwds.*',
+        'citylists.city',
+        'keyword.keyword as keywords',
+        'keyword.slug as slugs',
+        'clients.client_type',
+        'c.rating',
+        'c.avg_rating',
+        'c.comment_count'
+    )
+    
+    ->where('clients.active_status', '1')
+    ->where('keyword.slug', $search_kw)
+    //->where('c.comment_count', '>', 0)   // 👈 ADD THIS
+    ->distinct('clients.id')
+    ->orderByRaw("
+        CASE clients.client_type
+            WHEN 'platinum' THEN 1
+            WHEN 'diamond'  THEN 2
+            WHEN 'gold'     THEN 3
+            WHEN 'silver'   THEN 4
+            ELSE 5
+        END
+    ")
+    ->limit(5)
+    ->get();
+
+
+		$data['agents'] = $clientsAgents->map(function ($client) {
 
 			$logoImage = config('app.website') . 'client/images/default_pp_small.png';
 			$altLogo = "Business Logo";

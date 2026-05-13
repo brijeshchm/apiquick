@@ -1660,7 +1660,7 @@ class WebsiteController extends Controller
 
 			[
 				'url' => 'carpenters',
-				'img' => config('app.website') . 'popular/Carpenters.jpg',
+				'img' => config('app.website') . 'popular/carpenter.jpg',
 				'alt' => 'Carpenters',
 				'title' => 'Carpenters',
 				'type' => 'keyword',
@@ -1669,7 +1669,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'washing-machine-repairs',
-				'img' => config('app.website') . 'popular/Carpenters.jpg',
+				'img' => config('app.website') . 'popular/washing-machines.jpg',
 				'alt' => 'Washing machine repairs',
 				'title' => 'Washing machine repairs',
 				'type' => 'keyword',
@@ -1678,7 +1678,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'cctv-installation-training',
-				'img' => config('app.website') . 'popular/Carpenters.jpg',
+				'img' => config('app.website') . 'img/CCTV-security.png',
 				'alt' => 'CCTV Installation',
 				'title' => 'CCTV installation',
 				'type' => 'keyword',

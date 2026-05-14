@@ -346,6 +346,7 @@ class WebsiteController extends Controller
 					'c.comment_count'
 				)
 				->where('keyword.slug', $search_kw)
+				->where('clients.active_status', '1')
 				->groupBy('clients.id')
 
 				->orderByRaw("
@@ -704,6 +705,7 @@ class WebsiteController extends Controller
 		'c.comment_content'
 		)
 		->where('keyword.slug', $search_kw)
+		->where('clients.active_status', '1')
 		->whereNotNull('c.comment_content')
 		->groupBy(
 		'clients.id'        
@@ -3214,6 +3216,7 @@ class WebsiteController extends Controller
 		'c.comment_content'
 		)
 		->where('keyword.slug', $search_kw)
+		->where('clients.active_status', '1')
 		->whereNotNull('c.comment_content')
 		->groupBy(
 		'clients.id'       
@@ -4516,6 +4519,7 @@ class WebsiteController extends Controller
 
 			$clientData = DB::table('clients')
 				->where('business_name', 'LIKE', "%{$keyword}%")
+				->where('active_status', '1')
 				->select(
 
 					DB::raw("'company' as type"),
@@ -4523,6 +4527,7 @@ class WebsiteController extends Controller
 					DB::raw("business_slug as slug")
 				)
 				->orderBy('keyword', 'asc')
+				
 				->limit(50)
 				->get();
 
@@ -6215,6 +6220,7 @@ class WebsiteController extends Controller
 		)
 	 
 		->whereNotNull('c.comment_content')
+		->where('clients.active_status', '1')
 		->groupBy(
 		'clients.id'     
 		)

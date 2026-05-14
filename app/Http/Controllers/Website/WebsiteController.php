@@ -3489,8 +3489,8 @@ class WebsiteController extends Controller
 			->select(
 				'parent_category.id as parent_id',
 				'parent_category.parent_slug',
-				'child_category.ratingvalue',
-				'child_category.ratingcount',
+				'child_category.ratingvalue as rating_value',
+				'child_category.ratingcount as rating_count',
 				'parent_category.parent_category as parent_name',
 				'child_category.id as child_id',
 				'child_category.child_slug',
@@ -3521,8 +3521,8 @@ class WebsiteController extends Controller
 					'alt' => $alt,
 					'title' => $child->child_name,
 					'type' => 'child',
-					'rating' => $child->ratingvalue,
-					'ratingcount' => $child->ratingcount,
+					'rating' => $child->rating_value,
+					'ratingcount' => $child->rating_count,
 				];
 			});
 

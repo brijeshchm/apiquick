@@ -3489,8 +3489,8 @@ class WebsiteController extends Controller
 			->select(
 				'parent_category.id as parent_id',
 				'parent_category.parent_slug',
-				'parent_category.ratingvalue',
-				'parent_category.ratingcount',
+				'child_category.ratingvalue',
+				'child_category.ratingcount',
 				'parent_category.parent_category as parent_name',
 				'child_category.id as child_id',
 				'child_category.child_slug',

@@ -587,6 +587,16 @@ class WebsiteController extends Controller
 				->pluck('child_category.child_category', 'child_category.child_slug')
 				->toArray();
 				
+				
+					$workingHoursHtml = '10AM to 7PM';
+					$categorySlug = $client->category_service;
+
+					$template = $this->generate(
+						$client,
+						$workingHoursHtml,
+						$categorySlug
+					);
+				 
 			return [
 				'business_id' => $client->business_id,
 				'business_name' => $client->business_name,
@@ -637,6 +647,7 @@ class WebsiteController extends Controller
 				'comment_count' => $client->comment_count,
 				'tags' => $assignedKeywords,
 				'category' => $assignedCategory ?? null,
+				'overviewBusiness' => $template ?? null,
 
 			];
 		});
@@ -2944,6 +2955,16 @@ class WebsiteController extends Controller
 				$avgRating = ($client->rating / (5 * $client->comment_count)) * 5;
 				$avgRating = number_format($avgRating, 1, '.', '');
 			}
+			
+			$workingHoursHtml = '10AM to 7PM';
+					$categorySlug = $client->category_service;
+
+					$template = $this->generate(
+						$client,
+						$workingHoursHtml,
+						$categorySlug
+					);
+					
 			return [
 				'business_id' => $client->client_id,
 				'business_name' => $client->business_name,
@@ -2994,6 +3015,7 @@ class WebsiteController extends Controller
 				 
 				'tags' => $assignedKeywords ?? null,
 				'category' => $assignedCategory ?? null,
+				'overviewBusiness' => $template ?? null,
 			];
 		});
 
@@ -3097,6 +3119,15 @@ class WebsiteController extends Controller
 				$avgRating = ($client->rating / (5 * $client->comment_count)) * 5;
 				$avgRating = number_format($avgRating, 1, '.', '');
 			}
+			
+			$workingHoursHtml = '10AM to 7PM';
+			$categorySlug = $client->category_service;
+
+			$template = $this->generate(
+				$client,
+				$workingHoursHtml,
+				$categorySlug
+			);
 			return [
 				'business_id' => $client->client_id,
 				'business_name' => $client->business_name,
@@ -3147,6 +3178,7 @@ class WebsiteController extends Controller
 				 
 				'tags' => $assignedKeywords ?? null,
 				'category' => $assignedCategory ?? null,
+				'overviewBusiness' => $template ?? null,
 			];
 		});
 

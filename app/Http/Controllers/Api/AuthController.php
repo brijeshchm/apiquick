@@ -335,7 +335,7 @@ class AuthController extends Controller
             'message' => 'OTP has been sent to your email successfully',
             
             //  'expires_in' => auth()->factory()->getTTL()*60,
-            'data' => $user,
+            //'data' => $user,
         ]);
     }
 

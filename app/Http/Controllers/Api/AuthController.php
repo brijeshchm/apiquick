@@ -327,15 +327,16 @@ class AuthController extends Controller
             }); 			
         }
         // Generate new Sanctum token
-       // $token = $user->createToken('api-token')->plainTextToken;
+        $token = $user->createToken('api-token')->plainTextToken;
+		
         //$token = $user->createToken('browser-extension')->plainTextToken;
 
         return response()->json([
             'status' => true,
-            'message' => 'OTP has been sent to your email successfully',
-            
+            'message' => 'Login successful',
+            'token' => $token,
             //  'expires_in' => auth()->factory()->getTTL()*60,
-            //'data' => $user,
+            'data' => $user,
         ]);
     }
 
@@ -343,7 +344,7 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/api/apple/verifyOtp",
-     *     tags={"Apple Login Otp Verify"},
+     *     tags={"Apple Login Otp "},
      *     summary="Verify OTP and Login",
      *     description="Verify the 6-digit OTP sent to the user's email and issue an API token on success.",
      *     @OA\RequestBody(

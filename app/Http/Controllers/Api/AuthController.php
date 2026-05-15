@@ -321,10 +321,10 @@ class AuthController extends Controller
             );
             $message = "{$otp} is QuickDials Verification Code for {$user->email} .";
             $subject = "{$otp} is QuickDials Verification Code";
-            $checkmail = Mail::send('emails.sendotp_to_email', ['msg' => $message], function ($m) use ($message, $request, $subject) {
+            /*$checkmail = Mail::send('emails.sendotp_to_email', ['msg' => $message], function ($m) use ($message, $request, $subject) {
                 $m->from('leads.quickdials@gmail.com', 'Login OTP');
                 $m->to($request->input('email'), "")->subject($subject);
-            }); 			
+            }); */ 			
         }
         // Generate new Sanctum token
         $token = $user->createToken('api-token')->plainTextToken;

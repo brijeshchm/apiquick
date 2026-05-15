@@ -419,6 +419,17 @@ class WebsiteController extends Controller
 				->pluck('child_category.child_category', 'child_category.child_slug')
 				->toArray();
 				
+				
+					$workingHoursHtml = '10AM to 7PM';
+					$categorySlug = $client->category_service;
+
+					$template = $this->generate(
+						$client,
+						$workingHoursHtml,
+						$categorySlug
+					);
+									
+				
 			return [
 				'business_id' => $client->business_id,
 				'business_name' => $client->business_name,
@@ -469,6 +480,7 @@ class WebsiteController extends Controller
 				'comment_count' => $client->comment_count,
 				'tags' => $assignedKeywords,
 				'category' => $assignedCategory ?? null,
+				'overviewBusiness' => $template ?? null,
 
 			];
 		});
@@ -4638,7 +4650,7 @@ class WebsiteController extends Controller
         END
     ")
 			->first();
-		//  dd($clientscheck);
+		 
 		if (!empty($clientscheck)) {
 
 			$logoImage = config('app.website') . 'client/images/default_pp_small.png';
@@ -6916,7 +6928,7 @@ $overviewParagraph2 = "Whether you need a one-time service or ongoing support, {
 			->groupBy('parent_category') // Group by parent_category
 			->map(function ($group) {
 				return $group->map(function ($item) {
-					// dd($item);
+					 
 					$image = "";
 					$alt = "";
 					if (!empty($item->pc_icon)) {
@@ -7056,5 +7068,290 @@ $overviewParagraph2 = "Whether you need a one-time service or ongoing support, {
 			'message' => 'Review successfully submitted.'
 		], 200);
 	}
+	
+	
+	
+	
+	
+	
+	 public function generate($client, string $workingHoursHtml = '', ?string $categorySlug = null): array
+    {
+        $business = trim($client->business_name ?? 'this business');
+        $area     = trim($client->area ?? '');
+        $city     = trim($client->city ?? '');
+        $location = trim("{$area}, {$city}", ', ');
+
+        $slug = strtolower($categorySlug ??  $client->category_service ?? '');
+ 
+        $template = self::detectTemplate($slug);
+ 
+        return self::{$template}($business, $area, $city, $location, $workingHoursHtml);
+    }
+
+    /**
+     * Map a service slug → template method name.
+     */
+    private static function detectTemplate(string $slug): string
+    {
+      $map = getOverViewBusiness($slug);
+ 
+        foreach ($map as $needle => $template) {
+            if (str_contains($slug, $needle)) {
+                return $template;
+            }
+        }
+        return 'generic';
+    }
+
+ 
+    private static function training($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} is a leading training institute in {$city}, offering a wide range of professional courses and skill-development programs designed for today's competitive job market. From technical certifications to soft-skill workshops, the institute helps students, working professionals, and career changers build job-ready expertise.{$hours}Flexible batch timings — weekday, weekend, and fast-track — make it easy to learn while managing work or studies. The experienced faculty at {$business} provides hands-on training, real-world projects, doubt-clearing sessions, and dedicated placement support to ensure measurable career growth.",
+
+            "Whether you want to upskill in IT, finance, management, digital marketing, or any vocational discipline, {$business} in {$location} has the right program for you. With a comprehensive course catalog, expert mentors, modern infrastructure, and a strong placement record, {$business} stands as a trusted destination for skill development in {$city}. Enrol today and take the next step in your professional journey."
+        ];
+    }
+
+    // ── 2. AC REPAIR ──
+    private static function acRepair($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} is a trusted AC repair and service provider in {$city}, delivering reliable solutions for all major brands including Voltas, LG, Samsung, Daikin, Hitachi, Carrier, Blue Star, Whirlpool, Panasonic, and more. The team handles split AC, window AC, and central AC servicing, gas refilling, installation, uninstallation, deep cleaning, PCB repair, compressor replacement, and annual maintenance contracts (AMC).{$hours}With certified technicians, genuine spare parts, and same-day doorstep service in {$area}, {$business} ensures your AC runs efficiently and consumes less power.",
+
+            "Whether you need an emergency AC repair, a one-time service, or a yearly AMC, {$business} in {$location} offers transparent pricing, no hidden charges, and a service warranty on every job. Customers across {$city} trust {$business} for professional handling, quick response times, and long-lasting repairs. Book a technician today and enjoy cool, hassle-free comfort all summer long."
+        ];
+    }
+
+    // ── 3. REFRIGERATOR REPAIR ──
+    private static function fridgeRepair($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} is a reliable refrigerator repair service in {$city}, fixing all types of fridges — single door, double door, side-by-side, French door, mini fridge, and deep freezers — across leading brands like LG, Samsung, Whirlpool, Godrej, Haier, Bosch, Voltas Beko, and Panasonic. The skilled technicians at {$business} diagnose and resolve issues such as cooling problems, water leakage, ice build-up, compressor failure, gas charging, thermostat issues, and noisy operation.{$hours}",
+
+            "From routine servicing to complex repairs, {$business} in {$location} provides doorstep service across {$area} with quick response, genuine spare parts, and an honest pricing structure. Customers in {$city} prefer {$business} for prompt service, skilled handling, and lasting results. Schedule a fridge repair today and avoid food spoilage with an expert touch."
+        ];
+    }
+
+    // ── 4. WASHING MACHINE REPAIR ──
+    private static function washingMachineRepair($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} provides expert washing machine repair and service in {$city} for all types — fully automatic, semi-automatic, top-load, front-load, and dryer units — across brands like LG, Samsung, IFB, Bosch, Whirlpool, Godrej, Haier, Panasonic, and Onida. Common issues handled include water drainage problems, drum noise, motor failure, PCB repair, door lock, belt replacement, spin issues, and error codes.{$hours}",
+
+            "With trained technicians, original spare parts, and same-day doorstep service in {$area}, {$business} in {$location} is the preferred choice for washing machine owners across {$city}. Enjoy transparent quotes, repair warranty, and reliable service. Book your washing machine repair now and get your laundry back on track."
+        ];
+    }
+
+    // ── 5. TV REPAIR ──
+    private static function tvRepair($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} offers professional TV repair service in {$city} for LED, LCD, OLED, QLED, Smart TV, and Android TV units across all brands — Sony, Samsung, LG, Mi, OnePlus, TCL, Hisense, Panasonic, Philips, and more. Repairs include screen panel replacement, motherboard issues, backlight repair, no-display issues, sound problems, HDMI port repair, Wi-Fi connectivity, and software updates.{$hours}",
+
+            "Experienced engineers at {$business} provide doorstep TV repair across {$area} with original spare parts, on-site diagnosis, and service warranty. Whether your TV won't turn on or has a cracked display, {$business} in {$location} delivers fast, affordable, and reliable repair solutions to households across {$city}."
+        ];
+    }
+
+    // ── 6. WATER PURIFIER REPAIR ──
+    private static function waterPurifierRepair($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} is a trusted water purifier repair and service provider in {$city}, covering RO, UV, UF, and gravity-based water purifiers from brands like Kent, Aquaguard, Pureit, Livpure, Eureka Forbes, Blue Star, AO Smith, and Havells. Services include filter replacement, candle change, membrane replacement, motor repair, TDS adjustment, leakage fixing, and annual maintenance contracts (AMC).{$hours}",
+
+            "With certified technicians and genuine spare parts, {$business} in {$location} ensures clean, safe drinking water for every home in {$area}. Quick service response, transparent pricing, and post-service warranty make {$business} the preferred choice for water purifier care across {$city}. Book your service today for healthier hydration."
+        ];
+    }
+
+    // ── 7. LAPTOP REPAIR ──
+    private static function laptopRepair($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} delivers professional laptop repair service in {$city} for all brands — Dell, HP, Lenovo, Acer, Asus, Apple MacBook, Microsoft Surface, MSI, and more. Common services include screen replacement, keyboard repair, battery replacement, motherboard fault, hinge repair, virus removal, OS installation (Windows, macOS, Linux), SSD upgrade, RAM upgrade, and data recovery.{$hours}",
+
+            "Whether your laptop won't power on, runs slow, or has hardware damage, {$business} in {$location} offers honest diagnostics, genuine parts, and quick turnaround. With doorstep service across {$area} and reliable warranty, {$business} is the go-to laptop repair expert in {$city}. Book a free diagnosis today."
+        ];
+    }
+
+    // ── 8. COMPUTER REPAIR ──
+    private static function computerRepair($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} provides comprehensive computer and desktop repair services in {$city}, handling hardware faults, OS installation, virus and malware removal, network and Wi-Fi setup, data recovery, hardware upgrades (RAM, SSD, GPU), printer setup, and home/office IT support.{$hours}From PC slowdowns to total system failures, the technicians at {$business} resolve issues quickly with reliable solutions.",
+
+            "Trusted by homes, offices, and small businesses across {$area}, {$business} in {$location} offers AMC plans, on-site service, and remote support across {$city}. With transparent rates and skilled engineers, {$business} keeps your computer running smoothly so you can focus on what matters."
+        ];
+    }
+
+    // ── 9. CAR REPAIR ──
+    private static function carRepair($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} is a trusted car repair and servicing centre in {$city}, offering periodic maintenance, engine repair, AC service, brake and clutch repair, denting and painting, battery replacement, tyre alignment and balancing, oil change, and complete bodywork. The garage serves all car brands — Maruti Suzuki, Hyundai, Tata, Mahindra, Honda, Toyota, Kia, Renault, Skoda, Volkswagen, Ford, and luxury cars.{$hours}",
+
+            "With skilled mechanics, advanced diagnostic tools, and genuine spare parts, {$business} in {$location} delivers professional car care at honest prices. Customers across {$area} trust {$business} for transparent estimates, on-time delivery, and post-service warranty. Visit today for a free vehicle health check-up in {$city}."
+        ];
+    }
+
+    // ── 10. BIKE REPAIR ──
+    private static function bikeRepair($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} is a reliable bike and two-wheeler repair shop in {$city}, offering periodic servicing, engine work, tyre change, chain repair, brake adjustment, battery replacement, electrical repairs, denting, painting, and accessory fitting. The team services all brands — Hero, Bajaj, TVS, Honda, Yamaha, Suzuki, Royal Enfield, KTM, and electric bikes.{$hours}",
+
+            "Riders across {$area} trust {$business} in {$location} for skilled mechanics, genuine parts, and quick turnaround. With transparent service charges and pickup-drop options in {$city}, {$business} keeps your bike road-ready, fuel-efficient, and safe. Book your bike service today."
+        ];
+    }
+
+    // ── 11. BANQUET HALL ──
+    private static function banquetHall($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} is a premium banquet hall in {$city}, ideal for weddings, receptions, sangeet, engagement ceremonies, birthday parties, corporate events, and social gatherings. The venue offers spacious seating, air-conditioned halls, modern lighting, sound systems, ample parking, valet service, dedicated bridal rooms, and in-house catering with multi-cuisine options.{$hours}",
+
+            "From small intimate functions to grand celebrations, {$business} in {$location} provides flexible packages, customized décor, and professional event support to make every occasion memorable. With elegant interiors, attentive staff, and a prime location in {$area}, {$business} is among the most preferred banquet halls in {$city}. Book your date today."
+        ];
+    }
+
+    // ── 12. COURT MARRIAGE ──
+    private static function courtMarriage($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} provides end-to-end court marriage registration services in {$city}, including marriage under the Special Marriage Act 1954, Hindu Marriage Act 1955, Tatkal marriage registration, certificate procurement, and complete documentation assistance. The expert team handles affidavit drafting, photo attestation, witness arrangements, and same-day marriage registration where permissible.{$hours}",
+
+            "Whether you are an Indian, NRI, or inter-faith couple, {$business} in {$location} simplifies the legal process with transparent fees, on-time delivery, and trusted advocates across {$area}. Couples in {$city} rely on {$business} for hassle-free court marriage and lawful documentation. Get in touch today for a confidential consultation."
+        ];
+    }
+
+    // ── 13. DHOL SHEHNAI ──
+    private static function dholShehnai($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} provides professional dhol, shehnai, nagada, and traditional baraat band services in {$city} for weddings, baraat processions, sangeet ceremonies, engagements, festive events, corporate functions, and store openings. The troupe delivers high-energy performances on Punjabi dhol, traditional shehnai-nagada combinations, brass bands, and dholi groups in colorful traditional attire.{$hours}",
+
+            "Add unforgettable rhythm and grandeur to your celebration with {$business} in {$location}. Trusted by hundreds of families across {$area} and {$city}, {$business} offers customizable packages, on-time arrival, and energetic performances that elevate every event. Book your dhol-shehnai team today and let the celebrations begin."
+        ];
+    }
+
+    // ── 14. WEDDING PHOTOGRAPHY ──
+    private static function weddingPhotography($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} is a leading wedding photography and videography service in {$city}, capturing every emotion of your big day with cinematic style. Specializations include candid photography, traditional photography, pre-wedding shoots, post-wedding shoots, drone videography, cinematic wedding films, photo albums, same-day edits, and live event coverage.{$hours}",
+
+            "Working with the latest camera equipment, drones, gimbals, and editing software, the creative team at {$business} in {$location} crafts stunning visual stories that you will treasure forever. Couples across {$area} and {$city} choose {$business} for its artistic eye, professional handling, and timely delivery. Book your wedding photographer today and preserve memories that last a lifetime."
+        ];
+    }
+
+    // ── 15. WEDDING DECORATION / FLOWER DECORATION ──
+    private static function weddingDecoration($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} is a creative wedding and event decoration specialist in {$city}, offering stunning stage décor, mandap decoration, entrance gates, fresh flower decoration, themed décor, fairy light setups, balloon decoration, and customized backdrops for weddings, engagements, receptions, birthdays, and corporate events.{$hours}",
+
+            "From traditional Indian themes to modern minimalist setups, {$business} in {$location} blends fresh flowers, fabric drapes, premium lighting, and on-trend styling to transform any venue into a dream space. Trusted by families across {$area} and {$city}, {$business} delivers turnkey decoration with creative concepts and on-time setup. Book a free consultation today."
+        ];
+    }
+
+    // ── 16. VARMALA / JAIMALA ──
+    private static function varmala($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} provides spectacular varmala and jaimala entry services in {$city} — from elegant manual entries to grand mechanical varmala setups, hydraulic platforms, revolving stages, rotating jaimala thaalis, dry ice effects, LED-lit garlands, and themed bride-groom entries. Every setup is custom-designed to match your wedding theme and venue.{$hours}",
+
+            "Make your varmala ceremony the highlight of your wedding with {$business} in {$location}. Trusted by couples across {$area} and {$city}, the experienced team handles design, installation, special effects, and safety with precision. Add cinematic magic to your jaimala moment — enquire today for available designs and packages."
+        ];
+    }
+
+    // ── 17. WEDDING CHOREOGRAPHER ──
+    private static function weddingChoreographer($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} offers professional wedding choreography services in {$city} for sangeet, mehndi, haldi, reception, and engagement functions. The choreographers specialize in couple dance, family group dance, Bollywood choreography, classical, hip-hop, lyrical, and themed performances — designed to match every skill level from beginners to dance enthusiasts.{$hours}",
+
+            "With customized song selection, easy-to-learn routines, costume guidance, and stage presentation tips, {$business} in {$location} makes every performance unforgettable. Couples and families across {$area} and {$city} trust {$business} for energetic, joyful, and rehearsal-friendly choreography. Book your sessions today and shine on the dance floor."
+        ];
+    }
+
+    // ── 18. WEDDING ORGANISER / PLANNER ──
+    private static function weddingOrganiser($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} is a complete wedding planning and event management company in {$city}, offering end-to-end services — venue booking, decoration, catering, photography, hospitality, transport, guest management, choreography, baraat services, return gifts, invitations, and destination wedding coordination.{$hours}",
+
+            "From intimate weddings to grand celebrations, {$business} in {$location} delivers stress-free planning, on-budget execution, and creative direction tailored to every culture and tradition. Families across {$area} and {$city} count on {$business} to bring their dream wedding to life. Schedule a planning consultation today and let the experts handle the rest."
+        ];
+    }
+
+    // ── 19. ASTROLOGER ──
+    private static function astrologer($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} is a renowned astrology and Vedic consultation service in {$city}, offering marriage matching (kundli milan), guna milan, birth chart analysis, horoscope reading, gemstone recommendations, vastu consultancy, palmistry, numerology, muhurat selection, and remedies for life challenges.{$hours}",
+
+            "With years of experience in Vedic astrology, {$business} in {$location} provides accurate, ethical, and confidential guidance to clients across {$area} and {$city}. From wedding date selection to compatibility checks, get trusted insights that bring clarity and peace of mind. Book a session today — in-person or online consultations available."
+        ];
+    }
+
+    // ── 20. GHODA BAGGI ──
+    private static function ghodaBaggi($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} offers premium ghoda baggi (horse carriage) and decorated horse services in {$city} for weddings, baraats, processions, ring ceremonies, and special events. Choose from royal Rajasthani-style baggis, vintage carriages, decorated horses with traditional ornaments, and themed setups complete with sherwani-clad coachmen.{$hours}",
+
+            "Make your baraat unforgettable with the regal arrival of a beautifully adorned ghoda baggi from {$business} in {$location}. Trusted by families across {$area} and {$city}, the team ensures well-groomed horses, on-time service, and safety throughout the procession. Book your wedding baggi today."
+        ];
+    }
+
+    // ── 21. ROAD LIGHT (Wedding Lighting) ──
+    private static function roadLight($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} provides premium wedding road lighting and baraat lighting services in {$city}, including chandelier lights, LED tubelights, glow sticks, gas lights, walking lamps, royal pole lights, fairy light pathways, and decorative LED tube setups for processions and entry routes.{$hours}",
+
+            "Illuminate your wedding baraat with the dazzling lighting setups from {$business} in {$location}. Serving clients across {$area} and {$city}, the team brings out a regal, glowing atmosphere with customizable themes, on-site setup, and skilled operators. Book your wedding lighting solution today."
+        ];
+    }
+
+    // ── 22. COLD FIRE / FOG EFFECT ──
+    private static function coldFire($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} specializes in cold fire (cold pyro), fog effects, dry ice setups, LED confetti blasters, sparkular machines, smoke jets, and special-effect lighting for weddings, varmala entries, sangeet events, corporate functions, and stage shows in {$city}.{$hours}",
+
+            "Create breathtaking entry moments with the safe, smoke-free, indoor-friendly effects from {$business} in {$location}. Trusted by event planners across {$area} and {$city}, every setup is operated by trained technicians ensuring safety, timing, and visual brilliance. Book cold fire and fog effects today for an unforgettable celebration."
+        ];
+    }
+
+    // ── 23. CAR DECORATION (Wedding Car) ──
+    private static function carDecoration($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} offers stunning wedding car decoration services in {$city} using fresh flowers, artificial flowers, ribbons, themed setups, royal styles, and personalized name plates. Whether it's a vintage car, luxury sedan, SUV, or wedding limousine, every decoration is tailored to match the wedding theme.{$hours}",
+
+            "Trusted by hundreds of couples across {$area} and {$city}, {$business} in {$location} ensures timely setup, premium flowers, and elegant designs that turn the bridal car into a memorable centerpiece. Book your wedding car decoration today and add a beautiful finishing touch to your big day."
+        ];
+    }
+
+    // ── 24. SPORTS ACADEMY (covers cricket, badminton, swimming, boxing, taekwondo, javelin) ──
+    private static function sportsAcademy($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} is a leading sports academy in {$city}, offering professional coaching for all age groups — kids, juniors, teens, and adults. The academy provides certified trainers, structured curriculum, modern equipment, fitness conditioning, match practice, and tournament exposure to help every player reach their full potential.{$hours}",
+
+            "Whether you are a beginner looking to learn the basics or an aspiring athlete training for state and national tournaments, {$business} in {$location} offers personalized coaching plans and supportive learning environments. Parents and players across {$area} and {$city} trust {$business} for skill development, discipline, and competitive growth. Enrol today for a free trial session."
+        ];
+    }
+
+    // ── 25. GENERIC FALLBACK (any uncategorized service) ──
+    private static function generic($business, $area, $city, $location, $hours): array
+    {
+        return [
+            "{$business} in {$location} is a trusted service provider in {$city}, known for quality, reliability, and customer satisfaction. With experienced professionals, modern tools, and a strong commitment to service excellence, {$business} caters to a wide range of customer needs across {$area} and {$city}.{$hours}",
+
+            "From first contact to job completion, {$business} in {$location} ensures transparent pricing, on-time service, and quality outcomes that customers in {$city} can count on. Whether for one-time service or ongoing requirements, {$business} stands as a reliable choice. Get in touch today to learn more or schedule a visit."
+        ];
+    }
+
 
 }

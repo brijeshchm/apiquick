@@ -68,6 +68,66 @@ function generate_slug($slug = null)
 	return $slug;
 }
 
+function getOverViewBusiness($slug = null)
+{
+	 $map = [
+            // Training / Education
+            'training'        => 'training',
+            'course'          => 'training',
+            'coaching'        => 'training',
+            'tuition'         => 'training',
+            'institute'       => 'training',
+
+            // Home Appliance Repair
+            'ac-repair'       => 'acRepair',
+            'refrigerator'    => 'fridgeRepair',
+            'fridge'          => 'fridgeRepair',
+            'washing-machine' => 'washingMachineRepair',
+            'tv-repair'       => 'tvRepair',
+            'water-purifier'  => 'waterPurifierRepair',
+            'laptop'          => 'laptopRepair',
+            'computer'        => 'computerRepair',
+
+            // Vehicle
+            'car-service'     => 'carRepair',
+            'car-repair'      => 'carRepair',
+            'bike-service'    => 'bikeRepair',
+            'bike-repair'     => 'bikeRepair',
+
+            // Wedding
+            'banquet'         => 'banquetHall',
+            'court-marriage'  => 'courtMarriage',
+            'dhol'            => 'dholShehnai',
+            'shehnai'         => 'dholShehnai',
+            'photo-and-video' => 'weddingPhotography',
+            'photography'     => 'weddingPhotography',
+            'flower'          => 'weddingDecoration',
+            'decoration'      => 'weddingDecoration',
+            'varmala'         => 'varmala',
+            'choreographer'   => 'weddingChoreographer',
+            'organisers'      => 'weddingOrganiser',
+            'astrologer'      => 'astrologer',
+            'baggi'           => 'ghodaBaggi',
+            'road-light'      => 'roadLight',
+            'cold-fire'       => 'coldFire',
+            'fog'             => 'coldFire',
+            'car-decoration'  => 'carDecoration',
+
+            // Sports
+            'academy'         => 'sportsAcademy',
+            'cricket'         => 'sportsAcademy',
+            'badminton'       => 'sportsAcademy',
+            'swimming'        => 'sportsAcademy',
+            'boxing'          => 'sportsAcademy',
+            'taekwondo'       => 'sportsAcademy',
+            'javelin'         => 'sportsAcademy',
+        ];
+	return $map;
+}
+
+
+
+
 // INVERSE SLUG GENERATOR FOR CLIENTS
 // **********************************
 function inverse_generate_slug($slug = null)

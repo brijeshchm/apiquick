@@ -5020,6 +5020,13 @@ class WebsiteController extends Controller
 
 				$data['related_searches'] = $relKeywords;
 			}
+			
+			
+				$businessName = $clientscheck->business_name ?? 'this business';
+				$area         = $clientscheck->area ?? '';
+				$city         = $clientscheck->city ?? '';
+				$location     = trim($area . ($area && $city ? ', ' : '') . $city);
+
 			$area_business = [
 				'heading' =>
 					($clientscheck->business_name ?? '') .
@@ -5028,13 +5035,7 @@ class WebsiteController extends Controller
 					', ' .
 					($clientscheck->city ?? ''),
 
-				'paragraph' =>
-					($clientscheck->business_name ?? '') .
-					', located in ' .
-					($clientscheck->area ?? '') .
-					', ' .
-					($clientscheck->city ?? '') .
-					', has been a leader in skill development for many years. The company specializes in providing a comprehensive range of training programs designed to equip individuals with practical knowledge and expertise.'
+				'paragraph' => "{$businessName}, located in {$location}, has built a strong reputation as a trusted name in {$city} for delivering professional, reliable, and customer-focused services. With years of hands-on experience, a skilled team, and a strong commitment to quality, {$businessName} caters to a wide range of customer needs across {$area} and nearby areas in {$city}, ensuring timely service, transparent pricing, and lasting results every time.",
 			];
 
 			$data['area_business'] = $area_business;
@@ -5060,10 +5061,19 @@ class WebsiteController extends Controller
 				$workingHoursHtml .= '';
 			}
 
-			$overviewParagraph = ($clientscheck->business_name ?? '') . ' in ' .
-				($clientscheck->area ?? '') . ', ' .
-				($clientscheck->city ?? '') . ' is a prominent institution in the SAP Training Institutes sector, offering various skill-building programs tailored to meet the demands of today’s competitive job market.' . $workingHoursHtml . 'The company provides flexible scheduling options for individuals looking to enhance their skills while managing other responsibilities.The highly experienced team at ' . ($clientscheck->business_name ?? '') . ' is committed to delivering high-quality training to each participant.';
-			$overviewParagraph2 = 'Whether you’re looking to improve your technical skills, leadership capabilities, or industry-specific knowledge,' . ($clientscheck->business_name ?? '') . ' in ' . ($clientscheck->area ?? '') . ', ' . ($clientscheck->city ?? '') . ' has the right program for you. With a wide range of offerings, including IT, management, soft skills, and vocational training, ' . ($clientscheck->business_name ?? '') . ' stands as a comprehensive solution for all your skill development needs.';
+			 // ─── Extract once for clarity & to avoid repetition ───
+$businessName = $clientscheck->business_name ?? 'this business';
+$area         = $clientscheck->area ?? '';
+$city         = $clientscheck->city ?? '';
+$location     = trim($area . ($area && $city ? ', ' : '') . $city);
+
+// ─── Paragraph 1 ───
+$overviewParagraph = "{$businessName} in {$location} is a trusted service provider in {$city}, known for quality, reliability, and customer satisfaction. With experienced professionals, modern tools, and a strong commitment to service excellence, {$businessName} delivers consistent results every time. {$workingHoursHtml}The highly experienced team caters to a wide range of customer needs across {$area} and {$city}, offering flexible scheduling and personalized service to suit individual requirements.";
+
+// ─── Paragraph 2 ───
+$overviewParagraph2 = "Whether you need a one-time service or ongoing support, {$businessName} in {$location} has the right solution for you. With a wide range of offerings backed by professional handling and quality workmanship, {$businessName} stands as a comprehensive choice for customers across {$city}. From first contact to job completion, the team ensures transparent pricing, on-time service, and lasting quality outcomes. Get in touch with {$businessName} today to learn more or schedule a visit.";
+
+
 
 			$overview_business = [
 				'heading' => 'Overview of Business',

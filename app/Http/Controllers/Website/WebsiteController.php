@@ -2588,6 +2588,8 @@ class WebsiteController extends Controller
 				'meta_description' => ucfirst($blogdetails->meta_description),
 				'top_content' => ucfirst($blogdetails->top_content),
 				'bottom_content' => ucfirst($blogdetails->bottom_content),
+				'top_heading' => ucfirst($blogdetails->top_heading),
+				'bottom_heading' => ucfirst($blogdetails->bottom_heading),				
 				'heading' => ucfirst($blogdetails->heading),
 				'about_blog' => $blogdetails->about_blog,
 				'paragraph1' => $blogdetails->paragraph1,

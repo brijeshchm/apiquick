@@ -343,7 +343,7 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/api/apple/verifyOtp",
-     *     tags={"Apple Login Otp"},
+     *     tags={"Apple Login Otp Verify"},
      *     summary="Verify OTP and Login",
      *     description="Verify the 6-digit OTP sent to the user's email and issue an API token on success.",
      *     @OA\RequestBody(

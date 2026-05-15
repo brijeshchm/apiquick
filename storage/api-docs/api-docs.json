@@ -467,7 +467,7 @@
         "/api/apple/verifyOtp": {
             "post": {
                 "tags": [
-                    "Apple Login Otp"
+                    "Apple Login Otp Verify"
                 ],
                 "summary": "Verify OTP and Login",
                 "description": "Verify the 6-digit OTP sent to the user's email and issue an API token on success.",
@@ -13070,8 +13070,8 @@
             "description": "Apple Login"
         },
         {
-            "name": "Apple Login Otp",
-            "description": "Apple Login Otp"
+            "name": "Apple Login Otp Verify",
+            "description": "Apple Login Otp Verify"
         },
         {
             "name": "Google Login",

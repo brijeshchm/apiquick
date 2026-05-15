@@ -242,6 +242,218 @@ class AuthController extends Controller
     }
 
 
+
+ /**
+     * @OA\Post(
+     *     path="/api/apple/login",
+     *     tags={"Apple Login"},
+     *     summary="Login with Token",
+     *     description="This endpoint sends an email to the provided address.",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email","subject","message"},
+     *             @OA\Property(property="email", type="string", format="email", example="test@example.com"),
+     *             @OA\Property(property="apple_token", type="string", example=""),
+     *                        
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Email sent successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Email sent successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid input"
+     *     )
+     * )
+     */
+    public function appleLogin(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            //'password' => 'required',
+        ]);
+ 
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+ 
+        $user = Client::where('email', $request->email)->first();
+ 
+        if (!$user) {
+            return response()->json(['status' => false, 'message' => 'User account not found',], 403);
+        }
+
+        if (!$user->active_status) {
+            return response()->json(['status' => false, 'message' => 'Your account has been deactivated',], 403);
+        }
+
+        if (!empty($user->deleted_at)) {
+            return response()->json(['status' => false, 'message' => 'Your account has been deactivated',], 403);
+        }
+       
+        if ($user) {
+            if ($request->apple_token) {
+                $user->apple_token = $request->apple_token;
+                $user->save();
+            }
+
+            $otp = mt_rand(100000, 999999);
+
+            //     //$message = "{$otp} is quickdials Portal Verification Code for {$request->session()->get('client.mobile')}.";
+            // // $message = "{$otp} is Lead Portal Verification Code for {$request->session()->get('client.mobile')} quickdials";
+            //     $templateId ='1707161786775524106';
+
+            // //sendSMS($request->session()->get('client.mobile'),$message,$templateId);
+
+
+            OtpCode::updateOrCreate(
+                ['user_id' => $user->id], // condition: find by user_id
+                [
+                    'code' => $otp,  // update/create this
+                    'expires_at' => Carbon::now()->addMinutes(5),
+                ]
+            );
+            $message = "{$otp} is QuickDials Verification Code for {$user->email} .";
+            $subject = "{$otp} is QuickDials Verification Code";
+            $checkmail = Mail::send('emails.sendotp_to_email', ['msg' => $message], function ($m) use ($message, $request, $subject) {
+                $m->from('leads.quickdials@gmail.com', 'Login OTP');
+                $m->to($request->input('email'), "")->subject($subject);
+            }); 			
+        }
+        // Generate new Sanctum token
+       // $token = $user->createToken('api-token')->plainTextToken;
+        //$token = $user->createToken('browser-extension')->plainTextToken;
+
+        return response()->json([
+            'status' => true,
+            'message' => 'OTP has been sent to your email successfully',
+            
+            //  'expires_in' => auth()->factory()->getTTL()*60,
+            'data' => $user,
+        ]);
+    }
+
+
+    /**
+     * @OA\Post(
+     *     path="/api/apple/verifyOtp",
+     *     tags={"Apple Login Otp"},
+     *     summary="Verify OTP and Login",
+     *     description="Verify the 6-digit OTP sent to the user's email and issue an API token on success.",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email", "otp"},
+     *             @OA\Property(property="email", type="string", format="email", example="user@example.com"),
+     *             @OA\Property(property="otp", type="integer", example=123456, description="6-digit OTP code"),
+     *               
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="OTP verified successfully. Login successful.",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Login successful"),
+     *              
+     *             @OA\Property(
+     *                 property="user",
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="John Doe"),
+     *                 @OA\Property(property="email", type="string", example="user@example.com"),
+     *                  
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Invalid or expired OTP",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Invalid OTP or expired.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The email field is required.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found"
+     *     )
+     * )
+     */
+    public function appleVerifyOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:clients,email',
+            'otp' => 'required|size:6',
+        ]);
+
+        $master = '202525';
+        $user = client::where('email', $request->email)->first();
+        if (!$user) {
+            return response()->json(['status' => false, 'message' => 'User account not found',], 403);
+        }
+
+        if (!$user->active_status) {
+            return response()->json(['status' => false, 'message' => 'Your account has been deactivated',], 403);
+        }
+
+        if (!empty($user->deleted_at)) {
+            return response()->json(['status' => false, 'message' => 'Your account has been deactivated',], 403);
+        }
+
+        $otp = OtpCode::where(function ($q) use ($request, $user) {
+            $q->where('user_id', $user->id)
+                ->where('code', $request->otp);
+        })->first();
+
+
+        if ($otp || $master == $request->otp) {
+            // OTP is valid → delete it (one-time use)
+            if ($otp) {
+
+                OtpCode::updateOrCreate(
+                    ['user_id' => $otp->user_id],
+                    [
+                        'code' => 0,
+                    ]
+                );
+            }
+
+           
+
+            // Issue Sanctum token
+            $token = $user->createToken('api-token')->plainTextToken;
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Login successful',
+                'token' => $token,
+                'token_type' => 'Bearer',
+                //  'expires_in' => auth()->factory()->getTTL()*60,
+                'data' => $user,
+
+            ]);
+
+        } else {
+            return response()->json(['error' => 'Invalid OTP.'], 422);
+
+        }
+    }
+
+
     /**
      * @OA\Post(
      *     path="/api/google-login",

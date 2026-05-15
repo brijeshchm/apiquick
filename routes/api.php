@@ -31,8 +31,12 @@ use App\Http\Controllers\Api\ProfileController;
  use App\Http\Controllers\Api\ReviewController;
 
 Route::post('/login', [AuthController::class, 'login']);
+
 Route::post('/google-login', [AuthController::class, 'googleLogin']);
 Route::post('/check-fcm-token', [AuthController::class, 'checkFcmToken']);
+
+Route::post('/apple/login', [AuthController::class, 'appleLogin']);
+Route::post('/apple/verifyOtp', [AuthController::class, 'appleVerifyOtp']);
 
 Route::prefix('auth/google')->group(function () {
     Route::get('redirect', [AuthController::class, 'getRedirectUrl']);
@@ -46,6 +50,7 @@ Route::post('auth/google-ios/callback', [AuthController::class, 'handleCallbackI
  
 
 Route::post('/verifyOtp', [AuthController::class, 'verifyOtp']);
+
 Route::post('/business/saveBusinessOwners', [AuthController::class, 'saveBusinessOwners']); 
 
 Route::post('/site/saveEnquiry', [App\Http\Controllers\Api\ContactController::class, 'saveEnquiry']);

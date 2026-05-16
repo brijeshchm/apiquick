@@ -7388,4 +7388,222 @@ $overviewParagraph2 = "Whether you need a one-time service or ongoing support, {
     }
 
 
+	/**
+	 * @OA\Get(
+	 *     path="/api/website/get-business-list",
+	 *     tags={"Website"},
+	 *     summary="Website business list",
+	 *     description="Display data business list",
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Data retrieved successfully"),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="array",
+	 *                 @OA\Items(type="object")
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function getBusinessList(Request $request)
+	{
+		$url = config('app.url');
+
+		 
+
+
+		$clientsAgents = DB::table('clients')
+    ->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
+    ->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+    ->join('assigned_zones', 'clients.id', '=', 'assigned_zones.client_id')
+    ->join('citylists', 'assigned_zones.city_id', '=', 'citylists.id')
+    ->leftJoin(DB::raw('(
+        SELECT SUM(rating) AS rating,
+               AVG(rating) AS avg_rating,
+               comment_client_ID,
+               COUNT(comment_ID) AS comment_count
+        FROM comments
+        GROUP BY comment_client_ID
+    ) c'), 'c.comment_client_ID', '=', 'clients.id')
+    ->select(
+        'clients.*',
+        'clients.id as business_id',
+        'assigned_kwds.*',
+        'citylists.city',
+        'keyword.keyword as keywords',
+        'keyword.slug as slugs',
+        'clients.client_type',
+        'c.rating',
+        'c.avg_rating',
+        'c.comment_count'
+    )
+    //->where('citylists.city', $city)
+    ->where('clients.active_status', '1')
+   
+    //->where('c.comment_count', '>', 0)   // 👈 ADD THIS
+    ->distinct('clients.id')
+    ->orderByRaw("
+        CASE clients.client_type
+            WHEN 'platinum' THEN 1
+            WHEN 'diamond'  THEN 2
+            WHEN 'gold'     THEN 3
+            WHEN 'silver'   THEN 4
+            ELSE 5
+        END
+    ")
+    ->limit(20)
+    ->get();
+ 
+
+		$data['agents'] = $clientsAgents->map(function ($client) {
+
+			$logoImage = config('app.website') . 'client/images/default_pp_small.png';
+			$altLogo = "Business Logo";
+			if (!empty($client->logo)) {
+				$cicons = unserialize($client->logo);
+				if (!empty($cicons)) {
+					$logoImage = config('app.website') . $cicons['large']['src'];
+					$altLogo = $cicons['large']['name'];
+				}
+			}
+
+
+			$galleryArray = array();
+			if (!empty($client->pictures)) {
+				$galleryList = unserialize($client->pictures);
+				if (!empty($galleryList)) {
+					foreach ($galleryList as $key => $value) {
+
+						$galleryArray[$key] = array(
+							'galley' => $value
+
+						);
+
+					}
+				}
+			}
+			$certified_img = config('app.website') . 'img/q_verified.gif';
+			$trusted_img = config('app.website') . 'img/q_trust.gif';
+			$gst_img = config('app.website') . 'img/q_gst.gif';
+			$avgRating = "0";
+			if ($client->rating) {
+				$avgRating = ($client->rating / (5 * $client->comment_count)) * 5;
+				$avgRating = number_format($avgRating, 1, '.', '');
+			}
+
+
+			$assignedKeywords = DB::table('assigned_kwds')
+				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+				->where('assigned_kwds.client_id', $client->business_id)
+				->orderBy('keyword', 'asc')
+				->distinct()
+				->limit(10)
+				->pluck('keyword.keyword', 'keyword.slug')
+				->toArray();
+
+			$assignedCategory = DB::table('assigned_kwds')
+				->join('child_category', 'assigned_kwds.child_cat_id', '=', 'child_category.id')
+				->where('assigned_kwds.client_id', $client->client_id)
+				->orderBy('child_category', 'asc')
+				->distinct()
+				->limit(10)
+				->pluck('child_category.child_category', 'child_category.child_slug')
+				->toArray();
+				
+				
+					$workingHoursHtml = '10AM to 7PM';
+					$categorySlug = $client->category_service;
+
+					$template = $this->generate(
+						$client,
+						$workingHoursHtml,
+						$categorySlug
+					);
+				 
+			return [
+				'business_id' => $client->business_id,
+				'business_name' => $client->business_name,
+				'business_slug' => $client->business_slug,
+				'logo' => $logoImage ?? '',
+				'altLogo' => $altLogo ?? '',
+				'gallery' => $galleryArray ?? '',
+				'certifications' => $client->certifications,
+				'sirName' => $client->sirName,
+				'first_name' => $client->first_name,
+				'middle_name' => $client->middle_name,
+				'last_name' => $client->last_name,
+				'certified_status' => $client->certified_status,
+				'trusted_status' => $client->trusted_status,
+				'gst_status' => $client->gst_status,
+				'certified_img' => $certified_img,
+				'trusted_img' => $trusted_img,
+				'gst_img' => $gst_img,
+				'website' => $client->website,
+				'city' => $client->city,
+				'state' => $client->state,
+				'area' => $client->area,
+				'zone' => $client->zone,
+				'gst_no' => $client->gst_no,
+				'dpiit_no' => $client->dpiit_no,
+				'pan_no' => $client->pan_no,
+				'cin_no' => $client->cin_no,
+				'iso_no' => $client->iso_no,
+				'msme_no' => $client->msme_no,
+				'coi_no' => $client->coi_no,
+			 
+				'verified' => $client->verified,
+				'trending' => $client->trending,
+				'topSearch' => $client->topSearch,
+				'featured' => $client->featured,
+				'description' => $client->description,
+				'mapUrl' => "https://maps.google.com/?q=" . generate_slug($client->address),
+				'openUntil' => $client->openUntil,
+				'address' => $client->address,
+				'pincode' => $client->pincode,
+				'country' => $client->country,
+				'year_of_estb' => $client->year_of_estb,
+				'landmark' => $client->landmark,
+				'rating' => $client->rating,
+				'avgRating' => $avgRating,
+				'call' => "917559435943",
+				'whatsapp' => "917559435943",
+				'comment_count' => $client->comment_count,
+				'tags' => $assignedKeywords,
+				'category' => $assignedCategory ?? null,
+				'overviewBusiness' => $template ?? null,
+
+			];
+		});
+
+		return response()->json([
+			'success' => true,
+			'status' => true,
+			 
+			'data' => $data,
+		], 200);
+	}
+
+
 }

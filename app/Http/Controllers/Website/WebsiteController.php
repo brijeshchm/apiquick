@@ -854,7 +854,7 @@ class WebsiteController extends Controller
 				'img' => config('app.website') . 'img/wedding.png',
 				'alt' => 'Wedding pannel',
 				'title' => 'Wedding pannel',
-				'type' => 'child',
+				'type' => 'keyword',
 				'rating' => '4',
 				'count' => '234',
 
@@ -5241,7 +5241,7 @@ $overviewParagraph2 = "Whether you need a one-time service or ongoing support, {
 
 			],
 			[
-				'url' => '/wedding-pannel',
+				'url' => 'wedding-pannel',
 				'title' => 'Wedding Pannel',
 				'type' => 'keyword',
 

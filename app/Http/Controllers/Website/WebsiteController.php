@@ -850,10 +850,10 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'wedding-planning',
+				'url' => 'wedding-pannel',
 				'img' => config('app.website') . 'img/wedding.png',
-				'alt' => 'Wedding Planning',
-				'title' => 'Wedding Planning',
+				'alt' => 'Wedding pannel',
+				'title' => 'Wedding pannel',
 				'type' => 'child',
 				'rating' => '4',
 				'count' => '234',
@@ -1012,15 +1012,7 @@ class WebsiteController extends Controller
 				'rating' => '3.5',
 				'count' => '109',
 			],
-			[
-				'url' => 'web-technologies',
-				'img' => config('app.website') . 'images/Web-Designers.png',
-				'alt' => 'Web Designers',
-				'title' => 'Web Designers',
-				'type' => 'child',
-				'rating' => '3.5',
-				'count' => '106',
-			],
+			 
 			[
 				'url' => 'tours-and-travels',
 				'img' => config('app.website') . 'images/tour-travels.png',
@@ -1450,24 +1442,15 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'wedding-pannel',
-				'img' => config('app.website') . 'popular/carpenter.jpg',
-				'alt' => 'Wedding Planning',
-				'title' => 'Wedding Planning',
+				'img' => config('app.website') . 'popular/Bridal-Wear.jpg',
+				'alt' => 'Wedding pannel',
+				'title' => 'Wedding pannel',
 				'type' => 'keyword',
 				'rating' => '3.5',
 				'count' => '119',
 
 			],
-			[
-				'url' => 'carpenters',
-				'img' => config('app.website') . 'popular/carpenter.jpg',
-				'alt' => 'Carpenters',
-				'title' => 'Carpenters',
-				'type' => 'keyword',
-				'rating' => '3.5',
-				'count' => '16',
-
-			],
+			 
 
 
 		];
@@ -5258,9 +5241,9 @@ $overviewParagraph2 = "Whether you need a one-time service or ongoing support, {
 
 			],
 			[
-				'url' => '/wedding-planning',
-				'title' => 'Wedding Planning',
-				'type' => 'child',
+				'url' => '/wedding-pannel',
+				'title' => 'Wedding Pannel',
+				'type' => 'keyword',
 
 			],
 			[

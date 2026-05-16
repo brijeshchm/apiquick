@@ -7461,6 +7461,8 @@ $overviewParagraph2 = "Whether you need a one-time service or ongoing support, {
     )
     //->where('citylists.city', $city)
     ->where('clients.active_status', '1')
+	->whereNotNull('clients.logo')
+	->whereNotNull('clients.pictures')
    
     //->where('c.comment_count', '>', 0)   // 👈 ADD THIS
     ->distinct('clients.id')

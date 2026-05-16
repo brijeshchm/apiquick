@@ -7430,53 +7430,49 @@ $overviewParagraph2 = "Whether you need a one-time service or ongoing support, {
 	public function getBusinessList(Request $request)
 	{
 		$url = config('app.url');
-
-		 
-
-
 		$clientsAgents = DB::table('clients')
-    ->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
-    ->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
-    ->join('assigned_zones', 'clients.id', '=', 'assigned_zones.client_id')
-    ->join('citylists', 'assigned_zones.city_id', '=', 'citylists.id')
-    ->leftJoin(DB::raw('(
-        SELECT SUM(rating) AS rating,
-               AVG(rating) AS avg_rating,
-               comment_client_ID,
-               COUNT(comment_ID) AS comment_count
-        FROM comments
-        GROUP BY comment_client_ID
-    ) c'), 'c.comment_client_ID', '=', 'clients.id')
-    ->select(
-        'clients.*',
-        'clients.id as business_id',
-        'assigned_kwds.*',
-        'citylists.city',
-        'keyword.keyword as keywords',
-        'keyword.slug as slugs',
-        'clients.client_type',
-        'c.rating',
-        'c.avg_rating',
-        'c.comment_count'
-    )
-    //->where('citylists.city', $city)
-    ->where('clients.active_status', '1')
-	->whereNotNull('clients.logo')
-	->whereNotNull('clients.pictures')
-   
-    //->where('c.comment_count', '>', 0)   // 👈 ADD THIS
-    ->distinct('clients.id')
-    ->orderByRaw("
-        CASE clients.client_type
-            WHEN 'platinum' THEN 1
-            WHEN 'diamond'  THEN 2
-            WHEN 'gold'     THEN 3
-            WHEN 'silver'   THEN 4
-            ELSE 5
-        END
-    ")
-    ->limit(20)
-    ->get();
+        ->leftJoin(DB::raw('(
+            SELECT SUM(rating) AS rating,
+                   AVG(rating) AS avg_rating,
+                   comment_client_ID,
+                   COUNT(comment_ID) AS comment_count
+            FROM comments
+            GROUP BY comment_client_ID
+        ) c'), 'c.comment_client_ID', '=', 'clients.id')
+        ->select(
+            'clients.*',
+            'clients.id as client_id',
+            'clients.client_type',
+            'c.rating',
+            'c.avg_rating',
+            'c.comment_count'
+        )
+        // ✅ Filter: client must have at least 1 keyword
+        ->whereExists(function ($q) {
+            $q->select(DB::raw(1))
+              ->from('assigned_kwds')
+              ->whereColumn('assigned_kwds.client_id', 'clients.id');
+        })
+        // ✅ Filter: client must have at least 1 zone
+        ->whereExists(function ($q) {
+            $q->select(DB::raw(1))
+              ->from('assigned_zones')
+              ->whereColumn('assigned_zones.client_id', 'clients.id');
+        })
+        ->where('clients.active_status', '1')
+        ->whereNotNull('clients.logo')
+        ->whereNotNull('clients.pictures')
+        ->orderByRaw("
+            CASE clients.client_type
+                WHEN 'platinum' THEN 1
+                WHEN 'diamond'  THEN 2
+                WHEN 'gold'     THEN 3
+                WHEN 'silver'   THEN 4
+                ELSE 5
+            END
+        ")
+        ->limit(20)
+        ->get();
  
 
 		$data['agents'] = $clientsAgents->map(function ($client) {
@@ -7518,7 +7514,7 @@ $overviewParagraph2 = "Whether you need a one-time service or ongoing support, {
 
 			$assignedKeywords = DB::table('assigned_kwds')
 				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
-				->where('assigned_kwds.client_id', $client->business_id)
+				->where('assigned_kwds.client_id', $client->client_id)
 				->orderBy('keyword', 'asc')
 				->distinct()
 				->limit(10)
@@ -7545,7 +7541,7 @@ $overviewParagraph2 = "Whether you need a one-time service or ongoing support, {
 					);
 				 
 			return [
-				'business_id' => $client->business_id,
+				'business_id' => $client->client_id,
 				'business_name' => $client->business_name,
 				'business_slug' => $client->business_slug,
 				'logo' => $logoImage ?? '',

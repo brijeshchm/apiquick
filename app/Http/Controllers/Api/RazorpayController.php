@@ -548,9 +548,6 @@ class RazorpayController extends Controller
 	}
 
 
-
-
-
 	function get_curl_handle($payment_id, $data)
 	{
 		$url = 'https://api.razorpay.com/v1/payments/' . $payment_id . '/capture';

@@ -2510,7 +2510,8 @@ class WebsiteController extends Controller
 					'alt' => $alt,
 					'title' => $blog->title,
 					'created_at' => date('d, M Y', strtotime($blog->created_at)),
-					 
+					'category_name' => $blog->category_name,
+					'category_id' => $blog->category_id,
 					'updated_at' => get_time(strtotime($blog->updated_at)),
 					'description' => ucfirst(substr(strip_tags($blog->description), 0, 220)) . '...',
 

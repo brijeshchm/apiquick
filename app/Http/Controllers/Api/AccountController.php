@@ -148,6 +148,69 @@ class AccountController extends Controller
 		], 200);
 	}
 
+	
+	
+	/**
+	 * @OA\Get(
+	 *     path="/api/business/showPriceList",
+	 *     tags={"Show Price List"},
+	 *     summary="Get Show Price List",
+	 *     description="Fetch all available packages for businesses.",
+	 *     security={{"bearerAuth":{}}},
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="List of packages",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     type="object",
+	 *                     @OA\Property(property="client_id", type="integer", example=1),
+	 *                     @OA\Property(property="email", type="string", example="Email"),               
+	 *                      
+	 *                     ),
+	 *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-09-04T10:00:00Z")
+	 *                 )
+	 *             )
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function showPriceList(Request $request)
+	{
+		if (!Auth::guard('sanctum')->check()) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
+		}
+
+		$user = auth('sanctum')->user();
+		if (!$user) {
+			return response()->json([
+				'status' => false,
+				'message' => 'Unauthenticated: Token is missing or invalid',
+				'error' => 'token_missing_or_invalid'
+			], 401);
+		}
+
+		$client = Client::find($user->id);
+	 	$data['client_id'] = $client->id;
+	 	$data['email'] = $client->email;
+		$package['encrypt'] = $this->dataEncodeJsonBase64($data);
+
+		 return response()->json([
+			'status' => true,
+			'message' => "Successfully",
+			'data' => $package,
+			 
+
+		], 200);
+	}
+
+	
+	
 	function dataEncodeJsonBase64($o){
 				$o = json_encode($o);
 				$o = base64_encode($o);

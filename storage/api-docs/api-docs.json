@@ -76,6 +76,62 @@
                 ]
             }
         },
+        "/api/business/showPriceList": {
+            "get": {
+                "tags": [
+                    "Show Price List"
+                ],
+                "summary": "Get Show Price List",
+                "description": "Fetch all available packages for businesses.",
+                "operationId": "fea267458ef2bef6e8d86be5db740f42",
+                "responses": {
+                    "200": {
+                        "description": "List of packages",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-09-04T10:00:00Z"
+                                                }
+                                            },
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "client_id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "email": {
+                                                        "type": "string",
+                                                        "example": "Email"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/business/account-settings": {
             "get": {
                 "tags": [
@@ -13122,6 +13178,10 @@
         {
             "name": "Package",
             "description": "Package"
+        },
+        {
+            "name": "Show Price List",
+            "description": "Show Price List"
         },
         {
             "name": "Account settings",

@@ -148,6 +148,7 @@ Route::post('/business/assignLocation/selectAssignZoneDelete',[App\Http\Controll
 
 
 Route::get('/business/getPackage',[App\Http\Controllers\Api\AccountController::class, 'getPackage']);
+Route::get('/business/showPriceList',[App\Http\Controllers\Api\AccountController::class, 'showPriceList']);
 Route::get('/business/account-settings',[App\Http\Controllers\Api\AccountController::class, 'accountSettings']);
 Route::get('/business/get-business-location',[App\Http\Controllers\Api\BusinessLocationController::class, 'getBusinessLocationPagination']);
 Route::Delete('/business/business-location/{id}',[App\Http\Controllers\Api\BusinessLocationController::class, 'destroy']);

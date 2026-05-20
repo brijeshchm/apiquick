@@ -3526,7 +3526,8 @@ class WebsiteController extends Controller
 				'child_category.id as child_id',
 				'child_category.child_slug',
 				'child_category.child_category as child_name',
-				'child_category.pc_icon as 	pc_icon'
+				'child_category.pc_icon as 	pc_icon',
+				
 			)
 			->where('parent_category.parent_slug', $slug)
 			 
@@ -3572,6 +3573,10 @@ class WebsiteController extends Controller
 				$alt = $cicons['category_banner']['alt'];
 			}
 		}
+		
+		
+		
+	 
 		$data['keyword'] = array(
 			'parent_category' => $categoryDetails->parent_category,
 			'parent_slug' => $categoryDetails->parent_slug,
@@ -3582,6 +3587,8 @@ class WebsiteController extends Controller
 			'meta_description' => $categoryDetails->meta_description,
 			'top_description' => $categoryDetails->top_description,
 			'bottom_description' => $categoryDetails->bottom_description,
+			'bottom_heading' => $categoryDetails->bottom_heading,
+			'top_heading' => $categoryDetails->top_heading,
 			'faqq1' => $categoryDetails->faqq1,
 			'faqa1' => $categoryDetails->faqa1,
 			'faqq2' => $categoryDetails->faqq2,
@@ -3909,6 +3916,8 @@ class WebsiteController extends Controller
 			'meta_description' => $childDetails->meta_description,
 			'top_description' => $childDetails->top_description,
 			'bottom_description' => $childDetails->bottom_description,
+			'bottom_heading' => $childDetails->bottom_heading,
+			'top_heading' => $childDetails->top_heading,
 			'faqq1' => $childDetails->faqq1,
 			'faqa1' => $childDetails->faqa1,
 			'faqq2' => $childDetails->faqq2,

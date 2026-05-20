@@ -5049,6 +5049,35 @@ class WebsiteController extends Controller
 				'award_img10' => $awardimg10,
 			];
 
+			$defaultImg = "";
+			$recentActivity = [];
+
+			for ($i = 1; $i <= 6; $i++) {
+			$imgField  = "recent_img{$i}";
+			$nameField = "recent_name{$i}";
+			$paraField = "recent_paragraph{$i}";
+
+			// Default image (used if no upload)
+			$imgUrl = $defaultImg;
+
+			// If image exists, decode JSON and build full URL
+			if (!empty($clientscheck->$imgField)) {
+			$decoded = json_decode($clientscheck->$imgField);
+			if (!empty($decoded->large->src)) {
+			$imgUrl = config('app.website') . $decoded->large->src;
+			}
+			}
+
+			// Add to output array (matches your original flat structure)
+			$recentActivity[$nameField] = $clientscheck->$nameField;
+			$recentActivity[$imgField]  = $imgUrl;
+			$recentActivity[$paraField] = $clientscheck->$paraField;
+			}
+
+			$data['recentActivity'] = $recentActivity;
+
+
+
 
 			if (!empty($assignedKeywords)) {
 				$findKeywords = Keyword::select('child_category_id')->where('keyword', $assignedKeywords[0])->first();
@@ -5101,17 +5130,17 @@ class WebsiteController extends Controller
 				$workingHoursHtml .= '';
 			}
 
-			 // ─── Extract once for clarity & to avoid repetition ───
-$businessName = $clientscheck->business_name ?? 'this business';
-$area         = $clientscheck->area ?? '';
-$city         = $clientscheck->city ?? '';
-$location     = trim($area . ($area && $city ? ', ' : '') . $city);
+			// ─── Extract once for clarity & to avoid repetition ───
+			$businessName = $clientscheck->business_name ?? 'this business';
+			$area         = $clientscheck->area ?? '';
+			$city         = $clientscheck->city ?? '';
+			$location     = trim($area . ($area && $city ? ', ' : '') . $city);
 
-// ─── Paragraph 1 ───
-$overviewParagraph = "{$businessName} in {$location} is a trusted service provider in {$city}, known for quality, reliability, and customer satisfaction. With experienced professionals, modern tools, and a strong commitment to service excellence, {$businessName} delivers consistent results every time. {$workingHoursHtml}The highly experienced team caters to a wide range of customer needs across {$area} and {$city}, offering flexible scheduling and personalized service to suit individual requirements.";
+			// ─── Paragraph 1 ───
+			$overviewParagraph = "{$businessName} in {$location} is a trusted service provider in {$city}, known for quality, reliability, and customer satisfaction. With experienced professionals, modern tools, and a strong commitment to service excellence, {$businessName} delivers consistent results every time. {$workingHoursHtml}The highly experienced team caters to a wide range of customer needs across {$area} and {$city}, offering flexible scheduling and personalized service to suit individual requirements.";
 
-// ─── Paragraph 2 ───
-$overviewParagraph2 = "Whether you need a one-time service or ongoing support, {$businessName} in {$location} has the right solution for you. With a wide range of offerings backed by professional handling and quality workmanship, {$businessName} stands as a comprehensive choice for customers across {$city}. From first contact to job completion, the team ensures transparent pricing, on-time service, and lasting quality outcomes. Get in touch with {$businessName} today to learn more or schedule a visit.";
+			// ─── Paragraph 2 ───
+			$overviewParagraph2 = "Whether you need a one-time service or ongoing support, {$businessName} in {$location} has the right solution for you. With a wide range of offerings backed by professional handling and quality workmanship, {$businessName} stands as a comprehensive choice for customers across {$city}. From first contact to job completion, the team ensures transparent pricing, on-time service, and lasting quality outcomes. Get in touch with {$businessName} today to learn more or schedule a visit.";
 
 
 

@@ -488,7 +488,7 @@ class WebsiteController extends Controller
 
 
 
-
+/*
 		$clientsAgents = DB::table('clients')
     ->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
     ->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
@@ -529,9 +529,48 @@ class WebsiteController extends Controller
         END
     ")
     ->limit(5)
+    ->get();*/
+ 
+ 
+ $clientsAgents = DB::table('clients')
+    ->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
+    ->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+    ->join('assigned_zones', 'clients.id', '=', 'assigned_zones.client_id')
+    ->join('citylists', 'assigned_zones.city_id', '=', 'citylists.id')
+    ->leftJoin(DB::raw('(
+        SELECT comment_client_ID,
+               SUM(rating)        AS rating,
+               AVG(rating)        AS avg_rating,
+               COUNT(comment_ID)  AS comment_count
+        FROM comments
+        GROUP BY comment_client_ID
+    ) c'), 'c.comment_client_ID', '=', 'clients.id')
+    ->select(
+        'clients.*',
+        'clients.id as business_id',
+        DB::raw('MIN(citylists.city)    as city'),
+        DB::raw('MIN(keyword.keyword)   as keywords'),
+        DB::raw('MIN(keyword.slug)      as slugs'),
+        'c.rating',
+        'c.avg_rating',
+        'c.comment_count'
+    )
+	 //->where('citylists.city', $city)
+    ->where('clients.active_status', '1')
+    ->where('keyword.slug', $search_kw)
+    ->groupBy('clients.id')
+    ->orderByRaw("
+        CASE clients.client_type
+            WHEN 'platinum' THEN 1
+            WHEN 'diamond'  THEN 2
+            WHEN 'gold'     THEN 3
+            WHEN 'silver'   THEN 4
+            ELSE 5
+        END
+    ")
+    ->limit(5)
     ->get();
  
-
 		$data['agents'] = $clientsAgents->map(function ($client) {
 
 			$logoImage = config('app.website') . 'client/images/default_pp_small.png';
@@ -580,7 +619,7 @@ class WebsiteController extends Controller
 
 			$assignedCategory = DB::table('assigned_kwds')
 				->join('child_category', 'assigned_kwds.child_cat_id', '=', 'child_category.id')
-				->where('assigned_kwds.client_id', $client->client_id)
+				->where('assigned_kwds.client_id', $client->business_id)
 				->orderBy('child_category', 'asc')
 				->distinct()
 				->limit(10)
@@ -2943,7 +2982,7 @@ class WebsiteController extends Controller
 				$avgRating = number_format($avgRating, 1, '.', '');
 			}
 			
-			$workingHoursHtml = '10AM to 7PM';
+			$workingHoursHtml = '10AM to 7PM ';
 					$categorySlug = $client->category_service;
 
 					$template = $this->generate(
@@ -5137,7 +5176,7 @@ class WebsiteController extends Controller
 			$location     = trim($area . ($area && $city ? ', ' : '') . $city);
 
 			// ─── Paragraph 1 ───
-			$overviewParagraph = "{$businessName} in {$location} is a trusted service provider in {$city}, known for quality, reliability, and customer satisfaction. With experienced professionals, modern tools, and a strong commitment to service excellence, {$businessName} delivers consistent results every time. {$workingHoursHtml}The highly experienced team caters to a wide range of customer needs across {$area} and {$city}, offering flexible scheduling and personalized service to suit individual requirements.";
+			$overviewParagraph = "{$businessName} in {$location} is a trusted service provider in {$city}, known for quality, reliability, and customer satisfaction. With experienced professionals, modern tools, and a strong commitment to service excellence, {$businessName} delivers consistent results every time. {$workingHoursHtml} The highly experienced team caters to a wide range of customer needs across {$area} and {$city}, offering flexible scheduling and personalized service to suit individual requirements.";
 
 			// ─── Paragraph 2 ───
 			$overviewParagraph2 = "Whether you need a one-time service or ongoing support, {$businessName} in {$location} has the right solution for you. With a wide range of offerings backed by professional handling and quality workmanship, {$businessName} stands as a comprehensive choice for customers across {$city}. From first contact to job completion, the team ensures transparent pricing, on-time service, and lasting quality outcomes. Get in touch with {$businessName} today to learn more or schedule a visit.";

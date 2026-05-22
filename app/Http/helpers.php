@@ -68,7 +68,9 @@ function generate_slug($slug = null)
 	return $slug;
 }
 
-function getOverViewBusiness($slug = null)
+
+
+ function getOverViewBusiness()
 {
 	 $map = [
             // Training / Education
@@ -121,9 +123,401 @@ function getOverViewBusiness($slug = null)
             'boxing'          => 'sportsAcademy',
             'taekwondo'       => 'sportsAcademy',
             'javelin'         => 'sportsAcademy',
+
+ 
+        'courses'                           => 'professionalTraining',
+        'vocational-training'               => 'professionalTraining',
+        'fashion-designing-training'        => 'professionalTraining',
+        'gemology-course'                   => 'professionalTraining',
+        'shorthand-training'                => 'professionalTraining',
+        'tailoring-classes'                 => 'professionalTraining',
+        'telecom-training'                  => 'professionalTraining',
+        'aviation-management-training'      => 'professionalTraining',
+        'club-management-course'            => 'professionalTraining',
+        'construction-safety-training'      => 'professionalTraining',
+        'medical-courses'                   => 'professionalTraining',
+        'fitness-training'                  => 'professionalTraining',
+        'financial-training'                => 'professionalTraining',
+        'cyber-security'                    => 'professionalTraining',
+
+        // ── Computer / IT Courses ──
+        'computer-courses'                  => 'computerCourses',
+        'programming-languages'             => 'computerCourses',
+        'web-technologies'                  => 'computerCourses',
+        'database-training'                 => 'computerCourses',
+        'oracle-training'                   => 'computerCourses',
+        'erp-and-crm-training'              => 'computerCourses',
+        'multimedia-and-designing'          => 'computerCourses',
+        'networking-training'               => 'computerCourses',
+        'red-hat-training'                  => 'computerCourses',
+        'operating-system-training'         => 'computerCourses',
+        'mobile-development'                => 'computerCourses',
+        'mobile-app-development'            => 'computerCourses',
+        'cloud-computing'                   => 'computerCourses',
+        'microsoft-training'                => 'computerCourses',
+        'microsoft-azure'                   => 'computerCourses',
+        'microsoft-dynamics'                => 'computerCourses',
+        'microsoft-tools'                   => 'computerCourses',
+        'business-intelligence-and-analytics' => 'computerCourses',
+        'software-testing'                  => 'computerCourses',
+        'it-hardware-and-networking'        => 'computerCourses',
+        'computer-science-distance-education' => 'computerCourses',
+
+        // ── Engineering courses ──
+        'civil-engineering-courses'         => 'engineeringCourses',
+        'electrical-engineering'            => 'engineeringCourses',
+        'electronics-and-communication'     => 'engineeringCourses',
+        'robotics-training'                 => 'engineeringCourses',
+        'embedded-system-courses'           => 'engineeringCourses',
+        'mechanical-engineering'            => 'engineeringCourses',
+        'mechnical-engineering'             => 'engineeringCourses',
+
+        // ── Digital Marketing / Share Market ──
+        'digital-marketing-training'        => 'digitalMarketingTraining',
+        'share-marketing-training'          => 'shareMarketTraining',
+
+        // ── Entrance Exam Coaching ──
+        'entrance-exams-coaching'           => 'entranceExamCoaching',
+        'entrance-exam-coaching-center'     => 'entranceExamCoaching',
+        'polytechnic-entrance-exam-coaching' => 'entranceExamCoaching',
+        'mppsc-entrance-exam-coaching'      => 'entranceExamCoaching',
+        'pmt-entrance-coaching'             => 'entranceExamCoaching',
+        'ssc-entrance-coaching'             => 'entranceExamCoaching',
+        'tancet-entrance-coaching'          => 'entranceExamCoaching',
+        'cet-entrance-coaching'             => 'entranceExamCoaching',
+        'mca-entrance-coaching'             => 'entranceExamCoaching',
+        'amie-coaching'                     => 'entranceExamCoaching',
+        'banking-entrance-exams'            => 'entranceExamCoaching',
+        'cmat-coaching'                     => 'entranceExamCoaching',
+        'teachers-exam-coaching'            => 'entranceExamCoaching',
+        'ibps-coaching'                     => 'entranceExamCoaching',
+        'kmat-coaching'                     => 'entranceExamCoaching',
+        'nata-coaching'                     => 'entranceExamCoaching',
+        'ntse-coaching'                     => 'entranceExamCoaching',
+        'rrb-coaching'                      => 'entranceExamCoaching',
+        'mat-coaching'                      => 'entranceExamCoaching',
+        'railways-entrance-exam'            => 'entranceExamCoaching',
+        'psu-exam-coaching'                 => 'entranceExamCoaching',
+        'ugc-net-entrance-exam'             => 'entranceExamCoaching',
+        'combined-defence-services'         => 'entranceExamCoaching',
+        'defence-and-police-exam-coaching'  => 'entranceExamCoaching',
+        'gate-coaching'                     => 'entranceExamCoaching',
+        'judicial-services'                 => 'entranceExamCoaching',
+        'civil-services'                    => 'upscCoaching',
+        'upsc-entrance-coaching'            => 'upscCoaching',
+        'iit-jee-coaching'                  => 'iitJeeCoaching',
+        'engineering-entrance'              => 'iitJeeCoaching',
+        'neet-entrance-exam-coaching'       => 'neetCoaching',
+        'medical-entrance-exam-coaching'    => 'neetCoaching',
+        'cat-coaching'                      => 'catCoaching',
+        'management-entrance-exam'          => 'catCoaching',
+        'law-entrance-exam'                 => 'lawEntranceCoaching',
+        'hotel-management-entrance-exam-coaching' => 'hotelMgmtEntranceCoaching',
+        'design-entrance-exam-coaching'     => 'designEntranceCoaching',
+        'uceed'                             => 'designEntranceCoaching',
+        'interior-designing'                => 'interiorDesigner',
+
+        // ── Professional Coaching (CA / CS / CMA) ──
+        'ca-coaching'                       => 'caCoaching',
+        'ca-cpt-coaching'                   => 'caCoaching',
+     
+        'cma-coaching'                      => 'caCoaching',
+       
+        'cs-coaching'                       => 'caCoaching',
+        'icwa-coaching'                     => 'caCoaching',
+
+        // ── Language / Test Prep ──
+        'language-classes'                  => 'languageClasses',
+        'foreign-language-training'         => 'languageClasses',
+        'gmat-coaching'                     => 'testPrepAbroad',
+        'gre-coaching'                      => 'testPrepAbroad',
+        'ielts-coaching'                    => 'testPrepAbroad',
+        'ielts-online-coaching'             => 'testPrepAbroad',
+        'pte-coaching'                      => 'testPrepAbroad',
+        'sat-coaching'                      => 'testPrepAbroad',
+        'toefl-coaching'                    => 'testPrepAbroad',
+        'foreign-education-entrance-exams'  => 'testPrepAbroad',
+
+        // ── Tuitions ──
+        'coaching-and-tuitions'             => 'schoolTuition',
+        'coaching-and-tuition-center'       => 'schoolTuition',
+        'school-and-college-tuition'        => 'schoolTuition',
+        'school-tuition'                    => 'schoolTuition',
+        'college-tuition'                   => 'schoolTuition',
+
+        // ── Schools ──
+        'schools-and-colleges'              => 'schools',
+        'icse-schools'                      => 'schools',
+        'matriculation-schools'             => 'schools',
+        'residential-schools'               => 'schools',
+        'boarding-schools'                  => 'schools',
+        'vernacular-medium-schools'         => 'schools',
+        'special-schools'                   => 'schools',
+        'schools-by-brand'                  => 'schools',
+        'playschools'                       => 'playSchool',
+        'day-care'                          => 'playSchool',
+
+        // ── Colleges ──
+        'collages-and-institutions'         => 'colleges',
+      
+        'mbbs-colleges'                     => 'colleges',
+        'hotel-management-colleges'         => 'colleges',
+      
+        'pharmacy-colleges'                 => 'colleges',
+        'nursing-colleges'                  => 'colleges',
+        'aviation-colleges'                 => 'colleges',
+        'information-technology-colleges'   => 'colleges',
+        'mass-communication-colleges'       => 'colleges',
+        'law-colleges'                      => 'colleges',
+        'dental-colleges'                   => 'colleges',
+        'agriculture-colleges'              => 'colleges',
+        'engineering-colleges'              => 'colleges',
+        'management-colleges'               => 'colleges',
+        'sciences-colleges'                 => 'colleges',
+        'science'                           => 'colleges',
+        'arts-and-humanities-colleges'      => 'colleges',
+        'arts-colleges'                     => 'colleges',
+        'commerce-colleges'                 => 'colleges',
+        'teaching-colleges'                 => 'colleges',
+        'finance-and-accounts-colleges'     => 'colleges',
+        'computer-science-colleges'         => 'colleges',
+        'delhi-university-colleges'         => 'colleges',
+        'vocational-colleges'               => 'colleges',
+        'journalism-and-mass-media'         => 'colleges',
+        'mass-media'                        => 'colleges',
+        'higher-education'                  => 'colleges',
+        'acting-schools'                    => 'colleges',
+
+        // ── Distance Education ──
+        'distance-education'                => 'distanceEducation',
+        'distance-education-institute'      => 'distanceEducation',
+        'arts-and-media-distance-education' => 'distanceEducation',
+        'management-distance-education'     => 'distanceEducation',
+        'teaching-distance-education'       => 'distanceEducation',
+        'medical-distance-education'        => 'distanceEducation',
+        'science-distance-education'        => 'distanceEducation',
+        'open-school-distance-education'    => 'distanceEducation',
+        'engineering-distance-education'    => 'distanceEducation',
+        'finance-and-accounts-distance-education' => 'distanceEducation',
+        'humanities-distance-education'     => 'distanceEducation',
+        'foreign-distance-education'        => 'distanceEducation',
+
+        // ── Degrees ──
+        'bachelors'                         => 'degreePrograms',
+        'masters'                           => 'degreePrograms',
+        'certificate'                       => 'degreePrograms',
+        'diploma'                           => 'degreePrograms',
+        'doctorate'                         => 'degreePrograms',
+        'apprenticeship'                    => 'degreePrograms',
+        'associate'                         => 'degreePrograms',
+        'pre-professional'                  => 'degreePrograms',
+
+        // ── Overseas Education ──
+        'study-abroad'                      => 'overseasEducation',
+        'overseas-education-consultant'     => 'overseasEducation',
+        'armenia-education-consultants'     => 'overseasEducation',
+        'austria-education-consultants'     => 'overseasEducation',
+        'cyprus-education-consultants'      => 'overseasEducation',
+        'denmark-education-consultants'     => 'overseasEducation',
+        'finland-education-consultants'     => 'overseasEducation',
+        'france-education-consultants'      => 'overseasEducation',
+        'germany-education-consultants'     => 'overseasEducation',
+        'ireland-education-consultants'     => 'overseasEducation',
+        'italy-education-consultants'       => 'overseasEducation',
+        'norway-education-consultants'      => 'overseasEducation',
+        'poland-education-consultants'      => 'overseasEducation',
+        'sweden-education-consultants'      => 'overseasEducation',
+        'switzerland-education-consultants' => 'overseasEducation',
+        'uk-education-consultants'          => 'overseasEducation',
+        'ukraine-education-consultants'     => 'overseasEducation',
+        'china-education-consultants'       => 'overseasEducation',
+        'dubai-education-consultants'       => 'overseasEducation',
+        'malaysia-education-consultants'    => 'overseasEducation',
+        'philippines-education-consultants' => 'overseasEducation',
+        'russia-education-consultants'      => 'overseasEducation',
+        'singapore-education-consultants'   => 'overseasEducation',
+        'canada-education-consultants'      => 'overseasEducation',
+        'usa-education-consultants'         => 'overseasEducation',
+        'australia-education-consultants'   => 'overseasEducation',
+        'new-zealand-education-consultants' => 'overseasEducation',
+        'overseas-mba-education-consultants' => 'overseasEducation',
+        'overseas-medical-education-consultants' => 'overseasEducation',
+        'overseas-engineering-education-consultant' => 'overseasEducation',
+        'overseas-journalism-education-consultants' => 'overseasEducation',
+
+        // ── Music / Dance / Translation ──
+        'music-coaching'                    => 'musicClasses',
+        'music-classes'                     => 'musicClasses',
+        'dance-classes'                     => 'danceClasses',
+        'dancing'                           => 'danceClasses',
+        'translator'                        => 'translatorService',
+        'interpreter'                       => 'translatorService',
+        'translator-and-interpreter-center' => 'translatorService',
+
+        // ── Medical / Doctors / Hospitals ──
+        'doctors'                           => 'doctors',
+        'medical'                           => 'doctors',
+        'hospitals'                         => 'hospital',
+        'private-hospital'                  => 'hospital',
+        'goverment-hospital'                => 'hospital',
+        'government-hospital'               => 'hospital',
+        'dentists'                          => 'dentist',
+        'dental-clinics'                    => 'dentist',
+        'dentist-clinic'                    => 'dentist',
+        'medical-shop'                      => 'medicalShop',
+        'medical-equipment'                 => 'medicalEquipment',
+        'patient-care-service'              => 'patientCare',
+        'care-services'                     => 'patientCare',
+
+        // ── Health / Wellness ──
+        'health-and-wellness'               => 'healthWellness',
+        'yoga'                              => 'yoga',
+        'yoga-classes'                      => 'yoga',
+        'yoga-teacher'                      => 'yoga',
+        'gym-and-health-clubs'              => 'gym',
+
+        // ── Beauty / Spa / Salon ──
+        'spa'                               => 'spa',
+        'spa-and-beauty'                    => 'spa',
+        'spa-and-massages'                  => 'spa',
+        'beauty-parlours'                   => 'beautyParlour',
+        'salons'                            => 'salon',
+
+        // ── Repairs ──
+        'ac-service'                        => 'acService',
+       
+        'electric-car-service'              => 'electricCarService',
+        'electric-bike-service'             => 'electricBikeService',
+        'car-towing-services'               => 'carTowing',
+        'laptop-repair'                     => 'laptopRepair',
+        'computer-repairs'                  => 'computerRepair',
+        'mobile-phone-repairs'              => 'mobileRepair',
+        'refrigerator-repairs'              => 'refrigeratorRepair',
+        'tv-repairs'                        => 'tvRepair',
+        'washing-machine-repairs'           => 'washingMachineRepair',
+        'sofa-repair'                       => 'sofaRepair',
+        'cooler-repair'                     => 'coolerRepair',
+        'water-gyser-repair'                => 'waterGyserRepair',
+        'kitchen-chimney-repair-service'    => 'kitchenChimneyRepair',
+        'gas-stove-chulla-repair'           => 'gasStoveRepair',
+        'water-pump-repair'                 => 'waterPumpRepair',
+        'induction-stove-cooktop-repair'    => 'inductionStoveRepair',
+        'home-appliances-repair-services'   => 'homeAppliancesRepair',
+        'repair-services'                   => 'homeAppliancesRepair',
+
+        // ── Electric / Electronics ──
+        'electric-services'                 => 'electricServices',
+        'electric-installation'             => 'electricServices',
+        'electrical-wiring'                 => 'electricServices',
+        'electronics-home-service'          => 'electricServices',
+        'home-electrical-work'              => 'electricServices',
+
+        // ── Home Services / Contractors ──
+        'home-services'                     => 'homeServices',
+        'cleaning-services'                 => 'cleaningServices',
+        'housekeeping-services'             => 'housekeeping',
+        'maid-service'                      => 'maidService',
+        'servant-service'                   => 'maidService',
+        'laundry-service'                   => 'laundryService',
+        'painting-contractors'              => 'painter',
+        'carpenters'                        => 'carpenter',
+        'carpenter-services'                => 'carpenter',
+        'carpentry-contractors'             => 'carpenter',
+        'civil-contractors'                 => 'civilContractor',
+        'contractors'                       => 'civilContractor',
+        'home-construction'                 => 'homeConstruction',
+        'home-decoration-and-furniture'     => 'homeFurniture',
+        'interior-designer'                 => 'interiorDesigner',
+        'lift-and-elevators'                => 'liftElevator',
+        'welder-and-fabrication'            => 'welder',
+
+        // ── Security / Safety ──
+        'security-system'                   => 'securitySystem',
+        'security-service'                  => 'securityGuard',
+        'security-guards'                   => 'securityGuard',
+        'fire-safety'                       => 'fireSafety',
+
+        // ── Real Estate / Hostels ──
+        'real-estate'                       => 'realEstate',
+        'rent-and-buy'                      => 'realEstate',
+        'rent-or-buy'                       => 'realEstate',
+        'property-dealer'                   => 'realEstate',
+        'pg-hostels'                        => 'pgHostel',
+        'pg-hostels-for-boys'               => 'pgHostel',
+        'pg-hostels-for-girls'              => 'pgHostel',
+
+        // ── Hotels / Food ──
+        'hotels'                            => 'hotel',
+        '5-star-hotel'                      => 'fiveStarHotel',
+        'five-star-hotel'                   => 'fiveStarHotel',
+        'budget-hotel'                      => 'budgetHotel',
+        'restaurants'                       => 'restaurant',
+
+        // ── Finance / Loan / ATM ──
+        'finance-services'                  => 'financeService',
+        'loan-service'                      => 'loanService',
+        'atm'                               => 'atm',
+
+        // ── Travel ──
+        'tours-travel-services'             => 'tourTravel',
+        'tour-and-travel'                   => 'tourTravel',
+        'packers-and-movers'                => 'packersMovers',
+        'relocation-services'               => 'packersMovers',
+
+        // ── Jobs / Consultants / Legal ──
+        'job'                               => 'jobConsultant',
+        'jobs-placements'                   => 'jobConsultant',
+        'consultants'                       => 'jobConsultant',
+        'professional'                      => 'jobConsultant',
+        'lawyers'                           => 'lawyer',
+
+        // ── Driving School ──
+        'driving-schools'                   => 'drivingSchool',
+
+        // ── Sports ──
+        'sports-academy'                    => 'sportsAcademy',
+
+        // ── Special Occasions / Wedding / Events ──
+        'special-occasions-and-wedding'     => 'weddingPlanner',
+        'wedding-planning'                  => 'weddingPlanner',
+        'wedding'                           => 'weddingPlanner',
+        'event-organizers'                  => 'eventOrganizer',
+        'birthday-party'                    => 'birthdayParty',
+        'banquet-halls'                     => 'banquetHall',
+        'catering'                          => 'catering',
+        'caterers'                          => 'catering',
+        'stage-decorators'                  => 'stageDecorator',
+        'makeup-artists'                    => 'makeupArtist',
+        'mehendi-artists'                   => 'mehendiArtist',
+        'mehendi-artist'                    => 'mehendiArtist',
+        'bridal-wear'                       => 'bridalWear',
+        'wedding-dress'                     => 'bridalWear',
+        'wedding-groom'                     => 'bridalWear',
+        'ghodi-baggi'                       => 'ghodiBaggi',
+         
+        'firework-and-crackers'             => 'firework',
+        'honeymoon-packages'                => 'honeymoonPackage',
+       
+        'dhol-shehnai-baja'                 => 'dholShehnai',
+        'wedding-songs-dancer'              => 'weddingSinger',
+        'wedding-singer-and-dancer'         => 'weddingSinger',
+        'wedding-astrologer'                => 'weddingAstrologer',
+        
+        'flower-decoration'                 => 'flowerDecoration',
+       
+        'tent-house'                        => 'tentHouse',
+        'fog-cold-fire'                     => 'coldFire',
+       
+        'wedding-car-rental'                => 'weddingCarRental',
+        'jagran-party'                      => 'jagranParty',
+
+        // ── SAP / Misc ──
+        'sap'                               => 'computerCourses',
+           
         ];
 	return $map;
 }
+
 
 
 

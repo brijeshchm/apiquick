@@ -7143,7 +7143,7 @@ class WebsiteController extends Controller
     /**
      * Map a service slug → template method name.
      */
-    private static function detectTemplate(string $slug): string
+    private static function detectTemplate($slug)
     {
       $map = getOverViewBusiness($slug);
  
@@ -7155,6 +7155,227 @@ class WebsiteController extends Controller
         return 'generic';
     }
 
+
+
+	/**
+	 * @OA\Get(
+	 *     path="/api/website/get-business-list",
+	 *     tags={"Website"},
+	 *     summary="Website business list",
+	 *     description="Display data business list",
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Data retrieved successfully"),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="array",
+	 *                 @OA\Items(type="object")
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function getBusinessList(Request $request)
+	{
+		$url = config('app.url');
+		$clientsAgents = DB::table('clients')
+        ->leftJoin(DB::raw('(
+            SELECT SUM(rating) AS rating,
+                   AVG(rating) AS avg_rating,
+                   comment_client_ID,
+                   COUNT(comment_ID) AS comment_count
+            FROM comments
+            GROUP BY comment_client_ID
+        ) c'), 'c.comment_client_ID', '=', 'clients.id')
+        ->select(
+            'clients.*',
+            'clients.id as client_id',
+            'clients.client_type',
+            'c.rating',
+            'c.avg_rating',
+            'c.comment_count'
+        )
+        // ✅ Filter: client must have at least 1 keyword
+        ->whereExists(function ($q) {
+            $q->select(DB::raw(1))
+              ->from('assigned_kwds')
+              ->whereColumn('assigned_kwds.client_id', 'clients.id');
+        })
+        // ✅ Filter: client must have at least 1 zone
+        ->whereExists(function ($q) {
+            $q->select(DB::raw(1))
+              ->from('assigned_zones')
+              ->whereColumn('assigned_zones.client_id', 'clients.id');
+        })
+        ->where('clients.active_status', '1')
+        ->whereNotNull('clients.logo')
+        ->whereNotNull('clients.pictures')
+        ->orderByRaw("
+            CASE clients.client_type
+                WHEN 'platinum' THEN 1
+                WHEN 'diamond'  THEN 2
+                WHEN 'gold'     THEN 3
+                WHEN 'silver'   THEN 4
+                ELSE 5
+            END
+        ")
+        ->limit(20)
+        ->get();
+ 
+
+		$data['agents'] = $clientsAgents->map(function ($client) {
+
+			$logoImage = config('app.website') . 'client/images/default_pp_small.png';
+			$altLogo = "Business Logo";
+			if (!empty($client->logo)) {
+				$cicons = unserialize($client->logo);
+				if (!empty($cicons)) {
+					$logoImage = config('app.website') . $cicons['large']['src'];
+					$altLogo = $cicons['large']['name'];
+				}
+			}
+
+
+			$galleryArray = array();
+			if (!empty($client->pictures)) {
+				$galleryList = unserialize($client->pictures);
+				if (!empty($galleryList)) {
+					foreach ($galleryList as $key => $value) {
+
+						$galleryArray[$key] = array(
+							'galley' => $value
+
+						);
+
+					}
+				}
+			}
+			$certified_img = config('app.website') . 'img/q_verified.gif';
+			$trusted_img = config('app.website') . 'img/q_trust.gif';
+			$gst_img = config('app.website') . 'img/q_gst.gif';
+			$avgRating = "0";
+			if ($client->rating) {
+				$avgRating = ($client->rating / (5 * $client->comment_count)) * 5;
+				$avgRating = number_format($avgRating, 1, '.', '');
+			}
+
+
+			$assignedKeywords = DB::table('assigned_kwds')
+				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
+				->where('assigned_kwds.client_id', $client->client_id)
+				->orderBy('keyword', 'asc')
+				->distinct()
+				->limit(10)
+				->pluck('keyword.keyword', 'keyword.slug')
+				->toArray();
+
+			$assignedCategory = DB::table('assigned_kwds')
+				->join('child_category', 'assigned_kwds.child_cat_id', '=', 'child_category.id')
+				->where('assigned_kwds.client_id', $client->client_id)
+				->orderBy('child_category', 'asc')
+				->distinct()
+				->limit(10)
+				->pluck('child_category.child_category', 'child_category.child_slug')
+				->toArray();
+				
+				
+					$workingHoursHtml = '10AM to 7PM';
+					$categorySlug = $client->category_service;
+
+					$template = $this->generate(
+						$client,
+						$workingHoursHtml,
+						$categorySlug
+					);
+				 
+			return [
+				'business_id' => $client->client_id,
+				'business_name' => $client->business_name,
+				'business_slug' => $client->business_slug,
+				'logo' => $logoImage ?? '',
+				'altLogo' => $altLogo ?? '',
+				'gallery' => $galleryArray ?? '',
+				'certifications' => $client->certifications,
+				'sirName' => $client->sirName,
+				'first_name' => $client->first_name,
+				'middle_name' => $client->middle_name,
+				'last_name' => $client->last_name,
+				'certified_status' => $client->certified_status,
+				'trusted_status' => $client->trusted_status,
+				'gst_status' => $client->gst_status,
+				'certified_img' => $certified_img,
+				'trusted_img' => $trusted_img,
+				'gst_img' => $gst_img,
+				'website' => $client->website,
+				'city' => $client->city,
+				'state' => $client->state,
+				'area' => $client->area,
+				'zone' => $client->zone,
+				'gst_no' => $client->gst_no,
+				'dpiit_no' => $client->dpiit_no,
+				'pan_no' => $client->pan_no,
+				'cin_no' => $client->cin_no,
+				'iso_no' => $client->iso_no,
+				'msme_no' => $client->msme_no,
+				'coi_no' => $client->coi_no,
+			 
+				'verified' => $client->verified,
+				'trending' => $client->trending,
+				'topSearch' => $client->topSearch,
+				'featured' => $client->featured,
+				'description' => $client->description,
+				'mapUrl' => "https://maps.google.com/?q=" . generate_slug($client->address),
+				'openUntil' => $client->openUntil,
+				'address' => $client->address,
+				'pincode' => $client->pincode,
+				'country' => $client->country,
+				'year_of_estb' => $client->year_of_estb,
+				'landmark' => $client->landmark,
+				'rating' => $client->rating,
+				'avgRating' => $avgRating,
+				'call' => "917559435943",
+				'whatsapp' => "917559435943",
+				'comment_count' => $client->comment_count,
+				'tags' => $assignedKeywords,
+				'category' => $assignedCategory ?? null,
+				'overviewBusiness' => $template ?? null,
+
+			];
+		});
+
+		return response()->json([
+			'success' => true,
+			'status' => true,
+			 
+			'data' => $data,
+		], 200);
+	}
+
+
+
+	
+ 
  
     private static function training($business, $area, $city, $location, $hours): array
     {
@@ -7185,25 +7406,7 @@ class WebsiteController extends Controller
         ];
     }
 
-    // ── 4. WASHING MACHINE REPAIR ──
-    private static function washingMachineRepair($business, $area, $city, $location, $hours): array
-    {
-        return [
-            "{$business} in {$location} provides expert washing machine repair and service in {$city} for all types — fully automatic, semi-automatic, top-load, front-load, and dryer units — across brands like LG, Samsung, IFB, Bosch, Whirlpool, Godrej, Haier, Panasonic, and Onida. Common issues handled include water drainage problems, drum noise, motor failure, PCB repair, door lock, belt replacement, spin issues, and error codes.{$hours}",
-
-            "With trained technicians, original spare parts, and same-day doorstep service in {$area}, {$business} in {$location} is the preferred choice for washing machine owners across {$city}. Enjoy transparent quotes, repair warranty, and reliable service. Book your washing machine repair now and get your laundry back on track."
-        ];
-    }
-
-    // ── 5. TV REPAIR ──
-    private static function tvRepair($business, $area, $city, $location, $hours): array
-    {
-        return [
-            "{$business} in {$location} offers professional TV repair service in {$city} for LED, LCD, OLED, QLED, Smart TV, and Android TV units across all brands — Sony, Samsung, LG, Mi, OnePlus, TCL, Hisense, Panasonic, Philips, and more. Repairs include screen panel replacement, motherboard issues, backlight repair, no-display issues, sound problems, HDMI port repair, Wi-Fi connectivity, and software updates.{$hours}",
-
-            "Experienced engineers at {$business} provide doorstep TV repair across {$area} with original spare parts, on-site diagnosis, and service warranty. Whether your TV won't turn on or has a cracked display, {$business} in {$location} delivers fast, affordable, and reliable repair solutions to households across {$city}."
-        ];
-    }
+   
 
     // ── 6. WATER PURIFIER REPAIR ──
     private static function waterPurifierRepair($business, $area, $city, $location, $hours): array
@@ -7265,25 +7468,7 @@ class WebsiteController extends Controller
         ];
     }
 
-    // ── 12. COURT MARRIAGE ──
-    private static function courtMarriage($business, $area, $city, $location, $hours): array
-    {
-        return [
-            "{$business} in {$location} provides end-to-end court marriage registration services in {$city}, including marriage under the Special Marriage Act 1954, Hindu Marriage Act 1955, Tatkal marriage registration, certificate procurement, and complete documentation assistance. The expert team handles affidavit drafting, photo attestation, witness arrangements, and same-day marriage registration where permissible.{$hours}",
-
-            "Whether you are an Indian, NRI, or inter-faith couple, {$business} in {$location} simplifies the legal process with transparent fees, on-time delivery, and trusted advocates across {$area}. Couples in {$city} rely on {$business} for hassle-free court marriage and lawful documentation. Get in touch today for a confidential consultation."
-        ];
-    }
-
-    // ── 13. DHOL SHEHNAI ──
-    private static function dholShehnai($business, $area, $city, $location, $hours): array
-    {
-        return [
-            "{$business} in {$location} provides professional dhol, shehnai, nagada, and traditional baraat band services in {$city} for weddings, baraat processions, sangeet ceremonies, engagements, festive events, corporate functions, and store openings. The troupe delivers high-energy performances on Punjabi dhol, traditional shehnai-nagada combinations, brass bands, and dholi groups in colorful traditional attire.{$hours}",
-
-            "Add unforgettable rhythm and grandeur to your celebration with {$business} in {$location}. Trusted by hundreds of families across {$area} and {$city}, {$business} offers customizable packages, on-time arrival, and energetic performances that elevate every event. Book your dhol-shehnai team today and let the celebrations begin."
-        ];
-    }
+    
 
     // ── 14. WEDDING PHOTOGRAPHY ──
     private static function weddingPhotography($business, $area, $city, $location, $hours): array
@@ -7355,15 +7540,7 @@ class WebsiteController extends Controller
         ];
     }
 
-    // ── 21. ROAD LIGHT (Wedding Lighting) ──
-    private static function roadLight($business, $area, $city, $location, $hours): array
-    {
-        return [
-            "{$business} in {$location} provides premium wedding road lighting and baraat lighting services in {$city}, including chandelier lights, LED tubelights, glow sticks, gas lights, walking lamps, royal pole lights, fairy light pathways, and decorative LED tube setups for processions and entry routes.{$hours}",
-
-            "Illuminate your wedding baraat with the dazzling lighting setups from {$business} in {$location}. Serving clients across {$area} and {$city}, the team brings out a regal, glowing atmosphere with customizable themes, on-site setup, and skilled operators. Book your wedding lighting solution today."
-        ];
-    }
+    
 
     // ── 22. COLD FIRE / FOG EFFECT ──
     private static function coldFire($business, $area, $city, $location, $hours): array
@@ -7375,25 +7552,7 @@ class WebsiteController extends Controller
         ];
     }
 
-    // ── 23. CAR DECORATION (Wedding Car) ──
-    private static function carDecoration($business, $area, $city, $location, $hours): array
-    {
-        return [
-            "{$business} in {$location} offers stunning wedding car decoration services in {$city} using fresh flowers, artificial flowers, ribbons, themed setups, royal styles, and personalized name plates. Whether it's a vintage car, luxury sedan, SUV, or wedding limousine, every decoration is tailored to match the wedding theme.{$hours}",
-
-            "Trusted by hundreds of couples across {$area} and {$city}, {$business} in {$location} ensures timely setup, premium flowers, and elegant designs that turn the bridal car into a memorable centerpiece. Book your wedding car decoration today and add a beautiful finishing touch to your big day."
-        ];
-    }
-
-    // ── 24. SPORTS ACADEMY (covers cricket, badminton, swimming, boxing, taekwondo, javelin) ──
-    private static function sportsAcademy($business, $area, $city, $location, $hours): array
-    {
-        return [
-            "{$business} in {$location} is a leading sports academy in {$city}, offering professional coaching for all age groups — kids, juniors, teens, and adults. The academy provides certified trainers, structured curriculum, modern equipment, fitness conditioning, match practice, and tournament exposure to help every player reach their full potential.{$hours}",
-
-            "Whether you are a beginner looking to learn the basics or an aspiring athlete training for state and national tournaments, {$business} in {$location} offers personalized coaching plans and supportive learning environments. Parents and players across {$area} and {$city} trust {$business} for skill development, discipline, and competitive growth. Enrol today for a free trial session."
-        ];
-    }
+     
 
     // ── 25. GENERIC FALLBACK (any uncategorized service) ──
     private static function generic($business, $area, $city, $location, $hours): array
@@ -7526,10 +7685,7 @@ class WebsiteController extends Controller
         ];
     }
 
-    // ╔══════════════════════════════════════════════════════════════╗
-    // ║                  REPAIRS & HOME SERVICES                     ║
-    // ╚══════════════════════════════════════════════════════════════╝
-
+     
     // ── 13. AC SERVICE ──
     private static function acService($business, $area, $city, $location, $hours): array
     {
@@ -7581,24 +7737,7 @@ class WebsiteController extends Controller
     }
 
     // ── 18. LAPTOP REPAIR ──
-    private static function laptopRepair($business, $area, $city, $location, $hours): array
-    {
-        return [
-            "{$business} in {$location} offers professional laptop repair services in {$city} including screen replacement, keyboard repair, battery replacement, hinge repair, motherboard chip-level repair, SSD upgrade, RAM upgrade, virus removal, OS installation, and data recovery for Dell, HP, Lenovo, Asus, Acer, Apple MacBook, and MSI laptops.{$hours}",
-
-            "Students and professionals across {$area} and {$city} trust {$business} in {$location} for certified technicians, genuine spare parts, same-day repairs, free diagnosis, and 3-month service warranty. Bring your laptop today or book a doorstep pickup for fast, affordable repair."
-        ];
-    }
-
-    // ── 19. COMPUTER REPAIR ──
-    private static function computerRepair($business, $area, $city, $location, $hours): array
-    {
-        return [
-            "{$business} in {$location} offers complete computer repair services in {$city} including desktop assembly, SMPS replacement, motherboard repair, hard disk recovery, RAM and SSD upgrades, Windows installation, antivirus setup, printer connectivity, and network troubleshooting for homes, offices, and shops.{$hours}",
-
-            "Customers across {$area} and {$city} rely on {$business} in {$location} for skilled technicians, original parts, AMC plans, on-site visits, and quick turnaround. Call today to keep your computer system fast, secure, and fully functional."
-        ];
-    }
+      
 
     // ── 20. MOBILE REPAIR ──
     private static function mobileRepair($business, $area, $city, $location, $hours): array
@@ -7849,11 +7988,7 @@ class WebsiteController extends Controller
             "Property owners and contractors across {$area} and {$city} rely on {$business} in {$location} for skilled welders, ISI-grade material, accurate measurements, durable finishing, and on-time delivery. Get a free site quote today for your fabrication project."
         ];
     }
-
-    // ╔══════════════════════════════════════════════════════════════╗
-    // ║                  SECURITY / SAFETY                           ║
-    // ╚══════════════════════════════════════════════════════════════╝
-
+   
     // ── 45. SECURITY SYSTEM ──
     private static function securitySystem($business, $area, $city, $location, $hours): array
     {
@@ -7883,11 +8018,7 @@ class WebsiteController extends Controller
             "Businesses across {$area} and {$city} rely on {$business} in {$location} for ISI-certified equipment, licensed engineers, AMC packages, and government-approved fire NOC documentation. Schedule a fire safety inspection today and stay 100% compliant and protected."
         ];
     }
-
-    // ╔══════════════════════════════════════════════════════════════╗
-    // ║              REAL ESTATE / HOTELS / RESTAURANT               ║
-    // ╚══════════════════════════════════════════════════════════════╝
-
+     
     // ── 48. REAL ESTATE ──
     private static function realEstate($business, $area, $city, $location, $hours): array
     {
@@ -7947,11 +8078,7 @@ class WebsiteController extends Controller
             "Food lovers across {$area} and {$city} pick {$business} in {$location} for fresh ingredients, generous portions, value-for-money pricing, online ordering, and party booking options. Visit today or order online for a complete dining experience."
         ];
     }
-
-    // ╔══════════════════════════════════════════════════════════════╗
-    // ║              FINANCE / TRAVEL / JOBS / LAW                   ║
-    // ╚══════════════════════════════════════════════════════════════╝
-
+ 
     // ── 54. FINANCE SERVICE ──
     private static function financeService($business, $area, $city, $location, $hours): array
     {
@@ -8022,10 +8149,7 @@ class WebsiteController extends Controller
         ];
     }
 
-    // ╔══════════════════════════════════════════════════════════════╗
-    // ║              EDUCATION / COACHING / TRAINING                 ║
-    // ╚══════════════════════════════════════════════════════════════╝
-
+     
     // ── 61. PROFESSIONAL TRAINING (general) ──
     private static function professionalTraining($business, $area, $city, $location, $hours): array
     {
@@ -8296,10 +8420,7 @@ class WebsiteController extends Controller
         ];
     }
 
-    // ╔══════════════════════════════════════════════════════════════╗
-    // ║                  WEDDING & EVENTS                            ║
-    // ╚══════════════════════════════════════════════════════════════╝
-
+     
     // ── 88. WEDDING PLANNER ──
     private static function weddingPlanner($business, $area, $city, $location, $hours): array
     {
@@ -8330,15 +8451,7 @@ class WebsiteController extends Controller
         ];
     }
 
-    // ── 91. BANQUET HALL ──
-    private static function banquetHall($business, $area, $city, $location, $hours): array
-    {
-        return [
-            "{$business} in {$location} is a premium banquet hall in {$city} ideal for weddings, receptions, engagement ceremonies, sangeet, mehendi, birthdays, anniversaries, and corporate events. Facilities include AC halls, valet parking, in-house catering, stage decor, DJ setup, and customisable lighting.{$hours}",
-
-            "Hosts across {$area} and {$city} pick {$business} in {$location} for spacious halls, flexible menu packages, professional staff, and hassle-free event coordination. Book a venue visit today and lock in your date for a flawless celebration."
-        ];
-    }
+     
 
     // ── 92. CATERING ──
     private static function catering($business, $area, $city, $location, $hours): array
@@ -8480,16 +8593,7 @@ class WebsiteController extends Controller
         ];
     }
 
-    // ── 106. VARMALA ──
-    private static function varmala($business, $area, $city, $location, $hours): array
-    {
-        return [
-            "{$business} in {$location} specialises in varmala entry concepts in {$city} including jhoola entries, motorised flower-lift varmala stages, automatic descending platforms, cold pyro entries, themed couple entries, and floral varmala stage designs that turn the jaimala moment into a centrepiece of the wedding.{$hours}",
-
-            "Couples across {$area} and {$city} trust {$business} in {$location} for safe mechanical setups, fresh flower garlands, trained operators, and perfect timing on the big moment. Book your varmala entry today and make the jaimala moment unforgettable."
-        ];
-    }
-
+     
     // ── 107. TENT HOUSE ──
     private static function tentHouse($business, $area, $city, $location, $hours): array
     {
@@ -8500,15 +8604,7 @@ class WebsiteController extends Controller
         ];
     }
 
-    // ── 108. COLD FIRE / FOG EFFECTS ──
-    private static function coldFire($business, $area, $city, $location, $hours): array
-    {
-        return [
-            "{$business} in {$location} specializes in cold fire (cold pyro), fog effects, dry ice setups, LED confetti blasters, sparkular machines, smoke jets, and special-effect lighting for weddings, varmala entries, sangeet events, corporate functions, and stage shows in {$city}.{$hours}",
-
-            "Create breathtaking entry moments with the safe, smoke-free, indoor-friendly effects from {$business} in {$location}. Trusted by event planners across {$area} and {$city}, every setup is operated by trained technicians ensuring safety, timing, and visual brilliance. Book cold fire and fog effects today for an unforgettable celebration."
-        ];
-    }
+     
 
     // ── 109. CAR DECORATION ──
     private static function carDecoration($business, $area, $city, $location, $hours): array
@@ -8540,10 +8636,7 @@ class WebsiteController extends Controller
         ];
     }
 
-    // ╔══════════════════════════════════════════════════════════════╗
-    // ║                  SPORTS / GENERIC FALLBACK                   ║
-    // ╚══════════════════════════════════════════════════════════════╝
-
+  
     // ── 112. SPORTS ACADEMY ──
     private static function sportsAcademy($business, $area, $city, $location, $hours): array
     {
@@ -8564,221 +8657,6 @@ class WebsiteController extends Controller
         ];
     }
 
-
-	/**
-	 * @OA\Get(
-	 *     path="/api/website/get-business-list",
-	 *     tags={"Website"},
-	 *     summary="Website business list",
-	 *     description="Display data business list",
-	 *     @OA\Response(
-	 *         response=200,
-	 *         description="Search results retrieved successfully",
-	 *         @OA\JsonContent(
-	 *             type="object",
-	 *             @OA\Property(property="success", type="boolean", example=true),
-	 *             @OA\Property(property="message", type="string", example="Data retrieved successfully"),
-	 *             @OA\Property(
-	 *                 property="data",
-	 *                 type="array",
-	 *                 @OA\Items(type="object")
-	 *             )
-	 *         )
-	 *     ),
-	 *     @OA\Response(
-	 *         response=404,
-	 *         description="No results found",
-	 *         @OA\JsonContent(
-	 *             type="object",
-	 *             @OA\Property(property="success", type="boolean", example=false),
-	 *             @OA\Property(property="message", type="string", example="No records found.")
-	 *         )
-	 *     ),
-	 *     @OA\Response(
-	 *         response=401,
-	 *         description="Unauthorized",
-	 *         @OA\JsonContent(
-	 *             type="object",
-	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
-	 *         )
-	 *     )
-	 * )
-	 */
-	public function getBusinessList(Request $request)
-	{
-		$url = config('app.url');
-		$clientsAgents = DB::table('clients')
-        ->leftJoin(DB::raw('(
-            SELECT SUM(rating) AS rating,
-                   AVG(rating) AS avg_rating,
-                   comment_client_ID,
-                   COUNT(comment_ID) AS comment_count
-            FROM comments
-            GROUP BY comment_client_ID
-        ) c'), 'c.comment_client_ID', '=', 'clients.id')
-        ->select(
-            'clients.*',
-            'clients.id as client_id',
-            'clients.client_type',
-            'c.rating',
-            'c.avg_rating',
-            'c.comment_count'
-        )
-        // ✅ Filter: client must have at least 1 keyword
-        ->whereExists(function ($q) {
-            $q->select(DB::raw(1))
-              ->from('assigned_kwds')
-              ->whereColumn('assigned_kwds.client_id', 'clients.id');
-        })
-        // ✅ Filter: client must have at least 1 zone
-        ->whereExists(function ($q) {
-            $q->select(DB::raw(1))
-              ->from('assigned_zones')
-              ->whereColumn('assigned_zones.client_id', 'clients.id');
-        })
-        ->where('clients.active_status', '1')
-        ->whereNotNull('clients.logo')
-        ->whereNotNull('clients.pictures')
-        ->orderByRaw("
-            CASE clients.client_type
-                WHEN 'platinum' THEN 1
-                WHEN 'diamond'  THEN 2
-                WHEN 'gold'     THEN 3
-                WHEN 'silver'   THEN 4
-                ELSE 5
-            END
-        ")
-        ->limit(20)
-        ->get();
- 
-
-		$data['agents'] = $clientsAgents->map(function ($client) {
-
-			$logoImage = config('app.website') . 'client/images/default_pp_small.png';
-			$altLogo = "Business Logo";
-			if (!empty($client->logo)) {
-				$cicons = unserialize($client->logo);
-				if (!empty($cicons)) {
-					$logoImage = config('app.website') . $cicons['large']['src'];
-					$altLogo = $cicons['large']['name'];
-				}
-			}
-
-
-			$galleryArray = array();
-			if (!empty($client->pictures)) {
-				$galleryList = unserialize($client->pictures);
-				if (!empty($galleryList)) {
-					foreach ($galleryList as $key => $value) {
-
-						$galleryArray[$key] = array(
-							'galley' => $value
-
-						);
-
-					}
-				}
-			}
-			$certified_img = config('app.website') . 'img/q_verified.gif';
-			$trusted_img = config('app.website') . 'img/q_trust.gif';
-			$gst_img = config('app.website') . 'img/q_gst.gif';
-			$avgRating = "0";
-			if ($client->rating) {
-				$avgRating = ($client->rating / (5 * $client->comment_count)) * 5;
-				$avgRating = number_format($avgRating, 1, '.', '');
-			}
-
-
-			$assignedKeywords = DB::table('assigned_kwds')
-				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
-				->where('assigned_kwds.client_id', $client->client_id)
-				->orderBy('keyword', 'asc')
-				->distinct()
-				->limit(10)
-				->pluck('keyword.keyword', 'keyword.slug')
-				->toArray();
-
-			$assignedCategory = DB::table('assigned_kwds')
-				->join('child_category', 'assigned_kwds.child_cat_id', '=', 'child_category.id')
-				->where('assigned_kwds.client_id', $client->client_id)
-				->orderBy('child_category', 'asc')
-				->distinct()
-				->limit(10)
-				->pluck('child_category.child_category', 'child_category.child_slug')
-				->toArray();
-				
-				
-					$workingHoursHtml = '10AM to 7PM';
-					$categorySlug = $client->category_service;
-
-					$template = $this->generate(
-						$client,
-						$workingHoursHtml,
-						$categorySlug
-					);
-				 
-			return [
-				'business_id' => $client->client_id,
-				'business_name' => $client->business_name,
-				'business_slug' => $client->business_slug,
-				'logo' => $logoImage ?? '',
-				'altLogo' => $altLogo ?? '',
-				'gallery' => $galleryArray ?? '',
-				'certifications' => $client->certifications,
-				'sirName' => $client->sirName,
-				'first_name' => $client->first_name,
-				'middle_name' => $client->middle_name,
-				'last_name' => $client->last_name,
-				'certified_status' => $client->certified_status,
-				'trusted_status' => $client->trusted_status,
-				'gst_status' => $client->gst_status,
-				'certified_img' => $certified_img,
-				'trusted_img' => $trusted_img,
-				'gst_img' => $gst_img,
-				'website' => $client->website,
-				'city' => $client->city,
-				'state' => $client->state,
-				'area' => $client->area,
-				'zone' => $client->zone,
-				'gst_no' => $client->gst_no,
-				'dpiit_no' => $client->dpiit_no,
-				'pan_no' => $client->pan_no,
-				'cin_no' => $client->cin_no,
-				'iso_no' => $client->iso_no,
-				'msme_no' => $client->msme_no,
-				'coi_no' => $client->coi_no,
-			 
-				'verified' => $client->verified,
-				'trending' => $client->trending,
-				'topSearch' => $client->topSearch,
-				'featured' => $client->featured,
-				'description' => $client->description,
-				'mapUrl' => "https://maps.google.com/?q=" . generate_slug($client->address),
-				'openUntil' => $client->openUntil,
-				'address' => $client->address,
-				'pincode' => $client->pincode,
-				'country' => $client->country,
-				'year_of_estb' => $client->year_of_estb,
-				'landmark' => $client->landmark,
-				'rating' => $client->rating,
-				'avgRating' => $avgRating,
-				'call' => "917559435943",
-				'whatsapp' => "917559435943",
-				'comment_count' => $client->comment_count,
-				'tags' => $assignedKeywords,
-				'category' => $assignedCategory ?? null,
-				'overviewBusiness' => $template ?? null,
-
-			];
-		});
-
-		return response()->json([
-			'success' => true,
-			'status' => true,
-			 
-			'data' => $data,
-		], 200);
-	}
 
 
 }

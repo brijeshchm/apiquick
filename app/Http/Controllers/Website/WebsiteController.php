@@ -117,15 +117,16 @@ class WebsiteController extends Controller
 		}
 
 		$keywordBanners = [];
-		if($keywordDetails){			
-			$keywordBanners = DB::table('keyword_banners')
+		if($keywordDetails){				 			
+		   $keywordBanners = DB::table('keyword_banners')
 			->where('keyword_id', $keywordDetails->key_id)
 			->orderBy('sort_order')
 			->get()
-			->map(function ($b) use ($keywordDetails) {
-			$b->image_url = asset($b->image_path);
-			$b->alt_text  = $b->alt_text ?: $keywordDetails->meta_title ?? 'Banner';
-			return $b;
+			->map(function ($b) {
+				$b->image_url = asset($b->image_path);
+				$b->alt_text  = $b->alt_text ?: 'Banner';
+				$b->click_url = $b->client_slug ? url('/business-details/' . $b->client_slug) : null;
+				return $b;
 			})
 			->values();
 		}
@@ -133,7 +134,6 @@ class WebsiteController extends Controller
 		$category_banner = config('app.website') . 'client/images/computer-courses-training.jpg';
 
 		$alt = "";
-
 
 		$zones = DB::table('citylists')->join('zones', 'zones.city_id', '=', 'citylists.id')->where('citylists.city', 'LIKE', $city)->select('zones.id', 'zones.zone')->orderBy('zones.zone', 'asc')->distinct()->get();
 

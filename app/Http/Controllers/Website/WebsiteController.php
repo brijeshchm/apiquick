@@ -117,8 +117,7 @@ class WebsiteController extends Controller
 		}
 
 		$keywordBanners = [];
-		if($keywordDetails){		
-			
+		if($keywordDetails){			
 			$keywordBanners = DB::table('keyword_banners')
 			->where('keyword_id', $keywordDetails->key_id)
 			->orderBy('sort_order')

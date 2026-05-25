@@ -203,6 +203,9 @@ class WebsiteController extends Controller
 		$paragraph4 ="";
 		$paragraph5 ="";
 		$paragraph6 ="";
+		$meta_title ="";
+		$meta_keywords ="";
+		$meta_description ="";
 		if (!empty($keywordDetails->courseabout)) {
 			$courseabout = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->courseabout);
 		}

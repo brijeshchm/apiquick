@@ -129,7 +129,6 @@ class WebsiteController extends Controller
 			return $b;
 			})
 			->values();
-
 		}
 	
 		$category_banner = config('app.website') . 'client/images/computer-courses-training.jpg';
@@ -290,7 +289,6 @@ class WebsiteController extends Controller
 			'city' => $cityName,
 			'area' => $area,
 			'keywordBanners' => $keywordBanners,
-		
 
 		);
 

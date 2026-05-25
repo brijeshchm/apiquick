@@ -123,9 +123,9 @@ class WebsiteController extends Controller
 			->where('keyword_id', $keywordDetails->key_id)
 			->orderBy('sort_order')
 			->get()
-			->map(function ($b) use ($kwData) {
+			->map(function ($b) use ($keywordDetails) {
 			$b->image_url = asset($b->image_path);
-			$b->alt_text  = $b->alt_text ?: $kwData->meta_title ?? 'Banner';
+			$b->alt_text  = $b->alt_text ?: $keywordDetails->meta_title ?? 'Banner';
 			return $b;
 			})
 			->values();

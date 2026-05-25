@@ -103,10 +103,11 @@ class WebsiteController extends Controller
 		$keywordDetails = DB::table('keyword')
 			->join('parent_category', 'keyword.parent_category_id', '=', 'parent_category.id')
 			->join('child_category', 'keyword.child_category_id', '=', 'child_category.id')
+		 
 			->where('keyword.slug', $search_kw)
-			->select('keyword.*', 'parent_category.*', 'child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5','keyword.faqq6', 'keyword.faqa6', 'keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount','keyword.courseabout','keyword.heading','keyword.paragraph1','keyword.paragraph2','keyword.paragraph3','keyword.paragraph4','keyword.paragraph5','keyword.paragraph6','keyword.slug','keyword.bottom_heading','keyword.top_heading','keyword.extra_heading','keyword.extra_description')
+			->select('keyword.*', 'parent_category.*','child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5','keyword.faqq6', 'keyword.faqa6', 'keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount','keyword.courseabout','keyword.heading','keyword.paragraph1','keyword.paragraph2','keyword.paragraph3','keyword.paragraph4','keyword.paragraph5','keyword.paragraph6','keyword.slug','keyword.bottom_heading','keyword.top_heading','keyword.extra_heading','keyword.extra_description')
 			->first();
-
+ 
 			 
 		if (!$keywordDetails) {
 			return response()->json([
@@ -115,6 +116,22 @@ class WebsiteController extends Controller
 			], 404);
 		}
 
+		$keywordBanners = [];
+		if($keywordDetails){		
+			
+			$keywordBanners = DB::table('keyword_banners')
+			->where('keyword_id', $keywordDetails->key_id)
+			->orderBy('sort_order')
+			->get()
+			->map(function ($b) use ($kwData) {
+			$b->image_url = asset($b->image_path);
+			$b->alt_text  = $b->alt_text ?: $kwData->meta_title ?? 'Banner';
+			return $b;
+			})
+			->values();
+
+		}
+	
 		$category_banner = config('app.website') . 'client/images/computer-courses-training.jpg';
 
 		$alt = "";
@@ -272,6 +289,7 @@ class WebsiteController extends Controller
 			'zone' => $zones,
 			'city' => $cityName,
 			'area' => $area,
+			'keywordBanners	' => $keywordBanners,
 		
 
 		);

@@ -125,7 +125,7 @@ class WebsiteController extends Controller
 			->map(function ($b) {
 				$b->image_url = asset($b->image_path);
 				$b->alt_text  = $b->alt_text ?: 'Banner';
-				$b->click_url = $b->client_slug ? url('/business-details/' . $b->client_slug) : null;
+				$b->click_url = $b->client_slug ? '/business-details/' . $b->client_slug : null;
 				return $b;
 			})
 			->values();

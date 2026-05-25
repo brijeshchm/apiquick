@@ -289,7 +289,7 @@ class WebsiteController extends Controller
 			'zone' => $zones,
 			'city' => $cityName,
 			'area' => $area,
-			'keywordBanners	' => $keywordBanners,
+			'keywordBanners' => $keywordBanners,
 		
 
 		);

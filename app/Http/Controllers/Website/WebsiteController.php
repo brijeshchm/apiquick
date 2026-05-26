@@ -123,7 +123,7 @@ class WebsiteController extends Controller
 			->orderBy('sort_order')
 			->get()
 			->map(function ($b) {
-				$b->image_url = asset($b->image_path);
+				$b->image_url = $b->image_path ? asset($b->image_path) :'client/images/computer-courses-training.jpg';
 				$b->alt_text  = $b->alt_text ?: 'Banner';
 				$b->click_url = $b->client_slug ? '/business-details/' . $b->client_slug : null;
 				return $b;
@@ -338,10 +338,6 @@ class WebsiteController extends Controller
 			$clientsList = $clientscheck;
 		} else {
 
-
-
-
-
 			$clientsList = DB::table('clients')
 				->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
 				->join('assigned_zones', 'clients.id', '=', 'assigned_zones.client_id')
@@ -376,7 +372,7 @@ class WebsiteController extends Controller
                 ELSE 5
             END
         ")
-				->get();
+		->get();
 
 		}
 
@@ -477,8 +473,7 @@ class WebsiteController extends Controller
 				'cin_no' => $client->cin_no,
 				'iso_no' => $client->iso_no,
 				'msme_no' => $client->msme_no,
-				'coi_no' => $client->coi_no,
-			 
+				'coi_no' => $client->coi_no,			 
 				'verified' => $client->verified,
 				'trending' => $client->trending,
 				'topSearch' => $client->topSearch,
@@ -502,11 +497,8 @@ class WebsiteController extends Controller
 
 			];
 		});
-
  
- 
- 
- $clientsAgents = DB::table('clients')
+	$clientsAgents = DB::table('clients')
     ->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
     ->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
     ->join('assigned_zones', 'clients.id', '=', 'assigned_zones.client_id')
@@ -863,7 +855,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'wedding-pannel',
+				'url' => 'wedding-planning',
 				'img' => config('app.website') . 'img/wedding.png',
 				'alt' => 'Wedding pannel',
 				'title' => 'Wedding pannel',
@@ -1454,7 +1446,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'wedding-pannel',
+				'url' => 'wedding-planning',
 				'img' => config('app.website') . 'popular/Bridal-Wear.jpg',
 				'alt' => 'Wedding pannel',
 				'title' => 'Wedding pannel',
@@ -5294,7 +5286,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'wedding-pannel',
+				'url' => 'wedding-planning',
 				'title' => 'Wedding Pannel',
 				'type' => 'keyword',
 

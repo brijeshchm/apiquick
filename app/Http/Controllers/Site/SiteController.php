@@ -442,7 +442,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/child/wedding-planning',
+				'url' => '/child/wedding-pannel',
 				'img' => config('app.website') . 'img/wedding.png',
 				'alt' => 'Wedding Planning',
 				'title' => 'Wedding Planning',
@@ -3215,7 +3215,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/child/wedding-planning',
+				'url' => '/child/wedding-pannel',
 				'title' => 'Wedding Planning',
 				'type' => 'child',
 

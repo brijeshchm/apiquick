@@ -2417,7 +2417,7 @@ class WebsiteController extends Controller
 				'ratingcount' => $blog->ratingcount,
 				'ratingvalue' => $blog->ratingvalue,
 				'created_at' => date('d, M Y',strtotime($blog->created_at)),
-				'updated_at' => get_time(strtotime($blog->updated_at)),
+				'updated_at' => get_time(strtotime($blog->created_at)),
 				'description' => ucfirst(substr(strip_tags($blog->description), 0, 220)) . '...',
 
 			];
@@ -2517,7 +2517,7 @@ class WebsiteController extends Controller
 					'created_at' => date('d, M Y', strtotime($blog->created_at)),
 					'category_name' => $blog->category_name,
 					'category_id' => $blog->category_id,
-					'updated_at' => get_time(strtotime($blog->updated_at)),
+					'updated_at' => get_time(strtotime($blog->created_at)),
 					
 					
 					'description' => ucfirst(substr(strip_tags($blog->description), 0, 220)) . '...',
@@ -2572,7 +2572,7 @@ class WebsiteController extends Controller
 				'blogBannerAalt' => $blogaltB,
 				'author_name' => ucfirst($blogdetails->author_name),
 				'created_at' => date('d, M Y', strtotime($blogdetails->created_at)),				 
-				'updated_at' => get_time(strtotime($blogdetails->updated_at)),			
+				'updated_at' => get_time(strtotime($blogdetails->created_at)),			
 				
 				'title' => $blogdetails->title,
 				'description' => ucfirst($blogdetails->description),

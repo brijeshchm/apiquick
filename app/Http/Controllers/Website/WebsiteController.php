@@ -109,6 +109,21 @@ class WebsiteController extends Controller
 			->first();
  
 			 
+
+		$courseabout ="";
+		$heading ="";
+		$paragraph1 ="";
+		$paragraph2="";
+		$paragraph3 ="";
+		$paragraph4 ="";
+		$paragraph5 ="";
+		$paragraph6 ="";
+		$meta_title ="";
+		$meta_keywords ="";
+		$meta_description ="";
+		$bottom_description = "";
+		$top_description = "";
+
 		if (!$keywordDetails) {
 			return response()->json([
 				'status' => false,
@@ -180,32 +195,29 @@ class WebsiteController extends Controller
 			}
 		}
 
-
 		if (!empty($keywordDetails->meta_title)) {
 			$meta_title = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->meta_title);
+		} else {
+			$meta_title = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->keyword);
+
 		}
 		if (!empty($keywordDetails->meta_keywords)) {
 			$meta_keywords = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->meta_keywords);
-
+		} else {
+			$meta_keywords = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->keyword);
 
 		}
 
 
 		if (!empty($keywordDetails->meta_description)) {
 			$meta_description = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->meta_description);
-		}
 
-		$courseabout ="";
-		$heading ="";
-		$paragraph1 ="";
-		$paragraph2="";
-		$paragraph3 ="";
-		$paragraph4 ="";
-		$paragraph5 ="";
-		$paragraph6 ="";
-		$meta_title ="";
-		$meta_keywords ="";
-		$meta_description ="";
+
+		} else {
+			$meta_description = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->keyword);
+
+		}
+		
 		if (!empty($keywordDetails->courseabout)) {
 			$courseabout = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->courseabout);
 		}
@@ -231,11 +243,11 @@ class WebsiteController extends Controller
 			$paragraph6 = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->paragraph6);
 		}
 
-		$top_description = "";
+	
 		if (!empty($keywordDetails->top_description)) {
 			$top_description = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->top_description);
 		}
-		$bottom_description = "";
+		
 		if (!empty($keywordDetails->bottom_description)) {
 			$bottom_description = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->bottom_description);
 		}
@@ -2683,6 +2695,15 @@ class WebsiteController extends Controller
 			)
 			->first();
 		 
+			$courseabout ="";
+			$heading ="";
+			$paragraph1 ="";
+			$paragraph2="";
+			$paragraph3 ="";
+			$paragraph4 ="";
+			$paragraph5 ="";
+			$paragraph6 ="";
+
 			if(!$keywordDetails){
 						return response()->json([
 						'success' => false,
@@ -2725,76 +2746,61 @@ class WebsiteController extends Controller
 		}
 
 		if (!empty($keywordDetails->meta_title)) {
-			$meta_title = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->meta_title);
+			$meta_title = preg_replace('/in {{city}}/i', ucfirst($city), $keywordDetails->meta_title);
 		} else {
-			$meta_title = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->keyword);
+			$meta_title = preg_replace('/in {{city}}/i', ucfirst($city), $keywordDetails->keyword);
 
 		}
 		if (!empty($keywordDetails->meta_keywords)) {
-			$meta_keywords = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->meta_keywords);
-
-
+			$meta_keywords = preg_replace('/in {{city}}/i', ucfirst($city), $keywordDetails->meta_keywords);
 		} else {
-			$meta_keywords = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->keyword);
+			$meta_keywords = preg_replace('/in {{city}}/i', ucfirst($city), $keywordDetails->keyword);
 
 		}
 
 
 		if (!empty($keywordDetails->meta_description)) {
-			$meta_description = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->meta_description);
+			$meta_description = preg_replace('/in {{city}}/i', ucfirst($city), $keywordDetails->meta_description);
 
 
 		} else {
-			$meta_description = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->keyword);
+			$meta_description = preg_replace('/in {{city}}/i', ucfirst($city), $keywordDetails->keyword);
 
 		}
 
 		$top_description = "";
 		if (!empty($keywordDetails->top_description)) {
-			$top_description = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->top_description);
+			$top_description = preg_replace('/in {{city}}/i', ucfirst($city), $keywordDetails->top_description);
 		}
 		$bottom_description = "";
 		if (!empty($keywordDetails->bottom_description)) {
-			$bottom_description = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->bottom_description);
+			$bottom_description = preg_replace('/in {{city}}/i', ucfirst($city), $keywordDetails->bottom_description);
 		}
-		$courseabout ="";
-		$heading ="";
-		$paragraph1 ="";
-		$paragraph2="";
-		$paragraph3 ="";
-		$paragraph4 ="";
-		$paragraph5 ="";
-		$paragraph6 ="";
+		
 		if (!empty($keywordDetails->courseabout)) {
-			$courseabout = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->courseabout);
+			$courseabout = preg_replace('/in {{city}}/i', ucfirst($city), $keywordDetails->courseabout);
 		}
 		if (!empty($keywordDetails->heading)) {
-			$heading = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->heading);
+			$heading = preg_replace('/in {{city}}/i', ucfirst($city), $keywordDetails->heading);
 		}
 		if (!empty($keywordDetails->paragraph1)) {
-			$paragraph1 = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->paragraph1);
+			$paragraph1 = preg_replace('/in {{city}}/i', ucfirst($city), $keywordDetails->paragraph1);
 		}
 		if (!empty($keywordDetails->paragraph2)) {
-			$paragraph2 = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->paragraph2);
+			$paragraph2 = preg_replace('/in {{city}}/i', ucfirst($city), $keywordDetails->paragraph2);
 		}
 		if (!empty($keywordDetails->paragraph3)) {
-			$paragraph3 = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->paragraph3);
+			$paragraph3 = preg_replace('/in {{city}}/i', ucfirst($city), $keywordDetails->paragraph3);
 		}
 		if (!empty($keywordDetails->paragraph4)) {
-			$paragraph4 = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->paragraph4);
+			$paragraph4 = preg_replace('/in {{city}}/i', ucfirst($city), $keywordDetails->paragraph4);
 		}
 		if (!empty($keywordDetails->paragraph5)) {
-			$paragraph5 = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->paragraph5);
+			$paragraph5 = preg_replace('/in {{city}}/i', ucfirst($city), $keywordDetails->paragraph5);
 		}
 		if (!empty($keywordDetails->paragraph6)) {
-			$paragraph6 = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->paragraph6);
+			$paragraph6 = preg_replace('/in {{city}}/i', ucfirst($city), $keywordDetails->paragraph6);
 		}
-
-	 
-	 
-
-
-
 
 		$data['keyword'] = array(
 			'keyword' => $keywordDetails->keyword,

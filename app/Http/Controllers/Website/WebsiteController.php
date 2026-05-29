@@ -198,13 +198,19 @@ class WebsiteController extends Controller
 		if (!empty($keywordDetails->meta_title)) {
 			$meta_title = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->meta_title);
 		} else {
-			$meta_title = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->keyword);
+			$meta_title =  $keywordDetails->keyword . ' in ' . ucfirst($city) . ' | Quickdials';
 
 		}
 		if (!empty($keywordDetails->meta_keywords)) {
 			$meta_keywords = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->meta_keywords);
 		} else {
-			$meta_keywords = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->keyword);
+			$meta_keywords =  implode(', ', [
+							$keywordDetails->keyword,
+							$keywordDetails->keyword . ' in ' . ucfirst($city),
+							'Best ' . $keywordDetails->keyword . ' in ' . ucfirst($city),
+							ucfirst($city) . ' ' . $keywordDetails->keyword,
+							'Quickdials'
+						]);
 
 		}
 
@@ -214,7 +220,9 @@ class WebsiteController extends Controller
 
 
 		} else {
-			$meta_description = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->keyword);
+			$meta_description =  'Find the best ' . strtolower($keywordDetails->keyword) .
+               ' in ' . ucfirst($city) .
+               '. Compare ratings, reviews, contact details and book services on Quickdials.';
 
 		}
 		
@@ -2748,13 +2756,19 @@ class WebsiteController extends Controller
 		if (!empty($keywordDetails->meta_title)) {
 			$meta_title = preg_replace('/in {{city}}/i', ucfirst($city), $keywordDetails->meta_title);
 		} else {
-			$meta_title = preg_replace('/in {{city}}/i', ucfirst($city), $keywordDetails->keyword);
+			$meta_title = 'Best ' . $keywordDetails->keyword . ' - Reviews, Ratings & Contact Details | Quickdials';
 
 		}
 		if (!empty($keywordDetails->meta_keywords)) {
 			$meta_keywords = preg_replace('/in {{city}}/i', ucfirst($city), $keywordDetails->meta_keywords);
 		} else {
-			$meta_keywords = preg_replace('/in {{city}}/i', ucfirst($city), $keywordDetails->keyword);
+			$meta_keywords =  implode(', ', [
+						$keywordDetails->keyword,
+						'Best ' . $keywordDetails->keyword,
+						$keywordDetails->keyword . ' Reviews',
+						$keywordDetails->keyword . ' Contact Details',
+						'Quickdials'
+					]);
 
 		}
 
@@ -2764,7 +2778,7 @@ class WebsiteController extends Controller
 
 
 		} else {
-			$meta_description = preg_replace('/in {{city}}/i', ucfirst($city), $keywordDetails->keyword);
+			$meta_description = 'Find the best ' . strtolower($keywordDetails->keyword) . '. Compare ratings, reviews, contact details and service information on Quickdials.';
 
 		}
 
@@ -2780,6 +2794,7 @@ class WebsiteController extends Controller
 		if (!empty($keywordDetails->courseabout)) {
 			$courseabout = preg_replace('/in {{city}}/i', ucfirst($city), $keywordDetails->courseabout);
 		}
+		
 		if (!empty($keywordDetails->heading)) {
 			$heading = preg_replace('/in {{city}}/i', ucfirst($city), $keywordDetails->heading);
 		}

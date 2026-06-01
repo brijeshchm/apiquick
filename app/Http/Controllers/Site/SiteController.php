@@ -434,7 +434,7 @@ class SiteController extends Controller
 		$url = config('app.url');
 		$data['homePage'] = [
 			[
-				'url' => '/categories/professional-courses',
+				'url' => 'professional-courses',
 				'img' => config('app.website') . 'img/IT-Training.png',
 				'alt' => 'computer courses',
 				'title' => 'computer courses',
@@ -442,7 +442,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/child/wedding-pannel',
+				'url' => 'wedding-pannel',
 				'img' => config('app.website') . 'img/wedding.png',
 				'alt' => 'Wedding Planning',
 				'title' => 'Wedding Planning',
@@ -450,7 +450,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/categories/electric-services',
+				'url' => 'electric-services',
 				'img' => config('app.website') . 'img/electric-services.png',
 				'alt' => 'Electric Services',
 				'title' => 'Electric Services',
@@ -458,31 +458,31 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/categories/entrance-exams-coaching',
+				'url' => 'entrance-exams-coaching',
 				'img' => config('app.website') . 'img/government-exam.png',
 				'alt' => 'Government exam',
 				'title' => 'Government exam',
-				'type' => 'categories',
+				'type' => 'child',
 
 			],
 			[
-				'url' => '/categories/study-abroad',
+				'url' => 'study-abroad',
 				'img' => config('app.website') . 'img/study-abroad.png',
 				'alt' => 'Study Abroad',
 				'title' => 'Study Abroad',
-				'type' => 'categories',
+				'type' => 'child',
 
 			],
 			[
-				'url' => '/categories/spa',
+				'url' => 'spa-and-beauty',
 				'img' => config('app.website') . 'img/Spa & Beauty.png',
 				'alt' => 'Spa & Beauty',
 				'title' => 'Spa & Beauty',
-				'type' => 'categories',
+				'type' => 'child',
 
 			],
 			[
-				'url' => '/child/repair-services',
+				'url' => 'repair-services',
 				'img' => config('app.website') . 'img/Repairs-Services.png',
 				'alt' => 'Repair Services',
 				'title' => 'Repair Services',
@@ -490,7 +490,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/child/packers-and-movers',
+				'url' => 'packers-and-movers',
 				'img' => config('app.website') . 'img/Packers-movers.png',
 				'alt' => 'Packers & Movers',
 				'title' => 'Packers & Movers',
@@ -498,7 +498,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/categories/professional',
+				'url' => 'professional',
 				'img' => config('app.website') . 'img/Professional.png',
 				'alt' => 'Professional',
 				'title' => 'Professional',
@@ -506,7 +506,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/child/contractors',
+				'url' => 'contractors',
 				'img' => config('app.website') . 'img/contractors.png',
 				'alt' => 'Contractors',
 				'title' => 'Contractors',
@@ -514,7 +514,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/categories/collages-and-Institutions',
+				'url' => 'collages-and-Institutions',
 				'img' => config('app.website') . 'img/Education.png',
 				'alt' => 'Education',
 				'title' => 'Education',
@@ -522,63 +522,63 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/child/rent-or-buy',
+				'url' => 'rent-or-buy',
 				'img' => config('app.website') . 'img/Rent-buy.png',
 				'alt' => 'Rent & Buy',
 				'title' => 'Rent & Buy',
 				'type' => 'child',
 			],
 			[
-				'url' => '/child/sports-academy',
+				'url' => 'sports-academy',
 				'img' => config('app.website') . 'img/sports.png',
 				'alt' => 'Sport Academy',
 				'title' => 'Sport Academy',
 				'type' => 'child',
 			],
 			[
-				'url' => '/child/medical',
+				'url' => 'medical',
 				'img' => config('app.website') . 'img/Medical.png',
 				'alt' => 'Medical',
 				'title' => 'Medical',
 				'type' => 'child',
 			],
 			[
-				'url' => '/child/loan-service',
+				'url' => 'loan-service',
 				'img' => config('app.website') . 'img/Loan.png',
 				'alt' => 'Loan',
 				'title' => 'Loan',
 				'type' => 'child',
 			],
 			[
-				'url' => '/categories/dancing',
+				'url' => 'dance-classes',
 				'img' => config('app.website') . 'img/Dancing.png',
 				'alt' => 'Dancing',
 				'title' => 'Dancing',
-				'type' => 'categories',
+				'type' => 'child',
 			],
 			[
-				'url' => '/child/yoga-classes',
+				'url' => 'yoga-classes',
 				'img' => config('app.website') . 'img/Yoga.png',
 				'alt' => 'Yoga',
 				'title' => 'Yoga',
 				'type' => 'child',
 			],
 			[
-				'url' => '/child/security-system',
+				'url' => 'security-system',
 				'img' => config('app.website') . 'img/CCTV-security.png',
 				'alt' => 'CCTV Security',
 				'title' => 'CCTV Security',
 				'type' => 'child',
 			],
 			[
-				'url' => '/child/web-technologies',
+				'url' => 'web-technologies',
 				'img' => config('app.website') . 'images/Web-Designers.png',
 				'alt' => 'Web Designers',
 				'title' => 'Web Designers',
-				'type' => 'categories',
+				'type' => 'child',
 			],
 			[
-				'url' => '/tours-and-travels',
+				'url' => 'tours-and-travels',
 				'img' => config('app.website') . 'images/tour-travels.png',
 				'alt' => 'Tours & Travels',
 				'title' => 'Tours & Travels',
@@ -588,7 +588,7 @@ class SiteController extends Controller
 		];
 		$data['popularSearches'] = [
 			[
-				'url' => '/categories/computer-courses',
+				'url' => 'computer-courses',
 				'img' => config('app.website') . 'popular/IT-Training.jpg',
 				'alt' => 'computer courses',
 				'title' => 'computer courses',
@@ -596,39 +596,39 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/categories/entrance-exams-coaching',
+				'url' => 'entrance-exams-coaching',
 				'img' => config('app.website') . 'popular/Entrance-Exam.jpg',
 				'alt' => 'Entrance exam',
 				'title' => 'Entrance exam',
-				'type' => 'categories',
-
-			],
-			[
-				'url' => '/child/packers-and-movers',
-				'img' => config('app.website') . 'popular/Packers-Movers.jpg',
-				'alt' => 'Packers & Movers',
-				'title' => 'Packers & Movers',
 				'type' => 'child',
 
 			],
 			[
-				'url' => '/categories/interior-designer',
-				'img' => config('app.website') . 'popular/Interior-design.jpg',
-				'alt' => 'Interior Design',
-				'title' => 'Interior Design',
-				'type' => 'categories',
-
-			],
-			[
-				'url' => '/real-estate-agent',
-				'img' => config('app.website') . 'popular/real-estate-agent.jpg',
-				'alt' => 'Real Estate Agents',
-				'title' => 'Real Estate Agents',
+				'url' => 'packers-and-movers',
+				'img' => config('app.website') . 'popular/Packers-Movers.jpg',
+				'alt' => 'Packers & Movers',
+				'title' => 'Packers & Movers',
 				'type' => 'keyword',
 
 			],
 			[
-				'url' => '/carpenters',
+				'url' => 'interior-designer',
+				'img' => config('app.website') . 'popular/Interior-design.jpg',
+				'alt' => 'Interior Design',
+				'title' => 'Interior Design',
+				'type' => 'keyword',
+
+			],
+			[
+				'url' => 'real-estate',
+				'img' => config('app.website') . 'popular/real-estate-agent.jpg',
+				'alt' => 'Real Estate Agents',
+				'title' => 'Real Estate Agents',
+				'type' => 'child',
+
+			],
+			[
+				'url' => 'carpenters',
 				'img' => config('app.website') . 'popular/carpenter.jpg',
 				'alt' => 'Carpenters',
 				'title' => 'Carpenters',
@@ -730,7 +730,7 @@ class SiteController extends Controller
 		$url = config('app.url');
 		$data['repairsServices'] = [
 			[
-				'url' => '/ac-repair-service',
+				'url' => 'ac-repair-service',
 				'img' => config('app.website') . 'popular/AC-Service.jpg',
 				'alt' => 'AC Service',
 				'title' => 'AC Service',
@@ -738,7 +738,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/car-service',
+				'url' => 'car-service',
 				'img' => config('app.website') . 'popular/car-services.jpg',
 				'alt' => 'Car Services',
 				'title' => 'Car Services',
@@ -746,7 +746,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/laundry-service',
+				'url' => 'laundry-service',
 				'img' => config('app.website') . 'popular/washing-machines.jpg',
 				'alt' => 'Laundry Services',
 				'title' => 'Laundry Services',
@@ -754,7 +754,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/electricity-service',
+				'url' => 'electricity-service',
 				'img' => config('app.website') . 'popular/Electricity-Services.jpg',
 				'alt' => 'Electrician Services',
 				'title' => 'Electrician Services',
@@ -762,7 +762,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/hotels',
+				'url' => 'hotels',
 				'img' => config('app.website') . 'popular/Hotel-Services.jpg',
 				'alt' => 'Hotels',
 				'title' => 'Hotels',
@@ -770,7 +770,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/clinical-research',
+				'url' => 'clinical-research',
 				'img' => config('app.website') . 'popular/Fitness-Services.jpg',
 				'alt' => 'Health & Fitness',
 				'title' => 'Health & Fitness',
@@ -839,7 +839,7 @@ class SiteController extends Controller
 		$url = config('app.url');
 		$data['weddingPlanning'] = [
 			[
-				'url' => '/catering-services',
+				'url' => 'catering-services',
 				'img' => config('app.website') . 'popular/Catering-Services.jpg',
 				'alt' => 'Catering Services',
 				'title' => 'Catering Services',
@@ -847,7 +847,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/banquet-hall',
+				'url' => 'banquet-hall',
 				'img' => config('app.website') . 'popular/Banquet-Halls.jpg',
 				'alt' => 'Banquet Halls',
 				'title' => 'Banquet Halls',
@@ -855,7 +855,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/stage-decorators',
+				'url' => 'stage-decorators',
 				'img' => config('app.website') . 'popular/Stage-Decorators.jpg',
 				'alt' => 'Stage Decorators',
 				'title' => 'Stage Decorators',
@@ -871,7 +871,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/mehendi-artists',
+				'url' => 'mehendi-artists',
 				'img' => config('app.website') . 'popular/Mehendi-Artists.jpg',
 				'alt' => 'Mehendi Artists',
 				'title' => 'Mehendi Artists',
@@ -879,7 +879,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/bridal-wear',
+				'url' => 'bridal-wear',
 				'img' => config('app.website') . 'popular/Bridal-Wear.jpg',
 				'alt' => 'Bridal Wear',
 				'title' => 'Bridal Wear',
@@ -951,7 +951,7 @@ class SiteController extends Controller
 		$data['wedding_banner'] = config('app.website') . 'popular/wedding_banner.jpg';
 		$data['wedding_planning'] = [
 			[
-				'url' => '/banquet-hall',
+				'url' => 'banquet-hall',
 				'img' => config('app.website') . 'popular/Banquet_Hall.jpg',
 				'alt' => 'Banquet Hall',
 				'title' => 'Banquet Hall',
@@ -959,7 +959,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/ghoda-baggi',
+				'url' => 'ghoda-baggi',
 				'img' => config('app.website') . 'popular/Ghoda_Baggi.jpg',
 				'alt' => 'Ghoda Baggi & Rath',
 				'title' => 'Ghoda Baggi & Rath',
@@ -967,7 +967,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/fire-works-and-crackers',
+				'url' => 'fire-works-and-crackers',
 				'img' => config('app.website') . 'popular/Fire_Works_&_Crackers.jpg',
 				'alt' => 'Fire Works Crackers',
 				'title' => 'Fire Works Crackers',
@@ -975,7 +975,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/photo-and-videography',
+				'url' => 'photo-and-videography',
 				'img' => config('app.website') . 'popular/Photo_and_Videography.jpg',
 				'alt' => 'Photo and Videography',
 				'title' => 'Photo and Videography',
@@ -983,7 +983,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/flower-decoration',
+				'url' => 'flower-decoration',
 				'img' => config('app.website') . 'popular/Flower_Decoration.jpg',
 				'alt' => 'Flower Decoration',
 				'title' => 'Flower Decoration',
@@ -994,7 +994,7 @@ class SiteController extends Controller
 		$data['wedding_prerequisits'] = [
 
 			[
-				'url' => '/banquet-hall',
+				'url' => 'banquet-hall',
 				'img' => config('app.website') . 'popular/Banquet-Halls.jpg',
 				'alt' => 'Banquet Halls',
 				'title' => 'Banquet Halls',
@@ -1002,7 +1002,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/dj-sound-system',
+				'url' => 'dj-sound-system',
 				'img' => config('app.website') . 'popular/DJ_Sound_System.jpg',
 				'alt' => 'DJ Sound Systems',
 				'title' => 'DJ Sound Systems',
@@ -1010,7 +1010,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/party-organisers',
+				'url' => 'party-organisers',
 				'img' => config('app.website') . 'popular/Wedding_Organisers.jpg',
 				'alt' => 'Party Organiser',
 				'title' => 'Party Organiser',
@@ -1018,7 +1018,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/stage-decoratorss',
+				'url' => 'stage-decoratorss',
 				'img' => config('app.website') . 'popular/stage-decoratorss.jpg',
 				'alt' => 'Stage Decoration',
 				'title' => 'Stage Decoration',
@@ -1034,7 +1034,7 @@ class SiteController extends Controller
 		$data['wedding_planning_for_bride'] = [
 
 			[
-				'url' => '/makeup-artists',
+				'url' => 'makeup-artists',
 				'img' => config('app.website') . 'popular/Makeup_artist.jpg',
 				'alt' => 'Makeup Artists',
 				'title' => 'Makeup Artists',
@@ -1042,7 +1042,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/mehendi-artists',
+				'url' => 'mehendi-artists',
 				'img' => config('app.website') . 'popular/Mehendi-Artists.jpg',
 				'alt' => 'Mehendi Artists',
 				'title' => 'Mehendi Artists',
@@ -1050,7 +1050,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/bridal-wear',
+				'url' => 'bridal-wear',
 				'img' => config('app.website') . 'popular/Bridal-Wear.jpg',
 				'alt' => 'Bridal Wear',
 				'title' => 'Bridal Wear',
@@ -1058,7 +1058,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/jewellery-designing',
+				'url' => 'jewellery-designing',
 				'img' => config('app.website') . 'popular/Jewellery.jpg',
 				'alt' => 'Jewellery',
 				'title' => 'Jewellery',
@@ -1066,7 +1066,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/salons',
+				'url' => 'salons',
 				'img' => config('app.website') . 'popular/salon.jpg',
 				'alt' => 'salons',
 				'title' => 'salons',
@@ -1074,7 +1074,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/cosmetics',
+				'url' => 'cosmetics',
 				'img' => config('app.website') . 'popular/Cosmetic.jpg',
 				'alt' => 'Cosmetics',
 				'title' => 'Cosmetics',
@@ -1089,7 +1089,7 @@ class SiteController extends Controller
 		$data['wedding_planning_for_groom'] = [
 
 			[
-				'url' => '/wedding-suit-for-groom',
+				'url' => 'wedding-suit-for-groom',
 				'img' => config('app.website') . 'popular/wedding_suit_for_groom.jpg',
 				'alt' => 'Wedding Suit groom',
 				'title' => 'Wedding Suit groom',
@@ -1097,7 +1097,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/makeup-artist-for-groom',
+				'url' => 'makeup-artist-for-groom',
 				'img' => config('app.website') . 'popular/Makeup_artist_for_groom.jpg',
 				'alt' => 'Makeup Artist',
 				'title' => 'Makeup Artist',
@@ -1105,7 +1105,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/ghoda-baggi',
+				'url' => 'ghoda-baggi',
 				'img' => config('app.website') . 'popular/Ghoda_Baggi.jpg',
 				'alt' => 'ghoda baggi',
 				'title' => 'ghoda baggi',
@@ -1113,7 +1113,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/hair-dressing',
+				'url' => 'hair-dressing',
 				'img' => config('app.website') . 'popular/Hair_salons_for_groom.jpg',
 				'alt' => 'Hair Salons',
 				'title' => 'Hair Salons',
@@ -1121,7 +1121,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/wedding-band',
+				'url' => 'wedding-band',
 				'img' => config('app.website') . 'popular/Wedding_Band.jpg',
 				'alt' => 'Wedding Band Baja',
 				'title' => 'Wedding Band Baja',
@@ -1129,7 +1129,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/wedding-transport',
+				'url' => 'wedding-transport',
 				'img' => config('app.website') . 'popular/Car_Decoration.jpg',
 				'alt' => 'wedding transport',
 				'title' => 'wedding transport',
@@ -1143,7 +1143,7 @@ class SiteController extends Controller
 		$data['pre-Wedding_planning'] = [
 
 			[
-				'url' => '/wedding-choreographer',
+				'url' => 'wedding-choreographer',
 				'img' => config('app.website') . 'popular/wedding-choreographer.jpg',
 				'alt' => 'Wedding choreographer',
 				'title' => 'Wedding choreographer',
@@ -1151,7 +1151,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/wedding-astrologer',
+				'url' => 'wedding-astrologer',
 				'img' => config('app.website') . 'popular/wedding-astrologer.jpg',
 				'alt' => 'Wedding Astrologer',
 				'title' => 'Wedding Astrologer',
@@ -1159,7 +1159,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/wedding-dancer-and-singer',
+				'url' => 'wedding-dancer-and-singer',
 				'img' => config('app.website') . 'popular/wedding-dancer-and-singer.jpg',
 				'alt' => 'Wedding Dancer And Singer',
 				'title' => 'gWedding Dancer And Singer',
@@ -1167,7 +1167,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/pandits',
+				'url' => 'pandits',
 				'img' => config('app.website') . 'popular/Pandits.jpg',
 				'alt' => 'Pandits',
 				'title' => 'Pandits',
@@ -1175,7 +1175,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/honeymoon-packages',
+				'url' => 'honeymoon-packages',
 				'img' => config('app.website') . 'popular/honeymoon-packages.jpg',
 				'alt' => 'honeymoon packages',
 				'title' => 'honeymoon packages',
@@ -1183,7 +1183,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/stage-show-organisers',
+				'url' => 'stage-show-organisers',
 				'img' => config('app.website') . 'popular/stage-show-organisers.jpg',
 				'alt' => 'Stage Show Organisers',
 				'title' => 'Stage Show Organisers',
@@ -1256,15 +1256,15 @@ class SiteController extends Controller
 		$url = config('app.url');
 		$data['entranceExams'] = [
 			[
-				'url' => '/categories/entrance-exams-coaching',
+				'url' => 'entrance-exams-coaching',
 				'img' => config('app.website') . 'popular/air-force-navy.jpg',
 				'alt' => 'coaching',
 				'title' => 'Air Force & Navy / SSR / MR',
-				'type' => 'keyword',
+				'type' => 'child',
 
 			],
 			[
-				'url' => '/ssc-cgl',
+				'url' => 'ssc-cgl',
 				'img' => config('app.website') . 'popular/SSC-CGL-JEE.jpg',
 				'alt' => 'SSC CGL JEE',
 				'title' => 'SSC CGL JEE',
@@ -1272,7 +1272,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/rrb-ntpc-coaching',
+				'url' => 'rrb-ntpc-coaching',
 				'img' => config('app.website') . 'popular/NTPC-RRB-Railway.jpg',
 				'alt' => 'NTPC & RRB Railway ',
 				'title' => 'NTPC & RRB Railway ',
@@ -1280,7 +1280,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/cat-coaching',
+				'url' => 'cat-coaching',
 				'img' => config('app.website') . 'popular/CAT-exam.jpg',
 				'alt' => 'CAT/NEET',
 				'title' => 'CAT/NEET',
@@ -1288,7 +1288,7 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/ctet-coaching',
+				'url' => 'ctet-coaching',
 				'img' => config('app.website') . 'popular/CTET-Super-TET.jpg',
 				'alt' => 'CTET Super TET',
 				'title' => 'CTET Super TET',
@@ -1296,11 +1296,11 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/categories/entrance-exams-coaching',
+				'url' => 'entrance-exams-coaching',
 				'img' => config('app.website') . 'popular/UPSC-IAS.jpg',
 				'alt' => 'UPSC & IAS',
 				'title' => 'UPSC & IAS',
-				'type' => 'keyword',
+				'type' => 'child',
 
 			]
 
@@ -1387,7 +1387,7 @@ class SiteController extends Controller
 
 
 					$studyPageList[$key] = array(
-						'url' => '/child/' . $study->child_slug,
+						'url' => '' . $study->child_slug,
 						'img' => $img,
 						'alt' => $study->child_category,
 						'title' => $study->child_category,
@@ -1693,8 +1693,8 @@ class SiteController extends Controller
 		$search_kw = $request->input('keyword');
 		$city = '';
 		$keywordDetails = DB::table('keyword')
-			->join('parent_category', 'keyword.parent_category_id', '=', 'parent_category.id')
-			->join('child_category', 'keyword.child_category_id', '=', 'child_category.id')
+			->leftjoin('parent_category', 'keyword.parent_category_id', '=', 'parent_category.id')
+			->leftjoin('child_category', 'keyword.child_category_id', '=', 'child_category.id')
 			->where('keyword', 'LIKE', '%' . ucwords(str_replace('-', ' ', $search_kw)) . '%')
 			->select('keyword.*', 'parent_category.*', 'child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5', 'keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount')
 			->first();
@@ -2054,7 +2054,7 @@ class SiteController extends Controller
 					}
 				}
 				return [
-					'url' => "/child/{$child->child_slug}",
+					'url' => "{$child->child_slug}",
 					'img' => $image,
 					'alt' => $alt,
 					'title' => $child->child_name,
@@ -2321,7 +2321,7 @@ class SiteController extends Controller
 				return [
 					'img' => $image ?: '',
 					'alt' => $alt ?: $slider->title,
-					'url' => '/' . $slider->slug,					 
+					'url' => $slider->slug,					 
 					'title' => $slider->title,
 					'type' => 'keyword',
 				];
@@ -3209,126 +3209,126 @@ class SiteController extends Controller
 
 		$data['popularCategories'] = [
 			[
-				'url' => '/categories/professional-courses',
+				'url' => 'professional-courses',
 				'title' => 'Coaching & Tuitions',
 				'type' => 'categories',
 
 			],
 			[
-				'url' => '/child/wedding-pannel',
+				'url' => 'wedding-pannel',
 				'title' => 'Wedding Planning',
 				'type' => 'child',
 
 			],
 			[
-				'url' => '/category/health-wellness',
+				'url' => 'health-wellness',
 				'title' => 'Healthcare',
 				'type' => 'categories',
 
 			],
 			[
-				'url' => '/category/real-estate-agent',
+				'url' => 'real-estate-agent',
 				'title' => 'Real Estate',
 				'type' => 'categories',
 
 			],
 			[
-				'url' => '/categories/electric-services',
+				'url' => 'electric-services',
 				'title' => 'Electric Services',
 				'type' => 'categories',
 
 			],
 			[
-				'url' => '/categories/security-system',
+				'url' => 'security-system',
 				'title' => 'Security System',
-				'type' => 'categories',
+				'type' => 'child',
 
 			],
 			[
-				'url' => '/categories/medical',
+				'url' => 'medical',
 				'title' => 'Medical',
 				'type' => 'categories',
 			],
 			[
-				'url' => '/categories/packers-movers',
+				'url' => 'packers-movers',
 				'title' => 'Packers Movers',
 				'type' => 'categories',
 			],
 			[
-				'url' => '/restaurants',
+				'url' => 'restaurants',
 				'title' => 'Restaurants',
 				'type' => 'keyword',
 			],
 			[
-				'url' => '/hotels',
+				'url' => 'hotels',
 				'title' => 'Hotels',
 				'type' => 'keyword',
 			],
 			[
-				'url' => '/interior-designer',
+				'url' => 'interior-designer',
 				'title' => 'interior Design',
 				'type' => 'keyword',
 			]
 		];
 		$data['businessServicesLink'] = [
 			[
-				'url' => '/patient-care-service',
+				'url' => 'patient-care-service',
 				'title' => 'Patient Care Service',
 				'type' => 'keyword',
 
 			],
 			[
-				'url' => '/home-appliance-repair-training',
+				'url' => 'home-appliance-repair-training',
 				'title' => 'Home Appliances Repair',
 				'type' => 'keyword',
 
 			],
 			[
-				'url' => '/wedding-organisers',
+				'url' => 'wedding-organisers',
 				'title' => 'Wedding Organisers',
 				'type' => 'keyword',
 
 			],
 			[
-				'url' => '/ac-service',
+				'url' => 'ac-service',
 				'title' => 'AC Services',
 				'type' => 'keyword',
 
 			],
 			[
-				'url' => '/security-guards-services',
+				'url' => 'security-guards-services',
 				'title' => 'Security Guards',
 				'type' => 'keyword',
 
 			],
 			[
-				'url' => '/cleaning-services',
+				'url' => 'cleaning-services',
 				'title' => 'Cleaning Services',
 				'type' => 'keyword',
 
 			],
 			[
-				'url' => '/categories/repairs-services',
+				'url' => 'repairs-services',
 				'title' => 'Repairs Services',
 				'type' => 'categories',
 			],
 			[
-				'url' => '/categories/spa-beauty',
+				'url' => 'spa-beauty',
 				'title' => 'SPA Beauty',
 				'type' => 'categories',
 			],
 			[
-				'url' => '/child/loan',
+				'url' => 'loan',
 				'title' => 'Loan',
 				'type' => 'child',
 			],
 			[
-				'url' => '/income-tax-consultants',
+				'url' => 'income-tax-consultants',
 				'title' => 'Tax Consultants',
 				'type' => 'keyword',
 			],
 			[
-				'url' => '/interviews',
+				'url' => 'interviews',
 				'title' => 'Interviews Question',
 			]
 		];
@@ -4419,19 +4419,19 @@ class SiteController extends Controller
 
 			],
 			[
-				'url' => '/categories/personal-finance-services',
+				'url' => 'personal-finance-services',
 				'title' => 'Personal Finance Services',
 				'type' => 'categories',
 
 			],
 			[
-				'url' => '/categories/tours-travel-services',
+				'url' => 'tours-travel-services',
 				'title' => 'Tours & Travels',
 				'type' => 'categories',
 
 			],
 			[
-				'url' => '/categories/property-dealer',
+				'url' => 'property-dealer',
 				'title' => 'Property Dealer',
 				'type' => 'categories',
 
@@ -4447,7 +4447,7 @@ class SiteController extends Controller
 				'type' => 'keyword',
 			],
 			[
-				'url' => '/categories/computer-courses',
+				'url' => 'computer-courses',
 				'title' => 'Computer Courses & Training',
 				'type' => 'categories',
 			],
@@ -4468,14 +4468,14 @@ class SiteController extends Controller
 				'type' => 'keyword',
 			],
 			[
-				'url' => '/categories/electric-services',
+				'url' => 'electric-services',
 				'title' => 'Electric Services',
 				'type' => 'categories',
 			],
 			[
-				'url' => '/categories/entrance-exams-coaching',
+				'url' => 'entrance-exams-coaching',
 				'title' => 'Government Exam',
-				'type' => 'categories',
+				'type' => 'child',
 			],
 			[
 				'url' => '/web-designers',
@@ -4493,7 +4493,7 @@ class SiteController extends Controller
 				'type' => 'keyword',
 			],
 			[
-				'url' => '/child/yoga-classes',
+				'url' => 'yoga-classes',
 				'title' => 'Yoga',
 				'type' => 'child',
 			],
@@ -4583,9 +4583,9 @@ class SiteController extends Controller
 				'type' => 'keyword',
 			],
 			[
-				'url' => '/categories/entrance-exams-coaching',
+				'url' => 'entrance-exams-coaching',
 				'title' => 'Entrance Exam Coaching',
-				'type' => 'categories',
+				'type' => 'child',
 			],
 			[
 				'url' => '/competitive-exam-coaching',

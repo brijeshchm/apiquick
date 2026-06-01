@@ -899,7 +899,7 @@ class WebsiteController extends Controller
 				'img' => config('app.website') . 'img/government-exam.png',
 				'alt' => 'Government exam',
 				'title' => 'Government exam',
-				'type' => 'categories',
+				'type' => 'child',
 				'rating' => '3.5',
 				'count' => '229',
 
@@ -909,7 +909,7 @@ class WebsiteController extends Controller
 				'img' => config('app.website') . 'img/study-abroad.png',
 				'alt' => 'Study Abroad',
 				'title' => 'Study Abroad',
-				'type' => 'categories',
+				'type' => 'child',
 				'rating' => '5',
 				'count' => '399',
 
@@ -1011,11 +1011,11 @@ class WebsiteController extends Controller
 				'count' => '69',
 			],
 			[
-				'url' => 'dancing',
+				'url' => 'dance-classes',
 				'img' => config('app.website') . 'img/Dancing.png',
 				'alt' => 'Dancing',
 				'title' => 'Dancing',
-				'type' => 'categories',
+				'type' => 'child',
 				'rating' => '3.5',
 				'count' => '79',
 			],
@@ -1125,7 +1125,7 @@ class WebsiteController extends Controller
 				'img' => config('app.website') . 'img/government-exam.png',
 				'alt' => 'Government exam',
 				'title' => 'Government exam',
-				'type' => 'categories',
+				'type' => 'child',
 				'rating' => '3.5',
 				'count' => '229',
 
@@ -1135,7 +1135,7 @@ class WebsiteController extends Controller
 				'img' => config('app.website') . 'img/study-abroad.png',
 				'alt' => 'Study Abroad',
 				'title' => 'Study Abroad',
-				'type' => 'categories',
+				'type' => 'child',
 				'rating' => '5',
 				'count' => '399',
 
@@ -1209,11 +1209,11 @@ class WebsiteController extends Controller
 				'count' => '69',
 			],
 			[
-				'url' => 'dancing',
+				'url' => 'dance-classes',
 				'img' => config('app.website') . 'img/Dancing.png',
 				'alt' => 'Dancing',
 				'title' => 'Dancing',
-				'type' => 'categories',
+				'type' => 'child',
 				'rating' => '3.5',
 				'count' => '79',
 			],
@@ -1420,7 +1420,7 @@ class WebsiteController extends Controller
 				'img' => config('app.website') . 'popular/Entrance-Exam.jpg',
 				'alt' => 'Entrance exam',
 				'title' => 'Entrance exam',
-				'type' => 'categories',
+				'type' => 'child',
 				'rating' => '3.5',
 				'count' => '99',
 
@@ -1440,17 +1440,17 @@ class WebsiteController extends Controller
 				'img' => config('app.website') . 'popular/Interior-design.jpg',
 				'alt' => 'Interior Design',
 				'title' => 'Interior Design',
-				'type' => 'categories',
+				'type' => 'keyword',
 				'rating' => '3.5',
 				'count' => '192',
 
 			],
 			[
-				'url' => 'real-estate-agent',
+				'url' => 'real-estate',
 				'img' => config('app.website') . 'popular/real-estate-agent.jpg',
 				'alt' => 'Real Estate Agents',
 				'title' => 'Real Estate Agents',
-				'type' => 'keyword',
+				'type' => 'child',
 				'rating' => '3.5',
 				'count' => '239',
 
@@ -2209,7 +2209,7 @@ class WebsiteController extends Controller
 				'img' => config('app.website') . 'popular/air-force-navy.jpg',
 				'alt' => 'coaching',
 				'title' => 'Air Force & Navy / SSR / MR',
-				'type' => 'keyword',
+				'type' => 'child',
 
 			],
 			[
@@ -2249,7 +2249,7 @@ class WebsiteController extends Controller
 				'img' => config('app.website') . 'popular/UPSC-IAS.jpg',
 				'alt' => 'UPSC & IAS',
 				'title' => 'UPSC & IAS',
-				'type' => 'keyword',
+				'type' => 'child',
 
 			]
 
@@ -5312,15 +5312,15 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'category/health-wellness',
+				'url' => 'health-wellness',
 				'title' => 'Healthcare',
-				'type' => 'categories',
+				'type' => 'keyword',
 
 			],
 			[
-				'url' => 'category/real-estate-agent',
+				'url' => 'real-estate',
 				'title' => 'Real Estate',
-				'type' => 'categories',
+				'type' => 'child',
 
 			],
 			[
@@ -5332,7 +5332,7 @@ class WebsiteController extends Controller
 			[
 				'url' => 'security-system',
 				'title' => 'Security System',
-				'type' => 'categories',
+				'type' => 'child',
 
 			],
 			[
@@ -6697,7 +6697,7 @@ class WebsiteController extends Controller
 			[
 				'url' => 'study-abroad',
 				'title' => 'Study Abroad',
-				'type' => 'keyword',
+				'type' => 'child',
 			],
 			[
 				'url' => 'home-services',
@@ -6718,7 +6718,7 @@ class WebsiteController extends Controller
 			[
 				'url' => 'entrance-exams-coaching',
 				'title' => 'Government Exam',
-				'type' => 'categories',
+				'type' => 'child',
 			],
 			[
 				'url' => 'web-designers',
@@ -6828,7 +6828,7 @@ class WebsiteController extends Controller
 			[
 				'url' => 'entrance-exams-coaching',
 				'title' => 'Entrance Exam Coaching',
-				'type' => 'categories',
+				'type' => 'child',
 			],
 			[
 				'url' => 'competitive-exam-coaching',

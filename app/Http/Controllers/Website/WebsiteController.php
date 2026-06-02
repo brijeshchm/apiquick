@@ -915,11 +915,11 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'spa',
-				'img' => config('app.website') . 'img/Spa & Beauty.png',
+				'url' => 'spa-and-beauty',
+				'img' => config('app.website') . 'img/Spa-Beauty.png',
 				'alt' => 'Spa & Beauty',
 				'title' => 'Spa & Beauty',
-				'type' => 'categories',
+				'type' => 'child',
 				'rating' => '5',
 				'count' => '325',
 
@@ -1141,11 +1141,11 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'spa',
+				'url' => 'spa-and-beauty',
 				'img' => config('app.website') . 'img/Spa & Beauty.png',
 				'alt' => 'Spa & Beauty',
 				'title' => 'Spa & Beauty',
-				'type' => 'categories',
+				'type' => 'child',
 				'rating' => '5',
 				'count' => '325',
 
@@ -5404,9 +5404,9 @@ class WebsiteController extends Controller
 				'type' => 'categories',
 			],
 			[
-				'url' => 'spa-beauty',
+				'url' => 'spa-and-beauty',
 				'title' => 'SPA Beauty',
-				'type' => 'categories',
+				'type' => 'child',
 			],
 			[
 				'url' => 'loan',

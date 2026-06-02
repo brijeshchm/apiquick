@@ -3313,9 +3313,9 @@ class SiteController extends Controller
 				'type' => 'categories',
 			],
 			[
-				'url' => 'spa-beauty',
+				'url' => 'spa-and-beauty',
 				'title' => 'SPA Beauty',
-				'type' => 'categories',
+				'type' => 'child',
 			],
 			[
 				'url' => 'loan',

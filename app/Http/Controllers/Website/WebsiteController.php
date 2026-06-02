@@ -1142,7 +1142,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'spa-and-beauty',
-				'img' => config('app.website') . 'img/Spa & Beauty.png',
+				'img' => config('app.website') . 'img/Spa-Beauty.png',
 				'alt' => 'Spa & Beauty',
 				'title' => 'Spa & Beauty',
 				'type' => 'child',

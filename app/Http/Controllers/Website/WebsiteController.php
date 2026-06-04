@@ -2699,7 +2699,7 @@ class WebsiteController extends Controller
 			->leftjoin('parent_category', 'keyword.parent_category_id', '=', 'parent_category.id')
 			->leftjoin('child_category', 'keyword.child_category_id', '=', 'child_category.id')
 			->where('slug', $search_kw)
-			->select('keyword.*', 'parent_category.*', 'child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5','keyword.faqq6', 'keyword.faqa6', 'keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount','keyword.courseabout','keyword.heading','keyword.paragraph1','keyword.paragraph2','keyword.paragraph3','keyword.paragraph4','keyword.paragraph5','keyword.paragraph6','keyword.slug','keyword.bottom_heading','keyword.top_heading','keyword.extra_heading','keyword.extra_description'
+			->select('keyword.*', 'parent_category.*', 'child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5','keyword.faqq6','keyword.faqa6', 'keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount','keyword.courseabout','keyword.heading','keyword.paragraph1','keyword.paragraph2','keyword.paragraph3','keyword.paragraph4','keyword.paragraph5','keyword.paragraph6','keyword.slug','keyword.bottom_heading','keyword.top_heading','keyword.extra_heading','keyword.extra_description'
 			)
 			->first();
 		 
@@ -2837,6 +2837,7 @@ class WebsiteController extends Controller
 			'extra_heading' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->extra_heading),
 			'extra_description' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->extra_description),
 		 			
+			'faqq1' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqq1),
 			'faqa1' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqa1),
 			'faqq2' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqq2),
 			'faqa2' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqa2),
@@ -2845,8 +2846,7 @@ class WebsiteController extends Controller
 			'faqq4' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqq4),
 			'faqa4' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqa4),
 			'faqq5' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqq5),
-			'faqa5' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqa5),
-			
+			'faqa5' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqa5),			
 			'faqq6' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqq6),
 			'faqa6' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->faqa6),
 			

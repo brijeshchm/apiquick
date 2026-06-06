@@ -3599,7 +3599,40 @@ class WebsiteController extends Controller
 			}
 		}
 		
-		
+		if (!empty($categoryDetails->meta_title)) {
+			$meta_title = $categoryDetails->meta_title;
+		} else {
+			$meta_title = $categoryDetails->child_category ." | Find Trusted Services, Businesses & Professionals Near You | Quickdials ";
+
+		}
+		if (!empty($categoryDetails->meta_keywords)) {
+			$meta_keywords = $categoryDetails->meta_keywords;
+		} else {
+			 
+						
+			$meta_keywords = $categoryDetails->parent_category . ", " .
+                 $categoryDetails->parent_category . " near me, " .
+                 "best " . $categoryDetails->parent_category . ", " .
+                 "top " . $categoryDetails->parent_category . ", " .
+                 "local " . $categoryDetails->parent_category . ", " .
+                 "trusted " . $categoryDetails->parent_category . ", " .
+                 "affordable " . $categoryDetails->parent_category . ", " .
+                 $categoryDetails->parent_category . " services, " .
+                 $categoryDetails->parent_category . " providers, Quickdials";
+
+		}
+
+
+		if (!empty($categoryDetails->meta_description)) {
+			$meta_description = $categoryDetails->meta_description;
+
+
+		} else {
+			 
+			   $meta_description = "Find the best ".$categoryDetails->parent_category." near you on Quickdials. Compare trusted providers, read reviews, check details, and connect with top-rated businesses and professionals for your needs.";
+
+		}
+			
 		
 	 
 		$data['keyword'] = array(
@@ -3607,9 +3640,9 @@ class WebsiteController extends Controller
 			'parent_slug' => $categoryDetails->parent_slug,
 			'category_banner' => $banner_image,
 			'alt' => $alt,
-			'meta_title' => $categoryDetails->meta_title,
-			'meta_keywords' => $categoryDetails->meta_keywords,
-			'meta_description' => $categoryDetails->meta_description,
+			'meta_title' => $meta_title,
+			'meta_keywords' => $meta_keywords,
+			'meta_description' => $meta_description,
 			'top_description' => $categoryDetails->top_description,
 			'bottom_description' => $categoryDetails->bottom_description,
 			'bottom_heading' => $categoryDetails->bottom_heading,
@@ -3921,7 +3954,7 @@ class WebsiteController extends Controller
 
 		$banner_image = config('app.website') . 'client/images/computer-courses-training.jpg';
 
-		$alt = "";
+		$alt = $childDetails->child_category;
 
 		if (!empty($childDetails->category_banner)) {
 			$cicons = unserialize($childDetails->child_banner);
@@ -3931,14 +3964,49 @@ class WebsiteController extends Controller
 				$alt = $cicons['child_banner']['alt'];
 			}
 		}
+		if (!empty($childDetails->meta_title)) {
+			$meta_title = $childDetails->meta_title;
+		} else {
+			$meta_title = $childDetails->child_category ." | Find Trusted Services, Businesses & Professionals Near You | Quickdials ";
+
+		}
+		if (!empty($childDetails->meta_keywords)) {
+			$meta_keywords = $childDetails->meta_keywords;
+		} else {
+			 
+						
+			$meta_keywords = $childDetails->child_category . ", " .
+                 $childDetails->child_category . " near me, " .
+                 "best " . $childDetails->child_category . ", " .
+                 "top " . $childDetails->child_category . ", " .
+                 "local " . $childDetails->child_category . ", " .
+                 "trusted " . $childDetails->child_category . ", " .
+                 "affordable " . $childDetails->child_category . ", " .
+                 $childDetails->child_category . " services, " .
+                 $childDetails->child_category . " providers, Quickdials";
+
+		}
+
+
+		if (!empty($childDetails->meta_description)) {
+			$meta_description = $childDetails->meta_description;
+
+
+		} else {
+			 
+			   $meta_description = "Find the best ".$childDetails->child_category." near you on Quickdials. Compare trusted providers, read reviews, check details, and connect with top-rated businesses and professionals for your needs.";
+
+		}
+			
+		
 		$data['keyword'] = array(
 			'child_category' => $childDetails->child_category,
 			'child_slug' => $childDetails->child_slug,
 			'category_banner' => $banner_image,
 			'alt' => $alt,
-			'meta_title' => $childDetails->meta_title,
-			'meta_keywords' => $childDetails->meta_keywords,
-			'meta_description' => $childDetails->meta_description,
+			'meta_title' => $meta_title,
+			'meta_keywords' => $meta_keywords,
+			'meta_description' => $meta_description,
 			'top_description' => $childDetails->top_description,
 			'bottom_description' => $childDetails->bottom_description,
 			'bottom_heading' => $childDetails->bottom_heading,

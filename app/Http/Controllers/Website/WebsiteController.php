@@ -1054,7 +1054,7 @@ class WebsiteController extends Controller
 
 			[
 				'url' => 'repair-services',
-				'img' => config('app.website') . 'img/Repairs-Services.png',
+				'img' => config('app.website') . 'img/Repairs-Services.svg',
 				'alt' => 'Repair Services',
 				'title' => 'Repair Services',
 				'type' => 'child',
@@ -1092,7 +1092,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'professional-courses',
-				'img' => config('app.website') . 'img/IT-Training.png',
+				'img' => config('app.website') . 'popular/IT-Training.jpg',
 				'alt' => 'Professional Courses',
 				'title' => 'Professional Courses',
 				'type' => 'categories',

@@ -926,7 +926,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'repair-services',
-				'img' => config('app.website') . 'img/Repairs-Services.png',
+				'img' => config('app.website') . 'img/Repairs-Services.svg',
 				'alt' => 'Repair Services',
 				'title' => 'Repair Services',
 				'type' => 'child',

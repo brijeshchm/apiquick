@@ -1132,7 +1132,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'study-abroad',
-				'img' => config('app.website') . 'img/study-abroad.png',
+				'img' => config('app.website') . 'img/study-abroad.svg',
 				'alt' => 'Study Abroad',
 				'title' => 'Study Abroad',
 				'type' => 'child',

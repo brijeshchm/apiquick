@@ -866,7 +866,7 @@ class WebsiteController extends Controller
 		$data['homePage'] = [
 			[
 				'url' => 'professional-courses',
-				'img' => config('app.website') . 'img/IT-Training.png',
+				'img' => config('app.website') . 'img/it_training.svg',
 				'alt' => 'Professional Courses',
 				'title' => 'Professional Courses',
 				'type' => 'categories',
@@ -976,7 +976,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'rent-or-buy',
-				'img' => config('app.website') . 'img/Rent-buy.png',
+				'img' => config('app.website') . 'img/rent_buy.svg',
 				'alt' => 'Rent & Buy',
 				'title' => 'Rent & Buy',
 				'type' => 'child',

@@ -317,7 +317,7 @@ class WebsiteController extends Controller
  
 
 
-		$clientscheck = DB::table('clients')
+		$clientsList = DB::table('clients')
 			->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
 			->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
 			->join('assigned_zones', 'clients.id', '=', 'assigned_zones.client_id')
@@ -352,51 +352,6 @@ class WebsiteController extends Controller
         END
     ")
 			->get();
-
-
-		if ($clientscheck->count() > 0) {
-			$clientsList = $clientscheck;
-		} else {
-
-			$clientsList = DB::table('clients')
-				->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
-				->join('assigned_zones', 'clients.id', '=', 'assigned_zones.client_id')
-				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
-
-				->join('citylists', 'assigned_zones.city_id', '=', 'citylists.id')
-				->leftJoin(DB::raw('(
-            SELECT SUM(rating) AS rating, comment_client_ID, COUNT(comment_ID) AS comment_count
-            FROM comments GROUP BY comment_client_ID
-        ) c'), 'c.comment_client_ID', '=', 'clients.id')
-				->select(
-					'clients.*',
-					'clients.id as business_id',
-					'assigned_kwds.*',
-					'citylists.city',
-					'keyword.keyword as keywords',
-					'keyword.slug as slugs',
-					'clients.client_type',
-					'c.rating',
-					'c.comment_count'
-				)
-				->where('keyword.slug', $search_kw)
-				->where('clients.active_status', '1')
-				->groupBy('clients.id')
-
-				->orderByRaw("
-            CASE clients.client_type
-                WHEN 'platinum' THEN 1
-                WHEN 'diamond' THEN 2
-                WHEN 'gold' THEN 3
-                WHEN 'silver' THEN 4
-                ELSE 5
-            END
-        ")
-		->get();
-
-		}
-
-
 
 		$data['clientsList'] = $clientsList->map(function ($client) {
 
@@ -541,7 +496,7 @@ class WebsiteController extends Controller
         'c.avg_rating',
         'c.comment_count'
     )
-	 //->where('citylists.city', $city)
+	 ->where('citylists.city', $city)
     ->where('clients.active_status', '1')
     ->where('keyword.slug', $search_kw)
     ->groupBy('clients.id')

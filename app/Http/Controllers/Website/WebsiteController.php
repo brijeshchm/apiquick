@@ -253,6 +253,14 @@ class WebsiteController extends Controller
 			$paragraph6 = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->paragraph6);
 		}
 
+		if (!empty($keywordDetails->paragraph7)) {
+			$paragraph7 = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->paragraph7);
+		}
+
+
+		if (!empty($keywordDetails->paragraph8)) {
+			$paragraph8 = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->paragraph8);
+		}
 	
 		if (!empty($keywordDetails->top_description)) {
 			$top_description = preg_replace('/{{city}}/i', ucfirst($area), $keywordDetails->top_description);

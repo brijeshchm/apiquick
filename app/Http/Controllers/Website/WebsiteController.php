@@ -105,7 +105,7 @@ class WebsiteController extends Controller
 			->leftjoin('child_category', 'keyword.child_category_id', '=', 'child_category.id')
 		 
 			->where('keyword.slug', $search_kw)
-			->select('keyword.*', 'parent_category.*','child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5','keyword.faqq6', 'keyword.faqa6', 'keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount','keyword.courseabout','keyword.heading','keyword.paragraph1','keyword.paragraph2','keyword.paragraph3','keyword.paragraph4','keyword.paragraph5','keyword.paragraph6','keyword.slug','keyword.bottom_heading','keyword.top_heading','keyword.extra_heading','keyword.extra_description')
+			->select('keyword.*', 'parent_category.*','child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5','keyword.faqq6', 'keyword.faqa6', 'keyword.faqq7', 'keyword.faqa7','keyword.faqq8', 'keyword.faqa8','keyword.faqq9', 'keyword.faqa9','keyword.faqq10', 'keyword.faqa10','keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount','keyword.courseabout','keyword.heading','keyword.paragraph1','keyword.paragraph2','keyword.paragraph3','keyword.paragraph4','keyword.paragraph5','keyword.paragraph6','keyword.paragraph7','keyword.paragraph8','keyword.slug','keyword.bottom_heading','keyword.top_heading','keyword.extra_heading','keyword.extra_description')
 			->first();
  
 			 
@@ -118,6 +118,8 @@ class WebsiteController extends Controller
 		$paragraph4 ="";
 		$paragraph5 ="";
 		$paragraph6 ="";
+		$paragraph7 ="";
+		$paragraph8 ="";
 		$meta_title ="";
 		$meta_keywords ="";
 		$meta_description ="";
@@ -285,6 +287,8 @@ class WebsiteController extends Controller
 			'paragraph4' => $paragraph4,
 			'paragraph5' => $paragraph5,
 			'paragraph6' => $paragraph6,			 
+			'paragraph7' => $paragraph7,			 
+			'paragraph8' => $paragraph8,			 
 			'bottom_heading' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->bottom_heading),
 			'top_heading' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->top_heading),
 			'extra_heading' => preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->extra_heading),
@@ -301,6 +305,19 @@ class WebsiteController extends Controller
 			'faqa5' => $keywordDetails->faqa5,
 			'faqq6' => $keywordDetails->faqq6,
 			'faqa6' => $keywordDetails->faqa6,
+
+			'faqq7' => $keywordDetails->faqq7,
+			'faqa7' => $keywordDetails->faqa7,
+
+			'faqq8' => $keywordDetails->faqq8,
+			'faqa8' => $keywordDetails->faqa8,
+
+			'faqq9' => $keywordDetails->faqq9,
+			'faqa9' => $keywordDetails->faqa9,
+
+			'faqq10' => $keywordDetails->faqq10,
+			'faqa10' => $keywordDetails->faqa10,
+
 			'ratingvalue' => $keywordDetails->ratingvalue,
 			'ratingcount' => $keywordDetails->ratingcount,
 			'parent_category' => $keywordDetails->parent_category,
@@ -2654,7 +2671,7 @@ class WebsiteController extends Controller
 			->leftjoin('parent_category', 'keyword.parent_category_id', '=', 'parent_category.id')
 			->leftjoin('child_category', 'keyword.child_category_id', '=', 'child_category.id')
 			->where('slug', $search_kw)
-			->select('keyword.*', 'parent_category.*', 'child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5','keyword.faqq6','keyword.faqa6', 'keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount','keyword.courseabout','keyword.heading','keyword.paragraph1','keyword.paragraph2','keyword.paragraph3','keyword.paragraph4','keyword.paragraph5','keyword.paragraph6','keyword.slug','keyword.bottom_heading','keyword.top_heading','keyword.extra_heading','keyword.extra_description'
+			->select('keyword.*', 'parent_category.*', 'child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5','keyword.faqq6','keyword.faqa6','keyword.faqq7','keyword.faqa7','keyword.faqq8','keyword.faqa8','keyword.faqq9','keyword.faqa9','keyword.faqq10','keyword.faqa10','keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount','keyword.courseabout','keyword.heading','keyword.paragraph1','keyword.paragraph2','keyword.paragraph3','keyword.paragraph4','keyword.paragraph5','keyword.paragraph6','keyword.paragraph7','keyword.paragraph8','keyword.slug','keyword.bottom_heading','keyword.top_heading','keyword.extra_heading','keyword.extra_description'
 			)
 			->first();
 		 
@@ -2666,6 +2683,8 @@ class WebsiteController extends Controller
 			$paragraph4 ="";
 			$paragraph5 ="";
 			$paragraph6 ="";
+			$paragraph7 ="";
+			$paragraph8 ="";
 
 			if(!$keywordDetails){
 						return response()->json([
@@ -2771,6 +2790,12 @@ class WebsiteController extends Controller
 		if (!empty($keywordDetails->paragraph6)) {
 			$paragraph6 = preg_replace('/in {{city}}/i', $city, $keywordDetails->paragraph6);
 		}
+		if (!empty($keywordDetails->paragraph7)) {
+			$paragraph7 = preg_replace('/in {{city}}/i', $city, $keywordDetails->paragraph7);
+		}
+		if (!empty($keywordDetails->paragraph8)) {
+			$paragraph8 = preg_replace('/in {{city}}/i', $city, $keywordDetails->paragraph8);
+		}
 
 		$data['keyword'] = array(
 			'keyword' => $keywordDetails->keyword,
@@ -2801,9 +2826,25 @@ class WebsiteController extends Controller
 			'faqq4' => preg_replace('/{{city}}/i', $city, $keywordDetails->faqq4),
 			'faqa4' => preg_replace('/{{city}}/i', $city, $keywordDetails->faqa4),
 			'faqq5' => preg_replace('/{{city}}/i', $city, $keywordDetails->faqq5),
-			'faqa5' => preg_replace('/{{city}}/i', $city, $keywordDetails->faqa5),			
+			'faqa5' => preg_replace('/{{city}}/i', $city, $keywordDetails->faqa5),	
+
 			'faqq6' => preg_replace('/{{city}}/i', $city, $keywordDetails->faqq6),
 			'faqa6' => preg_replace('/{{city}}/i', $city, $keywordDetails->faqa6),
+					
+			'faqq7' => preg_replace('/{{city}}/i', $city, $keywordDetails->faqq7),
+			'faqa7' => preg_replace('/{{city}}/i', $city, $keywordDetails->faqa7),
+
+					
+			'faqq8' => preg_replace('/{{city}}/i', $city, $keywordDetails->faqq8),
+			'faqa8' => preg_replace('/{{city}}/i', $city, $keywordDetails->faqa8),
+
+					
+			'faqq9' => preg_replace('/{{city}}/i', $city, $keywordDetails->faqq9),
+			'faqa9' => preg_replace('/{{city}}/i', $city, $keywordDetails->faqa9),
+
+					
+			'faqq10' => preg_replace('/{{city}}/i', $city, $keywordDetails->faqq10),
+			'faqa10' => preg_replace('/{{city}}/i', $city, $keywordDetails->faqa10),
 			
 			'courseabout' => $courseabout,
 			'heading' => $heading,
@@ -2813,6 +2854,8 @@ class WebsiteController extends Controller
 			'paragraph4' => $paragraph4,
 			'paragraph5' => $paragraph5,
 			'paragraph6' => $paragraph6,
+			'paragraph7' => $paragraph7,
+			'paragraph8' => $paragraph8,
  		
 			'ratingvalue' => $keywordDetails->ratingvalue,
 			'ratingcount' => $keywordDetails->ratingcount,

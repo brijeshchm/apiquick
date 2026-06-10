@@ -352,21 +352,33 @@ class WebsiteController extends Controller
         FROM comments GROUP BY comment_client_ID
     ) c'), 'c.comment_client_ID', '=', 'clients.id')
 			->select(
-				'clients.*',
 				'clients.id as business_id',
-				'assigned_kwds.*',
+				'clients.business_name',
+				'clients.category_service',
+				'clients.verified',			 
+				'clients.gst_status',
+				'clients.active_status',
+				'clients.trending',			 
+				'clients.topSearch',			 
+				'clients.trusted_status',
+				'clients.featured',
+				'clients.openUntil',
+				'clients.address',
+				'clients.year_of_estb',
+				'clients.certified_status',
+				'clients.certifications',
+				'clients.business_slug',
+				'clients.client_type',			 
 				'citylists.city',
 				'keyword.keyword as keywords',
 				'keyword.slug as slugs',
-				'clients.client_type',
-				'c.rating',
-				'c.comment_count'
+				DB::raw('COALESCE(c.rating,0) as rating'),
+				DB::raw('COALESCE(c.comment_count,0) as comment_count')
 			)
 			->where('citylists.city', $city)
 			 ->where('clients.active_status', '1')
 			->where('keyword.slug', $search_kw)
-			// ->groupBy('clients.id')
-			->distinct('clients.id')
+			 ->groupBy('clients.id')			 
 			->orderByRaw("
         CASE clients.client_type
             WHEN 'platinum' THEN 1
@@ -376,7 +388,7 @@ class WebsiteController extends Controller
             ELSE 5
         END
     ")
-			->get();
+			->limit(20)->get();
 
 		$data['clientsList'] = $clientsList->map(function ($client) {
 
@@ -426,7 +438,7 @@ class WebsiteController extends Controller
 
 			$assignedCategory = DB::table('assigned_kwds')
 				->join('child_category', 'assigned_kwds.child_cat_id', '=', 'child_category.id')
-				->where('assigned_kwds.client_id', $client->client_id)
+				->where('assigned_kwds.client_id', $client->business_id)
 				->orderBy('child_category', 'asc')
 				->distinct()
 				->limit(10)
@@ -451,46 +463,27 @@ class WebsiteController extends Controller
 				'logo' => $logoImage ?? '',
 				'altLogo' => $altLogo ?? '',
 				'gallery' => $galleryArray ?? '',
-				'certifications' => $client->certifications,
-				'sirName' => $client->sirName,
-				'first_name' => $client->first_name,
-				'middle_name' => $client->middle_name,
-				'last_name' => $client->last_name,
+				'certifications' => $client->certifications,				 
 				'certified_status' => $client->certified_status,
 				'trusted_status' => $client->trusted_status,
 				'gst_status' => $client->gst_status,
 				'certified_img' => $certified_img,
 				'trusted_img' => $trusted_img,
-				'gst_img' => $gst_img,
-				'website' => $client->website,
-				'city' => $client->city,
-				'state' => $client->state,
-				'area' => $client->area,
-				'zone' => $client->zone,
-				'gst_no' => $client->gst_no,
-				'dpiit_no' => $client->dpiit_no,
-				'pan_no' => $client->pan_no,
-				'cin_no' => $client->cin_no,
-				'iso_no' => $client->iso_no,
-				'msme_no' => $client->msme_no,
-				'coi_no' => $client->coi_no,			 
+				'gst_img' => $gst_img,			 
+				'city' => $client->city,	 		 
 				'verified' => $client->verified,
-				'trending' => $client->trending,
+				'active_status' => $client->active_status,
+				'trending' => $client->trending,			 
 				'topSearch' => $client->topSearch,
-				'featured' => $client->featured,
-				'description' => $client->description,
-				'mapUrl' => "https://maps.google.com/?q=" . generate_slug($client->address),
-				'openUntil' => $client->openUntil,
-				'address' => $client->address,
-				'pincode' => $client->pincode,
-				'country' => $client->country,
-				'year_of_estb' => $client->year_of_estb,
-				'landmark' => $client->landmark,
+				'featured' => $client->featured,				 
+				'mapUrl' => "https://maps.google.com/?q=" . generate_slug($client->address),				 
+				'address' => $client->address,			 
+				'established' => $client->year_of_estb,			 
 				'rating' => $client->rating,
 				'avgRating' => $avgRating,
 				'call' => "917559435943",
 				'whatsapp' => "917559435943",
-				'comment_count' => $client->comment_count,
+				'reviewCount' => $client->comment_count,
 				'tags' => $assignedKeywords,
 				'category' => $assignedCategory ?? null,
 				'overviewBusiness' => $template ?? null,
@@ -512,8 +505,25 @@ class WebsiteController extends Controller
         GROUP BY comment_client_ID
     ) c'), 'c.comment_client_ID', '=', 'clients.id')
     ->select(
-        'clients.*',
-        'clients.id as business_id',
+       
+		'clients.id as business_id',
+		'clients.business_name',
+		'clients.category_service',
+		'clients.verified',
+		'clients.year_of_estb',
+		'clients.gst_status',
+		'clients.active_status',
+		'clients.trusted_status',
+		'clients.certified_status',
+		'clients.trending',
+		'clients.topSearch',
+		'clients.openUntil',
+		'clients.year_of_estb',
+		'clients.address',
+		'clients.featured',	 
+		'clients.business_slug',
+		'clients.client_type',			 
+		'citylists.city',  
         DB::raw('MIN(citylists.city)    as city'),
         DB::raw('MIN(keyword.keyword)   as keywords'),
         DB::raw('MIN(keyword.slug)      as slugs'),
@@ -605,46 +615,21 @@ class WebsiteController extends Controller
 			return [
 				'business_id' => $client->business_id,
 				'business_name' => $client->business_name,
-				'business_slug' => $client->business_slug,
-				'logo' => $logoImage ?? '',
-				'altLogo' => $altLogo ?? '',
-				'gallery' => $galleryArray ?? '',
-				'certifications' => $client->certifications,
-				'sirName' => $client->sirName,
-				'first_name' => $client->first_name,
-				'middle_name' => $client->middle_name,
-				'last_name' => $client->last_name,
+				'business_slug' => $client->business_slug,			 
 				'certified_status' => $client->certified_status,
 				'trusted_status' => $client->trusted_status,
 				'gst_status' => $client->gst_status,
 				'certified_img' => $certified_img,
 				'trusted_img' => $trusted_img,
-				'gst_img' => $gst_img,
-				'website' => $client->website,
-				'city' => $client->city,
-				'state' => $client->state,
-				'area' => $client->area,
-				'zone' => $client->zone,
-				'gst_no' => $client->gst_no,
-				'dpiit_no' => $client->dpiit_no,
-				'pan_no' => $client->pan_no,
-				'cin_no' => $client->cin_no,
-				'iso_no' => $client->iso_no,
-				'msme_no' => $client->msme_no,
-				'coi_no' => $client->coi_no,
-			 
+				'gst_img' => $gst_img,				 
+				'city' => $client->city,			 
 				'verified' => $client->verified,
 				'trending' => $client->trending,
 				'topSearch' => $client->topSearch,
-				'featured' => $client->featured,
-				'description' => $client->description,
-				'mapUrl' => "https://maps.google.com/?q=" . generate_slug($client->address),
-				'openUntil' => $client->openUntil,
-				'address' => $client->address,
-				'pincode' => $client->pincode,
-				'country' => $client->country,
-				'year_of_estb' => $client->year_of_estb,
-				'landmark' => $client->landmark,
+				'featured' => $client->featured,			 
+				'mapUrl' => "https://maps.google.com/?q=" . generate_slug($client->address),				 
+				'address' => $client->address,			 
+				'year_of_estb' => $client->year_of_estb,			
 				'rating' => $client->rating,
 				'avgRating' => $avgRating,
 				'call' => "917559435943",
@@ -2891,11 +2876,26 @@ class WebsiteController extends Controller
     ) c'), 'c.comment_client_ID', '=', 'clients.id')
 
 			->select(
-				'clients.*',
-				'clients.id as client_id',
+				'clients.id as business_id',
+				'clients.business_name',
+				'clients.category_service',
+				'clients.verified',			 
+				'clients.gst_status',
+				'clients.active_status',
+				'clients.trending',			 
+				'clients.topSearch',			 
+				'clients.trusted_status',
+				'clients.featured',
+				'clients.openUntil',
+				'clients.address',
+				'clients.year_of_estb',
+				'clients.certified_status',
+				'clients.certifications',
 				'clients.business_slug',
-				'clients.client_type',
-
+				'clients.client_type',			 
+				'clients.city',				 
+				'keyword.keyword as keywords',
+				'keyword.slug as slugs',
 				DB::raw('MAX(c.rating) as rating'),
 				DB::raw('MAX(c.comment_count) as comment_count')
 			)
@@ -2935,7 +2935,7 @@ class WebsiteController extends Controller
 				 
 				$assignedKeywords = DB::table('assigned_kwds')
 				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
-				->where('assigned_kwds.client_id', $client->client_id)
+				->where('assigned_kwds.client_id', $client->business_id)
 				->orderBy('keyword', 'asc')
 				->distinct()
 				->limit(10)
@@ -2945,7 +2945,7 @@ class WebsiteController extends Controller
 
 				$assignedCategory = DB::table('assigned_kwds')
 				->join('child_category', 'assigned_kwds.child_cat_id', '=', 'child_category.id')
-				->where('assigned_kwds.client_id', $client->client_id)
+				->where('assigned_kwds.client_id', $client->business_id)
 				->orderBy('child_category', 'asc')
 				->distinct()
 				->limit(10)
@@ -2984,53 +2984,37 @@ class WebsiteController extends Controller
 					);
 					
 			return [
-				'business_id' => $client->client_id,
+				'business_id' => $client->business_id,
 				'business_name' => $client->business_name,
 				'business_slug' => $client->business_slug,
 				'logo' => $logoImage ?? '',
 				'altLogo' => $altLogo ?? '',
 				'gallery' => $galleryArray ?? '',
-				'certifications' => $client->certifications,
-				'sirName' => $client->sirName,
-				'first_name' => $client->first_name,
-				'middle_name' => $client->middle_name,
-				'last_name' => $client->last_name,
+	 
+				 
 				'certified_status' => $client->certified_status,
 				'trusted_status' => $client->trusted_status,
 				'gst_status' => $client->gst_status,
-				'gst_no' => $client->gst_no,
-				'dpiit_no' => $client->dpiit_no,
-				'pan_no' => $client->pan_no,
-				'cin_no' => $client->cin_no,
-				'iso_no' => $client->iso_no,
-				'msme_no' => $client->msme_no,
-				'coi_no' => $client->coi_no,
+				 
 				'certified_img' => $certified_img,
 				'trusted_img' => $trusted_img,
 				'gst_img' => $gst_img,
-				'website' => $client->website,
+			 
 				'verified' => $client->verified,
 				'trending' => $client->trending,
 				'topSearch' => $client->topSearch,
-				'featured' => $client->featured,
-				'description' => $client->description,
-				'city' => $client->city,
-				'state' => $client->state,
-				'area' => $client->area,
-				'zone' => $client->zone,
-				'address' => $client->address,
-				'pincode' => $client->pincode,
-				'country' => $client->country,
+				'featured' => $client->featured,			 
+				'city' => $client->city,				 
+				'address' => $client->address,			 
 				'year_of_estb' => $client->year_of_estb,
-				'landmark' => $client->landmark,
+	 
 				'mapUrl' => "https://maps.google.com/?q=" . generate_slug($client->address),
 				'whatsapp' => '7559435943',
 				'call' => '917559435943',
 				'rating' => $client->rating,
 				'openUntil' => $client->openUntil,
 				'avgRating' => $avgRating,
-				'comment_count' => $client->comment_count,
-				 
+				'comment_count' => $client->comment_count,				 
 				'tags' => $assignedKeywords ?? null,
 				'category' => $assignedCategory ?? null,
 				'overviewBusiness' => $template ?? null,
@@ -3052,9 +3036,32 @@ class WebsiteController extends Controller
         GROUP BY comment_client_ID
     ) c'), 'c.comment_client_ID', '=', 'clients.id')
     ->select(
-        'clients.*',
         'clients.id as business_id',
-        'assigned_kwds.*',
+				'clients.business_name',
+				'clients.category_service',
+				'clients.verified',			 
+				'clients.gst_status',
+				'clients.active_status',
+				'clients.trending',			 
+				'clients.topSearch',			 
+				'clients.trusted_status',
+				'clients.featured',
+				'clients.openUntil',
+				'clients.address',
+				'clients.year_of_estb',
+				'clients.certified_status',
+				'clients.certifications',
+				'clients.business_slug',
+				'clients.client_type',			 
+				'clients.state',			 
+				'clients.area',			 
+				'clients.zone',			 
+				'clients.pincode',			 
+				'clients.country',			 
+				'clients.landmark',			 
+				 
+        
+     
         'citylists.city',
         'keyword.keyword as keywords',
         'keyword.slug as slugs',
@@ -3066,8 +3073,7 @@ class WebsiteController extends Controller
     
     ->where('clients.active_status', '1')
     ->where('keyword.slug', $search_kw)
-    //->where('c.comment_count', '>', 0)   // 👈 ADD THIS
-    ->distinct('clients.id')
+	->groupBy('clients.id')
     ->orderByRaw("
         CASE clients.client_type
             WHEN 'platinum' THEN 1
@@ -3094,12 +3100,9 @@ class WebsiteController extends Controller
 				}
 			}
 
-		 
-
-				 
-				$assignedKeywords = DB::table('assigned_kwds')
+			$assignedKeywords = DB::table('assigned_kwds')
 				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
-				->where('assigned_kwds.client_id', $client->client_id)
+				->where('assigned_kwds.client_id', $client->business_id)
 				->orderBy('keyword', 'asc')
 				->distinct()
 				->limit(10)
@@ -3109,7 +3112,7 @@ class WebsiteController extends Controller
 
 				$assignedCategory = DB::table('assigned_kwds')
 				->join('child_category', 'assigned_kwds.child_cat_id', '=', 'child_category.id')
-				->where('assigned_kwds.client_id', $client->client_id)
+				->where('assigned_kwds.client_id', $client->business_id)
 				->orderBy('child_category', 'asc')
 				->distinct()
 				->limit(10)
@@ -3147,36 +3150,23 @@ class WebsiteController extends Controller
 				$categorySlug
 			);
 			return [
-				'business_id' => $client->client_id,
+				'business_id' => $client->business_id,
 				'business_name' => $client->business_name,
 				'business_slug' => $client->business_slug,
 				'logo' => $logoImage ?? '',
 				'altLogo' => $altLogo ?? '',
 				'gallery' => $galleryArray ?? '',
-				'certifications' => $client->certifications,
-				'sirName' => $client->sirName,
-				'first_name' => $client->first_name,
-				'middle_name' => $client->middle_name,
-				'last_name' => $client->last_name,
+				'certifications' => $client->certifications,			 
 				'certified_status' => $client->certified_status,
 				'trusted_status' => $client->trusted_status,
-				'gst_status' => $client->gst_status,
-				'gst_no' => $client->gst_no,
-				'dpiit_no' => $client->dpiit_no,
-				'pan_no' => $client->pan_no,
-				'cin_no' => $client->cin_no,
-				'iso_no' => $client->iso_no,
-				'msme_no' => $client->msme_no,
-				'coi_no' => $client->coi_no,
+				'gst_status' => $client->gst_status,			 
 				'certified_img' => $certified_img,
 				'trusted_img' => $trusted_img,
-				'gst_img' => $gst_img,
-				'website' => $client->website,
+				'gst_img' => $gst_img,			 
 				'verified' => $client->verified,
 				'trending' => $client->trending,
 				'topSearch' => $client->topSearch,
-				'featured' => $client->featured,
-				'description' => $client->description,
+				'featured' => $client->featured,				 
 				'city' => $client->city,
 				'state' => $client->state,
 				'area' => $client->area,
@@ -3192,8 +3182,7 @@ class WebsiteController extends Controller
 				'rating' => $client->rating,
 				'openUntil' => $client->openUntil,
 				'avgRating' => $avgRating,
-				'comment_count' => $client->comment_count,
-				 
+				'comment_count' => $client->comment_count,				 
 				'tags' => $assignedKeywords ?? null,
 				'category' => $assignedCategory ?? null,
 				'overviewBusiness' => $template ?? null,

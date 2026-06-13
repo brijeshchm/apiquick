@@ -5467,9 +5467,9 @@ class WebsiteController extends Controller
 				'type' => 'categories',
 			],
 			[
-				'url' => 'spa-and-beauty',
+				'url' => 'spa-hub',
 				'title' => 'SPA Beauty',
-				'type' => 'child',
+				'type' => 'keyword',
 			],
 			[
 				'url' => 'loan',
@@ -7459,8 +7459,7 @@ class WebsiteController extends Controller
 
 		return response()->json([
 			'success' => true,
-			'status' => true,
-			 
+			'status' => true,			 
 			'data' => $data,
 		], 200);
 	}

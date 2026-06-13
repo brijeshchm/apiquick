@@ -880,11 +880,11 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'spa-and-beauty',
+				'url' => 'spa-hub',
 				'img' => config('app.website') . 'img/Spa & Beauty.png',
 				'alt' => 'Spa & Beauty',
 				'title' => 'Spa & Beauty',
-				'type' => 'child',
+				'type' => 'keyword',
 				'rating' => '5',
 				'count' => '325',
 

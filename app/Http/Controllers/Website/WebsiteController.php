@@ -910,7 +910,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'professional',
+				'url' => 'professional-courses',
 				'img' => config('app.website') . 'img/Professional.png',
 				'alt' => 'Professional',
 				'title' => 'Professional',
@@ -1116,7 +1116,7 @@ class WebsiteController extends Controller
 
 			],
 			[
-				'url' => 'professional',
+				'url' => 'professional-courses',
 				'img' => config('app.website') . 'img/Professional.png',
 				'alt' => 'Professional',
 				'title' => 'Professional',

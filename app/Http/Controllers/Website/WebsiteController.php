@@ -645,7 +645,7 @@ class WebsiteController extends Controller
 
 		$servicesRelated = Keyword::where('child_category_id', $keywordDetails->child_category_id)
 			->where('parent_category_id', $keywordDetails->parent_category_id)
-			->select('keyword', 'icon', 'slug')
+			->select('keyword', 'icon', 'slug','meta_description')
 			->orderBy('keyword', 'asc')
 			->distinct()
 			->get();

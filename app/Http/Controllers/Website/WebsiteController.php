@@ -142,7 +142,7 @@ class WebsiteController extends Controller
 			->map(function ($b) {
 				$b->image_url = $b->image_path ? asset($b->image_path) :'client/images/computer-courses-training.jpg';
 				$b->alt_text  = $b->alt_text ?: 'Banner';
-				$b->click_url = $b->client_slug ? '/business-details/' . $b->client_slug : null;
+				$b->click_url = $b->client_slug ? '/businessdetails/' . $b->client_slug : null;
 				return $b;
 			})
 			->values();
@@ -4865,7 +4865,7 @@ class WebsiteController extends Controller
 		 
 			$addressText = !empty($clientscheck->address) ? $clientscheck->address : '';
 			$mapText = !empty($clientscheck->business_map) ? '\n Directions: ' . $clientscheck->business_map : '';
-			$profile_url = 'https://www.quickdials.com/business-details/' . $clientscheck->business_slug;
+			$profile_url = 'https://www.quickdials.com/businessdetails/' . $clientscheck->business_slug;
 			$keyword = "";
 			$address_data = "Greetings from {$businessName},\n"
 				. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
@@ -4897,7 +4897,7 @@ class WebsiteController extends Controller
 				'meta_keyword' => $clientscheck->meta_keyword,
 				'business_name' => $clientscheck->business_name,
 				'business_slug' => $clientscheck->business_slug,
-				'business_url' => config('app.website') . 'business-details/' . $clientscheck->business_slug,
+				'business_url' => config('app.website') . 'businessdetails/' . $clientscheck->business_slug,
 				'logo' => $logoImage ?? '',
 				'altLogo' => $altLogo . ' Logo' ?? '',
 				'profile_banner' => $profile_pic ?? '',

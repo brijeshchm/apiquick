@@ -2849,7 +2849,7 @@ class SiteController extends Controller
 			$data['count'] = $count;
 			$addressText = !empty($clientscheck->address) ? $clientscheck->address : '';
 			$mapText = !empty($clientscheck->business_map) ? '\n Directions: ' . $clientscheck->business_map : '';
-			$profile_url = 'https://www.quickdials.com/business-details/' . $clientscheck->business_slug;
+			$profile_url = 'https://www.quickdials.com/businessdetails/' . $clientscheck->business_slug;
 			$keyword = "";
 			$address_data = "Greetings from {$businessName},\n"
 				. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
@@ -2878,7 +2878,7 @@ class SiteController extends Controller
 				'business_id' => $clientscheck->business_id,
 				'business_name' => $clientscheck->business_name,
 				'business_slug' => $clientscheck->business_slug,
-				'business_url' => config('app.website') . 'business-details/' . $clientscheck->business_slug,
+				'business_url' => config('app.website') . 'businessdetails/' . $clientscheck->business_slug,
 				'logo' => $logoImage ?? '',
 				'altLogo' => $altLogo . ' Logo' ?? '',
 				'profile_banner' => $profile_pic ?? '',

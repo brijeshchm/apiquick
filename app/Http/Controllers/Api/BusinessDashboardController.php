@@ -137,7 +137,7 @@ class BusinessDashboardController extends Controller
 				$keyword = !empty($val->kw_text) ? $val->kw_text : 'your enquiry';
 				$addressText = !empty($client->address) ? $client->address : '';
 				$mapText = !empty($client->business_map) ? '\n Directions: ' . $client->business_map : '';
-				$profile_url = 'https://www.quickdials.com/business-details/' . $client->business_slug;
+				$profile_url = 'https://www.quickdials.com/businessdetails/' . $client->business_slug;
 
 				$address_data = "Greetings from {$businessName},\n"
 					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"

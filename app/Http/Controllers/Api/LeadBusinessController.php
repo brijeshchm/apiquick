@@ -78,7 +78,7 @@ class LeadBusinessController extends Controller
 				$keyword = !empty($val->kw_text) ? $val->kw_text : 'your enquiry';
 				$addressText = !empty($client->address) ? $currentUser->address : '';
 				$mapText = !empty($client->business_map) ? '\n Directions: ' . $currentUser->business_map : '';
-				$profile_url = 'https://www.quickdials.com/business-details/' . $currentUser->business_slug;
+				$profile_url = 'https://www.quickdials.com/businessdetails/' . $currentUser->business_slug;
 
 				$address_data = "Greetings from {$businessName},\n"
 					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
@@ -211,7 +211,7 @@ class LeadBusinessController extends Controller
 				$keyword = !empty($val->kw_text) ? $val->kw_text : 'your enquiry';
 				$addressText = !empty($client->address) ? $currentUser->address : '';
 				$mapText = !empty($client->business_map) ? '\n Directions: ' . $currentUser->business_map : '';
-				$profile_url = 'https://www.quickdials.com/business-details/' . $currentUser->business_slug;
+				$profile_url = 'https://www.quickdials.com/businessdetails/' . $currentUser->business_slug;
 
 				$address_data = "Greetings from {$businessName},\n"
 					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"

@@ -3536,7 +3536,7 @@ class WebsiteController extends Controller
 
 		$slug = $request->input('category-slug');
 		$data['categoryList'] = DB::table('parent_category')
-			->join('child_category', 'child_category.parent_category_id', '=', 'parent_category.id')
+			->leftjoin('child_category', 'child_category.parent_category_id', '=', 'parent_category.id')
 			->select(
 				'parent_category.id as parent_id',
 				'parent_category.parent_slug',

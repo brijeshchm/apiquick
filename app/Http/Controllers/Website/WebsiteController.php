@@ -3597,7 +3597,7 @@ class WebsiteController extends Controller
 		if (!empty($categoryDetails->meta_title)) {
 			$meta_title = $categoryDetails->meta_title;
 		} else {
-			$meta_title = $categoryDetails->child_category ." | Find Trusted Services, Businesses & Professionals Near You | Quickdials ";
+			$meta_title = $categoryDetails->parent_category ." | Find Trusted Services, Businesses & Professionals Near You | Quickdials ";
 
 		}
 		if (!empty($categoryDetails->meta_keywords)) {

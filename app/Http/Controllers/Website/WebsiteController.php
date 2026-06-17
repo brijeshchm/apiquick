@@ -4890,6 +4890,37 @@ class WebsiteController extends Controller
 				'for_review' => $for_review,
 
 			);
+			
+			$faqs = array(
+				'faqq1' => $clientscheck->faqq1,
+			'faqa1' => $clientscheck->faqa1,
+			'faqq2' => $clientscheck->faqq2,
+			'faqa2' => $clientscheck->faqa2,
+			'faqq3' => $clientscheck->faqq3,
+			'faqa3' => $clientscheck->faqa3,
+			'faqq4' => $clientscheck->faqq4,
+			'faqa4' => $clientscheck->faqa4,
+			'faqq5' => $clientscheck->faqq5,
+			'faqa5' => $clientscheck->faqa5,
+			'faqq6' => $clientscheck->faqq6,
+			'faqa6' => $clientscheck->faqa6,
+
+			'faqq7' => $clientscheck->faqq7,
+			'faqa7' => $clientscheck->faqa7,
+
+			'faqq8' => $clientscheck->faqq8,
+			'faqa8' => $clientscheck->faqa8,
+
+			'faqq9' => $clientscheck->faqq9,
+			'faqa9' => $clientscheck->faqa9,
+
+			'faqq10' => $clientscheck->faqq10,
+			'faqa10' => $clientscheck->faqa10,
+			);
+			
+			
+			
+			
 			$data['clientsList'] = [
 				'business_id' => $clientscheck->business_id,
 				'meta_title' => $clientscheck->meta_title,
@@ -4937,6 +4968,7 @@ class WebsiteController extends Controller
 				'ratingCount' => $clientscheck->comment_count,				 
 				'social' => $social,
 				'user_share' => $user_share,
+				'faqs' => $faqs,
 			];
 			$isoImage = "";
 			if (!empty($clientscheck->iso_certificate)) {

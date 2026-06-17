@@ -5184,16 +5184,35 @@ class WebsiteController extends Controller
 				$city         = $clientscheck->city ?? '';
 				$location     = trim($area . ($area && $city ? ', ' : '') . $city);
 
-			$area_business = [
+				if(!empty($clientscheck->business_description)){
+
+				$area_business = [
 				'heading' =>
-					($clientscheck->business_name ?? '') .
-					' in ' .
-					($clientscheck->area ?? '') .
-					', ' .
-					($clientscheck->city ?? ''),
+				($clientscheck->business_name ?? '') .
+				' in ' .
+				($clientscheck->area ?? '') .
+				', ' .
+				($clientscheck->city ?? ''),
+
+				'paragraph' => $clientscheck->business_description,
+				];
+
+				}else{
+
+
+				$area_business = [
+				'heading' =>
+				($clientscheck->business_name ?? '') .
+				' in ' .
+				($clientscheck->area ?? '') .
+				', ' .
+				($clientscheck->city ?? ''),
 
 				'paragraph' => "{$businessName}, located in {$location}, has built a strong reputation as a trusted name in {$city} for delivering professional, reliable, and customer-focused services. With years of hands-on experience, a skilled team, and a strong commitment to quality, {$businessName} caters to a wide range of customer needs across {$area} and nearby areas in {$city}, ensuring timely service, transparent pricing, and lasting results every time.",
-			];
+				];
+
+
+				}
 
 			$data['area_business'] = $area_business;
 
@@ -5232,13 +5251,24 @@ class WebsiteController extends Controller
 
 
 
-			$overview_business = [
-				'heading' => 'Overview of Business',
-				'paragraph' => $overviewParagraph,
-				'paragraph1' => $overviewParagraph2
-			];
-
+				if(!empty($clientscheck->business_overview)){
+							$overview_business = [
+							'heading' => 'Overview of Business',
+							'paragraph' => $clientscheck->business_overview,
+							'paragraph1' => ''
+						];
+				}else{
+					
+					$overview_business = [
+							'heading' => 'Overview of Business',
+							'paragraph' => $overviewParagraph,
+							'paragraph1' => $overviewParagraph2
+						];				
+					
+				}
 			$data['overview_business'] = $overview_business;
+			
+			
 			return response()->json([
 				'success' => true,
 				'status' => true,

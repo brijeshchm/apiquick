@@ -4323,7 +4323,74 @@ class WebsiteController extends Controller
 	 *     )
 	 * )
 	 */
-	public function getCityList(Request $request)
+	 public function getCityList(Request $request)
+	{
+		$cid = trim($request->input('city', ''));
+
+		$defaultCities = [
+			'Hyderabad',
+			'Patna',
+			'Gorakhpur',
+			'Faridabad',
+			'Delhi',
+			'Noida',
+			'Ghaziabad',
+			'Mumbai',
+			'Pune',
+			'Meerut',
+			'Bangalore',
+			'Indore',
+			'Kanpur',
+			'Chennai',
+			'Kolkata',
+			'Coimbatore',
+			'Prayagraj'
+		];
+
+		$query = DB::table('zones')
+			->join('citylists', 'citylists.id', '=', 'zones.city_id')
+			->whereIn('citylists.city', $defaultCities);
+
+		if (!empty($cid)) {
+			$query->where(function ($q) use ($cid) {
+				$q->where('citylists.city', 'LIKE', "%{$cid}%")
+				  ->orWhere('zones.zone', 'LIKE', "%{$cid}%");
+			});
+		}
+
+		$zoneResults = $query
+			->select(
+				DB::raw('MIN(zones.id) as zone_id'),
+				DB::raw('MIN(zones.zone) as zone'),
+				'citylists.id as city_id',
+				'citylists.city as cityName',
+				DB::raw('NULL as pincode')
+			)
+			->groupBy('citylists.id', 'citylists.city')
+			->orderBy('citylists.city', 'asc')
+			->get();
+
+		$data = $zoneResults->map(function ($zone) {
+			$cityDetails = collect([
+				$zone->zone ?? null,
+				$zone->cityName ?? null,
+			])->filter()->implode(', ');
+
+			return [
+				'id' => $zone->zone_id,
+				'city' => $zone->cityName,
+				'cityDetails' => ucfirst($cityDetails)
+			];
+		})->unique('cityDetails')->values();
+
+		return response()->json([
+			'status' => true,
+			'message' => 'Successfully',
+			'data' => $data
+		], 200);
+	}
+
+	public function getCityList_good(Request $request)
 	{
 
 		$cid = trim($request->input('city'));
@@ -4417,7 +4484,6 @@ class WebsiteController extends Controller
 		], 200);
 
 	}
-
 
 /**
 	 * @OA\Get(

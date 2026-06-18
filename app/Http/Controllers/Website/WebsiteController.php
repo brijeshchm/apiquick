@@ -1059,7 +1059,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'professional-courses',
-				'img' => config('app.website') . 'popular/IT-Training.jpg',
+				'img' => config('app.website') . 'popular/IT-Training.png',
 				'alt' => 'Professional Courses',
 				'title' => 'Professional Courses',
 				'type' => 'categories',
@@ -1069,7 +1069,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'doctor',
-				'img' => config('app.website') . 'img/Doctor.webp',
+				'img' => config('app.website') . 'img/Doctor.png',
 				'alt' => 'Doctor',
 				'title' => 'Doctor',
 				'type' => 'keyword',

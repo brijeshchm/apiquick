@@ -369,6 +369,8 @@ class WebsiteController extends Controller
 				'clients.certifications',
 				'clients.business_slug',
 				'clients.client_type',			 
+				'clients.pictures',			 
+				'clients.logo',			 
 				'citylists.city',
 				'keyword.keyword as keywords',
 				'keyword.slug as slugs',
@@ -2893,7 +2895,10 @@ class WebsiteController extends Controller
 				'clients.certifications',
 				'clients.business_slug',
 				'clients.client_type',			 
-				'clients.city',				 
+				'clients.city',		
+				'clients.logo',		
+				'clients.pictures',		
+				
 				'keyword.keyword as keywords',
 				'keyword.slug as slugs',
 				DB::raw('MAX(c.rating) as rating'),
@@ -4888,6 +4893,8 @@ class WebsiteController extends Controller
 				}
 			}
 
+
+ 
 			$assignedKeywords = DB::table('assigned_kwds')
 				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
 				->where('assigned_kwds.client_id', $clientscheck->business_id)

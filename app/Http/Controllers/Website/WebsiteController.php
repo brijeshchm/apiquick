@@ -863,7 +863,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'entrance-exams-coaching',
-				'img' => config('app.website') . 'img/government-exam.png',
+				'img' => config('app.website') . 'popular/government-exam.png',
 				'alt' => 'Government exam',
 				'title' => 'Government exam',
 				'type' => 'child',
@@ -903,7 +903,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'packers-and-movers',
-				'img' => config('app.website') . 'img/Packers-movers.png',
+				'img' => config('app.website') . 'popular/Packers-movers.png',
 				'alt' => 'Packers & Movers',
 				'title' => 'Packers & Movers',
 				'type' => 'child',
@@ -913,7 +913,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'professional-courses',
-				'img' => config('app.website') . 'img/Professional.png',
+				'img' => config('app.website') . 'popular/Professional.png',
 				'alt' => 'Professional',
 				'title' => 'Professional',
 				'type' => 'categories',
@@ -933,7 +933,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'collages-and-Institutions',
-				'img' => config('app.website') . 'img/Education.png',
+				'img' => config('app.website') . 'popular/Education.png',
 				'alt' => 'Education',
 				'title' => 'Education',
 				'type' => 'categories',
@@ -952,7 +952,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'sports-academy',
-				'img' => config('app.website') . 'img/sports.png',
+				'img' => config('app.website') . 'popular/sports.png',
 				'alt' => 'Sport Academy',
 				'title' => 'Sport Academy',
 				'type' => 'child',
@@ -970,7 +970,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'loan-service',
-				'img' => config('app.website') . 'img/Loan.png',
+				'img' => config('app.website') . 'popular/Loan.png',
 				'alt' => 'Loan',
 				'title' => 'Loan',
 				'type' => 'child',
@@ -979,7 +979,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'dance-classes',
-				'img' => config('app.website') . 'img/Dancing.png',
+				'img' => config('app.website') . 'popular/Dancing.png',
 				'alt' => 'Dancing',
 				'title' => 'Dancing',
 				'type' => 'child',
@@ -988,7 +988,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'yoga-classes',
-				'img' => config('app.website') . 'img/Yoga.png',
+				'img' => config('app.website') . 'popular/Yoga.png',
 				'alt' => 'Yoga',
 				'title' => 'Yoga',
 				'type' => 'child',

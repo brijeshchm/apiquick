@@ -834,7 +834,7 @@ class WebsiteController extends Controller
 			[
 				'url' => 'professional-courses',
 				'img' => config('app.website') . 'img/it_training.svg',
-				'alt' => 'Professional Courses',
+				'alt' => 'IT Professional Courses',
 				'title' => 'Professional Courses',
 				'type' => 'categories',
 				'rating' => '4',
@@ -864,7 +864,7 @@ class WebsiteController extends Controller
 			[
 				'url' => 'entrance-exams-coaching',
 				'img' => config('app.website') . 'popular/government-exam.png',
-				'alt' => 'Government exam',
+				'alt' => 'Government exam coaching',
 				'title' => 'Government exam',
 				'type' => 'child',
 				'rating' => '3.5',
@@ -914,7 +914,7 @@ class WebsiteController extends Controller
 			[
 				'url' => 'professional-courses',
 				'img' => config('app.website') . 'popular/Professional.png',
-				'alt' => 'Professional',
+				'alt' => 'Professional Course',
 				'title' => 'Professional',
 				'type' => 'categories',
 				'rating' => '3.5',
@@ -924,7 +924,7 @@ class WebsiteController extends Controller
 			[
 				'url' => 'contractors',
 				'img' => config('app.website') . 'img/contractors.png',
-				'alt' => 'Contractors',
+				'alt' => 'Contractors Property',
 				'title' => 'Contractors',
 				'type' => 'child',
 				'rating' => '3.5',
@@ -934,7 +934,7 @@ class WebsiteController extends Controller
 			[
 				'url' => 'collages-and-Institutions',
 				'img' => config('app.website') . 'popular/Education.png',
-				'alt' => 'Education',
+				'alt' => 'collages and Institutions',
 				'title' => 'Education',
 				'type' => 'categories',
 				'rating' => '3.5',
@@ -944,7 +944,7 @@ class WebsiteController extends Controller
 			[
 				'url' => 'rent-or-buy',
 				'img' => config('app.website') . 'img/rent_buy.svg',
-				'alt' => 'Rent & Buy',
+				'alt' => 'Rent or Buy',
 				'title' => 'Rent & Buy',
 				'type' => 'child',
 				'rating' => '3.5',
@@ -962,7 +962,7 @@ class WebsiteController extends Controller
 			[
 				'url' => 'medical',
 				'img' => config('app.website') . 'img/Medical.png',
-				'alt' => 'Medical',
+				'alt' => 'Medical Medician',
 				'title' => 'Medical',
 				'type' => 'child',
 				'rating' => '3.5',
@@ -971,7 +971,7 @@ class WebsiteController extends Controller
 			[
 				'url' => 'loan-service',
 				'img' => config('app.website') . 'popular/Loan.png',
-				'alt' => 'Loan',
+				'alt' => 'Loan Service',
 				'title' => 'Loan',
 				'type' => 'child',
 				'rating' => '3.5',
@@ -980,7 +980,7 @@ class WebsiteController extends Controller
 			[
 				'url' => 'dance-classes',
 				'img' => config('app.website') . 'popular/Dancing.png',
-				'alt' => 'Dancing',
+				'alt' => 'Dancing Class',
 				'title' => 'Dancing',
 				'type' => 'child',
 				'rating' => '3.5',
@@ -989,7 +989,7 @@ class WebsiteController extends Controller
 			[
 				'url' => 'yoga-classes',
 				'img' => config('app.website') . 'popular/Yoga.png',
-				'alt' => 'Yoga',
+				'alt' => 'Yoga Class',
 				'title' => 'Yoga',
 				'type' => 'child',
 				'rating' => '3.5',
@@ -1032,7 +1032,7 @@ class WebsiteController extends Controller
 			[
 				'url' => 'rent-or-buy',
 				'img' => config('app.website') . 'img/Rent-buy.png',
-				'alt' => 'Rent & Buy',
+				'alt' => 'Rent Or Buy',
 				'title' => 'Rent & Buy',
 				'type' => 'child',
 				'rating' => '3.5',
@@ -1070,7 +1070,7 @@ class WebsiteController extends Controller
 			[
 				'url' => 'doctor',
 				'img' => config('app.website') . 'img/Doctor.png',
-				'alt' => 'Doctor',
+				'alt' => 'Doctor Clinic',
 				'title' => 'Doctor',
 				'type' => 'keyword',
 				'rating' => '4',
@@ -1120,7 +1120,7 @@ class WebsiteController extends Controller
 			[
 				'url' => 'professional-courses',
 				'img' => config('app.website') . 'img/Professional.png',
-				'alt' => 'Professional',
+				'alt' => 'Professional Course',
 				'title' => 'Professional',
 				'type' => 'categories',
 				'rating' => '3.5',
@@ -1130,7 +1130,7 @@ class WebsiteController extends Controller
 			[
 				'url' => 'contractors',
 				'img' => config('app.website') . 'img/contractors.png',
-				'alt' => 'Contractors',
+				'alt' => 'Contractors Builder',
 				'title' => 'Contractors',
 				'type' => 'child',
 				'rating' => '3.5',
@@ -1140,7 +1140,7 @@ class WebsiteController extends Controller
 			[
 				'url' => 'collages-and-Institutions',
 				'img' => config('app.website') . 'img/Education.png',
-				'alt' => 'Education',
+				'alt' => 'Education collages',
 				'title' => 'Education',
 				'type' => 'categories',
 				'rating' => '3.5',
@@ -1169,7 +1169,7 @@ class WebsiteController extends Controller
 			[
 				'url' => 'loan-service',
 				'img' => config('app.website') . 'img/Loan.png',
-				'alt' => 'Loan',
+				'alt' => 'Loan Service',
 				'title' => 'Loan',
 				'type' => 'child',
 				'rating' => '3.5',
@@ -1178,7 +1178,7 @@ class WebsiteController extends Controller
 			[
 				'url' => 'dance-classes',
 				'img' => config('app.website') . 'img/Dancing.png',
-				'alt' => 'Dancing',
+				'alt' => 'Dancing Class performance	',
 				'title' => 'Dancing',
 				'type' => 'child',
 				'rating' => '3.5',
@@ -1437,8 +1437,8 @@ class WebsiteController extends Controller
 			[
 				'url' => 'wedding-planning',
 				'img' => config('app.website') . 'popular/Bridal-Wear.jpg',
-				'alt' => 'Wedding pannel',
-				'title' => 'Wedding pannel',
+				'alt' => 'Bridal Wear',
+				'title' => 'Bridal Wear',
 				'type' => 'keyword',
 				'rating' => '3.5',
 				'count' => '119',
@@ -1782,7 +1782,7 @@ class WebsiteController extends Controller
 			[
 				'url' => 'makeup-artists',
 				'img' => config('app.website') . 'popular/makeup-artists.jpg',
-				'alt' => 'Makeup Artists',
+				'alt' => 'Indian Makeup Artists',
 				'title' => 'Makeup Artists',
 				'type' => 'keyword',
 
@@ -1790,7 +1790,7 @@ class WebsiteController extends Controller
 			[
 				'url' => 'mehendi-artists',
 				'img' => config('app.website') . 'popular/Mehendi-Artists.jpg',
-				'alt' => 'Mehendi Artists',
+				'alt' => 'Indian Mehendi Artists',
 				'title' => 'Mehendi Artists',
 				'type' => 'keyword',
 
@@ -1798,8 +1798,8 @@ class WebsiteController extends Controller
 			[
 				'url' => 'bridal-wear',
 				'img' => config('app.website') . 'popular/Bridal-Wear.jpg',
-				'alt' => 'Bridal Wear',
-				'title' => 'Bridal Wear',
+				'alt' => 'Indian Bridal Wear',
+				'title' => 'Indian Bridal Wear',
 				'type' => 'keyword',
 
 			]
@@ -4348,75 +4348,8 @@ class WebsiteController extends Controller
 	 *     )
 	 * )
 	 */
-	 public function getCityList(Request $request)
-	{
-		$cid = trim($request->input('city', ''));
-
-		$defaultCities = [
-			'Hyderabad',
-			'Patna',
-			'Gorakhpur',
-			'Faridabad',
-			'Delhi',
-			'Noida',
-			'Gurgaon',
-			'Ghaziabad',
-			'Mumbai',
-			'Pune',
-			'Meerut',
-			'Bangalore',
-			'Indore',
-			'Kanpur',
-			'Chennai',
-			'Kolkata',
-			'Coimbatore',
-			'Prayagraj'
-		];
-
-		$query = DB::table('zones')
-			->join('citylists', 'citylists.id', '=', 'zones.city_id')
-			->whereIn('citylists.city', $defaultCities);
-
-		if (!empty($cid)) {
-			$query->where(function ($q) use ($cid) {
-				$q->where('citylists.city', 'LIKE', "%{$cid}%")
-				  ->orWhere('zones.zone', 'LIKE', "%{$cid}%");
-			});
-		}
-
-		$zoneResults = $query
-			->select(
-				DB::raw('MIN(zones.id) as zone_id'),
-				DB::raw('MIN(zones.zone) as zone'),
-				'citylists.id as city_id',
-				'citylists.city as cityName',
-				DB::raw('NULL as pincode')
-			)
-			->groupBy('citylists.id', 'citylists.city')
-			->orderBy('citylists.city', 'asc')
-			->get();
-
-		$data = $zoneResults->map(function ($zone) {
-			$cityDetails = collect([
-				$zone->zone ?? null,
-				$zone->cityName ?? null,
-			])->filter()->implode(', ');
-
-			return [
-				'id' => $zone->zone_id,
-				'city' => $zone->cityName,
-				'cityDetails' => ucfirst($cityDetails)
-			];
-		})->unique('cityDetails')->values();
-
-		return response()->json([
-			'status' => true,
-			'message' => 'Successfully',
-			'data' => $data
-		], 200);
-	}
-
-	public function getCityList_good(Request $request)
+	 
+	public function getCityList(Request $request)
 	{
 
 		$cid = trim($request->input('city'));

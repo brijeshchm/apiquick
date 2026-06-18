@@ -1050,7 +1050,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'tours-and-travels',
-				'img' => config('app.website') . 'images/tour-travels.png',
+				'img' => config('app.website') . 'images/tour-travels.svg',
 				'alt' => 'Tours & Travels',
 				'title' => 'Tours & Travels',
 				'type' => 'keyword',
@@ -1214,6 +1214,8 @@ class WebsiteController extends Controller
 
 
 		];
+		
+		
 		$clientsList = DB::table('clients')
 			->join('assigned_kwds', 'clients.id', '=', 'assigned_kwds.client_id')
 			->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')

@@ -1069,7 +1069,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'doctor',
-				'img' => config('app.website') . 'img/Doctor.png',
+				'img' => config('app.website') . 'img/Doctor.webp',
 				'alt' => 'Doctor Clinic',
 				'title' => 'Doctor',
 				'type' => 'keyword',
@@ -1089,7 +1089,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'entrance-exams-coaching',
-				'img' => config('app.website') . 'img/government-exam.png',
+				'img' => config('app.website') . 'img/government-exam.webp',
 				'alt' => 'Government exam',
 				'title' => 'Government exam',
 				'type' => 'child',
@@ -1139,7 +1139,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'collages-and-Institutions',
-				'img' => config('app.website') . 'img/Education.png',
+				'img' => config('app.website') . 'img/Education.webp',
 				'alt' => 'Education collages',
 				'title' => 'Education',
 				'type' => 'categories',
@@ -1177,7 +1177,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'dance-classes',
-				'img' => config('app.website') . 'img/Dancing.png',
+				'img' => config('app.website') . 'img/Dancing.webp',
 				'alt' => 'Dancing Class performance	',
 				'title' => 'Dancing',
 				'type' => 'child',

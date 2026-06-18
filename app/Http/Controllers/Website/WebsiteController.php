@@ -4196,6 +4196,24 @@ class WebsiteController extends Controller
 
 	}
 
+
+ public function cityTabsFooter_good(Request $request)
+	{
+		 $data['cities'] = City::select('id','city')->where('popular','1')->get();
+
+        // Keywords
+        $data['keywords'] = DB::table('keyword')
+            ->select('slug', 'keyword')
+            ->where('seo_type', '1')
+            ->get();
+ 		return response()->json([
+			'success' => true,
+			'status' => true,
+			'data' => $data,
+			], 200);
+
+
+	}
 	
 	/**
 	 * @OA\Get(
@@ -4334,6 +4352,7 @@ class WebsiteController extends Controller
 			'Faridabad',
 			'Delhi',
 			'Noida',
+			'Gurgaon',
 			'Ghaziabad',
 			'Mumbai',
 			'Pune',

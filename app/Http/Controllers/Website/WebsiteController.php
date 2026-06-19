@@ -1040,7 +1040,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'packers-and-movers',
-				'img' => config('app.website') . 'img/Packers-movers.png',
+				'img' => config('app.website') . 'img/Packers-movers.webp',
 				'alt' => 'Packers & Movers',
 				'title' => 'Packers & Movers',
 				'type' => 'child',
@@ -1050,7 +1050,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'tours-and-travels',
-				'img' => config('app.website') . 'images/tour-travels.svg',
+				'img' => config('app.website') . 'images/tour-travels.webp',
 				'alt' => 'Tours & Travels',
 				'title' => 'Tours & Travels',
 				'type' => 'keyword',
@@ -1109,7 +1109,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'spa-and-beauty',
-				'img' => config('app.website') . 'img/Spa-Beauty.png',
+				'img' => config('app.website') . 'img/Spa-Beauty.webp',
 				'alt' => 'Spa & Beauty',
 				'title' => 'Spa & Beauty',
 				'type' => 'child',
@@ -1119,7 +1119,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'professional-courses',
-				'img' => config('app.website') . 'img/Professional.png',
+				'img' => config('app.website') . 'img/Professional.webp',
 				'alt' => 'Professional Course',
 				'title' => 'Professional',
 				'type' => 'categories',
@@ -1129,7 +1129,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'contractors',
-				'img' => config('app.website') . 'img/contractors.png',
+				'img' => config('app.website') . 'img/contractors.webp',
 				'alt' => 'Contractors Builder',
 				'title' => 'Contractors',
 				'type' => 'child',
@@ -1150,7 +1150,7 @@ class WebsiteController extends Controller
 
 			[
 				'url' => 'sports-academy',
-				'img' => config('app.website') . 'img/sports.png',
+				'img' => config('app.website') . 'img/sports.webp',
 				'alt' => 'Sport Academy',
 				'title' => 'Sport Academy',
 				'type' => 'child',
@@ -1186,7 +1186,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'yoga-classes',
-				'img' => config('app.website') . 'img/Yoga.png',
+				'img' => config('app.website') . 'img/Yoga.webp',
 				'alt' => 'Yoga',
 				'title' => 'Yoga',
 				'type' => 'child',

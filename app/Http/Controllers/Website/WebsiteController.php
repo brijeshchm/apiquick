@@ -1021,7 +1021,7 @@ class WebsiteController extends Controller
 
 			[
 				'url' => 'repair-services',
-				'img' => config('app.website') . 'img/Repairs-Services.png',
+				'img' => config('app.website') . 'img/Repairs-Services.webp',
 				'alt' => 'Repair Services',
 				'title' => 'Repair Services',
 				'type' => 'child',
@@ -1031,7 +1031,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'rent-or-buy',
-				'img' => config('app.website') . 'img/Rent-buy.png',
+				'img' => config('app.website') . 'img/Rent-buy.webp',
 				'alt' => 'Rent Or Buy',
 				'title' => 'Rent & Buy',
 				'type' => 'child',
@@ -1059,7 +1059,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'professional-courses',
-				'img' => config('app.website') . 'popular/IT-Training.png',
+				'img' => config('app.website') . 'popular/IT-Training.webp',
 				'alt' => 'Professional Courses',
 				'title' => 'Professional Courses',
 				'type' => 'categories',

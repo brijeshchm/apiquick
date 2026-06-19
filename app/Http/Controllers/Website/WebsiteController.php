@@ -1168,7 +1168,7 @@ class WebsiteController extends Controller
 			],
 			[
 				'url' => 'loan-service',
-				'img' => config('app.website') . 'img/Loan.png',
+				'img' => config('app.website') . 'img/Loan.webp',
 				'alt' => 'Loan Service',
 				'title' => 'Loan',
 				'type' => 'child',

@@ -4774,7 +4774,7 @@ class WebsiteController extends Controller
 				'clients.*',
 				'clients.id as business_id',
 				'assigned_kwds.*',
-				'citylists.city',
+				'clients.city',
 				'assigned_kwds.sold_on_position',
 				'c.average_rating',
 				'c.comment_count'

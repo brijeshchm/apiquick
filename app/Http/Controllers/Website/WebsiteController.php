@@ -4952,7 +4952,7 @@ class WebsiteController extends Controller
 				'business_id' => $clientscheck->business_id,
 				'meta_title' => $clientscheck->meta_title,
 				'meta_description' => $clientscheck->meta_description,
-				'meta_keyword' => $clientscheck->meta_keyword,
+				'meta_keywords' => $clientscheck->meta_keywords,
 				'business_name' => $clientscheck->business_name,
 				'business_slug' => $clientscheck->business_slug,
 				'business_url' => config('app.website') . 'businessdetails/' . $clientscheck->business_slug,

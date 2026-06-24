@@ -2843,7 +2843,7 @@ class WebsiteController extends Controller
 			'faqq10' => preg_replace('/{{city}}/i', $city, $keywordDetails->faqq10),
 			'faqa10' => preg_replace('/{{city}}/i', $city, $keywordDetails->faqa10),
 			
-			'courseabout' => $courseabout,
+			'courseabout' => preg_replace('/{{city}}/i', $city, $courseabout),
 			'heading' => $heading,
 			'paragraph1' => $paragraph1,
 			'paragraph2' => $paragraph2,

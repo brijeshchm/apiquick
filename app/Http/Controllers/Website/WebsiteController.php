@@ -5267,7 +5267,7 @@ class WebsiteController extends Controller
 				', ' .
 				($clientscheck->city ?? ''),
 
-				'paragraph' => "{$businessName}, located in {$location}, has built a strong reputation as a trusted name in {$city} for delivering professional, reliable, and customer-focused services. With years of hands-on experience, a skilled team, and a strong commitment to quality, {$businessName} caters to a wide range of customer needs across {$area} and nearby areas in {$city}, ensuring timely service, transparent pricing, and lasting results every time.",
+				'paragraph' => "{$businessName}, located in {$location}, has built a strong reputation as a trusted name in {$city} for delivering professional, reliable, and customer-focused services. With years of hands-on experience, a skilled team, and a strong commitment to quality, {$businessName} It caters to a wide range of customer needs across {$city} and is open from 10:00 AM to 7:00 PM., ensuring timely service, transparent pricing, and lasting results every time.",
 				];
 
 
@@ -5303,7 +5303,7 @@ class WebsiteController extends Controller
 			$location     = trim($area . ($area && $city ? ', ' : '') . $city);
 
 			// ─── Paragraph 1 ───
-			$overviewParagraph = "{$businessName} in {$location} is a trusted service provider in {$city}, known for quality, reliability, and customer satisfaction. With experienced professionals, modern tools, and a strong commitment to service excellence, {$businessName} delivers consistent results every time. {$workingHoursHtml} The highly experienced team caters to a wide range of customer needs across {$area} and {$city}, offering flexible scheduling and personalized service to suit individual requirements.";
+			$overviewParagraph = "{$businessName} in {$location} is a trusted service provider in {$city}, known for quality, reliability, and customer satisfaction. With experienced professionals, modern tools, and a strong commitment to service excellence, {$businessName} delivers consistent results every time. {$workingHoursHtml} The highly experienced team and It caters to a wide range of customer needs across {$city} and is open from 10:00 AM to 7:00 PM., offering flexible scheduling and personalized service to suit individual requirements.";
 
 			// ─── Paragraph 2 ───
 			$overviewParagraph2 = "Whether you need a one-time service or ongoing support, {$businessName} in {$location} has the right solution for you. With a wide range of offerings backed by professional handling and quality workmanship, {$businessName} stands as a comprehensive choice for customers across {$city}. From first contact to job completion, the team ensures transparent pricing, on-time service, and lasting quality outcomes. Get in touch with {$businessName} today to learn more or schedule a visit.";
@@ -7739,7 +7739,7 @@ class WebsiteController extends Controller
     private static function generic($business, $area, $city, $location, $hours): array
     {
         return [
-            "{$business} in {$location} is a trusted service provider in {$city}, known for quality, reliability, and customer satisfaction. With experienced professionals, modern tools, and a strong commitment to service excellence, {$business} caters to a wide range of customer needs across {$area} and {$city}.{$hours}",
+            "{$business} in {$location} is a trusted service provider in {$city}, known for quality, reliability, and customer satisfaction. With experienced professionals, modern tools, and a strong commitment to service excellence, {$business} It caters to a wide range of customer needs across {$city} and is open from {$hours}",
 
             "From first contact to job completion, {$business} in {$location} ensures transparent pricing, on-time service, and quality outcomes that customers in {$city} can count on. Whether for one-time service or ongoing requirements, {$business} stands as a reliable choice. Get in touch today to learn more or schedule a visit."
         ];

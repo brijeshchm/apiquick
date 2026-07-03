@@ -3593,13 +3593,20 @@ class WebsiteController extends Controller
 
 		$banner_image = config('app.website') . 'client/images/computer-courses-training.jpg';
 		$alt = "";
-
+		$category_icon ="";
 		if (!empty($categoryDetails->category_banner)) {
 			$cicons = unserialize($categoryDetails->category_banner);
 
 			if (!empty($cicons)) {
 				$banner_image = config('app.website') . $cicons['category_banner']['src'];
 				$alt = $cicons['category_banner']['alt'];
+			}
+		}if (!empty($categoryDetails->category_icon)) {
+			$catIcons = unserialize($categoryDetails->category_icon);
+
+			if (!empty($catIcons)) {
+				$category_icon = config('app.website') . $catIcons['category_icon']['src'];
+				$alt = $catIcons['category_icon']['name'];
 			}
 		}
 		
@@ -3643,6 +3650,7 @@ class WebsiteController extends Controller
 			'parent_category' => $categoryDetails->parent_category,
 			'parent_slug' => $categoryDetails->parent_slug,
 			'category_banner' => $banner_image,
+			'category_icon' => $category_icon,
 			'alt' => $alt,
 			'meta_title' => $meta_title,
 			'meta_keywords' => $meta_keywords,

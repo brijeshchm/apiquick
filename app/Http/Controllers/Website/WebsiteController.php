@@ -2707,7 +2707,7 @@ class WebsiteController extends Controller
 	 *         in="query",
 	 *         required=false,
 	 *         description="Filter by news_slug",
-	 *         @OA\Schema(type="string", example="microsoft-power-bi-data-visualization-course--master-interactive-dashboards")
+	 *         @OA\Schema(type="string", example="artificial-intelligence-training")
 	 *     ),  
 	 *        
 	 *     @OA\Response(

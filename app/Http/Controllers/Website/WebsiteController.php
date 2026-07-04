@@ -21,6 +21,7 @@ use App\Models\Blogdetails;
 use App\Models\ChildCategory;
 use App\Models\Lead;
 use Session;
+use App\Models\NewsArticle;
 use App\Models\ParentCategory;
 use App\Models\Client\Comment;
 use App\Models\HomeSlider;
@@ -2596,6 +2597,275 @@ class WebsiteController extends Controller
 			];
 		}
 		$data['blogDetails'] = $blogPageDetails;
+
+		return response()->json([
+			'success' => true,
+			'status' => true,
+			'data' => $data,
+		], 200);
+	}
+
+
+
+
+/**
+	 * @OA\Get(
+	 *     path="/api/website/getNews",
+	 *     tags={"Website"},
+	 *     summary="Website Home Page News",
+	 *     description="Display data home page",
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="message", type="string", example="Data retrieved successfully"),
+	 *             @OA\Property(
+	 *                 property="data",
+	 *                 type="array",
+	 *                 @OA\Items(type="object")
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             type="object",
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function getNews(Request $request)
+	{
+		$url = config('app.url');
+
+		$newsDetails = NewsArticle::where('status', '1')
+			->orderBy('id', 'DESC')
+			->paginate(100);
+
+		foreach ($newsDetails as $key => $news) {
+			$image = "";
+			$alt = "";
+
+			if (!empty($news->image)) {
+				$imgData = json_decode($news->image);
+				if (!empty($imgData->image->src)) {
+					$image = config('app.website') . $imgData->image->src;
+					$alt = $news->name;
+				}
+			}
+
+			$newsPageList[$key] = [
+				'id' => $news->id,
+				'name' => $news->name,
+				'url' => $news->slug,
+				'img' => $image,
+				'alt' => $alt,
+				'title' => $news->title,
+				'ratingcount' => $news->ratingcount,
+				'ratingvalue' => $news->ratingvalue,
+				'created_at' => date('d, M Y',strtotime($news->created_at)),
+				'updated_at' => get_time(strtotime($news->created_at)),
+				'description' => ucfirst(substr(strip_tags($news->description), 0, 220)) . '...',
+
+			];
+		}
+
+		return response()->json([
+			'success' => true,
+			'status' => true,
+			'current_page' => $newsDetails->currentPage(),
+			'last_page' => $newsDetails->lastPage(),
+			'per_page' => $newsDetails->perPage(),
+			'total' => $newsDetails->total(),
+			'data' => $newsPageList,
+		], 200);
+	}
+
+
+	/**
+	 * @OA\Get(
+	 *     path="/api/website/news",
+	 *     tags={"Website"},
+	 *     summary="Frontend news details",
+	 *     description="Search records dynamically based on a business slug",
+	 *      
+	 *      @OA\Parameter(
+	 *         name="news_slug",
+	 *         in="query",
+	 *         required=false,
+	 *         description="Filter by news_slug",
+	 *         @OA\Schema(type="string", example="microsoft-power-bi-data-visualization-course--master-interactive-dashboards")
+	 *     ),  
+	 *        
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=101),
+	 *                     @OA\Property(property="name", type="string", example="ABC Coaching Center"),
+	 *                     @OA\Property(property="city", type="string", example="Noida"),
+	 *                     @OA\Property(property="category", type="string", example="Education"),
+	 *                     @OA\Property(property="rating", type="number", format="float", example=4.5)
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function getNewsDetails(Request $request)
+	{
+		$url = config('app.url');
+		$request->validate([
+			'news_slug' => 'required|exists:news_articles,slug',
+		]);
+
+		$slug = $request->input('news_slug');
+
+		$newsLists = NewsArticle::where('status', '1')->limit(30)->orderBy('id', 'DESC')->get();
+
+		if (!empty($newsLists)) {
+			foreach ($newsLists as $key => $news) {
+				$image = "";
+				$alt = "";
+
+				if (!empty($news->image)) {
+					$imgData = json_decode($news->image);
+					if (!empty($imgData->image->src)) {
+						$image = config('app.website') . $imgData->image->src;
+						$alt = $news->name;
+					}
+				}
+
+				$newsPageList[$key] = [
+					'name' => $news->name,
+					'url' => $news->slug,
+					'id' => $news->id,
+					'img' => $image,
+					'alt' => $alt,
+					'title' => $news->title,
+					'created_at' => date('d, M Y', strtotime($news->created_at)),
+					'category_name' => $news->category_name,
+					'category_id' => $news->category_id,
+					'updated_at' => get_time(strtotime($news->created_at)),
+					
+					
+					'description' => ucfirst(substr(strip_tags($news->description), 0, 220)) . '...',
+
+				];
+			}
+		}
+
+		$data['newsList'] = $newsPageList;
+
+		$newsDetails = NewsArticle::where('news_articles.status', '1')
+			->where('news_articles.slug', $slug)
+			->leftJoin('authors', 'news_articles.author', '=', 'authors.id')
+			->select('news_articles.*', 'authors.name as author_name', 'authors.image as author_image', 'authors.comment', 'authors.linkedin_url')
+			->first();
+		$blogPageDetails = array();
+
+		if (!empty($newsDetails)) {
+
+			$newsImage = "";
+			$newsalt = "";
+
+			if (!empty($newsDetails->image)) {
+				$imgData = json_decode($newsDetails->image);
+				if (!empty($imgData->image->src)) {
+					$newsImage = config('app.website') . $imgData->image->src;
+					$newsalt = $newsDetails->name;
+				}
+			}
+			$imageBanner = "";
+
+			$blogaltB = "";
+
+			if (!empty($newsDetails->image_banner)) {
+				$imgBanner = json_decode($newsDetails->image_banner);
+				if (!empty($imgBanner->image_banner->src)) {
+					$imageBanner = config('app.website') . $imgBanner->image_banner->src;
+					$blogaltB = $newsDetails->name;
+				}
+			}
+
+
+			$newsPageDetails = [
+				'id' => $newsDetails->id,
+				'name' => $newsDetails->name,
+				'url' => $newsDetails->slug,
+				'category_name' => $newsDetails->category_name,
+				'category_id' => $newsDetails->category_id,
+				'newsImage' => $newsImage,
+				'newsalt' => $newsalt,
+				'imageBanner' => $imageBanner,
+				'newsBannerAalt' => $blogaltB,
+				'author_name' => ucfirst($newsDetails->author_name),
+				'created_at' => date('d, M Y', strtotime($newsDetails->created_at)),				 
+				'updated_at' => get_time(strtotime($newsDetails->created_at)),					
+				'title' => $newsDetails->title,
+				'description' => ucfirst($newsDetails->description),
+				'meta_title' => ucfirst($newsDetails->meta_title),
+				'meta_keywords' => ucfirst($newsDetails->meta_keywords),
+				'meta_description' => ucfirst($newsDetails->meta_description),
+				'top_content' => ucfirst($newsDetails->top_content),
+				'bottom_content' => ucfirst($newsDetails->bottom_content),
+				'top_heading' => ucfirst($newsDetails->top_heading),
+				'bottom_heading' => ucfirst($newsDetails->bottom_heading),				
+				'heading' => ucfirst($newsDetails->heading),
+				'about_blog' => $newsDetails->about_blog,
+				'paragraph1' => $newsDetails->paragraph1,
+				'paragraph2' => $newsDetails->paragraph2,
+				'paragraph3' => $newsDetails->paragraph3,
+				'paragraph4' => $newsDetails->paragraph4,
+				'paragraph5' => $newsDetails->paragraph5,
+				'paragraph6' => $newsDetails->paragraph6,
+				'ratingcount' => $newsDetails->ratingcount,
+				'ratingvalue' => $newsDetails->ratingvalue,
+				'faqq1' => $newsDetails->faqq1,
+				'faqa1' => $newsDetails->faqa1,
+				'faqq2' => $newsDetails->faqq2,
+				'faqa2' => $newsDetails->faqa2,
+				'faqq3' => $newsDetails->faqq3,
+				'faqa3' => $newsDetails->faqa3,
+				'faqq4' => $newsDetails->faqq4,
+				'faqa4' => $newsDetails->faqa4,
+				'faqq5' => $newsDetails->faqq5,
+				'faqa5' => $newsDetails->faqa5,
+
+			];
+		}
+		$data['newsDetails'] = $newsPageDetails;
 
 		return response()->json([
 			'success' => true,

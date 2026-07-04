@@ -31,7 +31,8 @@ Route::get('/api/website/getKeyword', [WebsiteController::class, 'getKeyword']);
 Route::get('/api/website/getBlog', [WebsiteController::class, 'getBlog']);
 Route::get('/api/website/blog', [WebsiteController::class, 'getBlogDetails']);
 Route::get('/api/website/get-business-list', [WebsiteController::class, 'getBusinessList']);
-
+Route::get('/api/website/getNews', [WebsiteController::class, 'getNews']);
+Route::get('/api/website/news', [WebsiteController::class, 'getNewsDetails']);
  
 
  Route::get('/api/website/getCategories', [WebsiteController::class, 'getCategories']);

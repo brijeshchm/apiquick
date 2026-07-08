@@ -11015,7 +11015,7 @@
                         "required": false,
                         "schema": {
                             "type": "string",
-                            "example": "microsoft-power-bi-data-visualization-course--master-interactive-dashboards"
+                            "example": "artificial-intelligence-training"
                         }
                     }
                 ],

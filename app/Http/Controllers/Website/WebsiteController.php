@@ -5129,8 +5129,10 @@ class WebsiteController extends Controller
 				->where('assigned_kwds.client_id', $clientscheck->business_id)
 				->orderBy('keyword', 'asc')
 				->distinct()
-				->pluck('keyword.keyword')
-				->toArray();
+				->pluck('keyword.keyword','keyword.slug');
+				 
+				
+			 
 			$assignedCity = DB::table('assigned_kwds')
 				->join('citylists', 'assigned_kwds.city_id', '=', 'citylists.id')
 				->where('assigned_kwds.client_id', $clientscheck->business_id)
@@ -5521,7 +5523,7 @@ class WebsiteController extends Controller
 
 
 			if (!empty($assignedKeywords)) {
-				$findKeywords = Keyword::select('child_category_id')->where('keyword', $assignedKeywords[0])->first();
+				$findKeywords = Keyword::select('child_category_id')->where('keyword', $assignedKeywords->first())->first();
 
 				$relKeywords = Keyword::select('keyword','slug')->where('child_category_id', $findKeywords->child_category_id)
 					->orderBy('keyword', 'asc')

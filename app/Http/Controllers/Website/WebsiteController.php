@@ -4481,7 +4481,7 @@ class WebsiteController extends Controller
 	 */
 	 public function cityTabsFooter(Request $request)
 	{
-		 $data['cities'] = City::select('id','city')->where('popular','1')->get();
+		 $data['cities'] = City::select('id','city','city_slug')->where('popular','1')->get();
 
         // Keywords
         $data['keywords'] = DB::table('keyword')

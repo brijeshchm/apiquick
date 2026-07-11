@@ -5346,7 +5346,6 @@ class WebsiteController extends Controller
 			$msmeImage = "";
 			if (!empty($clientscheck->msme_certificate)) {
 				$msme_certificate = json_decode($clientscheck->msme_certificate);
-
 				if (!empty($msme_certificate)) {
 					$msmeImage = config('app.website') . $msme_certificate->large->src;
 				}

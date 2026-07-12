@@ -68,8 +68,6 @@ function generate_slug($slug = null)
 	return $slug;
 }
 
-
-
  function getOverViewBusiness()
 {
 	 $map = [
@@ -518,7 +516,7 @@ function generate_slug($slug = null)
 	return $map;
 }
 
-
+ 
 
 
 

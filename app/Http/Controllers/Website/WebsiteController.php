@@ -106,7 +106,7 @@ class WebsiteController extends Controller
 			->leftjoin('child_category', 'keyword.child_category_id', '=', 'child_category.id')
 		 
 			->where('keyword.slug', $search_kw)
-			->select('keyword.*', 'parent_category.*','child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5','keyword.faqq6', 'keyword.faqa6', 'keyword.faqq7', 'keyword.faqa7','keyword.faqq8', 'keyword.faqa8','keyword.faqq9', 'keyword.faqa9','keyword.faqq10', 'keyword.faqa10','keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount','keyword.courseabout','keyword.heading','keyword.paragraph1','keyword.paragraph2','keyword.paragraph3','keyword.paragraph4','keyword.paragraph5','keyword.paragraph6','keyword.paragraph7','keyword.paragraph8','keyword.slug','keyword.bottom_heading','keyword.top_heading','keyword.extra_heading','keyword.extra_description')
+			->select('keyword.*', 'parent_category.*','child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5','keyword.faqq6', 'keyword.faqa6', 'keyword.faqq7', 'keyword.faqa7','keyword.faqq8', 'keyword.faqa8','keyword.faqq9', 'keyword.faqa9','keyword.faqq10', 'keyword.faqa10','keyword.meta_title', 'keyword.meta_description', 'keyword.h1_heading', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount','keyword.courseabout','keyword.heading','keyword.paragraph1','keyword.paragraph2','keyword.paragraph3','keyword.paragraph4','keyword.paragraph5','keyword.paragraph6','keyword.paragraph7','keyword.paragraph8','keyword.slug','keyword.bottom_heading','keyword.top_heading','keyword.extra_heading','keyword.extra_description')
 			->first();
  
 			 
@@ -122,7 +122,7 @@ class WebsiteController extends Controller
 		$paragraph7 ="";
 		$paragraph8 ="";
 		$meta_title ="";
-		$meta_keywords ="";
+		$h1_heading ="";
 		$meta_description ="";
 		$bottom_description = "";
 		$top_description = "";
@@ -204,16 +204,11 @@ class WebsiteController extends Controller
 			$meta_title =  $keywordDetails->keyword . ' in ' . ucfirst($city) . ' | Quickdials';
 
 		}
-		if (!empty($keywordDetails->meta_keywords)) {
-			$meta_keywords = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->meta_keywords);
+		if (!empty($keywordDetails->h1_heading)) {
+			$h1_heading = preg_replace('/{{city}}/i', ucfirst($city), $keywordDetails->h1_heading);
 		} else {
-			$meta_keywords =  implode(', ', [
-							$keywordDetails->keyword,
-							$keywordDetails->keyword . ' in ' . ucfirst($city),
-							'Best ' . $keywordDetails->keyword . ' in ' . ucfirst($city),
-							ucfirst($city) . ' ' . $keywordDetails->keyword,
-							'Quickdials'
-						]);
+			$h1_heading = $keywordDetails->keyword . ' in ' . ucfirst($city);
+							 
 
 		}
 
@@ -284,7 +279,7 @@ class WebsiteController extends Controller
 			'key_alt' => $child_alt,
 			'alt' => $alt,
 			'meta_title' => $meta_title,
-			'meta_keywords' => $meta_keywords,
+			'h1_heading' => $h1_heading,
 			'meta_description' => $meta_description,
 			'top_description' => $top_description,
 			'bottom_description' => $bottom_description,
@@ -450,7 +445,7 @@ class WebsiteController extends Controller
 				
 				
 					$workingHoursHtml = '10AM to 7PM';
-					$categorySlug = $client->category_service;
+					$categorySlug = $client->category_service??"Category";
 
 					$template = $this->generate(
 						$client,
@@ -2567,7 +2562,7 @@ class WebsiteController extends Controller
 				'title' => $blogdetails->title,
 				'description' => ucfirst($blogdetails->description),
 				'meta_title' => ucfirst($blogdetails->meta_title),
-				'meta_keywords' => ucfirst($blogdetails->meta_keywords),
+				'h1_heading' => ucfirst($blogdetails->h1_heading),
 				'meta_description' => ucfirst($blogdetails->meta_description),
 				'top_content' => ucfirst($blogdetails->top_content),
 				'bottom_content' => ucfirst($blogdetails->bottom_content),
@@ -2836,7 +2831,7 @@ class WebsiteController extends Controller
 				'title' => $newsDetails->title,
 				'description' => ucfirst($newsDetails->description),
 				'meta_title' => ucfirst($newsDetails->meta_title),
-				'meta_keywords' => ucfirst($newsDetails->meta_keywords),
+				'h1_heading' => ucfirst($newsDetails->h1_heading),
 				'meta_description' => ucfirst($newsDetails->meta_description),
 				'top_content' => ucfirst($newsDetails->top_content),
 				'bottom_content' => ucfirst($newsDetails->bottom_content),
@@ -2938,7 +2933,7 @@ class WebsiteController extends Controller
 			->leftjoin('parent_category', 'keyword.parent_category_id', '=', 'parent_category.id')
 			->leftjoin('child_category', 'keyword.child_category_id', '=', 'child_category.id')
 			->where('slug', $search_kw)
-			->select('keyword.*', 'parent_category.*', 'child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5','keyword.faqq6','keyword.faqa6','keyword.faqq7','keyword.faqa7','keyword.faqq8','keyword.faqa8','keyword.faqq9','keyword.faqa9','keyword.faqq10','keyword.faqa10','keyword.meta_title', 'keyword.meta_description', 'keyword.meta_keywords', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount','keyword.courseabout','keyword.heading','keyword.paragraph1','keyword.paragraph2','keyword.paragraph3','keyword.paragraph4','keyword.paragraph5','keyword.paragraph6','keyword.paragraph7','keyword.paragraph8','keyword.slug','keyword.bottom_heading','keyword.top_heading','keyword.extra_heading','keyword.extra_description'
+			->select('keyword.*', 'parent_category.*', 'child_category.*', 'keyword.id as key_id', 'keyword.faqq1', 'keyword.faqa1', 'keyword.faqq2', 'keyword.faqa2', 'keyword.faqq3', 'keyword.faqa3', 'keyword.faqq4', 'keyword.faqa4', 'keyword.faqq5', 'keyword.faqa5','keyword.faqq6','keyword.faqa6','keyword.faqq7','keyword.faqa7','keyword.faqq8','keyword.faqa8','keyword.faqq9','keyword.faqa9','keyword.faqq10','keyword.faqa10','keyword.meta_title', 'keyword.meta_description', 'keyword.h1_heading', 'keyword.top_description', 'keyword.bottom_description', 'keyword.ratingvalue', 'keyword.ratingcount','keyword.courseabout','keyword.heading','keyword.paragraph1','keyword.paragraph2','keyword.paragraph3','keyword.paragraph4','keyword.paragraph5','keyword.paragraph6','keyword.paragraph7','keyword.paragraph8','keyword.slug','keyword.bottom_heading','keyword.top_heading','keyword.extra_heading','keyword.extra_description'
 			)
 			->first();
 		 
@@ -3000,16 +2995,10 @@ class WebsiteController extends Controller
 			$meta_title = 'Best ' . $keywordDetails->keyword . ' - Reviews, Ratings & Contact Details | Quickdials';
 
 		}
-		if (!empty($keywordDetails->meta_keywords)) {
-			$meta_keywords = preg_replace('/in {{city}}/i', $city, $keywordDetails->meta_keywords);
+		if (!empty($keywordDetails->h1_heading)) {
+			$h1_heading = preg_replace('/in {{city}}/i', $city, $keywordDetails->h1_heading);
 		} else {
-			$meta_keywords =  implode(', ', [
-						$keywordDetails->keyword,
-						'Best ' . $keywordDetails->keyword,
-						$keywordDetails->keyword . ' Reviews',
-						$keywordDetails->keyword . ' Contact Details',
-						'Quickdials'
-					]);
+			$h1_heading = 'Best ' . $keywordDetails->keyword;
 
 		}
 
@@ -3074,7 +3063,7 @@ class WebsiteController extends Controller
 			'key_icon' => $key_icon,
 			'key_alt' => $child_alt,
 			'meta_title' => $meta_title,
-			'meta_keywords' => $meta_keywords,
+			'h1_heading' => $h1_heading,
 			'meta_description' => $meta_description,
 			'top_description' => $top_description,
 			'bottom_description' => $bottom_description,
@@ -3253,7 +3242,7 @@ class WebsiteController extends Controller
 			}
 			
 			$workingHoursHtml = '10AM to 7PM ';
-					$categorySlug = $client->category_service;
+					$categorySlug = $client->category_service??"Service";
 
 					$template = $this->generate(
 						$client,
@@ -3421,7 +3410,7 @@ class WebsiteController extends Controller
 			}
 			
 			$workingHoursHtml = '10AM to 7PM';
-			$categorySlug = $client->category_service;
+			$categorySlug = $client->category_service??"category";
 
 			$template = $this->generate(
 				$client,
@@ -3740,7 +3729,7 @@ class WebsiteController extends Controller
             'category_banner'   => config('app.website') . 'client/images/computer-courses-training.jpg',
             'alt'               => '',
             'meta_title'        => "Quickdials - Categories & Sub Categories",
-            'meta_keywords'     => 'quickdials categories, child categories',
+            'h1_heading'     => 'quickdials categories, child categories',
             'meta_description'  => 'Browse all categories and sub-categories on Quickdials',
             'top_description'   => '',
             'bottom_description'=> '',
@@ -3886,20 +3875,12 @@ class WebsiteController extends Controller
 			$meta_title = $categoryDetails->parent_category ." | Find Trusted Services, Businesses & Professionals Near You | Quickdials ";
 
 		}
-		if (!empty($categoryDetails->meta_keywords)) {
-			$meta_keywords = $categoryDetails->meta_keywords;
+		if (!empty($categoryDetails->h1_heading)) {
+			$h1_heading = $categoryDetails->h1_heading;
 		} else {
 			 
 						
-			$meta_keywords = $categoryDetails->parent_category . ", " .
-                 $categoryDetails->parent_category . " near me, " .
-                 "best " . $categoryDetails->parent_category . ", " .
-                 "top " . $categoryDetails->parent_category . ", " .
-                 "local " . $categoryDetails->parent_category . ", " .
-                 "trusted " . $categoryDetails->parent_category . ", " .
-                 "affordable " . $categoryDetails->parent_category . ", " .
-                 $categoryDetails->parent_category . " services, " .
-                 $categoryDetails->parent_category . " providers, Quickdials";
+			$h1_heading = $categoryDetails->parent_category;
 
 		}
 
@@ -3923,7 +3904,7 @@ class WebsiteController extends Controller
 			'category_icon' => $category_icon,
 			'alt' => $alt,
 			'meta_title' => $meta_title,
-			'meta_keywords' => $meta_keywords,
+			'h1_heading' => $h1_heading,
 			'meta_description' => $meta_description,
 			'top_description' => $categoryDetails->top_description,
 			'bottom_description' => $categoryDetails->bottom_description,
@@ -4108,7 +4089,7 @@ class WebsiteController extends Controller
 				'category_banner' => config('app.website') . 'client/images/computer-courses-training.jpg',
 				'alt' => '',
 				'meta_title' => "Quickdials child category",
-				'meta_keywords' => 'Quickdials child category',
+				'h1_heading' => 'Quickdials child category',
 				'meta_description' => 'Quickdials child category',
 				'top_description' => 'Quickdials child category',
 				'bottom_description' => 'Quickdials child category',
@@ -4265,20 +4246,11 @@ class WebsiteController extends Controller
 			$meta_title = $childDetails->child_category ." | Find Trusted Services, Businesses & Professionals Near You | Quickdials ";
 
 		}
-		if (!empty($childDetails->meta_keywords)) {
-			$meta_keywords = $childDetails->meta_keywords;
+		if (!empty($childDetails->h1_heading)) {
+			$h1_heading = $childDetails->h1_heading;
 		} else {
-			 
-						
-			$meta_keywords = $childDetails->child_category . ", " .
-                 $childDetails->child_category . " near me, " .
-                 "best " . $childDetails->child_category . ", " .
-                 "top " . $childDetails->child_category . ", " .
-                 "local " . $childDetails->child_category . ", " .
-                 "trusted " . $childDetails->child_category . ", " .
-                 "affordable " . $childDetails->child_category . ", " .
-                 $childDetails->child_category . " services, " .
-                 $childDetails->child_category . " providers, Quickdials";
+			 					
+			$h1_heading = $childDetails->child_category;
 
 		}
 
@@ -4301,7 +4273,7 @@ class WebsiteController extends Controller
 			'child_icon' => $child_icon,
 			'alt' => $alt,
 			'meta_title' => $meta_title,
-			'meta_keywords' => $meta_keywords,
+			'h1_heading' => $h1_heading,
 			'meta_description' => $meta_description,
 			'top_description' => $childDetails->top_description,
 			'bottom_description' => $childDetails->bottom_description,
@@ -5248,7 +5220,7 @@ class WebsiteController extends Controller
 				'business_id' => $clientscheck->business_id,
 				'meta_title' => $clientscheck->meta_title,
 				'meta_description' => $clientscheck->meta_description,
-				'meta_keywords' => $clientscheck->meta_keywords,
+				'h1_heading' => $clientscheck->h1_heading,
 				'business_name' => $clientscheck->business_name,
 				'business_slug' => $clientscheck->business_slug,
 				'business_url' => config('app.website') . 'businessdetails/' . $clientscheck->business_slug,
@@ -7603,7 +7575,7 @@ class WebsiteController extends Controller
 	
 	
 	
-	 public function generate($client, string $workingHoursHtml = '', ?string $categorySlug = null): array
+	 public function generate($client, string $workingHoursHtml = '', ?string $categorySlug = null): string
     {
         $business = trim($client->business_name ?? 'this business');
         $area     = trim($client->area ?? '');

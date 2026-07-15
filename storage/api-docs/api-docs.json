@@ -12155,6 +12155,107 @@
                 }
             }
         },
+        "/api/website/getZoneDetails": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Website Search Zone detils by City ",
+                "description": "Search records dynamically based on a zone",
+                "operationId": "4746496a61581860669f1ee8c487a910",
+                "parameters": [
+                    {
+                        "name": "city",
+                        "in": "query",
+                        "description": "Search zone, area, pincode",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "noida"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Search results retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "ABC Coaching Center"
+                                                    },
+                                                    "category": {
+                                                        "type": "string",
+                                                        "example": "Education"
+                                                    },
+                                                    "rating": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 4.5
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No results found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No records found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/website/get-keyword-list": {
             "get": {
                 "tags": [

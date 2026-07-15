@@ -48,6 +48,7 @@ Route::get('/api/website/news', [WebsiteController::class, 'getNewsDetails']);
  Route::get('/api/website/getCityList', [WebsiteController::class, 'getCityList']);
   Route::get('/api/website/checkCity', [WebsiteController::class, 'checkCity']);
  Route::get('/api/website/getZoneList', [WebsiteController::class, 'getZoneList']);
+ Route::get('/api/website/getZoneDetails', [WebsiteController::class, 'getZoneDetails']);
  Route::get('/api/website/get-keyword-list', [WebsiteController::class, 'getKeywordList']);
  Route::get('/api/website/getZoneByCityList', [WebsiteController::class, 'getZoneByCityList']);
  Route::get('/api/website/business-services', [WebsiteController::class, 'businessServices']);

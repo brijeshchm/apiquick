@@ -4850,6 +4850,79 @@ class WebsiteController extends Controller
 
 	}
 
+
+
+
+	/**
+	 * @OA\Get(
+	 *     path="/api/website/getZoneDetails",
+	 *     tags={"Website"},
+	 *     summary="Website Search Zone detils by City ",
+	 *     description="Search records dynamically based on a zone",
+	 *            
+	 *     @OA\Parameter(
+	 *         name="city",
+	 *         in="query",
+	 *         required=false,
+	 *         description="Search zone, area, pincode",
+	 *         @OA\Schema(type="string", example="noida")
+	 *     ),
+	 *        
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Search results retrieved successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=true),
+	 *             @OA\Property(property="data", type="array",
+	 *                 @OA\Items(
+	 *                     @OA\Property(property="id", type="integer", example=101),
+	 *                     @OA\Property(property="name", type="string", example="ABC Coaching Center"),
+	 *                     
+	 *                     @OA\Property(property="category", type="string", example="Education"),
+	 *                     @OA\Property(property="rating", type="number", format="float", example=4.5)
+	 *                 )
+	 *             )
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=404,
+	 *         description="No results found",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="success", type="boolean", example=false),
+	 *             @OA\Property(property="message", type="string", example="No records found.")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthorized",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+	 *         )
+	 *     )
+	 * )
+	 */
+	public function getZoneDetails(Request $request)
+	{
+
+		$citySlug = strtolower(trim(str_replace(' ', '-', $request->input('city'))));
+
+		$zone = DB::table('citylists')
+			->join('zones', 'zones.city_id', '=', 'citylists.id')
+			->where('citylists.city_slug', $citySlug)
+			->select('zones.id', 'zones.zone', 'citylists.city', 'zones.pincode', 'citylists.city_slug')
+			->orderBy('zones.zone', 'asc')
+			->first();
+
+		return response()->json([
+			'status' => true,
+			'message' => 'Successfully',
+			'data' => $zone
+		], 200);
+
+	}
+
+
+
 	/**
 	 * @OA\Get(
 	 *     path="/api/website/get-keyword-list",

@@ -4909,7 +4909,7 @@ class WebsiteController extends Controller
 		$zone = DB::table('citylists')
 			->join('zones', 'zones.city_id', '=', 'citylists.id')
 			->where('citylists.city_slug', $citySlug)
-			->select('zones.id', 'zones.zone', 'citylists.city', 'zones.pincode', 'citylists.city_slug')
+			->select('zones.id', 'zones.zone', 'citylists.city', 'zones.pincode', 'citylists.city_slug','citylists.state')
 			->orderBy('zones.zone', 'asc')
 			->first();
 

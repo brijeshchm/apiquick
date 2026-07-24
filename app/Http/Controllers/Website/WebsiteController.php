@@ -4459,6 +4459,7 @@ class WebsiteController extends Controller
         $data['keywords'] = DB::table('keyword')
             ->select('slug', 'keyword')
             ->where('seo_type', '1')
+			->limit(50)
             ->get();
  		return response()->json([
 			'success' => true,

@@ -5590,8 +5590,6 @@ class WebsiteController extends Controller
 				'heading' =>
 				($clientscheck->business_name ?? '') .
 				' in ' .
-				($clientscheck->area ?? '') .
-				', ' .
 				($clientscheck->city ?? ''),
 
 				'paragraph' => $clientscheck->business_description,
@@ -5604,8 +5602,7 @@ class WebsiteController extends Controller
 				'heading' =>
 				($clientscheck->business_name ?? '') .
 				' in ' .
-				($clientscheck->area ?? '') .
-				', ' .
+				
 				($clientscheck->city ?? ''),
 
 				'paragraph' => "{$businessName}, located in {$location}, has built a strong reputation as a trusted name in {$city} for delivering professional, reliable, and customer-focused services. With years of hands-on experience, a skilled team, and a strong commitment to quality, {$businessName} It caters to a wide range of customer needs across {$city} and is open from 10:00 AM to 7:00 PM., ensuring timely service, transparent pricing, and lasting results every time.",

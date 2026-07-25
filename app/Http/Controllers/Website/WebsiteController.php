@@ -5572,8 +5572,10 @@ class WebsiteController extends Controller
 
 				$relKeywords = Keyword::select('keyword','slug')->where('child_category_id', $findKeywords->child_category_id)
 					->orderBy('keyword', 'asc')
-					->pluck('keyword.keyword','keyword.slug')
+					 ->limit(50)
+					->pluck('keyword','slug')
 					->toArray();
+
 
 				$data['related_searches'] = $relKeywords;
 			}

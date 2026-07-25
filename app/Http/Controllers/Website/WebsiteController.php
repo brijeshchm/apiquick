@@ -5174,6 +5174,7 @@ class WebsiteController extends Controller
 				->join('keyword', 'assigned_kwds.kw_id', '=', 'keyword.id')
 				->where('assigned_kwds.client_id', $clientscheck->business_id)
 				->orderBy('keyword', 'asc')
+				->limit(50)
 				->distinct()
 				->pluck('keyword.keyword','keyword.slug');
 				 

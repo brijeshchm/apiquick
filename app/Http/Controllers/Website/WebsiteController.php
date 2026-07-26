@@ -218,9 +218,12 @@ class WebsiteController extends Controller
 
 
 		} else {
-			$meta_description =  'Find the best ' . strtolower($keywordDetails->keyword) .
-               ' in ' . ucfirst($city) .
-               '. Compare ratings, reviews, contact details and book services on Quickdials.';
+							
+				$cityName = ucwords(str_replace('-', ' ', $city));
+
+				$meta_description = 'Find the best ' . strtolower($keywordDetails->keyword) .
+				' in ' . $cityName .
+				'. Compare reviews, ratings, and contact details on QuickDials.';
 
 		}
 		
@@ -3009,7 +3012,7 @@ class WebsiteController extends Controller
 
 		} else {
 			$meta_description = 'Find the best ' . strtolower($keywordDetails->keyword) . '. Compare ratings, reviews, contact details and service information on Quickdials.';
-
+		
 		}
 
 		$top_description = "";
@@ -3889,9 +3892,9 @@ class WebsiteController extends Controller
 			$meta_description = $categoryDetails->meta_description;
 
 
-		} else {
-			 
-			   $meta_description = "Find the best ".$categoryDetails->parent_category." near you on Quickdials. Compare trusted providers, read reviews, check details, and connect with top-rated businesses and professionals for your needs.";
+		} else {			 
+			  
+			$meta_description = 'Find the best ' . strtolower($categoryDetails->parent_category) .  ' Compare reviews, ratings, and contact details on QuickDials.';
 
 		}
 			
@@ -4243,7 +4246,7 @@ class WebsiteController extends Controller
 		if (!empty($childDetails->meta_title)) {
 			$meta_title = $childDetails->meta_title;
 		} else {
-			$meta_title = $childDetails->child_category ." | Find Trusted Services, Businesses & Professionals Near You | Quickdials ";
+			$meta_title = $childDetails->child_category ." | Trusted Services Near You | QuickDials";
 
 		}
 		if (!empty($childDetails->h1_heading)) {
@@ -4260,8 +4263,8 @@ class WebsiteController extends Controller
 
 
 		} else {
-			 
-			   $meta_description = "Find the best ".$childDetails->child_category." near you on Quickdials. Compare trusted providers, read reviews, check details, and connect with top-rated businesses and professionals for your needs.";
+			 		 
+			   $meta_description = "Find the best ".$childDetails->child_category." near you on QuickDials. Compare trusted providers, read reviews, and connect with top-rated businesses.";
 
 		}
 			

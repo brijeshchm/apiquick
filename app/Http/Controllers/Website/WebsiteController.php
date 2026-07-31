@@ -4241,8 +4241,7 @@ class WebsiteController extends Controller
 				$alt = $childicons['pc_icon']['name'];
 			}
 		}
-		
-		
+				
 		if (!empty($childDetails->meta_title)) {
 			$meta_title = $childDetails->meta_title;
 		} else {
@@ -4261,14 +4260,12 @@ class WebsiteController extends Controller
 		if (!empty($childDetails->meta_description)) {
 			$meta_description = $childDetails->meta_description;
 
-
 		} else {
 			 		 
 			   $meta_description = "Find the best ".$childDetails->child_category." near you on QuickDials. Compare trusted providers, read reviews, and connect with top-rated businesses.";
 
 		}
-			
-		
+					
 		$data['keyword'] = array(
 			'child_category' => $childDetails->child_category,
 			'child_slug' => $childDetails->child_slug,
@@ -4277,6 +4274,8 @@ class WebsiteController extends Controller
 			'alt' => $alt,
 			'meta_title' => $meta_title,
 			'h1_heading' => $h1_heading,
+			'heading' => $childDetails->heading,
+			'courseabout' => $childDetails->courseabout,
 			'meta_description' => $meta_description,
 			'top_description' => $childDetails->top_description,
 			'bottom_description' => $childDetails->bottom_description,

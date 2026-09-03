@@ -5315,6 +5315,7 @@ class WebsiteController extends Controller
 				'h1_heading' => $clientscheck->h1_heading,
 				'business_name' => $clientscheck->business_name,
 				'business_slug' => $clientscheck->business_slug,
+				'views' => $clientscheck->views,
 				'business_url' => config('app.website') . 'businessdetails/' . $clientscheck->business_slug,
 				'logo' => $logoImage ?? '',
 				'altLogo' => $altLogo . ' Logo' ?? '',

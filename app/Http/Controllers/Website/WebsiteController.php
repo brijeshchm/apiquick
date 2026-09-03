@@ -2563,6 +2563,7 @@ class WebsiteController extends Controller
 				'updated_at' => get_time(strtotime($blogdetails->created_at)),			
 				
 				'title' => $blogdetails->title,
+				'views' => $blogdetails->views,
 				'description' => ucfirst($blogdetails->description),
 				'meta_title' => ucfirst($blogdetails->meta_title),
 				'h1_heading' => ucfirst($blogdetails->h1_heading),

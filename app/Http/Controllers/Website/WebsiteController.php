@@ -3854,7 +3854,7 @@ class WebsiteController extends Controller
 		$categoryDetails = DB::table('parent_category')->where('parent_slug', $slug)->first();
 
 
-		$banner_image = config('app.website') . 'client/images/computer-courses-training.jpg';
+		$banner_image = '';
 		$alt = "";
 		$category_icon ="";
 		if (!empty($categoryDetails->category_banner)) {
@@ -4227,7 +4227,8 @@ class WebsiteController extends Controller
 		$childDetails = ChildCategory::where('child_slug', $slug)->first();
 
 
-		$banner_image = config('app.website') . 'client/images/computer-courses-training.jpg';
+		$banner_image = "";
+		$child_banner = "";
 		$child_icon="";
 		$alt = $childDetails->child_category;
 
@@ -4241,6 +4242,14 @@ class WebsiteController extends Controller
 		}
 		
 		
+		if (!empty($childDetails->child_banner)) {
+			$cicons = unserialize($childDetails->child_banner);
+
+			if (!empty($cicons)) {
+				$child_banner = config('app.website') . $cicons['child_banner']['src'];
+				$alt = $cicons['child_banner']['name'];
+			}
+		}
 		
 		if (!empty($childDetails->pc_icon)) {
 			$childicons = unserialize($childDetails->pc_icon);
@@ -4279,6 +4288,7 @@ class WebsiteController extends Controller
 			'child_category' => $childDetails->child_category,
 			'child_slug' => $childDetails->child_slug,
 			'category_banner' => $banner_image,
+			'child_banner' => $child_banner,
 			'child_icon' => $child_icon,
 			'alt' => $alt,
 			'meta_title' => $meta_title,

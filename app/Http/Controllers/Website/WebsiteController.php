@@ -376,7 +376,7 @@ class WebsiteController extends Controller
 				DB::raw('COALESCE(c.rating,0) as rating'),
 				DB::raw('COALESCE(c.comment_count,0) as comment_count')
 			)
-			->where('citylists.city', $city)
+			->where('clients.city', $city)
 			 ->where('clients.active_status', '1')
 			->where('keyword.slug', $search_kw)
 			 ->groupBy('clients.id')			 
@@ -532,7 +532,7 @@ class WebsiteController extends Controller
         'c.avg_rating',
         'c.comment_count'
     )
-	 ->where('citylists.city', $city)
+	 ->where('clients.city', $city)
     ->where('clients.active_status', '1')
     ->where('keyword.slug', $search_kw)
     ->groupBy('clients.id')

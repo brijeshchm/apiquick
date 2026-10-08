@@ -5043,6 +5043,7 @@ class WebsiteController extends Controller
 				->where('active_status', '1')
 				->whereNotNull('city')
 				->whereRaw("TRIM(city) <> ''")
+				->whereRaw("TRIM(city) <> '0'")
 				->select(
 
 					DB::raw("'company' as type"),

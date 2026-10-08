@@ -24,6 +24,7 @@ use Session;
 use App\Models\ParentCategory;
 use App\Models\Client\Comment;
 use App\Models\HomeSlider;
+use str;
 class SiteController extends Controller
 {
 
@@ -2849,7 +2850,9 @@ class SiteController extends Controller
 			$data['count'] = $count;
 			$addressText = !empty($clientscheck->address) ? $clientscheck->address : '';
 			$mapText = !empty($clientscheck->business_map) ? '\n Directions: ' . $clientscheck->business_map : '';
-			$profile_url = 'https://www.quickdials.com/businessdetails/' . $clientscheck->business_slug;
+		 
+			$profile_url = 'https://www.quickdials.com/'. str::slug($clientscheck->city).'/' . $clientscheck->business_slug;
+
 			$keyword = "";
 			$address_data = "Greetings from {$businessName},\n"
 				. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
@@ -2878,7 +2881,7 @@ class SiteController extends Controller
 				'business_id' => $clientscheck->business_id,
 				'business_name' => $clientscheck->business_name,
 				'business_slug' => $clientscheck->business_slug,
-				'business_url' => config('app.website') . 'businessdetails/' . $clientscheck->business_slug,
+				'business_url' => config('app.website') . $clientscheck->city .'/' . $clientscheck->business_slug,
 				'logo' => $logoImage ?? '',
 				'altLogo' => $altLogo . ' Logo' ?? '',
 				'profile_banner' => $profile_pic ?? '',

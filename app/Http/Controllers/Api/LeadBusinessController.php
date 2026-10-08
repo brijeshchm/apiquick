@@ -8,6 +8,7 @@ use Nnjeim\World\Models\Country;
 use Nnjeim\World\Models\State;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Client\Client;
+use str;
 use Illuminate\Support\Facades\Hash;
 use DB;
 class LeadBusinessController extends Controller
@@ -76,9 +77,9 @@ class LeadBusinessController extends Controller
                 $created = get_time(strtotime($val->created)) . ' ago';
                 $businessName = !empty($currentUser->business_name) ? $currentUser->business_name : 'our company';
 				$keyword = !empty($val->kw_text) ? $val->kw_text : 'your enquiry';
-				$addressText = !empty($client->address) ? $currentUser->address : '';
-				$mapText = !empty($client->business_map) ? '\n Directions: ' . $currentUser->business_map : '';
-				$profile_url = 'https://www.quickdials.com/businessdetails/' . $currentUser->business_slug;
+				$addressText = !empty($currentUser->address) ? $currentUser->address : '';
+				$mapText = !empty($currentUser->business_map) ? '\n Directions: ' . $currentUser->business_map : '';
+				$profile_url = 'https://www.quickdials.com/'.str::slug($currentUser->city) .'/' . $currentUser->business_slug;
 
 				$address_data = "Greetings from {$businessName},\n"
 					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
@@ -210,8 +211,8 @@ class LeadBusinessController extends Controller
                  $businessName = !empty($currentUser->business_name) ? $currentUser->business_name : 'our company';
 				$keyword = !empty($val->kw_text) ? $val->kw_text : 'your enquiry';
 				$addressText = !empty($client->address) ? $currentUser->address : '';
-				$mapText = !empty($client->business_map) ? '\n Directions: ' . $currentUser->business_map : '';
-				$profile_url = 'https://www.quickdials.com/businessdetails/' . $currentUser->business_slug;
+				$mapText = !empty($client->business_map) ? '\n Directions: ' . $currentUser->business_map : '';				 
+                $profile_url = 'https://www.quickdials.com/'. str::slug($currentUser->city).'/' . $currentUser->business_slug;
 
 				$address_data = "Greetings from {$businessName},\n"
 					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"

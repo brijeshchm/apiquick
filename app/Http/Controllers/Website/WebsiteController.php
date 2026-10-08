@@ -21,6 +21,7 @@ use App\Models\Blogdetails;
 use App\Models\ChildCategory;
 use App\Models\Lead;
 use Session;
+use Str;
 use App\Models\NewsArticle;
 use App\Models\ParentCategory;
 use App\Models\Client\Comment;
@@ -143,7 +144,7 @@ class WebsiteController extends Controller
 			->map(function ($b) {
 				$b->image_url = $b->image_path ? asset($b->image_path) :'client/images/computer-courses-training.jpg';
 				$b->alt_text  = $b->alt_text ?: 'Banner';
-				$b->click_url = $b->client_slug ? '/businessdetails/' . $b->client_slug : null;
+				$b->click_url = $b->client_slug ? '/noida/' . $b->client_slug : null;
 				return $b;
 			})
 			->values();
@@ -2285,7 +2286,7 @@ class WebsiteController extends Controller
 		$url = config('app.url');
 		$studyPageList = [];
 		$data = [];
-		$studyAbroad_id = ParentCategory::where('parent_slug', 'study-abroad')->first();
+		$studyAbroad_id = ParentCategory::where('parent_slug', 'schools-and-colleges')->first();
 		$studyAbroad = DB::table('child_category')
 			->join('parent_category', 'child_category.parent_category_id', '=', 'parent_category.id')
 			->where('parent_category_id', $studyAbroad_id->id)
@@ -5040,6 +5041,8 @@ class WebsiteController extends Controller
 			$clientData = DB::table('clients')
 				->where('business_name', 'LIKE', "%{$keyword}%")
 				->where('active_status', '1')
+				->whereNotNull('city')
+				->whereRaw("TRIM(city) <> ''")
 				->select(
 
 					DB::raw("'company' as type"),
@@ -5262,7 +5265,10 @@ class WebsiteController extends Controller
 		 
 			$addressText = !empty($clientscheck->address) ? $clientscheck->address : '';
 			$mapText = !empty($clientscheck->business_map) ? '\n Directions: ' . $clientscheck->business_map : '';
-			$profile_url = 'https://www.quickdials.com/businessdetails/' . $clientscheck->business_slug;
+			 
+			$profile_url = 'https://www.quickdials.com/'. Str::slug($clientscheck->city).'/' . $clientscheck->business_slug;
+
+			
 			$keyword = "";
 			$address_data = "Greetings from {$businessName},\n"
 				. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
@@ -5326,7 +5332,7 @@ class WebsiteController extends Controller
 				'business_name' => $clientscheck->business_name,
 				'business_slug' => $clientscheck->business_slug,
 				'views' => $clientscheck->views,
-				'business_url' => config('app.website') . 'businessdetails/' . $clientscheck->business_slug,
+				'business_url' => config('app.website') . '/noida/' . $clientscheck->business_slug,
 				'logo' => $logoImage ?? '',
 				'altLogo' => $altLogo . ' Logo' ?? '',
 				'profile_banner' => $profile_pic ?? '',

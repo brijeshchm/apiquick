@@ -4648,7 +4648,7 @@ class WebsiteController extends Controller
 	{
 
 		$cid = trim($request->input('city'));
-
+		$cid = str_replace('-', ' ', $cid);
 
 		$zoneResults = collect();
 
@@ -5003,7 +5003,8 @@ class WebsiteController extends Controller
 	public function getKeywordList(Request $request)
 	{
 		$keyword = trim($request->input('keyword'));
-
+		$keyword = str_replace('-', ' ', $keyword);
+	 
 		// 🔹 Base Keyword Query
 		$locations = DB::table('keyword')
 			->when(empty($keyword), function ($q) {
@@ -5022,14 +5023,16 @@ class WebsiteController extends Controller
 					1665
 				]);
 			})
-			->when(!empty($keyword), function ($q) use ($keyword) {
-				$q->where('keyword', 'LIKE', "%{$keyword}%");
+			->when(!empty($keyword), function ($q) use ($keyword) {				 
+				$q->where('keyword', 'LIKE', "%{$keyword}%")
+				->orWhere('slug', 'LIKE', "%{$keyword}%");			 
+    
 			})
 			->select(
 
 				DB::raw("'keyword' as type"),
 				'keyword',
-				DB::raw("LOWER(REPLACE(keyword, ' ', '-')) as slug")
+				DB::raw("slug as slug")
 			)
 			->orderBy('keyword', 'asc')
 			->limit(50)
@@ -5039,21 +5042,23 @@ class WebsiteController extends Controller
 		if (!empty($keyword)) {
 
 			$clientData = DB::table('clients')
-				->where('business_name', 'LIKE', "%{$keyword}%")
+				->where(function ($query) use ($keyword) {
+					$query->where('business_name', 'LIKE', '%' . $keyword . '%')
+						  ->orWhere('business_slug', 'LIKE', '%' . $keyword . '%');
+				})
 				->where('active_status', '1')
 				->whereNotNull('city')
 				->whereRaw("TRIM(city) <> ''")
-				//->whereRaw("TRIM(city) <> '0'")
+				->whereRaw("TRIM(city) <> '0'")
 				->select(
-
-					DB::raw("'company' as type"),
-					DB::raw("business_name as keyword"),
-					DB::raw("business_slug as slug")
+					DB::raw("'company' AS type"),
+					'business_name AS keyword',
+					'business_slug AS slug'
 				)
-				->orderBy('keyword', 'asc')
-				
+				->orderBy('business_name', 'asc')
 				->limit(50)
 				->get();
+
 
 			$locations = $locations->merge($clientData);
 		}

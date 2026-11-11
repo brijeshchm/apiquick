@@ -17,7 +17,7 @@ use App\Models\LeadFollowUp;
 use App\Models\Status;
 use App\Models\AssignedLead;
 use Illuminate\Validation\Rule;
-use str;
+use Str;
 
 class EnquiryController extends Controller
 {
@@ -1287,7 +1287,7 @@ class EnquiryController extends Controller
 				$keyword = !empty($val->kw_text) ? $val->kw_text : 'your enquiry';
 				$addressText = !empty($client->address) ? $client->address : '';
 				$mapText = !empty($client->business_map) ? '\n Directions: ' . $client->business_map : '';
-				$profile_url = 'https://www.quickdials.com/'.str::slug($client->city) . $client->business_slug;
+				$profile_url = 'https://www.quickdials.com/'.Str::slug($client->city) . $client->business_slug;
 
 				$address_data = "Greetings from {$businessName},\n"
 					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
@@ -1305,9 +1305,12 @@ class EnquiryController extends Controller
 					. "For more information about the services offered by our business"
 					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
 					. ". Or visit our profile: {$profile_url}";
+				
+				$mobile = $this->dataDecodeJsonBase64($val->mobile);
+				
 				$share_lead = 
 					'Name: ' . (trim($val->name ?? '') ?: '') . ', ' .
-					'Mobile: ' . (trim($val->mobile ?? '') ?: '') . ', ' .
+					'Mobile: ' . (trim($mobile ?? '') ?: '') . ', ' .
 					'Email: ' . (trim($val->email ?? '') ?: '') . ', ' .
 					'Service: ' . (trim($val->kw_text ?? '') ?: '') . ', ' .
 					'Location: ' . (
@@ -1356,7 +1359,7 @@ class EnquiryController extends Controller
 					'scrapValue' => $val->scrapValue ?? 0,
 					'primeLead' => $val->primeLead ?? 0,
 					'name' => trim($val->name ?? '') ?: null,
-					'mobile' => trim($val->mobile ?? '') ?: null,
+					'mobile' => trim($mobile ?? '') ?: null,
 					'email' => trim($val->email ?? '') ?: null,
 					'remark' => trim($remark ?? '') ?: null,
 			 
@@ -1520,7 +1523,7 @@ class EnquiryController extends Controller
 					$keyword = !empty($val->kw_text) ? $val->kw_text : 'your enquiry';
 					$addressText = !empty($client->address) ? $client->address : '';
 					$mapText = !empty($client->business_map) ? '\n Directions: ' . $client->business_map : '';
-					$profile_url = 'https://www.quickdials.com/'.str::slug($client->city) . $client->business_slug;
+					$profile_url = 'https://www.quickdials.com/'.Str::slug($client->city) . $client->business_slug;
 
 					$address_data = "Greetings from {$businessName},\n"
 						. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
@@ -1539,10 +1542,10 @@ class EnquiryController extends Controller
 						. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
 						. ". Or visit our profile: {$profile_url}";
 
-
+					$mobile = $this->dataDecodeJsonBase64($val->mobile);
 					$share_lead = 
 					'Name: ' . (trim($val->name ?? '') ?: '') . ', ' .
-					'Mobile: ' . (trim($val->mobile ?? '') ?: '') . ', ' .
+					'Mobile: ' . (trim($mobile ?? '') ?: '') . ', ' .
 					'Email: ' . (trim($val->email ?? '') ?: '') . ', ' .
 					'Service: ' . (trim($val->kw_text ?? '') ?: '') . ', ' .
 					'Location: ' . (
@@ -1591,7 +1594,7 @@ class EnquiryController extends Controller
 						'primeLead' => $val->primeLead ?? 0,
 
 						'name' => !empty($val->name) ? trim($val->name) : null,
-						'mobile' => !empty($val->mobile) ? trim($val->mobile) : null,
+						'mobile' => !empty($val->mobile) ? trim($mobile) : null,
 						'email' => !empty($val->email) ? trim($val->email) : null,
 
 						'remark' => !empty($remark) ? trim($remark) : null,
@@ -1769,7 +1772,7 @@ class EnquiryController extends Controller
 				$keyword = !empty($val->kw_text) ? $val->kw_text : 'your enquiry';
 				$addressText = !empty($client->address) ? $client->address : '';
 				$mapText = !empty($client->business_map) ? '\n Directions: ' . $client->business_map : '';
-				$profile_url = 'https://www.quickdials.com/'.str::slug($client->city).'/' . $client->business_slug;
+				$profile_url = 'https://www.quickdials.com/'.Str::slug($client->city).'/' . $client->business_slug;
 
 				$address_data = "Greetings from {$businessName},\n"
 					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
@@ -1787,11 +1790,12 @@ class EnquiryController extends Controller
 					. "For more information about the services offered by our business"
 					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
 					. ". Or visit our profile: {$profile_url}";
-
+				
+				$mobile = $this->dataDecodeJsonBase64($val->mobile);
 
 				$share_lead = 
 					'Name: ' . (trim($val->name ?? '') ?: '') . ', ' .
-					'Mobile: ' . (trim($val->mobile ?? '') ?: '') . ', ' .
+					'Mobile: ' . (trim($mobile ?? '') ?: '') . ', ' .
 					'Email: ' . (trim($val->email ?? '') ?: '') . ', ' .
 					'Service: ' . (trim($val->kw_text ?? '') ?: '') . ', ' .
 					'Location: ' . (
@@ -1840,7 +1844,7 @@ class EnquiryController extends Controller
 					'primeLead' => $val->primeLead ?? 0,
 
 					'name' => !empty($val->name) ? trim($val->name) : null,
-					'mobile' => !empty($val->mobile) ? trim($val->mobile) : null,
+					'mobile' => !empty($val->mobile) ? trim($mobile) : null,
 					'email' => !empty($val->email) ? trim($val->email) : null,
 
 					'remark' => !empty($remark) ? trim($remark) : null,
@@ -2011,7 +2015,7 @@ class EnquiryController extends Controller
 				$keyword = !empty($val->kw_text) ? $val->kw_text : 'your enquiry';
 				$addressText = !empty($client->address) ? $client->address : '';
 				$mapText = !empty($client->business_map) ? '\n Directions: ' . $client->business_map : '';
-				$profile_url = 'https://www.quickdials.com/'.str::slug($client->city).'/' . $client->business_slug;
+				$profile_url = 'https://www.quickdials.com/'.Str::slug($client->city).'/' . $client->business_slug;
 
 				$address_data = "Greetings from {$businessName},\n"
 					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
@@ -2029,11 +2033,12 @@ class EnquiryController extends Controller
 					. "For more information about the services offered by our business"
 					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
 					. ". Or visit our profile: {$profile_url}";
-
+				
+				$mobile = $this->dataDecodeJsonBase64($val->mobile);
 
 				$share_lead = 
 					'Name: ' . (trim($val->name ?? '') ?: '') . ', ' .
-					'Mobile: ' . (trim($val->mobile ?? '') ?: '') . ', ' .
+					'Mobile: ' . (trim($mobile ?? '') ?: '') . ', ' .
 					'Email: ' . (trim($val->email ?? '') ?: '') . ', ' .
 					'Service: ' . (trim($val->kw_text ?? '') ?: '') . ', ' .
 					'Location: ' . (
@@ -2082,7 +2087,7 @@ class EnquiryController extends Controller
 					'primeLead' => $val->primeLead ?? 0,
 
 					'name' => !empty($val->name) ? trim($val->name) : null,
-					'mobile' => !empty($val->mobile) ? trim($val->mobile) : null,
+					'mobile' => !empty($val->mobile) ? trim($mobile) : null,
 					'email' => !empty($val->email) ? trim($val->email) : null,
 
 					'remark' => !empty($remark) ? trim($remark) : null,
@@ -2249,7 +2254,7 @@ class EnquiryController extends Controller
 				$keyword = !empty($val->kw_text) ? $val->kw_text : 'your enquiry';
 				$addressText = !empty($client->address) ? $client->address : '';
 				$mapText = !empty($client->business_map) ? '\n Directions: ' . $client->business_map : '';
-				$profile_url = 'https://www.quickdials.com/'.str::slug($client->city).'/' . $client->business_slug;
+				$profile_url = 'https://www.quickdials.com/'.Str::slug($client->city).'/' . $client->business_slug;
 
 				$address_data = "Greetings from {$businessName},\n"
 					. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
@@ -2267,10 +2272,11 @@ class EnquiryController extends Controller
 					. "For more information about the services offered by our business"
 					. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
 					. ". Or visit our profile: {$profile_url}";
-
+				
+				$mobile = $this->dataDecodeJsonBase64($val->mobile);
 				$share_lead = 
 					'Name: ' . (trim($val->name ?? '') ?: '') . ', ' .
-					'Mobile: ' . (trim($val->mobile ?? '') ?: '') . ', ' .
+					'Mobile: ' . (trim($mobile ?? '') ?: '') . ', ' .
 					'Email: ' . (trim($val->email ?? '') ?: '') . ', ' .
 					'Service: ' . (trim($val->kw_text ?? '') ?: '') . ', ' .
 					'Location: ' . (
@@ -2317,7 +2323,7 @@ class EnquiryController extends Controller
 					'primeLead' => $val->primeLead ?? 0,
 
 					'name' => !empty($val->name) ? trim($val->name) : null,
-					'mobile' => !empty($val->mobile) ? trim($val->mobile) : null,
+					'mobile' => !empty($val->mobile) ? trim($mobile) : null,
 					'email' => !empty($val->email) ? trim($val->email) : null,
 
 					'remark' => !empty($remark) ? trim($remark) : null,
@@ -2484,7 +2490,7 @@ class EnquiryController extends Controller
 		$keyword = !empty($leads->kw_text) ? $leads->kw_text : 'your enquiry';
 		$addressText = !empty($client->address) ? $client->address : '';
 		$mapText = !empty($client->business_map) ? '\n Directions: ' . $client->business_map : '';
-		$profile_url = 'https://www.quickdials.com/'.str::slug($client->city).'/' . $client->business_slug;
+		$profile_url = 'https://www.quickdials.com/'.Str::slug($client->city).'/' . $client->business_slug;
 
 		$address_data = "Greetings from {$businessName},\n"
 			. "We’re following up on your enquiry made on Quickdials for {$keyword}.\n"
@@ -2502,10 +2508,11 @@ class EnquiryController extends Controller
 			. "For more information about the services offered by our business"
 			. (!empty($addressText) ? ", you can visit us at {$addressText}" : "")
 			. ". Or visit our profile: {$profile_url}";
-
+		
+		$mobile = $this->dataDecodeJsonBase64($leads->mobile);
 		$share_lead = 
 					'Name: ' . (trim($leads->name ?? '') ?: '') . ', ' .
-					'Mobile: ' . (trim($leads->mobile ?? '') ?: '') . ', ' .
+					'Mobile: ' . (trim($lmobile ?? '') ?: '') . ', ' .
 					'Email: ' . (trim($leads->email ?? '') ?: '') . ', ' .
 					'Service: ' . (trim($leads->kw_text ?? '') ?: '') . ', ' .
 					'Location: ' . (
@@ -2564,7 +2571,7 @@ class EnquiryController extends Controller
 						? trim($leads->city_name . (!empty($leads->zone) ? ', ' . $leads->zone : ''))
 						: null,
  
-			'mobile' => $leads->mobile,
+			'mobile' => $mobile,
 			'status_name' => $leads->status_name,		 
 			'user_share' => $user_share,
 		];
@@ -2654,9 +2661,104 @@ class EnquiryController extends Controller
 	 */
 
 
-	public function manageEnquiry(Request $request)
+
+public function manageEnquiry(Request $request)
+{
+    if (!Auth::guard('sanctum')->check()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Unauthenticated',
+        ], 401);
+    }
+
+    $user = Auth::guard('sanctum')->user();
+
+    $request->validate([
+        'page'      => ['nullable', 'integer', 'min:1'],
+        'limit'     => ['nullable', 'integer', 'min:1', 'max:100'],
+        'date_from' => ['nullable', 'date_format:Y-m-d'],
+        'date_to'   => ['nullable', 'date_format:Y-m-d'],
+    ]);
+
+    $page = max(1, (int) $request->input('page', 1));
+    $limit = min(100, max(1, (int) $request->input('limit', 20)));
+
+    $query = DB::table('leads')
+        ->join('assigned_leads', 'leads.id', '=', 'assigned_leads.lead_id')
+        ->leftJoin('citylists', 'leads.city_id', '=', 'citylists.id')
+        ->leftJoin('areas', 'leads.area_id', '=', 'areas.id')
+        ->leftJoin('zones', 'leads.zone_id', '=', 'zones.id')
+        ->where('assigned_leads.client_id', $user->id)
+        ->select(
+            'leads.id',
+            'leads.name',
+            'leads.email',
+            'leads.mobile',
+            'areas.area',
+            'zones.zone',
+            'leads.kw_text',
+            'leads.city_name',
+            'assigned_leads.created_at',
+            'assigned_leads.id as assignId'
+        )
+        ->orderByDesc('assigned_leads.created_at')
+        ->orderByDesc('assigned_leads.id');
+
+    if ($request->filled('date_from')) {
+        $query->whereDate(
+            'assigned_leads.created_at',
+            '>=',
+            $request->input('date_from')
+        );
+    }
+
+    if ($request->filled('date_to')) {
+        $query->whereDate(
+            'assigned_leads.created_at',
+            '<=',
+            $request->input('date_to')
+        );
+    }
+
+    $enquiries = $query->paginate($limit, ['*'], 'page', $page);
+
+    $data = $enquiries->getCollection()->map(function ($lead) {
+        $mobile = null;
+
+        if ($lead->mobile !== null && $lead->mobile !== '') {
+            try {
+                $mobile = $this->dataDecodeJsonBase64($lead->mobile);
+            } catch (DecryptException $exception) {
+                report($exception);
+            }
+        }
+
+        return [
+            'id'         => $lead->id,
+            'assignId'   => $lead->assignId,
+            'name'       => $lead->name,
+            'email'      => $lead->email,
+            'mobile'     => $mobile,
+            'area'       => $lead->area,
+            'zone'       => $lead->zone,
+            'kw_text'    => $lead->kw_text,
+            'city_name'  => $lead->city_name,
+            'created_at' => $lead->created_at,
+        ];
+    })->values();
+
+    return response()->json([
+        'success' => true,
+        'data'    => $data,
+        'page'    => $enquiries->currentPage(),
+        'limit'   => $enquiries->perPage(),
+        'total'   => $enquiries->total(),
+    ], 200);
+}
+
+	public function manageEnquiry_old(Request $request)
 	{
-		// 🔐 Auth check
+		 
 		if (!Auth::guard('sanctum')->check()) {
 			return response()->json([
 				'success' => false,
@@ -2765,7 +2867,7 @@ class EnquiryController extends Controller
 	 */
 	public function exportEnquiry(Request $request)
 	{
-		// 🔐 Auth check
+		 
 		if (!Auth::guard('sanctum')->check()) {
 			return response()->json([
 				'success' => false,
@@ -2805,9 +2907,12 @@ class EnquiryController extends Controller
 		// 🧾 Prepare Excel rows
 		$rows = [];
 		foreach ($enquiries as $row) {
+			
+			$mobile = $this->dataDecodeJsonBase64($row->mobile);
+			
 			$rows[] = [
 				'Name' => $row->name,
-				'Mobile' => $row->mobile,
+				'Mobile' => $mobile,
 				'Email' => $row->email,
 				'Course' => $row->kw_text,
 				'City' => $row->city_name,
@@ -2916,9 +3021,11 @@ class EnquiryController extends Controller
 		// 🧾 Prepare Excel rows
 		$rows = [];
 		foreach ($enquiries as $row) {
+			
+			$mobile = $this->dataDecodeJsonBase64($row->mobile);
 			$rows[] = [
 				'Name' => $row->name,
-				'Mobile' => $row->mobile,
+				'Mobile' => $mobile,
 				'Email' => $row->email,
 				'Course' => $row->kw_text,
 				'City' => $row->city_name,
@@ -2934,6 +3041,16 @@ class EnquiryController extends Controller
 	}
 
 
-
+public function dataEncodeJsonBase64($o){
+		$o = json_encode($o);
+		$o = base64_encode($o);
+		return $o;
+		}
+		public function dataDecodeJsonBase64($o){
+				$o = base64_decode($o);
+				$o = json_decode($o); 			
+				return $o;
+		}
+	
 
 }

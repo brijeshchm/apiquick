@@ -182,7 +182,8 @@ class ContactController extends Controller
 
 		// ✅ Clean mobile
 		$mobile = preg_replace('/\s+/', '', ltrim($request->mobile, '0'));
-
+		$mobile = $this->dataEncodeJsonBase64($mobile);
+		 
 		// ✅ Duplicate check (last 4 days)
 		$duplicate = Lead::where('mobile', $mobile)
 			->where('kw_text', $request->kw_text)
@@ -798,6 +799,18 @@ class ContactController extends Controller
 
 		}
 	}
+		
+		public function dataEncodeJsonBase64($o){
+		$o = json_encode($o);
+		$o = base64_encode($o);
+		return $o;
+		}
+		public function dataDecodeJsonBase64($o){
+				$o = base64_decode($o);
+				$o = json_decode($o); 			
+				return $o;
+		}
+	
 
 
 
